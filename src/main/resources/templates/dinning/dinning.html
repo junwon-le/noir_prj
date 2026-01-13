@@ -1,0 +1,257 @@
+
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="title" content="NOIR">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>NOIR</title>
+
+<!-- <link rel="stylesheet" type="text/css" href="/Hotel28NewCMS_common/js/homepage/jquery.bxslider/jquery.bxslider.css"> -->
+<link rel="stylesheet" type="text/css" href="../common/css/homepage/base.css">
+<link rel="stylesheet" type="text/css" href="../common/css/homepage/style.css?v=0312">
+<link rel="stylesheet" type="text/css" href="../common/css/homepage/sub.css?v=0312">
+
+<script src="../common/js/comm/jquery-3.5.1.min.js"></script>
+<script src="../common/js/comm/jquery.bxslider.js"></script>
+<!-- <script src="/Hotel28NewCMS_common/js/homepage/jquery.mobile.custom.min.js"></script> -->
+<script src="../common/js/homepage/jquery.rwdImageMaps.min.js"></script>
+<script src="../common/js/homepage/jquery.accessibility.modal.js"></script>
+<script src="../common/js/comm/jquery.cookie.js"></script>
+<script src="../common/js/homepage/plugin.js"></script>
+<script type="text/javascript" src="../common/js/homepage/jquery.simpleWeather.js"></script>
+<script src="../common/js/homepage/custom.js"></script>
+
+<style>
+
+#detailBtn{
+width:150px;
+height:50px;
+position:absolute;
+top:690px;
+left:1400px;
+ background: #8F8664;
+  border: 1px solid rgba(216, 203, 168, 0.25);
+  color: #FFFFFF;
+  letter-spacing: 0.08em;
+  font-size: 15px;
+  font-weight: bold;
+  z-index: 999;
+}
+
+.fullsizeImage>ul>li::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at center,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.12) 25%,
+    rgba(0, 0, 0, 0.35) 50%,
+    rgba(0, 0, 0, 0.6) 75%,
+    rgba(0, 0, 0, 0.75) 100%
+  );
+  pointer-events: none;
+}
+
+#detailBtn:hover{
+ background: #756D50;
+  border-color:  #756D50;
+}
+
+#reserveBtn{
+width:150px;
+height:50px;
+position:absolute;
+top:750px;
+left:1400px;
+ background: #8F8664;
+  border: 1px solid rgba(216, 203, 168, 0.25);
+  color: #FFFFFF;
+  letter-spacing: 0.08em;
+  font-size: 15px;
+  font-weight: bold;
+  z-index: 999;
+}
+
+#reserveBtn:hover{
+ background: #756D50;
+  border-color: #756D50;
+}
+
+
+
+.btn_pop_close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+    background: yellow;
+    z-index: 99999;
+
+    /* 기존 텍스트 완전 무시 */
+    font-size: 0 !important;
+    text-indent: 0 !important;
+    overflow: visible !important;
+}
+
+.btn_pop_close::before {
+    content: '✕';          /* ← 강제 출력 */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
+    line-height: 1;
+    font-family: Arial, sans-serif;
+}
+
+.footer_bot{
+padding:0px;
+}
+
+</style>
+
+<body>
+
+<script>
+$(function(){
+	//$('header').load('../../incheader.html');
+
+	$('.fullsizeImage ul').myFunction();
+})
+
+var CONTEXT = '';
+$(document).ready(function($) {
+    $('.open_modal').click(function(e) {    	
+        $("iframe").attr("src", $(this).attr('url')).show();        	
+        e.preventDefault();
+    });
+});
+
+$(document).on('click','.btn_pop_close',function(e){
+	$('#popIframe > iframe').attr('src','').hide();
+	e.preventDefault();
+})
+</script>
+
+
+
+    
+	<div class="fullsizeImage">
+ 	<ul>
+    
+    <li style="background-image:url(../common/images/homepage/bg01.jpg)" ></li>
+    <li style="background-image:url(../common/images/homepage/bg02.jpg)" ></li>
+    <li style="background-image:url(../common/images/homepage/bg03.jpg)" ></li>
+    <li style="background-image:url(../common/images/homepage/bg04.jpg)" ></li>
+    <li style="background-image:url(../common/images/homepage/bg01.jpg)" ></li>
+    
+    
+	</ul>
+	</div>	
+
+	
+
+<header>
+	  <div th:replace="~{fragments/header :: header}"></div>
+</header>
+
+	<section id="dining">
+
+
+		<!-- <div class="bx-pager"></div> --><div>
+		<input type="button" id="detailBtn" value="상세보기">
+		</div>
+		<div>
+		<input type="button" id="reserveBtn" value="예약하기">
+		</div>
+
+		<div class="frame frame-dining">
+			<nav class="frame-nav">
+				HOME / DINING / <span class="gold">NOIR RESTAURANT</span>
+			</nav>
+			<h2 class="frame-title gold">NOIR RESTAURANT</h2>
+			<p class="frame-detail gold">
+				빛과 그림자가 공존하는 미식의 무대, NOIR 레스토랑.<br>
+				NOIR는 클래식한 서양 요리의 기법을 기반으로,<br>
+				현대적인 감각과 섬세한 해석을 더한 컨템포러리 다이닝을 선보입니다.<br>
+				정제된 플레이팅과 균형 잡힌 풍미는<br>
+				한 접시마다 깊이 있는 인상을 남깁니다.<br>
+				<br>
+				전통적인 프렌치 테크닉과 글로벌 다이닝의 흐름을 아우르는 NOIR의 요리는<br>
+				식재료 본연의 매력을 최대한 끌어내는 데 집중합니다.<br>
+				절제된 공간, 차분한 분위기 속에서 완성되는 코스는<br>
+				일상의 식사를 넘어 하나의 경험으로 기억됩니다.<br>
+				NOIR 레스토랑은 지금 이 순간의 감각으로<br>
+				서양 요리의 새로운 깊이를 제안합니다.<br>                			
+			</p>
+			<div class="etc location">
+				<p>LOCATION</p>
+				<p class="bold">6<span>F</span></p>
+			</div>
+			<!-- <div class="etc rentQna">
+				<p>INQUIRY</p>
+				<p class="bold">+82-2-318-9765</p>
+			</div> -->
+		</div>
+	</section>
+
+
+
+
+<script>
+$(document).ready(function(){
+  $('.menu_slider ul').bxSlider({
+		auto:false,
+		pager:false,
+		minSlides: 1,
+		maxSlides: 3,
+		slideWidth: 360,
+        slideMargin: 30,
+        infiniteLoop: false,
+        nextSelector: '#slider-next',
+        prevSelector: '#slider-prev'
+  });
+});
+</script>
+
+    
+	<div class="menu_slider">
+		<ul>
+			<!-- WOLHYANG -->
+			
+			<!-- <li><img src="/Hotel28NewCMS_common/images/homepage/gallery/club_01.JPG"></li>
+			<li><img src="/Hotel28NewCMS_common/images/homepage/gallery/club_02.JPG"></li>
+			<li><img src="/Hotel28NewCMS_common/images/homepage/gallery/club_04.jpg"></li>
+			<li><img src="/Hotel28NewCMS_common/images/homepage/gallery/club_05.jpg"></li>
+			<li><img src="/Hotel28NewCMS_common/images/homepage/gallery/club_06.jpg"></li>
+			<li><img src="/Hotel28NewCMS_common/images/homepage/gallery/club_07.jpg"></li>
+			<li><img src="/Hotel28NewCMS_common/images/homepage/gallery/club_03.JPG"></li> -->
+			<!-- LIBRARY -->
+			
+		    
+		</ul>
+        <div class="outside">
+          <span id="slider-prev"></span><span id="slider-next"></span>
+        </div>
+	</div>	
+	
+<footer>
+<div th:replace="~{fragments/footer :: footer}"></div>
+</footer>
+<div th:replace="~{fragments/privacy :: privacy}"></div>
+
+<!-- <script type="text/javascript" src="/Hotel28NewCMS_common/js/jquery.modalLayer.js"></script>
+<script type="text/javascript" src="/Hotel28NewCMS_common/js/common_dev.js"></script> -->
+<script type="text/javascript" src="${pageContext.request.contextPath}/common/js/comm/jquery.validate.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/common/js/comm/wings.core.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/common/js/comm/PAGING_HOMEPAGE.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/common/js/comm/kendo.web.min.js"></script>
+
+
+</body>
+</html>
