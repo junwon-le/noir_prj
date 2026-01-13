@@ -1,0 +1,259 @@
+html{ min-height: 100%;	position: relative;}
+body{ background: #181818; height:100%;}
+.gold{color: #b6966c !important;}
+.green{color: #3cb44a !important;}
+.blue{color: #2c9ede !important;}
+.fullsizeImage{	position: absolute;	top:0;left:0;bottom:0;right:0;	width:100%; height:100%; z-index:-1; overflow: hidden;}
+.movie-frame{ position: fixed; width: 100%;height: 100%; left: 0; top: 0; z-index: -1;	overflow: hidden;}
+.fullsizeImage ul{	position: relative;	width: 100%; height: 100%;}
+.fullsizeImage ul li{ position: absolute; left:0;top:0;	width:100%;height:100%;	background-size: 1920px; background-position:50% 0;	background-repeat: no-repeat; opacity: 0;	transition: all .9s ease-in;}
+.fullsizeImage ul li.active{ opacity: 1;}
+.movie-frame div{ position: absolute; width:23px;	height:100%; background-image: url(/Hotel28NewCMS_common/images/homepage/movie-frame.png); background-repeat: repeat-y; background-position:50% 0px;}
+.movie-frame-left{ left:12px;}
+.movie-frame-right{	right:12px;}
+header{	position: absolute;	top:0; left:0;	width:100%; height: 127px;	color: #FFF; background-color:transparent; background-repeat: repeat-x; transition:all .3s ease-in; z-index:1001;}
+header:hover{ background-color: #241f20;z-index: 1500;}
+#header_wrap{ width:1240px;	margin: 0 auto;}
+header:after,#header_wrap:after{ content:'';clear: both;display: block;}
+#logo{ padding-left : 36px;	float: left;}
+#logo img{ transition:all .3s ease-in-out;}
+#logo a:hover img{ transform: scale(1.1);}
+.top_nav{ width:1240px;	margin:0 auto; position: relative;font-size: 14px; text-align: right;z-index: 1001;}
+.top_nav > ul{ text-align: left;display: inline-block;padding:13px 0;}
+.top_nav > ul > li{	display: inline-block;	position: relative;	padding:0 18px 0 19px;}
+.top_nav > ul > li:after{	content:'';	width: 1px; height:10px; background: #FFF; position: absolute; left:0; top:50%;	margin-top:-5px;}
+.top_nav > ul > li:first-child:after{ content:none;}
+.top_nav > ul > li > a{	display: inline-block;}
+nav.top_nav > ul > li.language{background:none}
+nav.top_nav > ul > li.language > a{height:24px;line-height:24px;width:95px;border:none;background:url(/Hotel28NewCMS_common/images/homepage/common/ico_language_arrow.png) 100% 50% no-repeat}
+nav.top_nav > ul > li.language > ul{display:none;background: #fff;position:absolute;top:20px;left:0;width:124px;/* padding:0 0 10px; */z-index:999}
+nav.top_nav > ul > li.language > ul > li > a{display:block;text-transform: uppercase;height:24px;line-height:26px;font-size:13px;color:#545454;text-align:center}
+nav.top_nav > ul > li.language > ul > li > a:hover, div.util > ul > li.language > ul > li > a:focus, div.util > ul > li.language > ul > li > a.current{background-color:#b6966c;color:#fff}
+nav.top_nav > ul > li.language:hover ul, div.util > ul > li.language:focus ul{display:block}
+nav.top_nav > ul > li.language > ul{width:126px;border:none}
+
+.main_nav{	font-weight: 500;	letter-spacing: .5px; float:right;	margin-top: 19px;}
+.main_nav > ul > li{display: inline-block;}
+.main_nav > ul > li > a{display: block;padding:0 39px 55px;	transition: all .3s ease-in;position: relative;}
+.main_nav > ul > li a:after{content:'';	position: absolute;	bottom: 13px;left: 50%; margin-left: -20px;	transition: all .3s ease-in; border-bottom: 20px solid #a28460;	border-left: 20px solid transparent; border-right: 20px solid transparent;	opacity:0;}
+.main_nav > ul > li:hover > a:after{ opacity:.8;}
+.main_nav > ul > li:last-child a:after{	margin-left: 0px;}
+.main_nav > ul > li:last-child > a{	padding-right: 0;}
+.main_nav > ul > li:hover > a{	color: #a28460;}
+.main-sub{position: absolute;	width:100%; height: 87px;	overflow: hidden;	top: 127px; left: 0;	background: #a28460;	background-color: rgba(162,132,96,.8);	z-index: 1000;	transition: all .5s ease-in-out;	opacity: 0;	-webkit-box-sizing: border-box;	-moz-box-sizing: border-box;box-sizing: border-box;}
+.main_nav > ul > li:hover .main-sub{opacity: 1;	z-index: 1500;}
+.main-sub ul{width: 1240px;	margin: 0 auto;	text-align: center;	-webkit-box-sizing: border-box;	-moz-box-sizing: border-box;box-sizing: border-box;}
+.main_nav ul li:nth-child(1) .main-sub{	/*padding-left: 245px;*/}
+.main_nav ul li:nth-child(2) .main-sub{	/*padding-left: 84px;*/}
+.main_nav ul li:nth-child(3) .main-sub{	/*adding-left: 719px;*/}
+.main_nav ul li:nth-child(5) .main-sub li a{	letter-spacing: -1px;padding:0 30px;}
+.main-sub ul:after{	content:'';clear: both;display: block;}
+.main-sub li{display: inline-block;	height: 87px;	padding: 18px 0;	position: relative;	-webkit-box-sizing: border-box;	-moz-box-sizing: border-box;	box-sizing: border-box;}
+.main-sub li:after{	content:'';	width: 2px; height: 37px;	background: #725e48;	position: absolute;	left:0; top:24px;}
+.main-sub li:nth-child(1) a{	padding-left: 0;}
+.main-sub li:nth-child(1):after{	content: none;}
+.main-sub li a{	display: table-cell;vertical-align: middle;	height: 51px; font-weight: 300; padding:0 39px;	color: #231f20;	text-align: center;	transition: all .3s ease-in; -webkit-box-sizing: border-box;	-moz-box-sizing: border-box; box-sizing: border-box;}
+.main-sub li span{display: block;	position: relative;}
+.main-sub li span:after{ content: ''; position: absolute; bottom: -10px; left: 50%;	width:100%; height: 3px; margin-left: -50%; transition: all .3s ease-in;	background: transparent;}
+.main-sub li:hover a{color: #FFF;}
+.main-sub li:hover a span:after{background: #FFF;}
+section{position: relative;	z-index: 1000;}
+#main{ 	width:1240px;margin: 123px auto 0;	position: relative;	-webkit-box-sizing: border-box;	-moz-box-sizing: border-box;	box-sizing: border-box;}
+#main:after{	content:'';clear: both;display: block;}
+.nav_area{float:left; width:200px; height: 600px; position: relative;padding-top:70px; padding-left: 19px; -webkit-box-sizing: border-box;	-moz-box-sizing: border-box;box-sizing: border-box;}
+.nav_area .pager{ padding-top: 59px; padding-right: 10px;}
+.nav_area .pager a{	display: block;	width:14px; height:14px; margin:0 auto; border-radius:14px;	margin-bottom: 17px; text-indent:-9999px; background: #bdb8b6; transition: all .9s ease;}
+.nav_area .pager a.selected,.nav_area .pager a:hover{background: #b6966c;}
+.scroll-down{display: block;	text-align: center;	padding-right: 12px; margin-top: 44px; cursor: pointer;-webkit-box-sizing: border-box;	-moz-box-sizing: border-box; box-sizing: border-box;}
+.bx-wrapper .bx-viewport{background: transparent;	box-shadow: none;border: none;	left: 0;}
+
+.laundry-bg {background: url(/Hotel28NewCMS_common/images/homepage/activities/laundry-bg.jpg) center center no-repeat; background-size: cover!important;}
+
+.frame_wrap{ float:left;	width: 1040px; height: 600px;overflow: hidden;	-webkit-box-sizing: border-box;	-moz-box-sizing: border-box;box-sizing: border-box;}
+.frame > li{ padding-top: 150px; padding-left: 104px;	width: 100%;height: 600px;	position: relative;	-webkit-box-sizing: border-box;	-moz-box-sizing: border-box; box-sizing: border-box;}
+.frame > li > *{ position: relative;}
+.frame .fade01{	font-size: 30px;	color: #FFF;	font-weight: 500;}
+.frame .fade02{	display: inline-block;	padding:20px 19px 20px 0; font-size: 52px;	letter-spacing: 2px;	font-weight: 500;	color: #b6966c;	border-bottom: 2px solid #b6966c;	text-transform: uppercase;}
+.frame .fade03{	font-family: 'Noto Sans KR', sans-serif;	color: #FFF;	font-size: 16px;	letter-spacing: .1px;	padding-top: 27px;	line-height: 1.7;}
+.frame .fade04{	position: absolute;	right:197px;	top:177px;}
+.frame .fade05{	display: table;	background: transparent;	color: #b6966c;	width: 243px; height: 56px;	margin-left: 2px;	margin-top: 49px;	border:2px solid #b6966c;	-webkit-box-sizing: border-box;	-moz-box-sizing: border-box;box-sizing: border-box;	transition: background-color .2s ease-in-out, opacity 1s ease-in-out;}
+.frame .fade05.hide{opacity:0;}
+.frame .fade05 > a{	display: table-cell; width:100%; height:100%; vertical-align: middle; text-align: center;background-image: url(/Hotel28NewCMS_common/images/homepage/main-btn-arrow-normal.png); background-position: 195px 50%;	background-repeat: no-repeat; font-size: 21px;	padding-right: 17px; letter-spacing: 1px; -webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;}
+.frame .fade05:hover{	color: #FFF; background: #b6966c;}
+.frame .fade05:hover a{	background-image: url(/Hotel28NewCMS_common/images/homepage/main-btn-arrow.png);}
+.area02 h3{width:620px;}
+.area02 .fade04{top:210px;}
+.area04 h3{width:400px;}
+.area04 .fade04{top:210px;}
+#social{ width: 100%; height: 563px; padding-top: 45px;	margin: 0 auto;	background-image: url(/Hotel28NewCMS_common/images/homepage/social-bg.png);	background-repeat: repeat-x; -webkit-box-sizing: border-box;	-moz-box-sizing: border-box; box-sizing: border-box;}
+.social_wrap{width:1240px;	margin:0 auto;	padding:0 20px;	-webkit-box-sizing: border-box;	-moz-box-sizing: border-box;	box-sizing: border-box;}
+.social_wrap h2{font-size: 25px;	color: #FFF;	font-weight: 400;	letter-spacing: -.6px;	padding-bottom: 13px;	border-bottom: 1px solid #b6966c;	margin-bottom: 23px;}
+.social_wrap h2 span{font-style: italic;margin-left: 5px;color: #b6966c;}
+.social_wrap:after{	content:'';clear: both;display: block;}
+.social_wrap > div h3{	color: #b6966c;	font-weight: 400;font-size: 21px;margin-bottom: 20px;}
+.facebook{	width: 500px;margin-right: 55px;	float:left;	-webkit-box-sizing: border-box;	-moz-box-sizing: border-box;box-sizing: border-box;}
+.facebook > div{border:1px solid #3e3c3c;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;}
+.instagram{	width: 645px;float: left;position: relative;}
+.instagram .more{position: absolute;top:3px;right:7px;	color: #FFF;font-size: 20px;}
+.instagram-page:after{	content: '';clear: both;display: block;}
+.instagram-page > a{display: block;	width: 181px; height: 181px;float:left;	overflow: hidden;	border:1px solid #4c4c4c;margin-left: 50px;margin-bottom: 21px;	transition: border-color .3s ease-in-out;	-webkit-box-sizing: border-box;	-moz-box-sizing: border-box;box-sizing: border-box;}
+.instagram-page > a:nth-child(3n-2){margin-left: 0;}
+.instagram-page > a:nth-child(n+4){	margin-bottom: 0;}
+.instagram-page > a:hover{	border-color: #756248;}
+.instagram-page > a img{max-width: 100%;	width: 100%; height: 100%;	transition: all .7s ease-in;}
+.instagram-page > a:hover img{	transform:scale(1.15);	opacity: .8;}
+footer{	background: #181818; padding-bottom: 30px;}
+#footer_wrap{ width: 1200px; padding-top: 50px;	margin: 0 auto;	color: #FFF;}
+#footer_wrap .footer_top ul {height: 52px;}
+.footer_top{ /* padding-bottom: 15px; */ border-bottom: 1px solid #b6966c;}
+.footer_top:after{ content:'';clear: both;display: block;}
+.footer_top li{	color: #b6966c;	font-size: 17px;	float: left;	margin-right: 79px;	padding:17px 0;}
+.footer_top li.footer-title{ color: #8e8f90; margin-right: 23px; font-weight: bold;line-height: 14px;}
+.footer_top li.weather{	padding:0;}
+.footer_top li.weather img{	vertical-align: middle;	height:45px;}
+.weather span{	font-size: 12px;	margin-left: 9px; font-weight: bold; position: relative; top: 3px;}
+.weather span.degree{ font-size: 16px; font-weight: bold; margin-left: 14px;}
+.footer_top .sns{ position: absolute;	top:0px; right:0;}
+.footer_top .sns a{margin-left: 21px;	opacity:.8;}
+.footer_top .sns a:hover{opacity: 1;}
+.weather_info{ display: inline-block; overflow:hidden;width:285px; position: relative;top: -10px;}
+.weather_info .ico img{width:45px;height:45px}
+.weather_info .temp_alt{position:absolute;top:10px;left:50px;font-size:18px;font-weight:bold;color: #b6966c;}
+.weather_info .today{position:absolute;top: 12px;left:92px;font-size:14px;color: #b6966c;}
+.weather_info .today span{display:inline-block;font-size:14px;color: #b6966c; margin:0 0 0 8px;}
+.footer_bot{	position: relative;	padding-top: 36px;	color: #8e8f90;}
+.footer_bot:after{	content:'';clear: both;display: block;}
+.info ul:after{	content:'';clear: both;display: block;}
+.info li{	float:left;	font-size: 14px;	letter-spacing: -1px;	position: relative;}
+.info li a{	display: block;	padding:0 13px;}
+.info li a strong{font-weight:bold;}
+.info li:nth-child(1) a{ padding-left: 0; }
+.info li:after{	content:'';	width:1px; height:13px; background: #8e8f90;	position: absolute;	left:0;top:0;}
+.info li:nth-child(1):after{ content:none;}
+address{ margin-top: 20px;	font-size: 14px; line-height: 1.5;}
+.copyright{	margin-top: 22px; font-size: 14px;}
+.family-site{	width: 187px; height: 38px;	background: #231f20; position: absolute;	right: 0; top: 33px;display:table;}
+.family-site p{	display:table-cell;	vertical-align: middle;	text-align: left;	padding-left: 20px;	background-image: url(/Hotel28NewCMS_common/images/homepage/select_bg.png);	background-repeat: no-repeat; background-position: 95% 50%;}
+.family-site ul{ width:100%; display: none;	position: absolute;	top: 38px; left: 0;}
+.family-site:hover ul{ 	display: block;}
+.family-site ul li{	background: #000;}
+.family-site ul li a{	display: block;	padding:10px 0 5px 20px;}
+.family-site ul li a:hover{	background: #333;}
+
+div.readyTxt{ position: relative;top:92px; font-size: 20px; color: #fff; text-align: center;line-height: 24px;}
+div.readyTxt h4{font-size : 30px; text-align: center; margin: 0 0 25px;}
+
+
+/* title_logo  */
+.board .rtitle span.partner_logo {padding-left:30px;}
+.board .rtitle span.partner_logo img {width: 70%;}
+.board .rtitle span.partner_logo.partner_logo_img img {width: 30%;}
+.room_container h3.gold span.partner_logo img {width: 10%; padding-left: 30px;}
+.board .rtxt.eng_rtxt {margin-top: 10px;}
+/* --------------------------------------------
+ * Layer Popup
+/* ------------------------------------------ */
+div.pop_wrap{display:none;position:absolute;z-index:99999;width:650px;border:8px solid #ae8e6e;background-color:#fff;overflow:hidden}
+div.pop_wrap.w700{width:700px}
+div.pop_wrap.w800{width:800px}
+div.pop_wrap.w1200{width:1200px}
+div.pop_wrap .pop_header{position:relative;padding:0 12px;background-color:#ae8e6e}
+div.pop_wrap .pop_header h3{height:60px;line-height:58px;font-size:18px;color:#fff}
+div.pop_wrap .pop_header a.btn_pop_close{display:block;position:absolute;top:13px;right:20px;width:28px;height:27px;background:url(/Hotel28NewCMS_common/images/homepage/common/ico_pop_close.png) no-repeat;text-indent:-9999px}
+div.pop_wrap .pop_content{position:relative;padding:15px}
+div.pop_wrap .pop_content .drawings{position:relative;margin:-15px}
+div.pop_wrap .pop_content .drawings .bx-viewport{height:400px!important}
+div.pop_wrap .pop_content .drawings .drawings_slider .item{width:700px!important}
+div.pop_wrap .pop_content .drawings .bx-controls-direction a{position:absolute;top:50%;width:30px;height:27px;margin-top:-14px;background:url(/Hotel28NewCMS_common/images/homepage/accommodation/spr_slider.png) 0 0 no-repeat;text-indent:-9999px}
+div.pop_wrap .pop_content .drawings .bx-controls-direction a.bx-prev{left:10px;background-position:0 0}
+div.pop_wrap .pop_content .drawings .bx-controls-direction a.bx-next{right:10px;background-position:-35px 0}
+div.pop_wrap .pop_content .drawings .bx-pager{position:absolute;bottom:10px;width:100%;text-align:center}
+div.pop_wrap .pop_content .drawings .bx-pager .bx-pager-item{display:inline-block}
+div.pop_wrap .pop_content .drawings .bx-pager .bx-pager-item a{display:inline-block;width:50px;height:5px;margin:0 2px;background-color:#ddd;text-indent:-9999px}
+div.pop_wrap .pop_content .drawings .bx-pager .bx-pager-item a.active{background-color:#ae8e6e}
+div.pop_wrap .pop_content .terms_sroller{height:450px;overflow-x:hidden;overflow-y:auto}
+div.pop_wrap .pop_content .email{padding:5px}
+div.pop_wrap .pop_content .email p.email{line-height:20px}
+div.pop_wrap .pop_content .price_detail .item{margin-top:20px}
+div.pop_wrap .pop_content .price_detail .item h4{padding-left:14px;background:url(/Hotel28NewCMS_common/images/homepage/common/bullet1.gif) 0 2px no-repeat;font-size:16px}
+div.pop_wrap .pop_content .price_detail .item .list_table table thead th{padding:10px 0 14px;font-size:14px}
+div.pop_wrap .pop_content .price_detail .item .list_table table tbody td{padding:10px 0 14px;font-size:14px}
+div.pop_wrap .pop_content .alert{padding:50px 0;letter-spacing:-0.5px}
+div.pop_wrap .pop_content .alert p.txt1{line-height:28px;padding:20px 0;font-size:30px;text-align:center}
+div.pop_wrap .pop_content .alert p.txt2{line-height:22px;margin-top:20px;padding-top:20px;border-top:1px dotted #c7c7c7;font-size:16px;font-weight:bold;color:#474747}
+div.pop_wrap .pop_content .alert p.txt3{line-height:18px;margin-top:5px;font-size:12px;color:#474747}
+div.pop_wrap .pop_content .search{padding:30px 0;text-align:center}
+div.pop_wrap .pop_content .search label{display:inline-block;padding-right:8px;font-weight:bold;vertical-align:middle}
+div.pop_wrap .pop_content .search input{width:160px}
+div.pop_wrap .pop_content p.search_result{margin-top:20px;padding:20px 0;border-top:1px dotted #c7c7c7;text-align:center}
+div.pop_wrap .pop_content p.search_result strong{color:#ae5757}
+div.pop_wrap .pop_content .findIDPW{padding:15px;letter-spacing:-0.5px}
+div.pop_wrap .pop_content .findIDPW p.txt1{line-height:22px;font-weight:bold;font-size:14px;color:#525252;text-align:center}
+div.pop_wrap .pop_content .findIDPW p.txt2{line-height:18px;font-weight:bold;text-align:center}
+div.pop_wrap .pop_content .joinComplete{padding:65px 15px 15px}
+div.pop_wrap .pop_content .joinComplete p.txt1{line-height:45px;font-size:30px;text-align:center}
+div.pop_wrap .pop_content .joinComplete p.txt2{line-height:22px;margin-top:15px;font-size:18px;color:#525252;text-align:center}
+div.pop_wrap .pop_content .joinComplete p.txt3{line-height:18px;font-weight:bold;text-align:center}
+div.pop_wrap .pop_content > .btn_set > a.grey, div.pop_wrap .pop_content > .btn_set > a.brown{display:none}
+div.pop_wrap .pop_content .information{height:385px;margin-top:0}
+div.pop_wrap .pop_content .information .info_list .scroller{height:265px}
+div.pop_wrap .pop_content .information .visualSlider .slider .item img{width:100%}
+div.pop_wrap .pop_content .btn_set{margin-top:25px}
+div.pop_wrap .pop_content .info_use{margin-top:25px}
+div.pop_wrap .pop_content .info_use ul{padding:15px 0}
+div.pop_wrap .pop_content .info_use ul li{padding:5px 80px}
+div.pop_wrap .pop_footer{margin:0 20px;padding:30px 0 35px;border-top:1px solid #e3e3e3}
+div.pop_wrap .pop_footer .btn_set{margin-top:0;text-align:center}
+div.pop_wrap .pop_footer p.guide{line-height:22px;padding-left:12px;background:url(/Hotel28NewCMS_common/images/homepage/common/bullet2.gif) 0 8px no-repeat;color:#767676}
+div.pop_wrap .pop_footer ul.guide{margin-top:-10px}
+div.pop_wrap .pop_footer ul.guide li{line-height:22px;margin-top:10px;padding-left:12px;background:url(/Hotel28NewCMS_common/images/homepage/common/bullet2.gif) 0 8px no-repeat;color:#767676}
+div.pop_wrap .pop_footer .total{padding:20px 0;background-color:#565656;font-size:18px;text-align:center}
+div.pop_wrap .pop_footer .total label{padding-right:10px;color:#c4c4c4}
+div.pop_wrap .pop_footer .total strong{color:#fff}
+div.pop_wrap .pop_footer .total strong span{font-size:15px}
+div.pop_wrap .btn_set .btn{width:auto;padding:0 25px}
+
+div.popup_rsvn {display:none;position:absolute;width:960px;height:700px;border:8px solid #fff;background:#fff url(/Hotel28NewCMS_common/images/homepage/common/loading.gif) 50% 50% no-repeat;z-index:99999;}
+div.popup_rsvn a.btn_pop_close {position:absolute;top:5px;right:-52px;display:block;width:30px;height:30px;background:url(/rsvnPopup_common/images/homepage/KOR/common/ico_rsvn_pop_close.png) 0 0 no-repeat;text-indent:-9999px}
+
+/* --------------------------------------------
+ * Privacy
+/* ------------------------------------------ */
+div.privacy{font-size:13px;}
+div.privacy .privacy_header h2{font-size:13px;font-weight:400}
+div.privacy .privacy_header p{margin-top:15px;line-height:20px}
+div.privacy .privacy_header ol{margin-top:15px;zoom:1}
+div.privacy .privacy_header ol:after{content:'';display:block;clear:both}
+div.privacy .privacy_header ol li{float:left;width:50%}
+div.privacy .privacy_header ol li a{display:block;padding:8px 0;font-weight:bold;color:#000;text-decoration:none}
+div.privacy .privacy_content{margin-top:25px;border-top:1px dotted #ddd;font-size:13px;}
+div.privacy .privacy_content .item{margin-top:25px}
+div.privacy .privacy_content .item h3{font-size:14px;font-weight:bold}
+div.privacy .privacy_content .item > p{line-height:18px;margin:15px 0 0 20px}
+div.privacy .privacy_content .item ol li.bullet{position:relative;padding-left:10px;margin-top:10px}
+div.privacy .privacy_content .item ol li.bullet > span{display:block;position:absolute;top:9px;left:0;width:4px;height:1px;background-color:#999}
+div.privacy .privacy_content .item > ol{margin-left:20px}
+div.privacy .privacy_content .item > ol > li{line-height:18px;margin-top:15px}
+div.privacy .privacy_content .item > ol > li > p{margin:15px 0 0 20px}
+div.privacy .privacy_content .item > ol > li > strong{font-size:12px}
+div.privacy .privacy_content .item > ol > li > ol{margin-left:23px}
+div.privacy .privacy_content .item > ol > li > ol > li{line-height:18px;margin-top:10px}
+div.privacy .privacy_content .item > ol > li > ol > li > ol > li{margin-top:5px}
+div.privacy .privacy_content .item > ol > li > ol > li > ol > li > ol > li{margin-top:5px}
+div.privacy .privacy_content .item table{width:100%;margin-top:15px;border-spacing:0;border-width:1px 0 0 1px;border-style:solid;border-color:#ccc}
+div.privacy .privacy_content .item table caption{visibility:hidden;overflow:hidden;position:absolute;top:0;left:0;width:0;height:0;font-size:0;line-height:0}
+div.privacy .privacy_content .item table thead th{padding:5px 10px;border-width:0 1px 1px 0;border-style:solid;border-color:#ccc;background-color:#f7f7f7;font-weight:400;text-align:center}
+div.privacy .privacy_content .item table tbody th{padding:5px 10px;border-width:0 1px 1px 0;border-style:solid;border-color:#ccc;background-color:#fff;font-weight:400;text-align:left}
+div.privacy .privacy_content .item table tbody td{padding:5px 10px;border-width:0 1px 1px 0;border-style:solid;border-color:#ccc;background-color:#fff;text-align:left}
+
+/* --------------------------------------------
+ * Button
+/* ------------------------------------------ */
+div.btn_set{position:relative;margin-top:30px;text-align:center}
+a.btn{display:inline-block;width:278px;height:52px;line-height:52px;margin:0 10px;border:1px solid #b6966c;font-size:18px;color:#b6966c;text-align:center;transition:all 0.3s ease-in-out}
+a.btn:hover, a.btn:focus{background-color:#b6966c;color:#fff}
+a.btn.book{background-color:#b6966c;color:#fff}
+a.btn.book span{display:inline-block;height:52px;line-height:52px;padding-right:30px;background:url(/Hotel28NewCMS_common/images/homepage/offers/ico_book_arrow.png) 100% 50% no-repeat}
+a.btn.book:hover, a.btn.book:focus{border-color:#967344;background-color:#967344}
+a.btn_inner{display:inline-block;height:39px;line-height:39px;margin:0 5px;padding:0 25px;border-width:1px;border-style:solid;border-color:#797979;background-color:#797979;color:#fff;font-size:14px;vertical-align:middle;text-align:center;text-transform:uppercase}
+/* --------------------------------------------
