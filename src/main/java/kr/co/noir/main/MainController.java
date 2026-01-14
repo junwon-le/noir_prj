@@ -11,6 +11,11 @@ public class MainController {
 		return "/main";
 	}
 	
+	@GetMapping("/adminLogin")
+	public String adminLogin() {
+		return "manager/main/adminLogin";
+	}
+	
 	@GetMapping("/admin")
 	public String admin() {
 		return "admin_main/adminMain";

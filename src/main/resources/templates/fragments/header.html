@@ -6,16 +6,21 @@
  <div id="header_wrap">
 		<nav class="top_nav" style="height:50px">
 			<ul>
-	 			
-				<li><a href="#popIframe" class="open_modal" url="/view/login.do" style="color:white; text-decoration: none">LOGIN</a></li>
-				<li><a href="#popIframe" class="open_modal" url="/view/join_01.do"  style="color:white; text-decoration: none">JOIN</a></li>
-
+				    <li th:if="${session.loginMember == null and session.admin == null}">
+				        <a href="#popIframe" class="open_modal" url="/view/login.do" style="color:white; text-decoration: none">LOGIN</a>
+				    </li>
+				
+				    <li th:if="${session.loginMember != null or session.admin != null}">
+				        <a href="/logout.do" style="color:white; text-decoration: none">LOGOUT</a>
+				    </li>
+				
+				    <li th:if="${session.loginMember == null}">
+				        <a href="#popIframe" class="open_modal" url="/view/join_01.do" style="color:white; text-decoration: none">JOIN</a>
+				    </li>
+				
 				<!-- <li>
 					LANGUAGE : <a href="#" class="langChange" data-lang="KOR">KOR</a> / <a href="#" class="langChange" data-lang="ENG">ENG</a> / <a href="#" class="langChange" data-lang="JPN">JPN</a> / <a href="#" class="langChange" data-lang="CHN">CHN</a>
-					
-					
 				</li> -->
-				
 			</ul>
 		</nav>
 		<div>
