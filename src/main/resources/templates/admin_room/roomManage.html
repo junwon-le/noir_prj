@@ -1,0 +1,834 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>NOIR호텔 관리자 페이지</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Google Fonts
+		============================================ -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900" rel="stylesheet">
+    <!-- Bootstrap CSS
+		============================================ -->
+    <link rel="stylesheet" href="/admin_common/css/bootstrap.min.css">
+    <!-- Bootstrap CSS
+		============================================ -->
+    <link rel="stylesheet" href="/admin_common/css/font-awesome.min.css">
+	<!-- nalika Icon CSS
+		============================================ -->
+    <link rel="stylesheet" href="/admin_common/css/nalika-icon.css">
+    <!-- owl.carousel CSS
+		============================================ -->
+    <link rel="stylesheet" href="/admin_common/css/owl.carousel.css">
+    <link rel="stylesheet" href="/admin_common/css/owl.theme.css">
+    <link rel="stylesheet" href="/admin_common/css/owl.transitions.css">
+    <!-- animate CSS
+		============================================ -->
+    <link rel="stylesheet" href="/admin_common/css/animate.css">
+    <!-- normalize CSS
+		============================================ -->
+    <link rel="stylesheet" href="/admin_common/css/normalize.css">
+    <!-- meanmenu icon CSS
+		============================================ -->
+    <link rel="stylesheet" href="/admin_common/css/meanmenu.min.css">
+    <!-- main CSS
+		============================================ -->
+    <link rel="stylesheet" href="/admin_common/css/main.css">
+    <!-- morrisjs CSS
+		============================================ -->
+    <link rel="stylesheet" href="/admin_common/css/morrisjs/morris.css">
+    <!-- mCustomScrollbar CSS
+		============================================ -->
+    <link rel="stylesheet" href="/admin_common/css/scrollbar/jquery.mCustomScrollbar.min.css">
+    <!-- metisMenu CSS
+		============================================ -->
+    <link rel="stylesheet" href="/admin_common/css/metisMenu/metisMenu.min.css">
+    <link rel="stylesheet" href="/admin_common/css/metisMenu/metisMenu-vertical.css">
+
+    <link rel="stylesheet" href="/admin_common/style.css">
+    <!-- responsive CSS
+		============================================ -->
+    <link rel="stylesheet" href="/admin_common/css/responsive.css">
+    <!-- jquery
+		============================================ -->
+    <script src="/admin_common/js/vendor/jquery-1.12.4.min.js"></script>
+    <!-- bootstrap JS
+		============================================ -->
+    <script src="/admin_common/js/bootstrap.min.js"></script>
+    <!-- wow JS
+		============================================ -->
+    <script src="/admin_common/js/wow.min.js"></script>
+    <!-- price-slider JS
+		============================================ -->
+    <script src="/admin_common/js/jquery-price-slider.js"></script>
+    <!-- meanmenu JS
+		============================================ -->
+    <script src="/admin_common/js/jquery.meanmenu.js"></script>
+    <!-- owl.carousel JS
+		============================================ -->
+    <script src="/admin_common/js/owl.carousel.min.js"></script>
+    <!-- sticky JS
+		============================================ -->
+    <script src="/admin_common/js/jquery.sticky.js"></script>
+    
+    <!-- mCustomScrollbar JS
+		============================================ -->
+    <script src="/admin_common/js/scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="/admin_common/js/scrollbar/mCustomScrollbar-active.js"></script>
+    <!-- metisMenu JS
+		============================================ -->
+    <script src="/admin_common/js/metisMenu/metisMenu.min.js"></script>
+    <script src="/admin_common/js/metisMenu/metisMenu-active.js"></script>
+    <!-- sparkline JS
+		============================================ -->
+    <script src="/admin_common/js/sparkline/jquery.sparkline.min.js"></script>
+    <script src="/admin_common/js/sparkline/jquery.charts-sparkline.js"></script>
+    <!-- calendar JS
+		============================================ -->
+    <script src="/admin_common/js/calendar/moment.min.js"></script>
+    <script src="/admin_common/js/calendar/fullcalendar.min.js"></script>
+    <script src="/admin_common/js/calendar/fullcalendar-active.js"></script>
+	<!-- float JS
+		============================================ -->
+    <script src="/admin_common/js/flot/jquery.flot.js"></script>
+    <script src="/admin_common/js/flot/jquery.flot.resize.js"></script>
+    <script src="/admin_common/js/flot/curvedLines.js"></script>
+    <script src="/admin_common/js/flot/flot-active.js"></script>
+    <!-- plugins JS
+		============================================ -->
+    <script src="/admin_common/js/plugins.js"></script>
+    <!-- main JS
+		============================================ -->
+    <script src="/admin_common/js/main.js"></script>
+    
+<script>
+	$(function () {
+    	const today = new Date().toISOString().slice(0, 10);
+    	$('#dateInput').val(today);
+    	
+     	$('#dateInput').change(function(){
+
+    		
+    		var date = $('#dateInput').val();
+    		if(date==""){
+    			alert("날짜를 선택해주세요(미선택시 오늘 날짜로 처리됩니다.)");
+    			$('#dateInput').val(today);
+    		}else{
+    			$('#dateInput').val(date);
+    		}
+    		
+    		location.href="roomManage.jsp?date="+date;
+    		
+    	}); 
+    		
+    	
+	});
+	
+</script>
+    
+</head>
+
+<body>
+    <!--[if lt IE 8]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+	<div th:replace="~{admin_fragments/sidebar :: sidebar}"></div>  
+    <!-- Start Welcome area -->
+    <div class="all-content-wrapper">
+        <div class="header-advance-area">
+            <div class="breadcome-area">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="breadcome-list">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                        <div class="breadcomb-wp" style="color:#ffffff; font-size: 20px">
+											객실 관리
+										</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="contatiner" style="height:2450px; color:#ffffff">
+        <div>
+        	<div style="margin-right:60px; display:flex; justify-content:flex-end; margin-bottom:20px">        		
+        		<input id="dateInput" type="date" class="form-control" style="width:200px; background-color: white; color:#000000">        		
+        	</div>
+			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="display:flex" >
+				<div style="height:408px; width:40%; margin-top:30px; margin-left:40px">
+					<img src="/admin_common/img/room/bg01.jpg" style="height: 100%; width: 100%; object-fit: cover;">
+				</div>
+				<div>
+                   <div class="breadcome-list" style="margin-left:20px; width:900px">
+                       	<div class="row">
+                        	<div style="
+							    display: flex; 
+							    background-color: #ffffff; 
+							    padding: 15px 20px; 
+							    border-radius: 15px; 
+							    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+							    max-width: 750px; 
+							    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+							    color: #222222;
+							    gap: 30px;
+							    margin-left : 70px;
+							">
+							
+							  <!-- 좌측 정보 영역 -->
+							  <div style="flex: 1; margin-left:15px">
+							    <h2 style="font-weight:700; font-size: 24px; margin-bottom: 15px; color: #2a3a6b;">
+							      STANDARD QUEEN
+							    </h2>
+							
+							    <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px;">
+							      <div style="flex: 1 1 150px; background: #f0f4ff; border-radius: 10px; padding: 10px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.1);">
+							        <h4 style="margin:0 0 5px; color:#2a3a6b; font-weight:600; font-size:14px;">면적</h4>
+							        <p style="margin:0; font-size:14px; font-weight:500;">68㎡</p>
+							      </div>
+							
+							      <div style="flex: 1 1 150px; background: #f0f4ff; border-radius: 10px; padding: 10px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.1);">
+							        <h4 style="margin:0 0 5px; color:#2a3a6b; font-weight:600; font-size:14px;">베드 타입</h4>
+							        <p style="margin:0; font-size:14px; font-weight:500;">KING</p>
+							      </div>
+							
+							      <div style="flex: 1 1 150px; background: #f0f4ff; border-radius: 10px; padding: 10px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.1);">
+							        <h4 style="margin:0 0 5px; color:#2a3a6b; font-weight:600; font-size:14px;">최대 인원</h4>
+							        <p style="margin:0; font-size:14px; font-weight:500;">2명</p>
+							      </div>
+							
+							      <div style="flex: 1 1 150px; background: #f0f4ff; border-radius: 10px; padding: 10px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.1);">
+							        <h4 style="margin:0 0 5px; color:#2a3a6b; font-weight:600; font-size:14px;">체크인 시간</h4>
+							        <p style="margin:0; font-size:14px; font-weight:500;">03:00 PM</p>
+							      </div>
+							
+							      <div style="flex: 1 1 150px; background: #f0f4ff; border-radius: 10px; padding: 10px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.1);">
+							        <h4 style="margin:0 0 5px; color:#2a3a6b; font-weight:600; font-size:14px;">체크아웃 시간</h4>
+							        <p style="margin:0; font-size:14px; font-weight:500;">11:00 AM</p>
+							      </div>
+							    </div>
+							
+							    <div style="display: flex; gap: 20px; margin-bottom: 20px;">
+							      <div style="flex: 1; background: #f9faff; padding: 12px; border-radius: 12px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.05); text-align: center;">
+							        <h4 style="margin-bottom: 8px; color: #2a3a6b; font-weight: 600; font-size: 14px;">객실 서비스 제공 수</h4>
+							        <p style="font-size: 16px; font-weight: 700; margin: 0;">20</p>
+							      </div>
+							      <div style="flex: 1; background: #f9faff; padding: 12px; border-radius: 12px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.05); text-align: center;">
+							        <h4 style="margin-bottom: 8px; color: #2a3a6b; font-weight: 600; font-size: 14px;">어매니티 제공 수</h4>
+							        <p style="font-size: 16px; font-weight: 700; margin: 0;">5</p>
+							      </div>
+							    </div>
+							
+							    <div style="display: flex; gap: 30px;">
+							      <div>
+							        <h3 style="margin: 0 0 5px; color: #7495CC; font-weight: 700; font-size: 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+							          오늘 가격
+							        </h3>
+							        <p style="font-size: 20px; font-weight: 700; color: #111111; margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+							          230,000원
+							        </p>
+							      </div>
+							
+							      <div>
+							        <h3 style="margin: 0 0 5px; color: #808080; font-weight: 700; font-size: 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+							          최근 7일 평균 가격
+							        </h3>
+							        <p style="font-size: 20px; font-weight: 700; color: #111111; margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+							          210,000원
+							        </p>
+							      </div>
+							    </div>
+							  </div>
+							
+							  <!-- 우측 버튼 영역 -->
+							  <div style="display: flex; flex-direction: column; gap: 15px; justify-content: center;">
+							    <button style="
+							      padding: 12px 25px; 
+							      border: none; 
+							      border-radius: 10px; 
+							      background-color: #7495CC; 
+							      color: white; 
+							      font-weight: 600; 
+							      cursor: pointer;
+							      font-size: 16px;
+							      box-shadow: 0 3px 8px rgba(58,117,255,0.5);
+							      transition: background-color 0.3s ease;
+							    " 
+							    onmouseover="this.style.backgroundColor='#6482FF';" 
+							    onmouseout="this.style.backgroundColor='#7495CC';">
+							      정보 수정
+							    </button>
+							    
+							    <button style="
+							      padding: 12px 25px; 
+							      border: 2px solid #7495CC; 
+							      border-radius: 10px; 
+							      background-color: white; 
+							      color: #7495CC; 
+							      font-weight: 600; 
+							      cursor: pointer;
+							      font-size: 16px;
+							      box-shadow: 0 3px 8px rgba(58,117,255,0.2);
+							      transition: background-color 0.3s ease, color 0.3s ease;
+							    " 
+							    onmouseover="this.style.backgroundColor='#7495CC'; this.style.color='white';" 
+							    onmouseout="this.style.backgroundColor='white'; this.style.color='#7495CC';">
+							      가격 설정
+							    </button>
+							  </div>
+							
+							</div>
+                        	
+
+                   		</div>
+                	</div>
+           		</div>
+        
+        	</div>  
+        </div>
+		<div>
+			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="display:flex" >
+				<div style="height:408px; width:40%; margin-top:30px; margin-left:40px">
+					<img src="/admin_common/img/room/bg01.jpg" style="height: 100%; width: 100%; object-fit: cover;">
+				</div>
+				<div>
+                   <div class="breadcome-list" style="margin-left:20px; width:900px">
+                       	<div class="row">
+                        	<div style="
+							    display: flex; 
+							    background-color: #ffffff; 
+							    padding: 15px 20px; 
+							    border-radius: 15px; 
+							    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+							    max-width: 750px; 
+							    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+							    color: #222222;
+							    gap: 30px;
+							    margin-left : 70px;
+							">
+							
+							  <!-- 좌측 정보 영역 -->
+							  <div style="flex: 1; margin-left:15px">
+							    <h2 style="font-weight:700; font-size: 24px; margin-bottom: 15px; color: #2a3a6b;">
+							      SEMI-DELUXE DOUBLE
+							    </h2>
+							
+							    <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px;">
+							      <div style="flex: 1 1 150px; background: #f0f4ff; border-radius: 10px; padding: 10px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.1);">
+							        <h4 style="margin:0 0 5px; color:#2a3a6b; font-weight:600; font-size:14px;">면적</h4>
+							        <p style="margin:0; font-size:14px; font-weight:500;">68㎡</p>
+							      </div>
+							
+							      <div style="flex: 1 1 150px; background: #f0f4ff; border-radius: 10px; padding: 10px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.1);">
+							        <h4 style="margin:0 0 5px; color:#2a3a6b; font-weight:600; font-size:14px;">베드 타입</h4>
+							        <p style="margin:0; font-size:14px; font-weight:500;">KING</p>
+							      </div>
+							
+							      <div style="flex: 1 1 150px; background: #f0f4ff; border-radius: 10px; padding: 10px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.1);">
+							        <h4 style="margin:0 0 5px; color:#2a3a6b; font-weight:600; font-size:14px;">최대 인원</h4>
+							        <p style="margin:0; font-size:14px; font-weight:500;">2명</p>
+							      </div>
+							
+							      <div style="flex: 1 1 150px; background: #f0f4ff; border-radius: 10px; padding: 10px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.1);">
+							        <h4 style="margin:0 0 5px; color:#2a3a6b; font-weight:600; font-size:14px;">체크인 시간</h4>
+							        <p style="margin:0; font-size:14px; font-weight:500;">03:00 PM</p>
+							      </div>
+							
+							      <div style="flex: 1 1 150px; background: #f0f4ff; border-radius: 10px; padding: 10px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.1);">
+							        <h4 style="margin:0 0 5px; color:#2a3a6b; font-weight:600; font-size:14px;">체크아웃 시간</h4>
+							        <p style="margin:0; font-size:14px; font-weight:500;">11:00 AM</p>
+							      </div>
+							    </div>
+							
+							    <div style="display: flex; gap: 20px; margin-bottom: 20px;">
+							      <div style="flex: 1; background: #f9faff; padding: 12px; border-radius: 12px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.05); text-align: center;">
+							        <h4 style="margin-bottom: 8px; color: #2a3a6b; font-weight: 600; font-size: 14px;">객실 서비스 제공 수</h4>
+							        <p style="font-size: 16px; font-weight: 700; margin: 0;">20</p>
+							      </div>
+							      <div style="flex: 1; background: #f9faff; padding: 12px; border-radius: 12px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.05); text-align: center;">
+							        <h4 style="margin-bottom: 8px; color: #2a3a6b; font-weight: 600; font-size: 14px;">어매니티 제공 수</h4>
+							        <p style="font-size: 16px; font-weight: 700; margin: 0;">5</p>
+							      </div>
+							    </div>
+							
+							    <div style="display: flex; gap: 30px;">
+							      <div>
+							        <h3 style="margin: 0 0 5px; color: #7495CC; font-weight: 700; font-size: 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+							          오늘 가격
+							        </h3>
+							        <p style="font-size: 20px; font-weight: 700; color: #111111; margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+							          230,000원
+							        </p>
+							      </div>
+							
+							      <div>
+							        <h3 style="margin: 0 0 5px; color: #808080; font-weight: 700; font-size: 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+							          최근 7일 평균 가격
+							        </h3>
+							        <p style="font-size: 20px; font-weight: 700; color: #111111; margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+							          210,000원
+							        </p>
+							      </div>
+							    </div>
+							  </div>
+							
+							  <!-- 우측 버튼 영역 -->
+							  <div style="display: flex; flex-direction: column; gap: 15px; justify-content: center;">
+							    <button style="
+							      padding: 12px 25px; 
+							      border: none; 
+							      border-radius: 10px; 
+							      background-color: #7495CC; 
+							      color: white; 
+							      font-weight: 600; 
+							      cursor: pointer;
+							      font-size: 16px;
+							      box-shadow: 0 3px 8px rgba(58,117,255,0.5);
+							      transition: background-color 0.3s ease;
+							    " 
+							    onmouseover="this.style.backgroundColor='#6482FF';" 
+							    onmouseout="this.style.backgroundColor='#7495CC';">
+							      정보 수정
+							    </button>
+							    
+							    <button style="
+							      padding: 12px 25px; 
+							      border: 2px solid #7495CC; 
+							      border-radius: 10px; 
+							      background-color: white; 
+							      color: #7495CC; 
+							      font-weight: 600; 
+							      cursor: pointer;
+							      font-size: 16px;
+							      box-shadow: 0 3px 8px rgba(58,117,255,0.2);
+							      transition: background-color 0.3s ease, color 0.3s ease;
+							    " 
+							    onmouseover="this.style.backgroundColor='#7495CC'; this.style.color='white';" 
+							    onmouseout="this.style.backgroundColor='white'; this.style.color='#7495CC';">
+							      가격 설정
+							    </button>
+							  </div>
+							
+							</div>
+                        	
+
+                   		</div>
+                	</div>
+           		</div>
+        
+        	</div>  
+        </div>        	      
+		<div>
+			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="display:flex" >
+				<div style="height:408px; width:40%; margin-top:30px; margin-left:40px">
+					<img src="/admin_common/img/room/bg01.jpg" style="height: 100%; width: 100%; object-fit: cover;">
+				</div>
+				<div>
+                   <div class="breadcome-list" style="margin-left:20px; width:900px">
+                       	<div class="row">
+                        	<div style="
+							    display: flex; 
+							    background-color: #ffffff; 
+							    padding: 15px 20px; 
+							    border-radius: 15px; 
+							    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+							    max-width: 750px; 
+							    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+							    color: #222222;
+							    gap: 30px;
+							    margin-left : 70px;
+							">
+							
+							  <!-- 좌측 정보 영역 -->
+							  <div style="flex: 1; margin-left:15px">
+							    <h2 style="font-weight:700; font-size: 24px; margin-bottom: 15px; color: #2a3a6b;">
+							      DELUXE DOUBLE
+							    </h2>
+							
+							    <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px;">
+							      <div style="flex: 1 1 150px; background: #f0f4ff; border-radius: 10px; padding: 10px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.1);">
+							        <h4 style="margin:0 0 5px; color:#2a3a6b; font-weight:600; font-size:14px;">면적</h4>
+							        <p style="margin:0; font-size:14px; font-weight:500;">68㎡</p>
+							      </div>
+							
+							      <div style="flex: 1 1 150px; background: #f0f4ff; border-radius: 10px; padding: 10px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.1);">
+							        <h4 style="margin:0 0 5px; color:#2a3a6b; font-weight:600; font-size:14px;">베드 타입</h4>
+							        <p style="margin:0; font-size:14px; font-weight:500;">KING</p>
+							      </div>
+							
+							      <div style="flex: 1 1 150px; background: #f0f4ff; border-radius: 10px; padding: 10px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.1);">
+							        <h4 style="margin:0 0 5px; color:#2a3a6b; font-weight:600; font-size:14px;">최대 인원</h4>
+							        <p style="margin:0; font-size:14px; font-weight:500;">2명</p>
+							      </div>
+							
+							      <div style="flex: 1 1 150px; background: #f0f4ff; border-radius: 10px; padding: 10px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.1);">
+							        <h4 style="margin:0 0 5px; color:#2a3a6b; font-weight:600; font-size:14px;">체크인 시간</h4>
+							        <p style="margin:0; font-size:14px; font-weight:500;">03:00 PM</p>
+							      </div>
+							
+							      <div style="flex: 1 1 150px; background: #f0f4ff; border-radius: 10px; padding: 10px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.1);">
+							        <h4 style="margin:0 0 5px; color:#2a3a6b; font-weight:600; font-size:14px;">체크아웃 시간</h4>
+							        <p style="margin:0; font-size:14px; font-weight:500;">11:00 AM</p>
+							      </div>
+							    </div>
+							
+							    <div style="display: flex; gap: 20px; margin-bottom: 20px;">
+							      <div style="flex: 1; background: #f9faff; padding: 12px; border-radius: 12px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.05); text-align: center;">
+							        <h4 style="margin-bottom: 8px; color: #2a3a6b; font-weight: 600; font-size: 14px;">객실 서비스 제공 수</h4>
+							        <p style="font-size: 16px; font-weight: 700; margin: 0;">20</p>
+							      </div>
+							      <div style="flex: 1; background: #f9faff; padding: 12px; border-radius: 12px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.05); text-align: center;">
+							        <h4 style="margin-bottom: 8px; color: #2a3a6b; font-weight: 600; font-size: 14px;">어매니티 제공 수</h4>
+							        <p style="font-size: 16px; font-weight: 700; margin: 0;">5</p>
+							      </div>
+							    </div>
+							
+							    <div style="display: flex; gap: 30px;">
+							      <div>
+							        <h3 style="margin: 0 0 5px; color: #7495CC; font-weight: 700; font-size: 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+							          오늘 가격
+							        </h3>
+							        <p style="font-size: 20px; font-weight: 700; color: #111111; margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+							          230,000원
+							        </p>
+							      </div>
+							
+							      <div>
+							        <h3 style="margin: 0 0 5px; color: #808080; font-weight: 700; font-size: 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+							          최근 7일 평균 가격
+							        </h3>
+							        <p style="font-size: 20px; font-weight: 700; color: #111111; margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+							          210,000원
+							        </p>
+							      </div>
+							    </div>
+							  </div>
+							
+							  <!-- 우측 버튼 영역 -->
+							  <div style="display: flex; flex-direction: column; gap: 15px; justify-content: center;">
+							    <button style="
+							      padding: 12px 25px; 
+							      border: none; 
+							      border-radius: 10px; 
+							      background-color: #7495CC; 
+							      color: white; 
+							      font-weight: 600; 
+							      cursor: pointer;
+							      font-size: 16px;
+							      box-shadow: 0 3px 8px rgba(58,117,255,0.5);
+							      transition: background-color 0.3s ease;
+							    " 
+							    onmouseover="this.style.backgroundColor='#6482FF';" 
+							    onmouseout="this.style.backgroundColor='#7495CC';">
+							      정보 수정
+							    </button>
+							    
+							    <button style="
+							      padding: 12px 25px; 
+							      border: 2px solid #7495CC; 
+							      border-radius: 10px; 
+							      background-color: white; 
+							      color: #7495CC; 
+							      font-weight: 600; 
+							      cursor: pointer;
+							      font-size: 16px;
+							      box-shadow: 0 3px 8px rgba(58,117,255,0.2);
+							      transition: background-color 0.3s ease, color 0.3s ease;
+							    " 
+							    onmouseover="this.style.backgroundColor='#7495CC'; this.style.color='white';" 
+							    onmouseout="this.style.backgroundColor='white'; this.style.color='#7495CC';">
+							      가격 설정
+							    </button>
+							  </div>
+							
+							</div>
+                        	
+
+                   		</div>
+                	</div>
+           		</div>
+        
+        	</div>  
+        </div>        	      
+        <div>
+			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="display:flex" >
+				<div style="height:408px; width:40%; margin-top:30px; margin-left:40px">
+					<img src="/admin_common/img/room/bg01.jpg" style="height: 100%; width: 100%; object-fit: cover;">
+				</div>
+				<div>
+                   <div class="breadcome-list" style="margin-left:20px; width:900px">
+                       	<div class="row">
+                        	<div style="
+							    display: flex; 
+							    background-color: #ffffff; 
+							    padding: 15px 20px; 
+							    border-radius: 15px; 
+							    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+							    max-width: 750px; 
+							    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+							    color: #222222;
+							    gap: 30px;
+							    margin-left : 70px;
+							">
+							
+							  <!-- 좌측 정보 영역 -->
+							  <div style="flex: 1; margin-left:15px">
+							    <h2 style="font-weight:700; font-size: 24px; margin-bottom: 15px; color: #2a3a6b;">							      
+							      DELUXE TWIN
+							    </h2>
+							
+							    <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px;">
+							      <div style="flex: 1 1 150px; background: #f0f4ff; border-radius: 10px; padding: 10px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.1);">
+							        <h4 style="margin:0 0 5px; color:#2a3a6b; font-weight:600; font-size:14px;">면적</h4>
+							        <p style="margin:0; font-size:14px; font-weight:500;">68㎡</p>
+							      </div>
+							
+							      <div style="flex: 1 1 150px; background: #f0f4ff; border-radius: 10px; padding: 10px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.1);">
+							        <h4 style="margin:0 0 5px; color:#2a3a6b; font-weight:600; font-size:14px;">베드 타입</h4>
+							        <p style="margin:0; font-size:14px; font-weight:500;">KING</p>
+							      </div>
+							
+							      <div style="flex: 1 1 150px; background: #f0f4ff; border-radius: 10px; padding: 10px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.1);">
+							        <h4 style="margin:0 0 5px; color:#2a3a6b; font-weight:600; font-size:14px;">최대 인원</h4>
+							        <p style="margin:0; font-size:14px; font-weight:500;">2명</p>
+							      </div>
+							
+							      <div style="flex: 1 1 150px; background: #f0f4ff; border-radius: 10px; padding: 10px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.1);">
+							        <h4 style="margin:0 0 5px; color:#2a3a6b; font-weight:600; font-size:14px;">체크인 시간</h4>
+							        <p style="margin:0; font-size:14px; font-weight:500;">03:00 PM</p>
+							      </div>
+							
+							      <div style="flex: 1 1 150px; background: #f0f4ff; border-radius: 10px; padding: 10px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.1);">
+							        <h4 style="margin:0 0 5px; color:#2a3a6b; font-weight:600; font-size:14px;">체크아웃 시간</h4>
+							        <p style="margin:0; font-size:14px; font-weight:500;">11:00 AM</p>
+							      </div>
+							    </div>
+							
+							    <div style="display: flex; gap: 20px; margin-bottom: 20px;">
+							      <div style="flex: 1; background: #f9faff; padding: 12px; border-radius: 12px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.05); text-align: center;">
+							        <h4 style="margin-bottom: 8px; color: #2a3a6b; font-weight: 600; font-size: 14px;">객실 서비스 제공 수</h4>
+							        <p style="font-size: 16px; font-weight: 700; margin: 0;">20</p>
+							      </div>
+							      <div style="flex: 1; background: #f9faff; padding: 12px; border-radius: 12px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.05); text-align: center;">
+							        <h4 style="margin-bottom: 8px; color: #2a3a6b; font-weight: 600; font-size: 14px;">어매니티 제공 수</h4>
+							        <p style="font-size: 16px; font-weight: 700; margin: 0;">5</p>
+							      </div>
+							    </div>
+							
+							    <div style="display: flex; gap: 30px;">
+							      <div>
+							        <h3 style="margin: 0 0 5px; color: #7495CC; font-weight: 700; font-size: 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+							          오늘 가격
+							        </h3>
+							        <p style="font-size: 20px; font-weight: 700; color: #111111; margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+							          230,000원
+							        </p>
+							      </div>
+							
+							      <div>
+							        <h3 style="margin: 0 0 5px; color: #808080; font-weight: 700; font-size: 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+							          최근 7일 평균 가격
+							        </h3>
+							        <p style="font-size: 20px; font-weight: 700; color: #111111; margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+							          210,000원
+							        </p>
+							      </div>
+							    </div>
+							  </div>
+							
+							  <!-- 우측 버튼 영역 -->
+							  <div style="display: flex; flex-direction: column; gap: 15px; justify-content: center;">
+							    <button style="
+							      padding: 12px 25px; 
+							      border: none; 
+							      border-radius: 10px; 
+							      background-color: #7495CC; 
+							      color: white; 
+							      font-weight: 600; 
+							      cursor: pointer;
+							      font-size: 16px;
+							      box-shadow: 0 3px 8px rgba(58,117,255,0.5);
+							      transition: background-color 0.3s ease;
+							    " 
+							    onmouseover="this.style.backgroundColor='#6482FF';" 
+							    onmouseout="this.style.backgroundColor='#7495CC';">
+							      정보 수정
+							    </button>
+							    
+							    <button style="
+							      padding: 12px 25px; 
+							      border: 2px solid #7495CC; 
+							      border-radius: 10px; 
+							      background-color: white; 
+							      color: #7495CC; 
+							      font-weight: 600; 
+							      cursor: pointer;
+							      font-size: 16px;
+							      box-shadow: 0 3px 8px rgba(58,117,255,0.2);
+							      transition: background-color 0.3s ease, color 0.3s ease;
+							    " 
+							    onmouseover="this.style.backgroundColor='#7495CC'; this.style.color='white';" 
+							    onmouseout="this.style.backgroundColor='white'; this.style.color='#7495CC';">
+							      가격 설정
+							    </button>
+							  </div>
+							
+							</div>
+                        	
+
+                   		</div>
+                	</div>
+           		</div>
+        
+        	</div>  
+        </div>        	      
+        <div>
+			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="display:flex" >
+				<div style="height:408px; width:40%; margin-top:30px; margin-left:40px">
+					<img src="/admin_common/img/room/bg01.jpg" style="height: 100%; width: 100%; object-fit: cover;">
+				</div>
+				<div>
+                   <div class="breadcome-list" style="margin-left:20px; width:900px">
+                       	<div class="row">
+                        	<div style="
+							    display: flex; 
+							    background-color: #ffffff; 
+							    padding: 15px 20px; 
+							    border-radius: 15px; 
+							    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+							    max-width: 750px; 
+							    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+							    color: #222222;
+							    gap: 30px;
+							    margin-left : 70px;
+							">
+							
+							  <!-- 좌측 정보 영역 -->
+							  <div style="flex: 1; margin-left:15px">
+							    <h2 style="font-weight:700; font-size: 24px; margin-bottom: 15px; color: #2a3a6b;">
+							      FAMILY TWIN
+							    </h2>
+							
+							    <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px;">
+							      <div style="flex: 1 1 150px; background: #f0f4ff; border-radius: 10px; padding: 10px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.1);">
+							        <h4 style="margin:0 0 5px; color:#2a3a6b; font-weight:600; font-size:14px;">면적</h4>
+							        <p style="margin:0; font-size:14px; font-weight:500;">68㎡</p>
+							      </div>
+							
+							      <div style="flex: 1 1 150px; background: #f0f4ff; border-radius: 10px; padding: 10px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.1);">
+							        <h4 style="margin:0 0 5px; color:#2a3a6b; font-weight:600; font-size:14px;">베드 타입</h4>
+							        <p style="margin:0; font-size:14px; font-weight:500;">KING</p>
+							      </div>
+							
+							      <div style="flex: 1 1 150px; background: #f0f4ff; border-radius: 10px; padding: 10px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.1);">
+							        <h4 style="margin:0 0 5px; color:#2a3a6b; font-weight:600; font-size:14px;">최대 인원</h4>
+							        <p style="margin:0; font-size:14px; font-weight:500;">2명</p>
+							      </div>
+							
+							      <div style="flex: 1 1 150px; background: #f0f4ff; border-radius: 10px; padding: 10px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.1);">
+							        <h4 style="margin:0 0 5px; color:#2a3a6b; font-weight:600; font-size:14px;">체크인 시간</h4>
+							        <p style="margin:0; font-size:14px; font-weight:500;">03:00 PM</p>
+							      </div>
+							
+							      <div style="flex: 1 1 150px; background: #f0f4ff; border-radius: 10px; padding: 10px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.1);">
+							        <h4 style="margin:0 0 5px; color:#2a3a6b; font-weight:600; font-size:14px;">체크아웃 시간</h4>
+							        <p style="margin:0; font-size:14px; font-weight:500;">11:00 AM</p>
+							      </div>
+							    </div>
+							
+							    <div style="display: flex; gap: 20px; margin-bottom: 20px;">
+							      <div style="flex: 1; background: #f9faff; padding: 12px; border-radius: 12px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.05); text-align: center;">
+							        <h4 style="margin-bottom: 8px; color: #2a3a6b; font-weight: 600; font-size: 14px;">객실 서비스 제공 수</h4>
+							        <p style="font-size: 16px; font-weight: 700; margin: 0;">20</p>
+							      </div>
+							      <div style="flex: 1; background: #f9faff; padding: 12px; border-radius: 12px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.05); text-align: center;">
+							        <h4 style="margin-bottom: 8px; color: #2a3a6b; font-weight: 600; font-size: 14px;">어매니티 제공 수</h4>
+							        <p style="font-size: 16px; font-weight: 700; margin: 0;">5</p>
+							      </div>
+							    </div>
+							
+							    <div style="display: flex; gap: 30px;">
+							      <div>
+							        <h3 style="margin: 0 0 5px; color: #7495CC; font-weight: 700; font-size: 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+							          오늘 가격
+							        </h3>
+							        <p style="font-size: 20px; font-weight: 700; color: #111111; margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+							          230,000원
+							        </p>
+							      </div>
+							
+							      <div>
+							        <h3 style="margin: 0 0 5px; color: #808080; font-weight: 700; font-size: 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+							          최근 7일 평균 가격
+							        </h3>
+							        <p style="font-size: 20px; font-weight: 700; color: #111111; margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+							          210,000원
+							        </p>
+							      </div>
+							    </div>
+							  </div>
+							
+							  <!-- 우측 버튼 영역 -->
+							  <div style="display: flex; flex-direction: column; gap: 15px; justify-content: center;">
+							    <button style="
+							      padding: 12px 25px; 
+							      border: none; 
+							      border-radius: 10px; 
+							      background-color: #7495CC; 
+							      color: white; 
+							      font-weight: 600; 
+							      cursor: pointer;
+							      font-size: 16px;
+							      box-shadow: 0 3px 8px rgba(58,117,255,0.5);
+							      transition: background-color 0.3s ease;
+							    " 
+							    onmouseover="this.style.backgroundColor='#6482FF';" 
+							    onmouseout="this.style.backgroundColor='#7495CC';">
+							      정보 수정
+							    </button>
+							    
+							    <button style="
+							      padding: 12px 25px; 
+							      border: 2px solid #7495CC; 
+							      border-radius: 10px; 
+							      background-color: white; 
+							      color: #7495CC; 
+							      font-weight: 600; 
+							      cursor: pointer;
+							      font-size: 16px;
+							      box-shadow: 0 3px 8px rgba(58,117,255,0.2);
+							      transition: background-color 0.3s ease, color 0.3s ease;
+							    " 
+							    onmouseover="this.style.backgroundColor='#7495CC'; this.style.color='white';" 
+							    onmouseout="this.style.backgroundColor='white'; this.style.color='#7495CC';">
+							      가격 설정
+							    </button>
+							  </div>
+							
+							</div>
+                        	
+
+                   		</div>
+                	</div>
+           		</div>
+        
+        	</div>  
+        </div> 
+               	      	
+        <!-- 막기 -->
+        </div>       
+       
+       
+        
+    </div>
+    
+       <div th:replace="~{admin_fragments/footer :: footer}"></div>  
+</body>
+
+</html>

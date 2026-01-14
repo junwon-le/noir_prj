@@ -16,6 +16,15 @@ public class MainController {
 		return "admin_main/adminMain";
 	}
 	
+	@GetMapping("/admin/dinningMgr")
+	public String dinningMgr() {
+		return "admin_dinning/dinningManage";
+	}
+	@GetMapping("/admin/adminRoom")
+	public String admin_room() {
+		return "admin_room/roomManagePrice";
+	}
+	
 	@GetMapping("/room")
 	public String Room() {
 		return "/room/room";

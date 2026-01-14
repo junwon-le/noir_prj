@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>NOIR호텔 관리자 페이지</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Google Fonts
+		============================================ -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900" rel="stylesheet">
+    <!-- Bootstrap CSS
+		============================================ -->
+    <link rel="stylesheet" href="/admin_common/css/bootstrap.min.css">
+    <!-- Bootstrap CSS
+		============================================ -->
+    <link rel="stylesheet" href="/admin_common/css/font-awesome.min.css">
+	<!-- nalika Icon CSS
+		============================================ -->
+    <link rel="stylesheet" href="/admin_common/css/nalika-icon.css">
+    <!-- owl.carousel CSS
+		============================================ -->
+    <link rel="stylesheet" href="/admin_common/css/owl.carousel.css">
+    <link rel="stylesheet" href="/admin_common/css/owl.theme.css">
+    <link rel="stylesheet" href="/admin_common/css/owl.transitions.css">
+    <!-- animate CSS
+		============================================ -->
+    <link rel="stylesheet" href="/admin_common/css/animate.css">
+    <!-- normalize CSS
+		============================================ -->
+    <link rel="stylesheet" href="/admin_common/css/normalize.css">
+    <!-- meanmenu icon CSS
+		============================================ -->
+    <link rel="stylesheet" href="/admin_common/css/meanmenu.min.css">
+    <!-- main CSS
+		============================================ -->
+    <link rel="stylesheet" href="/admin_common/css/main.css">
+    <!-- morrisjs CSS
+		============================================ -->
+    <link rel="stylesheet" href="/admin_common/css/morrisjs/morris.css">
+    <!-- mCustomScrollbar CSS
+		============================================ -->
+    <link rel="stylesheet" href="/admin_common/css/scrollbar/jquery.mCustomScrollbar.min.css">
+    <!-- metisMenu CSS
+		============================================ -->
+    <link rel="stylesheet" href="/admin_common/css/metisMenu/metisMenu.min.css">
+    <link rel="stylesheet" href="/admin_common/css/metisMenu/metisMenu-vertical.css">
+
+    <link rel="stylesheet" href="/admin_common/style.css">
+    <!-- responsive CSS
+		============================================ -->
+    <link rel="stylesheet" href="/admin_common/css/responsive.css">
+    <!-- jquery
+		============================================ -->
+    <script src="/admin_common/js/vendor/jquery-1.12.4.min.js"></script>
+    <!-- bootstrap JS
+		============================================ -->
+    <script src="/admin_common/js/bootstrap.min.js"></script>
+    <!-- wow JS
+		============================================ -->
+    <script src="/admin_common/js/wow.min.js"></script>
+    <!-- price-slider JS
+		============================================ -->
+    <script src="/admin_common/js/jquery-price-slider.js"></script>
+    <!-- meanmenu JS
+		============================================ -->
+    <script src="/admin_common/js/jquery.meanmenu.js"></script>
+    <!-- owl.carousel JS
+		============================================ -->
+    <script src="/admin_common/js/owl.carousel.min.js"></script>
+    <!-- sticky JS
+		============================================ -->
+    <script src="/admin_common/js/jquery.sticky.js"></script>
+    
+    <!-- mCustomScrollbar JS
+		============================================ -->
+    <script src="/admin_common/js/scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="/admin_common/js/scrollbar/mCustomScrollbar-active.js"></script>
+    <!-- metisMenu JS
+		============================================ -->
+    <script src="/admin_common/js/metisMenu/metisMenu.min.js"></script>
+    <script src="/admin_common/js/metisMenu/metisMenu-active.js"></script>
+    <!-- sparkline JS
+		============================================ -->
+    <script src="/admin_common/js/sparkline/jquery.sparkline.min.js"></script>
+    <script src="/admin_common/js/sparkline/jquery.charts-sparkline.js"></script>
+    <!-- calendar JS
+		============================================ -->
+    <script src="/admin_common/js/calendar/moment.min.js"></script>
+    <script src="/admin_common/js/calendar/fullcalendar.min.js"></script>
+    <script src="/admin_common/js/calendar/fullcalendar-active.js"></script>
+	<!-- float JS
+		============================================ -->
+    <script src="/admin_common/js/flot/jquery.flot.js"></script>
+    <script src="/admin_common/js/flot/jquery.flot.resize.js"></script>
+    <script src="/admin_common/js/flot/curvedLines.js"></script>
+    <script src="/admin_common/js/flot/flot-active.js"></script>
+    <!-- plugins JS
+		============================================ -->
+    <script src="/admin_common/js/plugins.js"></script>
+    <!-- main JS
+		============================================ -->
+    <script src="/admin_common/js/main.js"></script>
+    
+<script>
+	$(function () {
+    	const today = new Date().toISOString().slice(0, 10);
+    	$('#dateInput').val(today);
+    	
+     	$('#dateInput').change(function(){
+
+    		
+    		var date = $('#dateInput').val();
+    		if(date==""){
+    			alert("날짜를 선택해주세요(미선택시 오늘 날짜로 처리됩니다.)");
+    			$('#dateInput').val(today);
+    		}else{
+    			$('#dateInput').val(date);
+    		}
+    		
+    		location.href="roomManage.jsp?date="+date;
+    		
+    	}); 
+    		
+    	
+	});
+	
+</script>
+    
+</head>
+
+<body>
+    <!--[if lt IE 8]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+    <div th:replace="~{admin_fragments/sidebar :: sidebar}"></div>
+    <!-- Start Welcome area -->
+    <div class="all-content-wrapper">
+        <div class="header-advance-area">
+            <div class="breadcome-area">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="breadcome-list">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                        <div class="breadcomb-wp" style="color:#ffffff; font-size: 20px">
+											다이닝 관리
+										</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="contatiner" style="height:800px; color:#ffffff">
+        <div>
+        	<div style="margin-right:60px; display:flex; justify-content:flex-end; margin-bottom:20px">
+        		<div style="display: flex; gap: 10px;">
+        
+        <input type="date" value="2026-01-12" style="
+            flex: 1.2; 
+            background: #ffffff; 
+            border-radius: 6px; 
+            padding: 10px; 
+            border: none; 
+            font-size: 14px; 
+            font-weight: 600; 
+            outline: none;
+            color:#000000;
+        ">
+    </div>       		
+        	</div>
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <div style="
+        display: grid; 
+        grid-template-columns: repeat(2, 1fr); /* 가로 2칸 */
+        /* 첫 번째 줄은 400px, 두 번째 줄은 300px로 설정 */
+        grid-template-rows: 400px 200px; 
+        gap: 20px; 
+        padding: 20px 40px;
+    ">
+        
+        <div style="width: 100%; height: 100%; overflow: hidden; border-radius: 10px;">
+            <img src="/common/images/homepage/bg01.jpg" style="width: 100%; height: 100%; object-fit: cover;">
+        </div>
+
+        <div class="breadcome-list" style="margin: 0; padding: 20px; background: #ffffff; border-radius: 10px;">
+            <label style="display: block; color: #666; font-size: 12px; margin-bottom: 8px; font-weight: 600;">운영 정보 1</label>
+            <textarea style="width: 100%; height: calc(100% - 30px); border: none; resize: none; font-size: 14px; line-height: 1.6; color: #333; outline: none;" readonly>
+Breakfast : 06:30 ~ 10:30
+Lunch : 12:00 ~ 14:30
+Dinner : 18:00 ~ 21:30
+
+좌석수 : 280석
+            </textarea>
+        </div>
+
+       <div class="breadcome-list" style="flex: 1; margin: 0; padding: 0; background: #ffffff; border-radius: 10px; overflow: hidden; box-shadow: none; min-height: 0; height: fit-content;">
+    <table style="width: 100%; border-collapse: collapse; color: #333; text-align: center; font-size: 13px; margin-bottom: 0;">
+        <thead style="background: #f9faff; border-bottom: 1px solid #eff2f7;">
+            <tr>
+                <th style="padding: 10px; color: #2a3a6b; font-weight: 700; width: 30%;">가격</th>
+                <th style="padding: 10px; color: #2a3a6b; font-weight: 700;">어른</th>
+                <th style="padding: 10px; color: #2a3a6b; font-weight: 700;">어린이</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr style="border-bottom: 1px solid #eff2f7;">
+                <td style="padding: 6px; font-weight: 600; background: #fdfdfd;">조식</td>
+                <td style="padding: 4px;"><input type="text" value="Content" style="width: 90%; height: 28px; border: 1px solid #eee; border-radius: 4px; text-align: center;"></td>
+                <td style="padding: 4px;"><input type="text" style="width: 90%; height: 28px; border: 1px solid #eee; border-radius: 4px; text-align: center;"></td>
+            </tr>
+            <tr style="border-bottom: 1px solid #eff2f7;">
+                <td style="padding: 6px; font-weight: 600; background: #fdfdfd;">중식</td>
+                <td style="padding: 4px;"><input type="text" value="Content" style="width: 90%; height: 28px; border: 1px solid #eee; border-radius: 4px; text-align: center;"></td>
+                <td style="padding: 4px;"><input type="text" style="width: 90%; height: 28px; border: 1px solid #eee; border-radius: 4px; text-align: center;"></td>
+            </tr>
+            <tr style="border-bottom: none;">
+                <td style="padding: 6px; font-weight: 600; background: #fdfdfd;">석식</td>
+                <td style="padding: 4px;"><input type="text" value="Content" style="width: 90%; height: 28px; border: 1px solid #eee; border-radius: 4px; text-align: center;"></td>
+                <td style="padding: 4px;"><input type="text" style="width: 90%; height: 28px; border: 1px solid #eee; border-radius: 4px; text-align: center;"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="breadcome-list" style="flex: 1; margin: 0; padding: 0; background: #ffffff; border-radius: 10px; overflow: hidden; min-height: 0; height: fit-content;">
+    <table style="width: 100%; border-collapse: collapse; color: #333; text-align: center; font-size: 13px; margin-bottom: 0;">
+        <thead style="background: #f9faff; border-bottom: 1px solid #eff2f7;">
+            <tr>
+                <th style="padding: 10px; color: #2a3a6b; font-weight: 700; width: 30%;">대표 메뉴</th>
+                <th style="padding: 10px; color: #2a3a6b; font-weight: 700;">메인메뉴</th>
+                <th style="padding: 10px; color: #2a3a6b; font-weight: 700;">사이드메뉴</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr style="border-bottom: 1px solid #eff2f7;">
+                <td style="padding: 6px; font-weight: 600; background: #fdfdfd; color: #333;">조식</td>
+                <td style="padding: 4px;"><input type="text" value="Content" style="width: 90%; height: 28px; padding: 2px 8px; border: 1px solid #eee; border-radius: 4px; text-align: center; color: #333; font-size: 13px;"></td>
+                <td style="padding: 4px;"><input type="text" style="width: 90%; height: 28px; padding: 2px 8px; border: 1px solid #eee; border-radius: 4px; text-align: center; color: #333; font-size: 13px;"></td>
+            </tr>
+            <tr style="border-bottom: 1px solid #eff2f7;">
+                <td style="padding: 6px; font-weight: 600; background: #fdfdfd; color: #333;">중식</td>
+                <td style="padding: 4px;"><input type="text" value="Content" style="width: 90%; height: 28px; padding: 2px 8px; border: 1px solid #eee; border-radius: 4px; text-align: center; color: #333; font-size: 13px;"></td>
+                <td style="padding: 4px;"><input type="text" style="width: 90%; height: 28px; padding: 2px 8px; border: 1px solid #eee; border-radius: 4px; text-align: center; color: #333; font-size: 13px;"></td>
+            </tr>
+            <tr style="border-bottom: none;">
+                <td style="padding: 6px; font-weight: 600; background: #fdfdfd; color: #333;">석식</td>
+                <td style="padding: 4px;"><input type="text" value="Content" style="width: 90%; height: 28px; padding: 2px 8px; border: 1px solid #eee; border-radius: 4px; text-align: center; color: #333; font-size: 13px;"></td>
+                <td style="padding: 4px;"><input type="text" style="width: 90%; height: 28px; padding: 2px 8px; border: 1px solid #eee; border-radius: 4px; text-align: center; color: #333; font-size: 13px;"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+        </div>
+		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="display: flex; justify-content: flex-end; padding: 0 40px; margin-top: 20px; margin-bottom: 50px;">
+   			<button style="background: #7d9ad1; color: white; border: none; padding: 12px 30px; border-radius: 6px; font-weight: 600; font-size: 14px; cursor: pointer; transition: 0.2s;">
+      		메뉴 및 정보 수정
+    		</button>
+		</div>
+		
+		
+		
+		
+               	      	
+        <!-- 막기 -->
+        </div>       
+      
+    </div> 
+        
+    </div>
+    </div>
+    
+    
+       <div th:replace="~{admin_fragments/footer :: footer}"></div>
+</body>
+
+</html>
