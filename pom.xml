@@ -101,11 +101,7 @@
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-thymeleaf</artifactId>
 </dependency>
-		<dependency>
-			<groupId>kr.co.sist</groupId>
-			<artifactId>spring_mvc</artifactId>
-			<version>1.2</version>
-		</dependency>
+		
 	</dependencies>
 
 	<build>
