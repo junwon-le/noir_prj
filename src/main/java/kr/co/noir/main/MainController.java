@@ -10,10 +10,16 @@ public class MainController {
 	public String Main() {
 		return "/main";
 	}
+
+	@GetMapping("/memberLogin")
+	public String memberLogin() {
+		return "/login/memberLogin";
+	}
+	
 	
 	@GetMapping("/adminLogin")
 	public String adminLogin() {
-		return "manager/main/adminLogin";
+		return "/login/adminLogin";
 	}
 	
 	@GetMapping("/admin")
@@ -27,7 +33,7 @@ public class MainController {
 	}
 	@GetMapping("/admin/adminRoom")
 	public String admin_room() {
-		return "admin_room/roomManagePrice";
+		return "manager/room/roomManagePrice";
 	}
 	
 	@GetMapping("/room")

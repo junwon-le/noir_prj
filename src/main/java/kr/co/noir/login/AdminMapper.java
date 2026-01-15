@@ -1,4 +1,4 @@
-package kr.co.noir.admin;
+package kr.co.noir.login;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
