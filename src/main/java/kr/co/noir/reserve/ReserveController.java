@@ -20,4 +20,17 @@ public class ReserveController {
 	public String roomResSearch() {
 		return "/reserve/roomResSearch";
 	}
+	
+	@GetMapping("/dinningResSearch")
+	public String dinningResSearch() {
+		return "/reserve/dinningResSearch";
+	}
+	@GetMapping("/dinningRes")
+	public String dinningRes() {
+		return "/reserve/dinningRes";
+	}
+	@GetMapping("/nonDinningRes")
+	public String nonDinningRes() {
+		return "/reserve/nonDinningRes";
+	}
 }

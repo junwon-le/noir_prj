@@ -23,7 +23,7 @@ public class MainController {
 	
 	@GetMapping("/admin/dinningMgr")
 	public String dinningMgr() {
-		return "admin_dinning/dinningManage";
+		return "manager/dinning/dinningManage";
 	}
 	@GetMapping("/admin/adminRoom")
 	public String admin_room() {

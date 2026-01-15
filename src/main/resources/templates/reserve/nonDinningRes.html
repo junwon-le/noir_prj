@@ -110,7 +110,7 @@ margin-top: 10px;
             <img src="/common/images/res_img/hr.png" class="hr"/>
             <form action="reservationProcess.jsp" method="POST" class="space-y-6">
                 <div>
-                    <label class="block text-sm mb-1">투숙객명 <span class="text-red-500">*</span></label>
+                    <label class="block text-sm mb-1">고객명 <span class="text-red-500">*</span></label>
                     <div class="flex gap-4">
                         <input type="text" name="lastName" placeholder="last name" class="w-1/2 bg-white text-black p-2 rounded bor">
                         <input type="text" name="firstName" placeholder="first name" class="w-1/2 bg-white text-black p-2 rounded bor">
@@ -145,7 +145,16 @@ margin-top: 10px;
 						<div class="text-right">
         					<span class="text-sm text-gray-500">0/100</span>
     					</div>
+    					<span class="payMsgDiv">※ 요청사항은 호텔 상황에 따라 확정되지 않을 수 있습니다.</span>
 					</div>
+                </div>
+                 
+                <div>
+                    <label class="block text-sm mb-1">예약 확인 비밀번호<span class="text-red-500">*</span></label>
+                    <div>
+                        <input type="password" name="password" placeholder="비밀번호 입력" class="w-1/2 bg-white text-black p-2 rounded bor">
+                        <input type="password" name="password2" placeholder="비밀번호 확인" class="w-1/2 bg-white text-black p-2 rounded bor" style="margin-top:10px;">
+                    </div>
                 </div>
 
                 <div class="pt-6 border-t border-zinc-700">
@@ -187,7 +196,7 @@ margin-top: 10px;
 						</div>
                     </div>
                     <div class="payMsgDiv">
-                    ※ 신용카드 정보는 고객님의 투숙을 개런티하기 위한 용도 외에는 어떤 목적으로도 사용되지 않으며, 체크카드 및 일부 신용 카드의 경우 사용이 제한 될 수 있습니다.<br>
+                    ※ 신용카드 정보는 고객님의 예약을 개런티하기 위한 용도 외에는 어떤 목적으로도 사용되지 않으며, 체크카드 및 일부 신용 카드의 경우 사용이 제한 될 수 있습니다.<br>
 					※ <span style="color:red">온라인 예약 시 직접 결제가 이루어지지 않으며</span>, 최종 결제는 프론트 데스크에서 해주시기 바랍니다. 
                     </div>
                 </div>
@@ -203,23 +212,20 @@ margin-top: 10px;
                         <label class="flex items-center gap-2"><input type="checkbox"> [필수] 개인정보 제 3자 제공 동의</label>
                     </div>
                 </div>
-                <div class="pt-6 border-t border-zinc-700">
+                <div class="pt-6 border-t border-zinc-700 text-white" style="padding:0px;">
                 	<h2 class="text-xl font-bold ">취소 정책</h2>
-                   	<img src="/common/images/res_img/hr.png" class="hr"/>
-	                <table border="1" >
-                   	<tr >
-                   	<td>입실 1일전 15:00까지</td>
-                   	<td>취소 비용 없음</td>
-					</tr>
-                   	<tr >
-                   	<td>입실 1일전 15:00부터 입실 당일까지</td>
-                   	<td>첫 객실료의 100% 수수료 발생</td>
-					</tr>
-                   	<tr >
-                   	<td>노쇼</td>
-                   	<td>첫 객실료의 100% 부과</td>
-					</tr>
-                   	</table>
+                   	<img src="/common/images/res_img/hr.png" class="hr" style="margin-bottom:20px;"/>
+	                <div>
+	                <span style="font-weight: bold">예약 시 참고사항</span><br>
+	                <div  class="payMsgDiv">
+	                - 해당 예약은 홀 좌석 이용 시에만 예약 가능합니다.<br>
+	                - 홀 예약 특성상 테이블 좌석으로만 안내되는 점 양해 부탁드립니다.<br>
+	                - 당일 예약 불가하며, 당일 이용을 원하시는 경우 문의 전화로 연락 부탁드립니다.<br>
+	                - 예약 접수 후 담당 직원이 유선으로 옝약 확정 여부를 안내드립니다.<br>
+	                - 음식 관력 특이사항이 또는 알러지가 있으신 경우, 예약 시 추가 요청사항란에 반드시 기재해 주시기 바랍니다.<br>
+	                - 중삭생부터 성인 요금이 적용되는 점 양해 부탁드립니다.<br>
+	                </div>
+	                </div>
                    	<div class="bg-zinc-800 p-4 rounded text-sm space-y-2" style="margin-top: 20px;">
                     <label class="flex items-center gap-2" >
                         <input type="checkbox" id="checkAll"> 취소 규정을 확인하였습니다.
@@ -233,9 +239,9 @@ margin-top: 10px;
         <div class="w-full md:w-80 h-fit text-black p-6 rounded shadow-lg" style="position: fixed; top:220px; right:100px; background-color: #eee8cc" >
             <h3 class="text-blue-900 font-bold border-b pb-2 mb-4">예약정보</h3>
             <div class=" space-y-3 mb-6">
-                <div class="flex justify-between"><span>체크인</span><span class="font-semibold">2026-01-07 (화)</span></div>
-                <div class="flex justify-between"><span>체크아웃</span><span class="font-semibold">2026-01-08 (수) · 1박</span></div>
-                <div class="flex justify-between"><span>객실</span><span class="font-semibold text-right">디럭스 트윈<br>Room Only</span></div>
+                <div class="flex justify-between"><span>방문일</span><span class="font-semibold">2026-01-07 (화)</span></div>
+                <div class="flex justify-between"><span>조식</span><span class="font-semibold">08:00</span></div>
+                <div class="flex justify-between"><span>인원</span><span class="font-semibold text-right">성인/1 어린이/2</span></div>
             </div>
             <div class="border-t pt-4">
                 <div class="flex justify-between items-center mb-6">
