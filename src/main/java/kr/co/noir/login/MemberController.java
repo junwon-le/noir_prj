@@ -15,12 +15,12 @@ public class MemberController {
 	@Autowired
 	private MemberService memberService;
 	
-	@GetMapping("/memberLogin")
+	@GetMapping("/memberlogin")
 	public String login() {
 		return "memberService";
 	}
 	
-	@PostMapping("/admin/login")
+	@PostMapping("/member/login")
 	public String loginProcess(@RequestParam("memberId") String memberId, @RequestParam("memberPass") String memberPass, HttpSession session) {
 		
 		MemberDTO member = memberService.login(memberId, memberId);
