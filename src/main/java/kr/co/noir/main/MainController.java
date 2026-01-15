@@ -13,13 +13,13 @@ public class MainController {
 
 	@GetMapping("/memberlogin")
 	public String memberLogin() {
-		return "/main/memberLogin";
+		return "/login/memberLogin";
 	}
 	
 	
 	@GetMapping("/adminLogin")
 	public String adminLogin() {
-		return "manager/main/adminLogin";
+		return "/login/adminLogin";
 	}
 	
 	@GetMapping("/admin")
