@@ -124,12 +124,15 @@ padding:0px;
          justify-content: center;
          align-items: center;
          color: #fff;
+         position: relative;
+         overflow: hidden;
      }
 
      .login-container {
          width: 100%;
          max-width: 400px; /* 로그인 창은 회원가입보다 좁게 */
          padding: 20px;
+         margin-bottom: 10vh; /* 푸터와 겹치지 않도록 상단으로 약간 이동 */
      }
 
      /* 유리 효과 박스 */
@@ -212,6 +215,31 @@ padding:0px;
          transform: translateY(-2px);
      }
 
+     /* 헤더와 푸터 위치 고정 */
+     header {
+         position: absolute;
+         top: 0;
+         left: 0;
+         width: 100%;
+         z-index: 100;
+     }
+
+     footer {
+         position: absolute;
+         bottom: 0;
+         left: 0;
+         width: 100%;
+         z-index: 100;
+     }
+
+     /* 개인정보 팝업 등 하단 요소가 레이아웃 흐름을 방해하지 않도록 절대 위치 설정 */
+     body > div:last-child {
+         position: absolute;
+         bottom: 0;
+         left: 0;
+         width: 100%;
+         z-index: 101;
+     }
 
 </style>
 </head>
