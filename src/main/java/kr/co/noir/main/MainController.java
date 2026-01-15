@@ -53,4 +53,23 @@ public class MainController {
 	public String DinningDetail() {
 		return "/dinning/dinningDetail";
 	}
+	@GetMapping("/hotelRev")
+	public String hotelRev() {
+		return "/manager/hotel_rev/hotelRev.html";
+	}
+	
+	@GetMapping("/hotelRevDetail")
+	public String hotelRevDetail() {
+		return "/manager/hotel_rev/hotelRev_detail.html";
+	}
+	@GetMapping("/dinningRev")
+	public String dinningRev() {
+		return "/manager/dinning_rev/dinningRev.html";
+	}
+	
+	@GetMapping("/dinningRevDetail")
+	public String dinningRevDetail() {
+		return "/manager/dinning_rev/dinningRev_detail.html";
+	}
+	
 }
