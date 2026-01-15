@@ -1,4 +1,4 @@
-package kr.co.noir.admin;
+package kr.co.noir.login;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package kr.co.noir.admin;
+package kr.co.noir.login;
 
 import lombok.Data;
 

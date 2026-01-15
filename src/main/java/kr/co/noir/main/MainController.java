@@ -10,6 +10,12 @@ public class MainController {
 	public String Main() {
 		return "/main";
 	}
+
+	@GetMapping("/memberlogin")
+	public String memberLogin() {
+		return "/main/memberLogin";
+	}
+	
 	
 	@GetMapping("/adminLogin")
 	public String adminLogin() {
