@@ -13,7 +13,7 @@ public class MainController {
 	
 	@GetMapping("/admin")
 	public String admin() {
-		return "admin_main/adminMain";
+		return "manager/main/adminMain";
 	}
 	
 	@GetMapping("/admin/dinningMgr")

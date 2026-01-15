@@ -7,8 +7,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/reserve")
 @Controller
 public class ReserveController {
-	@GetMapping("/roomReserve.do")
+	@GetMapping("/roomReserve")
 	public String reserve() {
 		return "/reserve/roomRes";
+	}
+	@GetMapping("/nonRoomReserve")
+	public String nonReserve() {
+		return "/reserve/nonRoomRes";
+	}
+	
+	@GetMapping("/roomResSearch")
+	public String roomResSearch() {
+		return "/reserve/roomResSearch";
 	}
 }
