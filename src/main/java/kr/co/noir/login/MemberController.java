@@ -15,9 +15,24 @@ public class MemberController {
 	@Autowired
 	private MemberService memberService;
 	
-	@GetMapping("/memberlogin")
-	public String login() {
-		return "memberService";
+	@GetMapping("/memberLogin")
+	public String memberLogin() {
+		return "/login/memberLogin";
+	}
+	
+	@GetMapping("/signUp")
+	public String signUp() {
+		return "/login/signUp";
+	}
+
+	@GetMapping("/findId")
+	public String findId() {
+		return "/login/findId";
+	}
+
+	@GetMapping("/findPw")
+	public String findPw() {
+		return "/login/findPw";
 	}
 	
 	@PostMapping("/member/login")

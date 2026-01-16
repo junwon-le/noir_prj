@@ -10,33 +10,11 @@ public class MainController {
 	public String Main() {
 		return "/main";
 	}
-
-	@GetMapping("/memberLogin")
-	public String memberLogin() {
-		return "/login/memberLogin";
-	}
 	
 	@GetMapping("/adminLogin")
 	public String adminLogin() {
 		return "/login/adminLogin";
 	}
-
-	@GetMapping("/signUp")
-	public String signUp() {
-		return "/login/signUp";
-	}
-
-	@GetMapping("/findId")
-	public String findId() {
-		return "/login/findId";
-	}
-
-	@GetMapping("/findPw")
-	public String findPw() {
-		return "/login/findPw";
-	}
-	
-	
 	
 	@GetMapping("/admin")
 	public String admin() {
