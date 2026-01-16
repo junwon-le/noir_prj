@@ -47,8 +47,29 @@ left:1230px;
 width:150px;
 height:50px;
 position:absolute;
-top:830px;
+top:850px;
 left:1400px;
+ background: #8F8664;
+  border: 1px solid rgba(216, 203, 168, 0.25);
+  color: #FFFFFF;
+  letter-spacing: 0.08em;
+  font-size: 15px;
+  font-weight: bold;
+  z-index: 999;
+}
+
+#reserveBtn:hover{
+ background: #756D50;
+  border-color: #756D50;
+}
+
+
+#reviewBtn{
+width:150px;
+height:50px;
+position:absolute;
+top:850px;
+left:1200px;
  background: rgba(50, 50, 50, 0.95);
   border: 1px solid rgba(216, 203, 168, 0.25);
   color: #CFC4A3;
@@ -57,10 +78,15 @@ left:1400px;
   font-weight: bold;
 }
 
-#reserveBtn:hover{
+#reviewBtn:hover{
  background: rgba(30, 30, 30, 0.95);
   border-color: rgba(216, 203, 168, 0.6);
 }
+
+
+
+
+
 
 .fullsizeImage >ul,
 .fullsizeImage> ul>li {
@@ -167,6 +193,10 @@ $(function(){
 	<section id="rooms">
 
 		<div class="bx-pager" style="margin-right:600px; margin-bottom:470px">
+		</div>
+		
+		<div>
+		<input type="button" id="reviewBtn" value="리뷰보기">
 		</div>
 		
 		<div>

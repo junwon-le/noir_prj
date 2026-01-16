@@ -7,128 +7,62 @@
     <title>NOIR호텔 관리자 페이지</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Google Fonts
-		============================================ -->
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900" rel="stylesheet">
-    <!-- Bootstrap CSS
-		============================================ -->
     <link rel="stylesheet" href="/admin_common/css/bootstrap.min.css">
-    <!-- Bootstrap CSS
-		============================================ -->
     <link rel="stylesheet" href="/admin_common/css/font-awesome.min.css">
-	<!-- nalika Icon CSS
-		============================================ -->
     <link rel="stylesheet" href="/admin_common/css/nalika-icon.css">
-    <!-- owl.carousel CSS
-		============================================ -->
     <link rel="stylesheet" href="/admin_common/css/owl.carousel.css">
     <link rel="stylesheet" href="/admin_common/css/owl.theme.css">
     <link rel="stylesheet" href="/admin_common/css/owl.transitions.css">
-    <!-- animate CSS
-		============================================ -->
     <link rel="stylesheet" href="/admin_common/css/animate.css">
-    <!-- normalize CSS
-		============================================ -->
     <link rel="stylesheet" href="/admin_common/css/normalize.css">
-    <!-- meanmenu icon CSS
-		============================================ -->
     <link rel="stylesheet" href="/admin_common/css/meanmenu.min.css">
-    <!-- main CSS
-		============================================ -->
     <link rel="stylesheet" href="/admin_common/css/main.css">
-    <!-- morrisjs CSS
-		============================================ -->
     <link rel="stylesheet" href="/admin_common/css/morrisjs/morris.css">
-    <!-- mCustomScrollbar CSS
-		============================================ -->
     <link rel="stylesheet" href="/admin_common/css/scrollbar/jquery.mCustomScrollbar.min.css">
-    <!-- metisMenu CSS
-		============================================ -->
     <link rel="stylesheet" href="/admin_common/css/metisMenu/metisMenu.min.css">
     <link rel="stylesheet" href="/admin_common/css/metisMenu/metisMenu-vertical.css">
-
     <link rel="stylesheet" href="/admin_common/style.css">
-    <!-- responsive CSS
-		============================================ -->
     <link rel="stylesheet" href="/admin_common/css/responsive.css">
-    <!-- jquery
-		============================================ -->
-    <script src="/admin_common/js/vendor/jquery-1.12.4.min.js"></script>
-    <!-- bootstrap JS
-		============================================ -->
-    <script src="/admin_common/js/bootstrap.min.js"></script>
-    <!-- wow JS
-		============================================ -->
-    <script src="/admin_common/js/wow.min.js"></script>
-    <!-- price-slider JS
-		============================================ -->
-    <script src="/admin_common/js/jquery-price-slider.js"></script>
-    <!-- meanmenu JS
-		============================================ -->
-    <script src="/admin_common/js/jquery.meanmenu.js"></script>
-    <!-- owl.carousel JS
-		============================================ -->
-    <script src="/admin_common/js/owl.carousel.min.js"></script>
-    <!-- sticky JS
-		============================================ -->
-    <script src="/admin_common/js/jquery.sticky.js"></script>
     
-    <!-- mCustomScrollbar JS
-		============================================ -->
+    <script src="/admin_common/js/vendor/jquery-1.12.4.min.js"></script>
+    <script src="/admin_common/js/bootstrap.min.js"></script>
+    <script src="/admin_common/js/wow.min.js"></script>
+    <script src="/admin_common/js/jquery-price-slider.js"></script>
+    <script src="/admin_common/js/jquery.meanmenu.js"></script>
+    <script src="/admin_common/js/owl.carousel.min.js"></script>
+    <script src="/admin_common/js/jquery.sticky.js"></script>
     <script src="/admin_common/js/scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
     <script src="/admin_common/js/scrollbar/mCustomScrollbar-active.js"></script>
-    <!-- metisMenu JS
-		============================================ -->
     <script src="/admin_common/js/metisMenu/metisMenu.min.js"></script>
     <script src="/admin_common/js/metisMenu/metisMenu-active.js"></script>
-    <!-- sparkline JS
-		============================================ -->
     <script src="/admin_common/js/sparkline/jquery.sparkline.min.js"></script>
     <script src="/admin_common/js/sparkline/jquery.charts-sparkline.js"></script>
-    <!-- calendar JS
-		============================================ -->
     <script src="/admin_common/js/calendar/moment.min.js"></script>
     <script src="/admin_common/js/calendar/fullcalendar.min.js"></script>
     <script src="/admin_common/js/calendar/fullcalendar-active.js"></script>
-	<!-- float JS
-		============================================ -->
     <script src="/admin_common/js/flot/jquery.flot.js"></script>
     <script src="/admin_common/js/flot/jquery.flot.resize.js"></script>
     <script src="/admin_common/js/flot/curvedLines.js"></script>
     <script src="/admin_common/js/flot/flot-active.js"></script>
-    <!-- plugins JS
-		============================================ -->
     <script src="/admin_common/js/plugins.js"></script>
-    <!-- main JS
-		============================================ -->
     <script src="/admin_common/js/main.js"></script>
-    
-<script>
-
-	
-</script>
-    
 </head>
 
 <body>
-    <!--[if lt IE 8]>
-            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-        <![endif]-->
-
     <div th:replace="~{manager/fragments/sidebar :: sidebar}"></div>  
-    <!-- Start Welcome area -->
     <div class="all-content-wrapper">
         <div class="header-advance-area">
             <div class="breadcome-area">
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <div class="breadcome-list">
+                            <div class="breadcome-list" style="margin-left:40px; width:95%; border-radius: 20px;">
                                 <div class="row">
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                         <div class="breadcomb-wp" style="color:#ffffff; font-size: 20px">
-											객실 정보 수정(방 type 들어가야함.)
-										</div>
+                                            객실 정보 수정
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -137,227 +71,122 @@
                 </div>
             </div>
         </div>
-        <div class="contatiner" style="height:1050px; color:#ffffff">
-        <div>
-			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="display:flex" >
-				<div style="height:200px; width:18%; margin-top:30px; margin-left:20px">
-					<img src="/admin_common/img/room/bg01.jpg" style="height: 100%; width: 100%; object-fit: cover;">
-				</div>
-				<div style="height:200px; width:18%; margin-top:30px; margin-left:30px">
-					<img src="/admin_common/img/room/bg01.jpg" style="height: 100%; width: 100%; object-fit: cover;">
-				</div>
-				<div style="height:200px; width:18%; margin-top:30px; margin-left:30px">
-					<img src="/admin_common/img/room/bg01.jpg" style="height: 100%; width: 100%; object-fit: cover;">
-				</div>
-				<div style="height:200px; width:18%; margin-top:30px; margin-left:30px">
-					<img src="/admin_common/img/room/bg01.jpg" style="height: 100%; width: 100%; object-fit: cover;">
-				</div>
-				<div style="height:200px; width:18%; margin-top:30px; margin-left:30px">
-					<img src="/admin_common/img/room/bg01.jpg" style="height: 100%; width: 100%; object-fit: cover;">
-				</div>
-        	</div>
-                   <div class="breadcome-list" style="margin-left:20px; width:1655px">
-                       	
-							
-							  <!-- 우측 버튼 영역 -->
-							  <div style="
-								    display: flex; 
-								    flex-direction: column; /* 가로에서 세로 방향으로 변경 */
-								    background-color: #ffffff; 
-								    padding: 25px 30px; /* 패딩 약간 조정 */
-								    border-radius: 15px; 
-								    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-								    max-width: 1000px; 
-								    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-								    color: #222222;
-								    gap: 20px; /* 간격 조정 */
-								    margin: 300px auto 0 300px; /* 마진 정리 */
-								">
-								
-								    <div style="width: 100%;">
-								        	<div style="display: flex; gap: 12px; align-items: stretch; flex-wrap: nowrap; margin-bottom: 20px;">
-								    
-								    <div style="flex: 2; min-width: 300px; background: #f0f4ff; border-radius: 10px; padding: 15px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.1);">
-								        <h4 style="margin:0 0 10px; color:#2a3a6b; font-weight:600; font-size:14px;">기간선택</h4>
-								        <div style="display: flex; align-items: center; gap: 10px;">
-								            <input id="startDate" type="date" class="form-control" style="flex: 1; background-color: white; color:#000000; border: 1px solid #ccc; border-radius: 5px; padding: 5px;">
-								            <span style="color: #2a3a6b; font-weight: bold;">~</span>
-								            <input id="endDate" type="date" class="form-control" style="flex: 1; background-color: white; color:#000000; border: 1px solid #ccc; border-radius: 5px; padding: 5px;">
-								        </div>
-								    </div>
-								
-								    <div style="flex: 1; min-width: 200px; background: #f0f4ff; border-radius: 10px; padding: 15px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.1);">
-								        <h4 style="margin:0 0 10px; color:#2a3a6b; font-weight:600; font-size:14px;">베드 타입</h4>
-								        <select id="bedType" class="form-control" style="
-								            width: 100%; 
-								            background-color: white; 
-								            color: #000000; 
-								            border: 1px solid #ccc; 
-								            border-radius: 5px; 
-								            padding: 6px; 
-								            font-size: 14px; 
-								            font-weight: 500;
-								            cursor: pointer;
-								        ">
-								            <option value="KING">KING</option>
-								            <option value="2_SUPER_SINGLE">2 SUPER SINGLE</option>
-								            <option value="2_QUEEN">2 QUEEN</option>
-								            <option value="1_KING_1_SOFA_BED">1 KING 1 SOFA BED</option>
-								        </select>
-								    </div>
-								
-								</div>
-			
-			
-			
-  <div style="display: flex; gap: 15px; align-items: stretch; width: 100%; margin-bottom: 20px;">
-    
-    <div style="flex: 0 0 auto; width: 260px; background: #f0f4ff; border-radius: 12px; padding: 15px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.08);">
-        <h4 style="margin:0 0 10px; color:#2a3a6b; font-weight:600; font-size:13px; text-align: center;">체크인/아웃 시간</h4>
-        <div style="display: flex; align-items: center; gap: 12px;">
-            <select id="checkInTime" style="flex: 1; background-color: white; color: #000000; border: 1px solid #ccc; border-radius: 5px; padding: 8px 5px; font-size: 14px; font-weight: 500; cursor: pointer; text-align: center;">
-                <option value="15:00" selected>15:00</option>
-                <option value="00:00">00:00</option><option value="01:00">01:00</option><option value="02:00">02:00</option><option value="03:00">03:00</option><option value="04:00">04:00</option><option value="05:00">05:00</option><option value="06:00">06:00</option><option value="07:00">07:00</option><option value="08:00">08:00</option><option value="09:00">09:00</option><option value="10:00">10:00</option><option value="11:00">11:00</option><option value="12:00">12:00</option><option value="13:00">13:00</option><option value="14:00">14:00</option><option value="16:00">16:00</option><option value="17:00">17:00</option><option value="18:00">18:00</option><option value="19:00">19:00</option><option value="20:00">20:00</option><option value="21:00">21:00</option><option value="22:00">22:00</option><option value="23:00">23:00</option><option value="24:00">24:00</option>
-            </select>
-            <span style="color: #2a3a6b; font-weight: bold; font-size: 14px; opacity: 0.5;">/</span>
-            <select id="checkOutTime" style="flex: 1; background-color: white; color: #000000; border: 1px solid #ccc; border-radius: 5px; padding: 8px 5px; font-size: 14px; font-weight: 500; cursor: pointer; text-align: center;">
-                <option value="11:00" selected>11:00</option>
-                <option value="00:00">00:00</option><option value="01:00">01:00</option><option value="02:00">02:00</option><option value="03:00">03:00</option><option value="04:00">04:00</option><option value="05:00">05:00</option><option value="06:00">06:00</option><option value="07:00">07:00</option><option value="08:00">08:00</option><option value="09:00">09:00</option><option value="10:00">10:00</option><option value="12:00">12:00</option><option value="13:00">13:00</option><option value="14:00">14:00</option><option value="15:00">15:00</option><option value="16:00">16:00</option><option value="17:00">17:00</option><option value="18:00">18:00</option><option value="19:00">19:00</option><option value="20:00">20:00</option><option value="21:00">21:00</option><option value="22:00">22:00</option><option value="23:00">23:00</option><option value="24:00">24:00</option>
-            </select>
+
+        <div class="contatiner" style="height:850px; color:#ffffff">
+            <div>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="display:flex; margin-left:20px;" >
+                    <div style="height:200px; width:18%; margin-top:30px; margin-left:20px">
+                        <img src="/admin_common/img/room/bg01.jpg" style="height: 100%; width: 100%; object-fit: cover;">
+                    </div>
+                    <div style="height:200px; width:18%; margin-top:30px; margin-left:30px">
+                        <img src="/admin_common/img/room/bg01.jpg" style="height: 100%; width: 100%; object-fit: cover;">
+                    </div>
+                    <div style="height:200px; width:18%; margin-top:30px; margin-left:30px">
+                        <img src="/admin_common/img/room/bg01.jpg" style="height: 100%; width: 100%; object-fit: cover;">
+                    </div>
+                    <div style="height:200px; width:18%; margin-top:30px; margin-left:30px">
+                        <img src="/admin_common/img/room/bg01.jpg" style="height: 100%; width: 100%; object-fit: cover;">
+                    </div>
+                    <div style="height:200px; width:18%; margin-top:30px; margin-left:30px">
+                        <img src="/admin_common/img/room/bg01.jpg" style="height: 100%; width: 100%; object-fit: cover;">
+                    </div>
+                </div>
+
+                <div class="breadcome-list" style="margin-left:35px; width:1655px; border-radius: 20px;">
+                    <div style="
+                        display: flex; 
+                        flex-direction: column; 
+                        background-color: #ffffff; 
+                        padding: 25px 30px; 
+                        border-radius: 15px; 
+                        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+                        max-width: 1000px; 
+                        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                        color: #222222;
+                        gap: 20px; 
+                        margin-top:250px;
+                        margin-left:300px;
+                    ">
+                        
+                        <div style="display: flex; gap: 15px; align-items: stretch; width: 100%;">
+                            <div style="flex: 2; background: #f0f4ff; padding: 15px 20px; border-radius: 12px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.05); display: flex; flex-direction: column; justify-content: center;">
+                                <h4 style="margin:0 0 12px; color: #2a3a6b; font-weight: 600; font-size: 14px; text-align: center;">어매니티</h4>
+                                <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; align-items: center;">
+                                    <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox" style="width: 16px; height: 16px;"> 배스용품</label>
+                                    <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox" style="width: 16px; height: 16px;"> 배스타월</label>
+                                    <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox" style="width: 16px; height: 16px;"> 배스로브</label>
+                                    <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox" style="width: 16px; height: 16px;"> 헤어드라이어</label>
+                                    <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox" style="width: 16px; height: 16px;"> 체중계</label>
+                                </div>
+                            </div>
+                            <div style="flex: 1; background: #f0f4ff; border-radius: 10px; padding: 15px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.1); display: flex; flex-direction: column; justify-content: center;">
+                                <h4 style="margin:0 0 10px; color:#2a3a6b; font-weight:600; font-size:14px; text-align: center;">베드 타입</h4>
+                                <select id="bedType" class="form-control" style="width: 100%; background-color: white; color: #000000; border: 1px solid #ccc; border-radius: 5px; padding: 6px; font-size: 14px; font-weight: 500; cursor: pointer;">
+                                    <option value="KING">KING</option>
+                                    <option value="2_SUPER_SINGLE">2 SUPER SINGLE</option>
+                                    <option value="2_QUEEN">2 QUEEN</option>
+                                    <option value="1_KING_1_SOFA_BED">1 KING 1 SOFA BED</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; gap: 15px; align-items: stretch; width: 100%;">
+                            <div style="flex: 2; background: #f0f4ff; padding: 15px 20px; border-radius: 12px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.05);">
+                                <h4 style="margin:0 0 15px; color: #2a3a6b; font-weight: 600; font-size: 14px; text-align: center;">객실 서비스</h4>
+                                <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px 8px; justify-items: start; align-items: center;">
+                                    <label style="display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox"> 레스토랑</label>
+                                    <label style="display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox"> 라운지</label>
+                                    <label style="display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox"> 실내수영장</label>
+                                    <label style="display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox"> 디지털채팅</label>
+                                    <label style="display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox"> 피트니스</label>
+                                    <label style="display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox"> 세탁서비스</label>
+                                    <label style="display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox"> 무료WiFi</label>
+                                    <label style="display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox"> 룸서비스</label>
+                                    <label style="display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox"> 컨시어지</label>
+                                    <label style="display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox"> 하우스키핑</label>
+                                </div>
+                            </div>
+                            <div style="flex: 1; background: #f0f4ff; border-radius: 12px; padding: 15px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.08); display: flex; flex-direction: column; justify-content: center;">
+                                <h4 style="margin:0 0 10px; color:#2a3a6b; font-weight:600; font-size:13px; text-align: center;">체크인/아웃 시간</h4>
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <select id="checkInTime" style="flex: 1; background-color: white; color: #000000; border: 1px solid #ccc; border-radius: 5px; padding: 6px 2px; font-size: 13px; font-weight: 500; cursor: pointer; text-align: center;">
+                                        <option value="15:00" selected>15:00</option>
+                                    </select>
+                                    <span style="color: #2a3a6b; font-weight: bold; font-size: 14px; opacity: 0.5;">/</span>
+                                    <select id="checkOutTime" style="flex: 1; background-color: white; color: #000000; border: 1px solid #ccc; border-radius: 5px; padding: 6px 2px; font-size: 13px; font-weight: 500; cursor: pointer; text-align: center;">
+                                        <option value="11:00" selected>11:00</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="width:100%; background: #f0f4ff; padding: 15px; border-radius: 12px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.05); display: flex; flex-direction: column;">
+                            <h4 style="margin: 0 0 10px 5px; color: #2a3a6b; font-weight: 600; font-size: 14px; text-align: left;">소개글</h4>
+                            <textarea id="introText" placeholder="여기에 객실 소개글을 입력하세요..." style="
+                                width: 100%;
+                                min-height: 100px; 
+                                padding: 10px;
+                                border: 1px solid #ccc;
+                                border-radius: 8px;
+                                font-size: 14px;
+                                font-family: inherit;
+                                color: #333;
+                                resize: vertical; 
+                                box-sizing: border-box;
+                                outline: none;
+                                line-height: 1.5;
+                            "></textarea>
+                        </div>
+
+                        <div style="display: flex; gap: 15px; justify-content: flex-end; margin-top: 10px; border-top: 1px solid #eee; padding-top: 20px;">
+                            <button style="padding: 10px 35px; border: 2px solid #7495CC; border-radius: 10px; background-color: white; color: #7495CC; font-weight: 600; cursor: pointer; font-size: 15px; transition: all 0.3s ease;" onmouseover="this.style.backgroundColor='#f0f4ff';" onmouseout="this.style.backgroundColor='white';">취소</button>
+                            <button style="padding: 10px 35px; border: none; border-radius: 10px; background-color: #7495CC; color: white; font-weight: 600; cursor: pointer; font-size: 15px; box-shadow: 0 3px 8px rgba(116, 149, 204, 0.3); transition: background-color 0.3s ease;" onmouseover="this.style.backgroundColor='#6482FF';" onmouseout="this.style.backgroundColor='#7495CC';">수정</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+        <div th:replace="~{manager/fragments/footer :: footer}"></div>  
     </div>
-
-    <div style="flex: 1; background: #f0f4ff; padding: 15px 20px; border-radius: 12px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.05); display: flex; flex-direction: column; justify-content: center;">
-        <h4 style="margin:0 0 12px; color: #2a3a6b; font-weight: 600; font-size: 14px; text-align: center;">어매니티</h4>
-        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; align-items: center;">
-            <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox" style="width: 16px; height: 16px;"> 배스용품</label>
-            <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox" style="width: 16px; height: 16px;"> 배스타월</label>
-            <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox" style="width: 16px; height: 16px;"> 배스로브</label>
-            <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox" style="width: 16px; height: 16px;"> 헤어드라이어</label>
-            <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox" style="width: 16px; height: 16px;"> 체중계</label>
-        </div>
-    </div>
-
-</div>
-     
-            
-          <div style="flex: 1; background: #f0f4ff; padding: 15px 20px; border-radius: 12px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.05);">
-    <h4 style="margin:0 0 15px; color: #2a3a6b; font-weight: 600; font-size: 14px; text-align: center;">객실 서비스</h4>
-    
-    <div style="
-        display: grid; 
-        grid-template-columns: repeat(5, 1fr); 
-        gap: 12px 10px; 
-        justify-items: start; 
-        align-items: center;
-        max-width: 600px;
-        margin: 0 auto;
-    ">
-        
-        <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: #333; cursor: pointer;">
-            <input type="checkbox" style="width: 15px; height: 15px; cursor: pointer;"> 호텔 내 레스토랑
-        </label>
-        <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: #333; cursor: pointer;">
-            <input type="checkbox" style="width: 15px; height: 15px; cursor: pointer;"> 라운지 이용
-        </label>
-        <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: #333; cursor: pointer;">
-            <input type="checkbox" style="width: 15px; height: 15px; cursor: pointer;"> 실내 수영장
-        </label>
-        <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: #333; cursor: pointer;">
-            <input type="checkbox" style="width: 15px; height: 15px; cursor: pointer;"> 디지털 채팅
-        </label>
-        <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: #333; cursor: pointer;">
-            <input type="checkbox" style="width: 15px; height: 15px; cursor: pointer;"> 피트니스 센터
-        </label>
-
-        <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: #333; cursor: pointer;">
-            <input type="checkbox" style="width: 15px; height: 15px; cursor: pointer;"> 호텔 내 세탁
-        </label>
-        <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: #333; cursor: pointer;">
-            <input type="checkbox" style="width: 15px; height: 15px; cursor: pointer;"> 무료 wifi
-        </label>
-        <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: #333; cursor: pointer;">
-            <input type="checkbox" style="width: 15px; height: 15px; cursor: pointer;"> 24시간 룸서비스
-        </label>
-        <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: #333; cursor: pointer;">
-            <input type="checkbox" style="width: 15px; height: 15px; cursor: pointer;"> 컨시어지
-        </label>
-        <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: #333; cursor: pointer;">
-            <input type="checkbox" style="width: 15px; height: 15px; cursor: pointer;"> 매일 하우스 키핑
-        </label>
-
-    </div>
-</div>
-
-
-
-
-              <div style="flex: 1; margin-top:20px; background: #f0f4ff; padding: 15px; border-radius: 12px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.05); display: flex; flex-direction: column;">
-    <h4 style="margin: 0 0 10px 5px; color: #2a3a6b; font-weight: 600; font-size: 14px; text-align: left;">소개글</h4>
-    
-    <textarea id="introText" placeholder="여기에 객실 소개글을 입력하세요..." style="
-        width: 100%;
-        min-height: 100px; 
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        font-size: 14px;
-        font-family: inherit;
-        color: #333;
-        resize: vertical; 
-        box-sizing: border-box;
-        outline: none;
-        line-height: 1.5;
-    "></textarea>
-</div>
-        </div>
-
-    <div style="display: flex; gap: 15px; justify-content: flex-end; margin-top: 10px; border-top: 1px solid #eee; padding-top: 20px;">
-        <button style="
-            padding: 10px 35px; 
-            border: 2px solid #7495CC; 
-            border-radius: 10px; 
-            background-color: white; 
-            color: #7495CC; /* 취소 버튼색을 메인색으로 변경 제안 (가독성) */
-            font-weight: 600; 
-            cursor: pointer;
-            font-size: 15px;
-            transition: all 0.3s ease;
-        " 
-        onmouseover="this.style.backgroundColor='#f0f4ff';" 
-        onmouseout="this.style.backgroundColor='white';">
-            취소
-        </button>
-
-        <button style="
-            padding: 10px 35px; 
-            border: none; 
-            border-radius: 10px; 
-            background-color: #7495CC; 
-            color: white; 
-            font-weight: 600; 
-            cursor: pointer;
-            font-size: 15px;
-            box-shadow: 0 3px 8px rgba(116, 149, 204, 0.3);
-            transition: background-color 0.3s ease;
-        " 
-        onmouseover="this.style.backgroundColor='#6482FF';" 
-        onmouseout="this.style.backgroundColor='#7495CC';">
-            수정
-        </button>
-    </div>
-</div>
-							
-							</div>
-                        	
-
-                   		</div>
-                	</div>
-        </div>
-	
-        <!-- 막기 -->
-    
-       <div th:replace="~{manager/fragments/footer :: footer}"></div>  
 </body>
-
 </html>
