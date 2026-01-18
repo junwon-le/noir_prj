@@ -33,4 +33,13 @@ public class ReserveController {
 	public String nonDinningRes() {
 		return "/reserve/nonDinningRes";
 	}
+	
+	@GetMapping("/admin/nonRoomRes")
+	public String adminNonRoomRes() {
+		return "/manager/reserve/nonRoomRes";
+	}
+	@GetMapping("/admin/nonDinningRes")
+	public String adminNonDinningRes() {
+		return "/manager/reserve/nonDinningRes";
+	}
 }
