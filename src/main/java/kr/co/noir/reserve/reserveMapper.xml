@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="kr.co.sist.reserve">
+  	<select id="selectRoom" resultType="roomSearchDomain">
+  		select room_type, room_detail, room_img1, room_max_person, room_price
+		from room_info ri , room_price rp
+		where rp.room_date='2026-05-13'
+  	</select>
+  </mapper>

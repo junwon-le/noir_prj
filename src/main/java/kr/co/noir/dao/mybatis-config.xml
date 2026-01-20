@@ -6,6 +6,7 @@
 	<properties resource="properties/database.properties"/>
 	<typeAliases>
 		<typeAlias type="kr.co.noir.room.RoomDomain" alias="roomDomain"/>		
+		<typeAlias type="kr.co.noir.reserve.RoomSearchDomain" alias="roomSearchDomain"/>		
 	</typeAliases>
 	
 	
@@ -22,5 +23,6 @@
   </environments>
   <mappers>
     <mapper resource="kr/co/noir/room/roomMapper.xml"/> <!-- select 연습 -->
+    <mapper resource="kr/co/noir/reserve/reserveMapper.xml"/> <!-- select 연습 -->
   </mappers>
 </configuration>

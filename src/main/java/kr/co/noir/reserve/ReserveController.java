@@ -1,8 +1,8 @@
 package kr.co.noir.reserve;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/reserve")
 @Controller
 public class ReserveController {
+	
+	@Autowired
+	private RoomReserveService rrs;
+	
 	@GetMapping("/roomReserve")
 	public String reserve() {
 		return "/reserve/roomRes";
@@ -22,9 +26,8 @@ public class ReserveController {
 	
 	@GetMapping("/roomResSearch")
 	public String roomResSearch(Model model) {
-		List<String> roomDomain = new ArrayList<String>();
-		roomDomain.add("디럭스");
-		roomDomain.add("스위트");
+		List<RoomSearchDomain> roomDomain = rrs.searchRoom();
+		
 		model.addAttribute("roomList",roomDomain);
 		return "/reserve/roomResSearch";
 	}
