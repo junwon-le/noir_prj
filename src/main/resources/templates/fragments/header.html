@@ -45,11 +45,11 @@
 					<a href="#"  class="subject">ROOMS</a>
 					<div class="main-sub">
 						<ul>
-							<li><a href="../view/standardQueen.jsp"><span>STANDARD<br>QUEEN</span></a></li>
-							<li><a href="/view/viewLink.do?page=homepage/KOR/rooms/semiDeluxeDouble"><span>SEMI-DELUXE<br>DOUBLE</span></a></li>
-							<li><a href="/view/viewLink.do?page=homepage/KOR/rooms/deluxeDouble"><span>DELUXE<br>DOUBLE</span></a></li>
-							<li><a href="/view/viewLink.do?page=homepage/KOR/rooms/deluxeTwin"><span>DELUXE<br>TWIN</span></a></li>
-							<li><a href="/view/viewLink.do?page=homepage/KOR/rooms/familyTwin"><span>FAMILY<br>TWIN</span></a></li>
+							<li><a th:href="@{{url}(url='/roomView', num=1)}"><span>STANDARD<br>QUEEN</span></a></li>
+							<li><a th:href="@{{url}(url='/roomView', num=2)}"><span>SEMI-DELUXE<br>DOUBLE</span></a></li>
+							<li><a th:href="@{{url}(url='/roomView', num=3)}"><span>DELUXE<br>DOUBLE</span></a></li>
+							<li><a th:href="@{{url}(url='/roomView', num=4)}"><span>DELUXE<br>TWIN</span></a></li>
+							<li><a th:href="@{{url}(url='/roomView', num=5)}"><span>FAMILY<br>TWIN</span></a></li>
 						</ul>
 					</div>
 				</li>
