@@ -20,7 +20,22 @@ public class MemberController {
 	public String aboutHotel() {
 		return "/hotel/about";
 	}
+	
+	@GetMapping("/hotel/library")
+	public String hotelLibrary() {
+		return "/hotel/library";
+	}
 
+	@GetMapping("/hotel/gym")
+	public String hotelGym() {
+		return "/hotel/gym";
+	}	
+
+	@GetMapping("/hotel/laundry")
+	public String hotelLaundry() {
+		return "/hotel/laundry";
+	}	
+		
 	@GetMapping("/login/memberLogin")
 	public String memberLogin() {
 		return "/login/memberLogin";

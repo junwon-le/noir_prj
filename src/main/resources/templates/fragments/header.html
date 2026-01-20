@@ -2,9 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org">
  <div th:fragment="header">
     
+
  <div id="header_wrap">
 		<nav class="top_nav" style="height:50px">
-			<ul>     <!-- login connect -->
+			<ul>
 				    <li th:if="${session.member == null and session.admin == null}">
 						<a href="/login/memberLogin">LOGIN</a>
 				    </li>
@@ -13,7 +14,8 @@
 				    </li>
 				    <li th:if="${session.loginMember == null}"> 
 				        <a href="/login/join" >JOIN</a>				    
-				    </li> 
+				    </li>
+				
 				<!-- <li>
 					LANGUAGE : <a href="#" class="langChange" data-lang="KOR">KOR</a> / <a href="#" class="langChange" data-lang="ENG">ENG</a> / <a href="#" class="langChange" data-lang="JPN">JPN</a> / <a href="#" class="langChange" data-lang="CHN">CHN</a>
 				</li> -->
@@ -29,11 +31,11 @@
 					<div class="main-sub">
 						<ul>
 							<li><a href="/view/viewLink.do?page=homepage/KOR/hotel/greeting"><span>GREETING</span></a></li>
-							<!--  <li><a href="/view/viewLink.do?page=homepage/KOR/hotel/about"><span>ABOUT HOTEL</span></a></li>-->
- 			 	 				  <li><a href="/hotel/about">ABOUT HOTEL</a>
+							<li><a href="/hotel/about">ABOUT HOTEL</a>
 							<li><a href="/view/viewLink.do?page=homepage/KOR/hotel/design"><span>HOTEL DESIGN</span></a></li>
 							<li><a href="/view/viewLink.do?page=homepage/KOR/hotel/location"><span>LOCATION</span></a></li>
 							<li><a href="/view/news_list.do"><span>NEWS</span></a></li>
+							
 						</ul>
 					</div>
 				</li>
@@ -65,10 +67,10 @@
 					<div class="main-sub">
 						<ul>
 						
-							<li><a href="/view/viewLink.do?page=homepage/KOR/activities/doLibrary"><span>LIBRARY</span></a></li>
-							<li><a href="/view/viewLink.do?page=homepage/KOR/activities/gym"><span>GYM</span></a></li>
+							<li><a href="/hotel/library">LIBRARY</a></li>		
+							<li><a href="/hotel/gym">GYM</a></li>
 							<li><a href="/view/viewLink.do?page=homepage/KOR/activities/doGallery"><span>FOUNDER'S GALLERY</span></a></li>							
-							<li><a href="/view/viewLink.do?page=homepage/KOR/facilities/laundry"><span>LAUNDRY</span></a></li>
+							<li><a href="/hotel/laundry">LAUNDRY</a></li>
 						</ul>
 					</div>
 				</li>
