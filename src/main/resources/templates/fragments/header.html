@@ -2,10 +2,9 @@
 <html xmlns:th="http://www.thymeleaf.org">
  <div th:fragment="header">
     
-
  <div id="header_wrap">
 		<nav class="top_nav" style="height:50px">
-			<ul>
+			<ul>     <!-- login connect -->
 				    <li th:if="${session.member == null and session.admin == null}">
 						<a href="/login/memberLogin">LOGIN</a>
 				    </li>
@@ -14,7 +13,7 @@
 				    </li>
 				    <li th:if="${session.loginMember == null}"> 
 				        <a href="/login/join" >JOIN</a>				    
-				    </li>
+				    </li> 
 				<!-- <li>
 					LANGUAGE : <a href="#" class="langChange" data-lang="KOR">KOR</a> / <a href="#" class="langChange" data-lang="ENG">ENG</a> / <a href="#" class="langChange" data-lang="JPN">JPN</a> / <a href="#" class="langChange" data-lang="CHN">CHN</a>
 				</li> -->
