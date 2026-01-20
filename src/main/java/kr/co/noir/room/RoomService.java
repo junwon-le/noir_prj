@@ -15,7 +15,6 @@ public class RoomService {
 		RoomDomain rDomain = null;
 		try {
 			rDomain = rDAO.selectRoom(num);
-			System.out.println(rDomain);
 		}catch(PersistenceException pe) {
 			pe.printStackTrace();
 		}
