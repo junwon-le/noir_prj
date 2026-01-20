@@ -178,21 +178,25 @@ $(document).on('click','.btn_pop_close',function(e){
 
 		<div class="frame frame-rooms">
 			<nav class="frame-nav">
-				HOTEL / THE ROOMS / <span class="gold">STANDARD QUEEN</span>
+				HOTEL / THE ROOMS / <span class="gold" th:text="${room.roomType}"></span>
 			</nav>
-			<h2 class="frame-title gold">STANDARD QUEEN</h2>
+			<h2 class="frame-title gold" th:text="${room.roomType}"></h2>
 			<div class="etc">
 				<div class="room_summary">
 					<h4>BED TYPE</h4>
-					<p>QUEEN</p>
+					<th:block th:switch="${room.roomType}">
+					<p th:case="SEMI-DELUXE DOUBLE">2 SUPER<br>SINGLE</p>
+					<p th:case="*"><th:block th:text="${room.roomBadType}"></p>
+					</th:block>
 				</div>
 				<div class="room_summary">
 					<h4>CAPACITY</h4>
-					<p>1<span>Pax</span></p>
+					
+					<p th:text="${room.roomMaxPerson}"><span>Pax</span></p>
 				</div>
 				<div class="room_summary">
 					<h4>SIZE</h4>
-					<p>22.1<span>㎡</span></p>
+					<p th:text="${room.roomArea}">22.1<span>㎡</span></p>
 				</div>
 			</div>
 		</div>

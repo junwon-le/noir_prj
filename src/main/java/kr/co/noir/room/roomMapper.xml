@@ -7,11 +7,11 @@
 
 	<resultMap type="roomDomain" id="roomSelect">
 		<result column="room_type" property="roomType"/>	
-		<result column="room_img1" property="roomImg[0]"/>	
-		<result column="room_img2" property="roomImg[1]"/>	
-		<result column="room_img3" property="roomImg[2]"/>	
-		<result column="room_img4" property="roomImg[3]"/>	
-		<result column="room_img5" property="roomImg[4]"/>
+		<result column="room_img1" property="roomImg1"/>	
+		<result column="room_img2" property="roomImg2"/>	
+		<result column="room_img3" property="roomImg3"/>	
+		<result column="room_img4" property="roomImg4"/>	
+		<result column="room_img5" property="roomImg5"/>	
 		<result column="room_area" property="roomArea"/>	
 		<result column="room_bad_type" property="roomBadType"/>	
 		<result column="room_max_person" property="roomMaxPerson"/>	
