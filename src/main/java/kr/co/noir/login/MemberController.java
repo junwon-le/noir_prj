@@ -16,12 +16,17 @@ public class MemberController {
 	@Autowired
 	private MemberService memberService;
 	
-	@GetMapping("/memberLogin")
+	@GetMapping("/hotel/about")
+	public String aboutHotel() {
+		return "/hotel/about";
+	}
+
+	@GetMapping("/login/memberLogin")
 	public String memberLogin() {
 		return "/login/memberLogin";
 	}
 	
-	@GetMapping("/join")
+	@GetMapping("/login/join")
 	public String join() {
 		return "/login/join";
 	}
@@ -48,7 +53,7 @@ public class MemberController {
 			return "redirect:/main"; // 첫화면으로 
 		} else {
 			// 로그인 실패: 에러 파라미터와 함께 로그인 페이지로 리다이렉트
-			return "redirect:/main/login?error=true";
+			return "redirect:/login/memberLogin?error=true";
 		}//end if
 		
 	} //memberLoginProcess
