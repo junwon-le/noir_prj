@@ -12,8 +12,15 @@ public class MemberService {
 	
 	public MemberDTO login(String memberId, String memberPass) {
 		return memberMapper.login(memberId, memberPass);
-	}
-}
+	}//login
+	
+	public MemberDTO findIdByNameAndEmail(String memberName, String memberEmail) {
+		MemberDTO foundId=null;
+		foundId= memberMapper.findIdByNameAndEmail(memberName, memberEmail);
+		return foundId;
+	}//findIdByNameAndEmail
+	
+}//class
 
 
 

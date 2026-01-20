@@ -6,11 +6,11 @@
  <div id="header_wrap">
 		<nav class="top_nav" style="height:50px">
 			<ul>
-				    <li th:if="${session.loginMember == null and session.admin == null}">
+				    <li th:if="${session.member == null and session.admin == null}">
 				        <a href="#popIframe" class="open_modal" url="/view/login.do" style="color:white; text-decoration: none">LOGIN</a>
 				    </li>
 				
-				    <li th:if="${session.loginMember != null or session.admin != null}">
+				    <li th:if="${session.member != null or session.admin != null}">
 				        <a href="/logout.do" style="color:white; text-decoration: none">LOGOUT</a>
 				    </li>
 				

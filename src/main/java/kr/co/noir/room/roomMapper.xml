@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.noir.room">
+
+
+	<resultMap type="roomDomain" id="roomSelect">
+		<result column="room_type" property="roomType"/>	
+		<result column="room_img1" property="roomImg[0]"/>	
+		<result column="room_img2" property="roomImg[1]"/>	
+		<result column="room_img3" property="roomImg[2]"/>	
+		<result column="room_img4" property="roomImg[3]"/>	
+		<result column="room_img5" property="roomImg[4]"/>
+		<result column="room_area" property="roomArea"/>	
+		<result column="room_bad_type" property="roomBadType"/>	
+		<result column="room_max_person" property="roomMaxPerson"/>	
+			
+	</resultMap> 
+
+
+
+		<select id="roomSelect" parameterType="int" resultMap="roomSelect">
+		select room_type, room_img1, room_img2, room_img3, room_img4, room_img5, room_area, room_bad_type,
+		 room_max_person from room_info
+		where
+		<choose>
+			<when test="num eq 1">
+			room_type_num=1
+			</when>
+			<when test="num eq 2">
+			room_type_num=2
+			</when>
+			<when test="num eq 3">
+			room_type_num=3
+			</when>
+			<when test="num eq 4">
+			room_type_num=4
+			</when>
+			<otherwise>
+			room_type_num=5
+			</otherwise>		
+		</choose>
+		</select>	
+</mapper>
+
+
+
