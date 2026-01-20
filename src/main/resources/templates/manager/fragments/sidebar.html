@@ -11,28 +11,38 @@
                 <nav class="sidebar-nav left-sidebar-menu-pro">
                     <ul class="metismenu" id="menu1">
                         <li class="active">
-                            <a href="index.html">
+                            <a href="dashboard.html">
 							   <i class="icon nalika-pie-chart icon-wrap"></i>
 							   <span>대시보드</span>
 							</a>
                         </li>
                         <li>
-                            <a href="mailbox.html" aria-expanded="false">
+                            <a href="memberMgr.html" aria-expanded="false">
                             <i class="icon nalika-user icon-wrap"></i> <span>회원 관리</span></a>
                         </li>
                         <li>
-                            <a href="mailbox.html" aria-expanded="false">
+                            <a href="nonMemberMgr.html" aria-expanded="false">
                             <i class="icon nalika-user icon-wrap"></i> <span>비회원 관리</span></a>
                         </li>
                         <li>
-                            <a href="mailbox.html" aria-expanded="false"><i class="icon nalika-settings icon-wrap"></i>
+                            <a th:href="@{/admin/roomMgr}" aria-expanded="false"><i class="icon nalika-settings icon-wrap"></i>
                             <span>객실 관리</span></a>
+                            
+                        </li>
+                        <li>
+                            <a href="mailbox.html" aria-expanded="false"><i class="icon nalika-settings icon-wrap"></i>
+                            <span>객실 예약관리(회원)</span></a>
+                            
+                        </li>
+                        <li>
+                            <a href="mailbox.html" aria-expanded="false"><i class="icon nalika-settings icon-wrap"></i>
+                            <span>객실 예약관리(비회원)</span></a>
                             
                         </li>
                         
                         <hr style="height: 0.5px;  background-color: #ccc;  width: 80%; margin: 5px auto;    ">
                         <li>
-                            <a href="mailbox.html" aria-expanded="false"><i class="icon nalika-search icon-wrap"></i> 
+                            <a th:href="@{/admin/dinningMgr}" aria-expanded="false"><i class="icon nalika-search icon-wrap"></i> 
                             <span>다이닝 관리</span></a>
                         </li>
                         <li>

@@ -6,16 +6,14 @@
  <div id="header_wrap">
 		<nav class="top_nav" style="height:50px">
 			<ul>
-				    <li th:if="${session.loginMember == null and session.admin == null}">
-				        <a href="#popIframe" class="open_modal" url="/view/login.do" style="color:white; text-decoration: none">LOGIN</a>
+				    <li th:if="${session.member == null and session.admin == null}">
+						<a href="/login/memberLogin">LOGIN</a>
 				    </li>
-				
-				    <li th:if="${session.loginMember != null or session.admin != null}">
-				        <a href="/logout.do" style="color:white; text-decoration: none">LOGOUT</a>
+				    <li th:if="${session.member != null or session.admin != null}">
+				        <a href="/login/logout" >LOGOUT</a>
 				    </li>
-				
-				    <li th:if="${session.loginMember == null}">
-				        <a href="#popIframe" class="open_modal" url="/view/join_01.do" style="color:white; text-decoration: none">JOIN</a>
+				    <li th:if="${session.loginMember == null}"> 
+				        <a href="/login/join" >JOIN</a>				    
 				    </li>
 				
 				<!-- <li>
@@ -33,7 +31,7 @@
 					<div class="main-sub">
 						<ul>
 							<li><a href="/view/viewLink.do?page=homepage/KOR/hotel/greeting"><span>GREETING</span></a></li>
-							<li><a href="/view/viewLink.do?page=homepage/KOR/hotel/about"><span>ABOUT HOTEL</span></a></li>
+							<li><a href="/hotel/about">ABOUT HOTEL</a>
 							<li><a href="/view/viewLink.do?page=homepage/KOR/hotel/design"><span>HOTEL DESIGN</span></a></li>
 							<li><a href="/view/viewLink.do?page=homepage/KOR/hotel/location"><span>LOCATION</span></a></li>
 							<li><a href="/view/news_list.do"><span>NEWS</span></a></li>
@@ -45,11 +43,11 @@
 					<a href="#"  class="subject">ROOMS</a>
 					<div class="main-sub">
 						<ul>
-							<li><a href="../view/standardQueen.jsp"><span>STANDARD<br>QUEEN</span></a></li>
-							<li><a href="/view/viewLink.do?page=homepage/KOR/rooms/semiDeluxeDouble"><span>SEMI-DELUXE<br>DOUBLE</span></a></li>
-							<li><a href="/view/viewLink.do?page=homepage/KOR/rooms/deluxeDouble"><span>DELUXE<br>DOUBLE</span></a></li>
-							<li><a href="/view/viewLink.do?page=homepage/KOR/rooms/deluxeTwin"><span>DELUXE<br>TWIN</span></a></li>
-							<li><a href="/view/viewLink.do?page=homepage/KOR/rooms/familyTwin"><span>FAMILY<br>TWIN</span></a></li>
+							<li><a th:href="@{{url}(url='/roomView', num=1)}"><span>STANDARD<br>QUEEN</span></a></li>
+							<li><a th:href="@{{url}(url='/roomView', num=2)}"><span>SEMI-DELUXE<br>DOUBLE</span></a></li>
+							<li><a th:href="@{{url}(url='/roomView', num=3)}"><span>DELUXE<br>DOUBLE</span></a></li>
+							<li><a th:href="@{{url}(url='/roomView', num=4)}"><span>DELUXE<br>TWIN</span></a></li>
+							<li><a th:href="@{{url}(url='/roomView', num=5)}"><span>FAMILY<br>TWIN</span></a></li>
 						</ul>
 					</div>
 				</li>
@@ -69,10 +67,10 @@
 					<div class="main-sub">
 						<ul>
 						
-							<li><a href="/view/viewLink.do?page=homepage/KOR/activities/doLibrary"><span>LIBRARY</span></a></li>
-							<li><a href="/view/viewLink.do?page=homepage/KOR/activities/gym"><span>GYM</span></a></li>
+							<li><a href="/hotel/library">LIBRARY</a></li>		
+							<li><a href="/hotel/gym">GYM</a></li>
 							<li><a href="/view/viewLink.do?page=homepage/KOR/activities/doGallery"><span>FOUNDER'S GALLERY</span></a></li>							
-							<li><a href="/view/viewLink.do?page=homepage/KOR/facilities/laundry"><span>LAUNDRY</span></a></li>
+							<li><a href="/hotel/laundry">LAUNDRY</a></li>
 						</ul>
 					</div>
 				</li>

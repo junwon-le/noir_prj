@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="title" content="NOIR - The Library">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>NOIR - The Library</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Noto+Sans+KR:wght@300;400&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" type="text/css" th:href="@{/common/css/homepage/base.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/common/css/homepage/style.css(v='0312')}">
+<link rel="stylesheet" type="text/css" th:href="@{/common/css/homepage/sub.css(v='0312')}">
+<link rel="stylesheet" type="text/css" th:href="@{/common/css/homepage/admin_style.css}">
+
+<script th:src="@{/common/js/comm/jquery-3.5.1.min.js}"></script>
+<script th:src="@{/common/js/homepage/custom.js}"></script>
+
+<style>
+    /* =========================================
+       1. 기본 레이아웃
+       ========================================= */
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Noto Sans KR', sans-serif; }
+
+    html { height: auto !important; overflow-y: auto !important; overflow-x: hidden !important; }
+    
+    body {
+        background: #0f1218;
+        display: flex !important;
+        flex-direction: column !important;
+        min-height: 100vh !important;
+        height: auto !important;
+        position: relative !important;
+        color: #d6c6a5;
+        margin: 0 !important;
+    }
+
+    header { position: absolute; top: 0; left: 0; width: 100%; z-index: 100; }
+    
+    #main-wrapper { flex: 1 0 auto; width: 100%; position: relative; z-index: 10; display: block; }
+    
+    footer { flex-shrink: 0; position: relative; width: 100%; z-index: 100; background-color: #1a1a1a; }
+    
+    #privacy-layer { position: absolute; bottom: 0; width: 100%; z-index: 101; }
+
+    /* =========================================
+       2. The Library 전용 스타일
+       ========================================= */
+    
+    /* [메인 비주얼] */
+    .library-visual {
+        height: 400px;
+        background: linear-gradient(
+            rgba(0,0,0,0.3),
+            rgba(0,0,0,0.6)
+        ),
+        url('../common/images/homepage/library_bg.jpg') center center / cover no-repeat;
+        
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .library-visual h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: 56px;
+        letter-spacing: 4px;
+        color: #fff;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    }
+    
+    .library-visual p {
+        font-family: 'Playfair Display', serif;
+        font-size: 18px;
+        color: #e0e0e0;
+        margin-top: 20px;
+        letter-spacing: 1px;
+        font-style: italic;
+    }
+
+    /* [섹션 1] 소개 글 */
+    .library-intro {
+        max-width: 1200px;
+        margin: 70px auto;
+        display: grid;
+        grid-template-columns: 1fr 1.2fr;
+        gap: 80px;
+        padding: 0 20px;
+        align-items: start;
+    }
+
+    .library-intro h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: 42px;
+        line-height: 1.2;
+        margin-bottom: 30px;
+        color: #d6c6a5;
+    }
+    
+    .intro-desc h3 {
+        font-size: 20px;
+        font-weight: 500;
+        color: #fff;
+        margin-bottom: 20px;
+    }
+
+    .intro-desc p {
+        font-size: 15px;
+        color: #c9c2b8;
+        line-height: 1.8;
+        margin-bottom: 20px;
+        word-break: keep-all;
+    }
+
+    /* [섹션 2] 서비스 & 편의시설 (이미지형 수정) */
+    .library-service {
+        background: #14171d;
+        padding: 70px 0;
+    }
+
+    .service-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+    
+    .section-title {
+        text-align: center;
+        font-family: 'Playfair Display', serif;
+        font-size: 32px;
+        color: #d6c6a5;
+        margin-bottom: 60px;
+    }
+
+    .service-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+    }
+
+    /* 카드 스타일 수정: 패딩 제거하고 이미지 꽉 차게 */
+    .service-card {
+        background: #0f1218;
+        border: 1px solid #333;
+        text-align: center;
+        transition: 0.3s;
+        overflow: hidden; /* 이미지 확대 시 넘침 방지 */
+    }
+
+    .service-card:hover {
+        border-color: #b89b6a;
+        transform: translateY(-5px);
+    }
+
+    /* 이미지 영역 */
+    .service-img-box {
+        width: 100%;
+        height: 250px; /* 이미지 높이 고정 */
+        overflow: hidden;
+        border-bottom: 1px solid #222;
+    }
+
+    .service-img-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.5s ease;
+    }
+
+    .service-card:hover .service-img-box img {
+        transform: scale(1.1); /* 호버 시 이미지 확대 효과 */
+    }
+
+    /* 텍스트 영역 */
+    .service-text-box {
+        padding: 30px 20px;
+    }
+
+    .service-text-box h4 {
+        font-size: 18px;
+        color: #fff;
+        margin-bottom: 15px;
+        font-family: 'Playfair Display', serif;
+        letter-spacing: 1px;
+    }
+
+    .service-text-box p {
+        font-size: 14px;
+        color: #999;
+        line-height: 1.6;
+        word-break: keep-all;
+    }
+
+    /* [섹션 3] 운영 안내 (버튼 제거 및 Contact 추가) */
+    .library-info {
+        max-width: 1000px;
+        margin: 70px auto;
+        border-top: 1px solid #333;
+        border-bottom: 1px solid #333;
+        padding: 40px 0;
+        display: flex;
+        justify-content: space-around;
+        align-items: flex-start; /* 상단 정렬 */
+        text-align: center;
+    }
+
+    .info-item {
+        flex: 1;
+        padding: 0 20px;
+        border-right: 1px solid #222; /* 구분선 추가 */
+    }
+
+    .info-item:last-child {
+        border-right: none;
+    }
+
+    .info-item h5 {
+        font-size: 16px;
+        color: #b89b6a;
+        margin-bottom: 15px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-weight: 600;
+    }
+
+    .info-item p {
+        font-size: 16px;
+        color: #fff;
+        font-weight: 300;
+        line-height: 1.6;
+    }
+    
+    .contact-mail {
+        font-size: 14px;
+        color: #888;
+        margin-top: 5px;
+        display: block;
+    }
+
+    /* 반응형 */
+    @media (max-width: 768px) {
+        .library-visual { height: 350px; }
+        .library-visual h1 { font-size: 36px; }
+        .library-intro { grid-template-columns: 1fr; gap: 40px; margin: 80px auto; }
+        .service-grid { grid-template-columns: 1fr; }
+        
+        .library-info { flex-direction: column; gap: 40px; padding: 40px 20px; }
+        .info-item { border-right: none; border-bottom: 1px solid #222; padding-bottom: 30px; width: 100%; }
+        .info-item:last-child { border-bottom: none; padding-bottom: 0; }
+    }
+
+</style>
+</head>
+
+<body>
+
+    <header>
+        <div th:replace="~{fragments/header :: header}"></div>
+    </header>
+
+    <div id="main-wrapper">
+        
+        <div class="library-visual">
+            <div>
+                <h1>THE LIBRARY</h1>
+                <p>Private Sanctuary for Inspiration</p>
+            </div>
+        </div>
+
+        <section class="library-intro">
+            <div>
+                <h2>Space for<br>Intellect & Rest</h2>
+            </div>
+            <div class="intro-desc">
+                <h3>"고전적인 아름다움 속에서 찾는 비즈니스와 휴식의 균형"</h3>
+                <p>
+                    NOIR Hotel의 라이브러리는 단순한 서재를 넘어, 
+                    투숙객을 위한 프라이빗한 소셜 라운지이자 미팅 공간입니다. 
+                    엄선된 아트북과 인문학 서적이 비치된 서가, 따뜻한 조명 아래 
+                    배치된 앤티크 가구는 깊은 몰입과 편안한 대화를 이끌어냅니다.
+                </p>
+                <p>
+                    소규모 비즈니스 미팅이나 개인적인 집무를 위한 최적의 환경을 제공하며,
+                    요청 시 프리미엄 커피와 다과 서비스가 제공됩니다.
+                </p>
+            </div>
+        </section>
+
+        <section class="library-service">
+            <div class="service-container">
+                <h3 class="section-title">Amenities & Services</h3>
+                
+                <div class="service-grid">
+                    <div class="service-card">
+                        <div class="service-img-box">
+                            <img src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570" alt="Curated Books">
+                        </div>
+                        <div class="service-text-box">
+                            <h4>Curated Books</h4>
+                            <p>예술, 건축, 인문학 분야의<br>엄선된 큐레이션 도서 열람</p>
+                        </div>
+                    </div>
+
+                    <div class="service-card">
+                        <div class="service-img-box">
+                            <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085" alt="Coffee Service">
+                        </div>
+                        <div class="service-text-box">
+                            <h4>Private Lounge</h4>
+                            <p>스페셜티 커피와 티 서비스가 제공되는<br>프라이빗 라운지 공간</p>
+                        </div>
+                    </div>
+
+                    <div class="service-card">
+                        <div class="service-img-box">
+                            <img src="https://images.unsplash.com/photo-1497215728101-856f4ea42174" alt="Business Ready">
+                        </div>
+                        <div class="service-text-box">
+                            <h4>Business Ready</h4>
+                            <p>초고속 Wi-Fi 및 소규모 미팅을 위한<br>6인용 컨퍼런스 테이블</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="library-info">
+            <div class="info-item">
+                <h5>Location</h5>
+                <p>2F, Main Wing</p>
+            </div>
+            <div class="info-item">
+                <h5>Open Hours</h5>
+                <p>07:00 - 22:00</p>
+            </div>
+            <div class="info-item">
+                <h5>Inquiries</h5>
+                <p>+82-2-777-7777</p>
+                <span class="contact-mail">concierge@noir.co.kr</span>
+            </div>
+        </section>
+
+    </div>
+
+    <footer>
+        <div th:replace="~{fragments/footer :: footer}"></div>
+    </footer>
+    
+    <div id="privacy-layer">
+        <div th:replace="~{fragments/privacy :: privacy}"></div>
+    </div>
+
+</body>
+</html>

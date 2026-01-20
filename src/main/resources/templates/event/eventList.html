@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="title" content="HOTEL 28">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>HOTEL 28</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.css" rel="stylesheet">
+<!-- jQeury CDN 시작 -->
+<link rel="stylesheet" type="text/css" href="/common/css/homepage/base.css">
+<link rel="stylesheet" type="text/css" href="/common/css/homepage/style.css?v=0312">
+<link rel="stylesheet" type="text/css" href="/common/css/homepage/sub.css?v=0312">
+<!-- jQeury CDN 시작 -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
+
+<script src="/common/js/comm/jquery.bxslider.js"></script>
+<script src="/common/js/homepage/jquery.rwdImageMaps.min.js"></script>
+<script src="/common/js/homepage/jquery.accessibility.modal.js"></script>
+<script src="/common/js/comm/jquery.cookie.js"></script>
+<script src="/common/js/homepage/plugin.js"></script>
+<script src="/common/js/homepage/custom.js"></script>
+
+</head>
+<script>
+var CONTEXT = '';
+$(document).ready(function($) {
+    $('.open_modal').click(function(e) {    	
+        $("iframe").attr("src", $(this).attr('url')).show();        	
+        e.preventDefault();
+    });
+});
+
+$(document).on('click','.btn_pop_close',function(e){
+	$('#popIframe > iframe').attr('src','').hide();
+	e.preventDefault();
+})
+</script>
+
+
+<style>
+.wrapper{
+	background-color: white;
+}
+
+.subject
+{
+color:white;
+text-decoration: none;
+}
+
+
+.main-sub > ul > li > a {
+	text-decoration: none;
+}
+
+
+
+.footer_bot{
+padding:0px;
+}
+
+.title-box{
+ background-color: black;
+ height: 127px;
+}
+
+.maincontainer{
+height:auto;
+background-color: #FFF;
+}
+
+.pagination .page-link {
+  color: #000;
+  background-color: #fff;
+  border: 1px solid #ddd;
+}
+
+.pagination .page-link:hover {
+  background-color: #000;
+  color: #fff;
+  border-color: #000;
+}
+
+.pagination .page-item.active .page-link,
+.pagination .page-item.active span {
+  background-color: #000;
+  border-color: #000;
+  color: #fff;
+  font-weight: 600;
+}
+
+.pagination .page-item.disabled .page-link {
+  color: #ccc;
+  pointer-events: none;
+  background-color: #f8f8f8;
+}
+
+.event-card-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:24px;
+  max-width:1200px;
+  margin:0 auto 40px;
+}
+
+.event-card{
+  background:#fff;
+  overflow:hidden;
+  transition:transform 0.2s ease, box-shadow 0.2s ease;
+  border:1px solid #ddd;
+  
+}
+
+.event-card__thumb{
+  position:relative;
+  width:100%;
+  padding-top:66%;
+  overflow:hidden;
+}
+
+.event-card__thumb img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.event-card:hover img{
+  transform: scale(1.05);
+}
+
+.event-card__body{
+  padding:14px 16px 16px;
+}
+
+.event-card__title{
+  font-size:25px;
+  font-weight:700;
+  color:#000;
+  margin-bottom:6px;
+}
+
+.event-card__desc{
+  font-size:20px;
+  color:#666;
+}
+.event-card__date{
+  font-size:12px;
+  color:#666;
+  
+}
+.eventmain{
+	margin-top:150px;
+
+}
+
+.ffffff{
+	background-color: #fff;
+	height: 150px;
+	width: 1000px;
+	
+}
+
+.event-card__bottom{
+  display: flex;
+  justify-content: space-between; /* 좌우 배치 */
+  align-items: center;
+  margin-top: 14px;
+}
+
+.event-card__date{
+  margin-top:20px;
+  font-size: 13px;
+  color: #666;
+}
+
+.detailbtn{
+  align-self: flex-end;
+  margin-top: 14px;
+  padding: 13px 26px;
+  font-size: 13px;
+  font-weight: 600;
+  background: #000;
+  color: #fff;
+}
+.pagetitle{
+  padding-top:30px;
+  padding-left:350px;
+  font-size: 50px;
+  font-weight: 800;
+  color: #000;
+}
+
+/* pagination 전체 정렬 */
+.pagination{
+  gap: 6px;
+}
+
+/* 기본 버튼 */
+.pagination .page-link{
+  min-width: 42px;
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+  border: 1px solid #e0e0e0;
+
+  background: #fff;
+  color: #111;
+  font-size: 14px;
+  font-weight: 500;
+
+  transition: all 0.25s ease;
+}
+
+/* hover */
+.pagination .page-link:hover{
+  background: #000;
+  color: #fff;
+  border-color: #000;
+}
+
+/* 활성 페이지 */
+.pagination .page-item.active .page-link{
+  background: #000;
+  color: #fff;
+  border-color: #000;
+  font-weight: 700;
+  transform: scale(1.08);
+}
+
+/* 비활성 */
+.pagination .page-item.disabled .page-link{
+  background: #f7f7f7;
+  color: #bbb;
+  border-color: #e5e5e5;
+  pointer-events: none;
+}
+
+/* << >> 버튼 살짝 작게 */
+.pagination .page-item:first-child .page-link,
+.pagination .page-item:last-child .page-link{
+  border-radius: 12px;
+  min-width: 48px;
+}
+
+
+.pagination:empty::before{
+  content: "«  1  2  3  »";
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: #111;
+  padding:30px 30px;
+}
+
+</style>
+
+
+<body>
+
+    <div id="popIframe" class="popup_rsvn">
+        <iframe name="popupIframe" id="popupIframe" src="" width="100%" height="100%" scrolling="no" visible="true" frameborder="0"></iframe>
+		<a href="#" class="btn_pop_close">X</a>
+    </div>
+
+<a href="#popIframe" class="open_modal" url="/view/roomReservationStep2.do" id="rsvnLayer" style="display:none;"></a>
+<header>
+<div th:replace="~{fragments/header :: header}"></div>
+</header>
+<div class="title-box">
+</div>
+<div class="maincontainer">
+<div class="ffffff">
+<div class="pagetitle">
+	EVENT
+</div>
+</div>
+<div class="event-card-grid">
+
+  <!-- 카드 1 -->
+
+  <div class="event-card">
+    <div class="event-card__thumb">
+      <img src="../common/images/homepage/logoo2.png" alt="이벤트 이미지">
+    </div>
+    <div class="event-card__body">
+      <div class="event-card__title">
+        제목 [부제목]
+      </div>
+      <div class="event-card__desc">
+        내용
+      </div>
+      <div class="event-card__bottom">
+      <div class="event-card__date">
+        날짜예용
+      </div>
+      <button type="button" class="detailbtn">자세히 보기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 카드 2 -->
+  <div class="event-card">
+    <div class="event-card__thumb">
+      <img src="../common/images/homepage/logoo2.png" alt="이벤트 이미지">
+    </div>
+    <div class="event-card__body">
+      <div class="event-card__title">
+        제목 [부제목]
+      </div>
+      <div class="event-card__desc">
+        내용
+      </div>
+      <div class="event-card__bottom">
+      <div class="event-card__date">
+        날짜예용
+      </div>
+      <button type="button" class="detailbtn">자세히 보기</button>
+      </div>
+    </div>
+    
+  </div>
+  <div class="event-card">
+    <div class="event-card__thumb">
+      <img src="../common/images/homepage/logoo2.png" alt="이벤트 이미지">
+    </div>
+    <div class="event-card__body">
+      <div class="event-card__title">
+        제목 [부제목]
+      </div>
+      <div class="event-card__desc">
+        내용
+      </div>
+      <div class="event-card__bottom">
+      <div class="event-card__date">
+        날짜예용
+      </div>
+      <button type="button" class="detailbtn">자세히 보기</button>
+      </div>
+    </div>
+    
+  </div>
+
+
+</div>
+<nav aria-label="Page navigation" style="margin:40px 0;">
+  <nav aria-label="Page navigation" style="margin:40px 0;">
+  <ul class="pagination justify-content-center">
+    <li class="page-item disabled">
+      <a class="page-link" href="#">&lt;&lt;</a>
+    </li>
+
+    <li class="page-item active">
+      <a class="page-link" href="#">1</a>
+    </li>
+
+    <li class="page-item">
+      <a class="page-link" href="#">2</a>
+    </li>
+
+    <li class="page-item">
+      <a class="page-link" href="#">3</a>
+    </li>
+
+    <li class="page-item">
+      <a class="page-link" href="#">&gt;&gt;</a>
+    </li>
+  </ul>
+</nav>
+
+</nav>
+
+
+</div>		
+<footer>
+        <div th:replace="~{fragments/footer :: footer}"></div>
+    </footer>
+    
+    <div id="privacy-layer">
+        <div th:replace="~{fragments/privacy :: privacy}"></div>
+    </div>
+
+<!-- <script type="text/javascript" src="/Hotel28NewCMS_common/js/jquery.modalLayer.js"></script>
+<script type="text/javascript" src="/Hotel28NewCMS_common/js/common_dev.js"></script> -->
+<script type="text/javascript" src="${pageContext.request.contextPath}/common/js/comm/jquery.validate.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/common/js/comm/wings.core.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/common/js/comm/PAGING_HOMEPAGE.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/common/js/comm/kendo.web.min.js"></script>
+
+</body>
+</html>

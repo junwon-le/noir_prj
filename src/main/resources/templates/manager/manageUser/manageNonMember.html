@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>NOIR Admin - 비회원 예약자 정보</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* 공통 스타일 (이전 회원관리 CSS와 동일) */
+        body { margin: 0; padding: 0; display: flex; height: 100vh; font-family: 'Noto Sans KR', sans-serif; background-color: #f4f6f9; }
+        
+        /* 사이드바 스타일 */
+        .sidebar { width: 250px; background-color: #1a253a; color: white; display: flex; flex-direction: column; }
+        .logo { height: 80px; display: flex; justify-content: center; align-items: center; font-size: 24px; font-weight: bold; border-bottom: 1px solid #2c3e50; }
+        .menu { list-style: none; padding: 0; margin-top: 20px; }
+        .menu li a { display: block; padding: 15px 25px; color: #b0b8c5; text-decoration: none; font-size: 15px; display: flex; align-items: center; }
+        .menu li a:hover, .menu li a.active { background-color: #2c3e50; color: white; border-left: 4px solid #fff; }
+        .menu li a i { margin-right: 10px; width: 20px; text-align: center; }
+
+        /* 메인 컨텐츠 스타일 */
+        .main-content { flex: 1; padding: 40px; overflow-y: auto; background-color: #151c2c; }
+        .page-header { background-color: #1f2d44; padding: 30px; border-radius: 50px; color: white; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .page-title { margin: 0; font-size: 24px; font-weight: bold; }
+
+        .content-card { background: white; border-radius: 8px; padding: 20px; min-height: 600px; }
+        
+        /* 검색바 & 테이블 */
+        .search-bar { display: flex; justify-content: flex-end; margin-bottom: 20px; gap: 10px; }
+        .form-select, .form-input { padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; }
+        .btn-search { background-color: #5d6b82; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; }
+        
+        .custom-table { width: 100%; border-collapse: collapse; text-align: center; }
+        .custom-table th { background-color: #f8f9fa; padding: 15px; font-weight: 600; border-bottom: 2px solid #e9ecef; color: #495057; }
+        .custom-table td { padding: 15px; border-bottom: 1px solid #eee; color: #555; vertical-align: middle; }
+        
+        .pagination { display: flex; justify-content: center; margin-top: 30px; gap: 5px; }
+        .page-link { padding: 8px 12px; border: 1px solid #ddd; color: #333; text-decoration: none; border-radius: 4px; }
+        .page-link.active { background-color: #1a253a; color: white; border-color: #1a253a; }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="logo">NOIR</div>
+        <div style="padding: 10px 20px;">
+            <button style="width:100%; padding:10px; background:white; color:#333; border:none; border-radius:5px; font-weight:bold;">
+                <i class="fas fa-th-large"></i> Dashboard
+            </button>
+        </div>
+        <ul class="menu">
+            <li><a href="/admin/members"><i class="fas fa-user"></i> 회원 관리</a></li>
+            <li><a href="/admin/non-members" class="active"><i class="fas fa-user-clock"></i> 비회원 관리</a></li>
+            <li><a href="#"><i class="far fa-folder"></i> 객실 관리</a></li>
+            <li><a href="#"><i class="far fa-calendar-check"></i> 객실 예약 관리</a></li>
+            </ul>
+    </div>
+
+    <div class="main-content">
+        <div class="page-header">
+            <h2 class="page-title">비회원 예약자 정보</h2>
+        </div>
+
+        <div class="content-card">
+            <form action="/admin/non-members" method="get" class="search-bar">
+                <select name="searchType" class="form-select">
+                    <option value="name" th:selected="${searchType == 'name'}">이름</option>
+                    <option value="tel" th:selected="${searchType == 'tel'}">연락처</option>
+                    <option value="email" th:selected="${searchType == 'email'}">이메일</option>
+                </select>
+                <input type="text" name="keyword" class="form-input" placeholder="Search..." th:value="${keyword}">
+                <button type="submit" class="btn-search">조회</button>
+            </form>
+
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th width="10%">번호</th> <th width="15%">이름</th>
+                        <th width="25%">이메일</th>
+                        <th width="20%">연락처</th>
+                        <th width="20%">등록일(예약일)</th>
+                        <th width="10%">예약번호(FK)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:if="${#lists.isEmpty(nonMemberList)}">
+                        <td colspan="6">조회된 비회원 예약자가 없습니다.</td>
+                    </tr>
+                    
+                    <tr th:each="user : ${nonMemberList}">
+                        <td th:text="${user.nonUserNum}">1001</td>
+                        <td th:text="${user.nonUserName}">홍길동</td>
+                        <td th:text="${user.nonUserEmail}">hong@test.com</td>
+                        <td th:text="${user.nonUserTel}">010-1234-5678</td>
+                        <td th:text="${#dates.format(user.nonUserInputDate, 'yyyy-MM-dd')}">2026-01-01</td>
+                        <td th:text="${user.num}">55</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="pagination" th:if="${totalPage > 0}">
+                <a th:if="${currentPage > 1}" th:href="@{/admin/non-members(page=${currentPage - 1}, searchType=${searchType}, keyword=${keyword})}" class="page-link">&lt;</a>
+                
+                <th:block th:each="pageNum : ${#numbers.sequence(1, totalPage)}">
+                    <a th:href="@{/admin/non-members(page=${pageNum}, searchType=${searchType}, keyword=${keyword})}" 
+                       th:text="${pageNum}" 
+                       th:classappend="${pageNum == currentPage} ? 'active'" 
+                       class="page-link">1</a>
+                </th:block>
+
+                <a th:if="${currentPage < totalPage}" th:href="@{/admin/non-members(page=${currentPage + 1}, searchType=${searchType}, keyword=${keyword})}" class="page-link">&gt;</a>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>
