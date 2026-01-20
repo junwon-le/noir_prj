@@ -1,4 +1,4 @@
-package kr.co.sist.dao;
+package kr.co.noir.dao;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -25,7 +25,7 @@ public class MyBatisHandler {
 	private static SqlSessionFactory getSessionFactory() throws IOException {
 		if(ssf == null) {
 			//1. 설정용 XML 연결
-			Reader reader = Resources.getResourceAsReader("kr/co/sist/dao/mybatis-config.xml");
+			Reader reader = Resources.getResourceAsReader("kr/co/noir/dao/mybatis-config.xml");
 			//2. SqlSessionFactorytBuild 생성
 			SqlSessionFactoryBuilder ssfb = new SqlSessionFactoryBuilder();
 			//3. SqlSessionFactory를 building 한다.

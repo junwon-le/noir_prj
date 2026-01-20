@@ -9,7 +9,7 @@ import lombok.ToString;
 @ToString
 
 public class RoomDomain {
-	private String roomType, roomBadType, roomCheckIn, roomCheckOut, roomDetail, roomTodayPrice, roomSelectPrice;
+	private String roomType, roomBadType, roomCheckIn, roomCheckOut, roomArea, roomDetail, roomTodayPrice, roomSelectPrice;
 	private int roomMaxPerson;
 	private String[] roomImg = new String[5];
 	private String[] roomAmenity = new String[5];

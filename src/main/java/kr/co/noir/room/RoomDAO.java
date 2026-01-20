@@ -4,7 +4,7 @@ import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
-import kr.co.sist.dao.MyBatisHandler;
+import kr.co.noir.dao.MyBatisHandler;
 
 @Repository
 public class RoomDAO {
@@ -14,7 +14,7 @@ public class RoomDAO {
 		RoomDomain rDomain = null;
 		
 		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
-		rDomain = ss.selectOne("kr.co.sist.roomSelect",num);
+		rDomain = ss.selectOne("kr.co.noir.room.roomSelect",num);
 		if(ss!=null) {
 			ss.close();
 		}
