@@ -9,15 +9,12 @@
 				    <li th:if="${session.member == null and session.admin == null}">
 						<a href="/login/memberLogin">LOGIN</a>
 				    </li>
-				
 				    <li th:if="${session.member != null or session.admin != null}">
 				        <a href="/login/logout" >LOGOUT</a>
 				    </li>
-				
 				    <li th:if="${session.loginMember == null}"> 
 				        <a href="/login/join" >JOIN</a>				    
 				    </li>
-				
 				<!-- <li>
 					LANGUAGE : <a href="#" class="langChange" data-lang="KOR">KOR</a> / <a href="#" class="langChange" data-lang="ENG">ENG</a> / <a href="#" class="langChange" data-lang="JPN">JPN</a> / <a href="#" class="langChange" data-lang="CHN">CHN</a>
 				</li> -->
