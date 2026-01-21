@@ -47,7 +47,7 @@ left:1230px;
 width:150px;
 height:50px;
 position:absolute;
-top:850px;
+top:900px;
 left:1400px;
  background: #8F8664;
   border: 1px solid rgba(216, 203, 168, 0.25);
@@ -68,7 +68,7 @@ left:1400px;
 width:150px;
 height:50px;
 position:absolute;
-top:850px;
+top:900px;
 left:1200px;
  background: rgba(50, 50, 50, 0.95);
   border: 1px solid rgba(216, 203, 168, 0.25);
@@ -147,6 +147,16 @@ $(function(){
 
 	$('.fullsizeImage ul').myFunction();
 	
+	var num=$("#typeNum").val();
+	$("#reserveBtn").click(function(){
+		location.href="/reserve/roomResSearch";
+	});
+	
+	$("#reviewBtn").click(function(){
+		location.href="/roomReviewList";
+	});
+	
+	
 	var CONTEXT = '';
 	$(document).ready(function($) {
 	    $('.open_modal').click(function(e) {    	
@@ -166,11 +176,11 @@ $(function(){
 	<div class="fullsizeImage" style="width:762px; height:490px; margin:0px auto; margin-top:250px; margin-left:300px">
  	<ul>
     
-    <li style="background-image:url(../common/images/homepage/bg01.jpg)" ></li>
-    <li style="background-image:url(../common/images/homepage/bg02.jpg)" ></li>
-    <li style="background-image:url(../common/images/homepage/bg03.jpg)" ></li>
-    <li style="background-image:url(../common/images/homepage/bg04.jpg)" ></li>
-    <li style="background-image:url(../common/images/homepage/bg01.jpg)" ></li>
+    <li th:style="'background-image: url(../common/images/homepage/' + ${room.roomImg1} + ')'" ></li>
+    <li th:style="'background-image: url(../common/images/homepage/' + ${room.roomImg2} + ')'" ></li>
+    <li th:style="'background-image: url(../common/images/homepage/' + ${room.roomImg3} + ')'" ></li>
+    <li th:style="'background-image: url(../common/images/homepage/' + ${room.roomImg4} + ')'" ></li>
+    <li th:style="'background-image: url(../common/images/homepage/' + ${room.roomImg5} + ')'" ></li>
     
     
 	</ul>
@@ -196,6 +206,7 @@ $(function(){
 		</div>
 		
 		<div>
+		<input type="hidden" id="typeNum" th:value="${room.roomTypeNum}">
 		<input type="button" id="reviewBtn" value="리뷰보기">
 		</div>
 		
@@ -209,23 +220,20 @@ $(function(){
 
 		<div class="frame frame-rooms" style="position:relative; top:471px; right:0px; left:900px; width:1000px;">
 			<nav class="frame-nav">
-				HOTEL / THE ROOMS / <span class="gold">STANDARD QUEEN</span>
+				HOTEL / THE ROOMS / <span class="gold" th:text="${room.roomType}"></span>
 			</nav>
-			<h2 class="frame-title gold">STANDARD QUEEN</h2>	
+			<h2 class="frame-title gold" th:text="${room.roomType}"></h2>	
 		</div>
 		
 		
 		<div style="color:#FFFFFF; margin-left:1100px; position:relative; bottom:50px">
 			ROOM DETAILS
 			<div style="width:500px; height:1px; background:#fff;"></div>
-			<div style="margin-top:15px; font-size: 20px; font-weight: bold; color: #C8BD9E; ">
-			모던하면서 아늑한 인테리어와<br>
+			<div style="margin-top:15px; font-size: 20px; font-weight: bold; color: #C8BD9E; width:320px" th:text=${room.roomDetail}>
 			</div>
-			<div style="margin-top:10px; font-size: 20px; font-weight: bold; color: #C8BD9E; ">
-			편안한 여유로움을 느낄 수 있는 디럭스 룸
-			</div>
+			
 			<div style="margin-top:30px">
-			편안한 분위기와 세련된 실내 디자인의 스텐다드 퀸 룸은
+			편안한 분위기와 세련된 실내 디자인의 NOIR의 룸은
 			</div>
 			<div style="margin-top:5px;">
 			안락하고 편안한 휴식을 제공합니다.
@@ -243,12 +251,12 @@ $(function(){
 			</div>
 			
 			<div style="margin-top:15px">
-			방 면적 : 22.1<span>㎡</span></div>
+			방 면적 : <span th:text="${room.roomArea}"></span></div>
 			<div style="margin-top:5px">
-			최대 인원 : 2명
+			최대 인원 : <span th:text="${room.roomMaxPerson}"></span>명
 			</div>
 			<div style="margin-top:5px">
-			침대 타입 : 퀸사이즈
+			침대 타입 : <span th:text="${room.roomBadType}"></span>
 			</div>
 			
 			
@@ -259,31 +267,34 @@ $(function(){
 					객실 서비스
 					</div>
 					<div style="margin-top:15px">
-					무료 wifi
+					<span th:if="${room.roomService1 eq 'Y'}">24시간 wifi</span>
 					</div>
 					<div style="margin-top:5px">
-					매일 하우스 키핑
+					<span th:if="${room.roomService2 eq 'Y'}">매일 하우스 키핑</span>					
 					</div>
 					<div style="margin-top:5px">
-					컨시어지
+					<span th:if="${room.roomService3 eq 'Y'}">컨시어지</span>
 					</div>
 					<div style="margin-top:5px">
-					턴다운서비스
+					<span th:if="${room.roomService4 eq 'Y'}">턴다운서비스</span>
 					</div>
 					<div style="margin-top:5px">
-					24시간 룸서비스
+					<span th:if="${room.roomService5 eq 'Y'}">24시간 룸서비스</span>
 					</div>
 					<div style="margin-top:5px">
-					호텔 내 세탁
+					<span th:if="${room.roomService6 eq 'Y'}">호텔 내 세탁</span>
 					</div>
 					<div style="margin-top:5px">
-					호텔 내 레스토랑
+					<span th:if="${room.roomService7 eq 'Y'}">호텔 내 레스토랑</span>
 					</div>
 					<div style="margin-top:5px">
-					피트니스센터
+					<span th:if="${room.roomService8 eq 'Y'}">피트니스센터</span>
 					</div>
 					<div style="margin-top:5px">
-					실내 수영장
+					<span th:if="${room.roomService9 eq 'Y'}">실내 수영장</span>
+					</div>
+					<div style="margin-top:5px">
+					<span th:if="${room.roomService10 eq 'Y'}">콜키지 차지</span>
 					</div>
 				</div>
 				<div style="margin-left:100px;">
@@ -291,19 +302,19 @@ $(function(){
 					어메니티
 					</div>
 					<div style="margin-top:15px">
-					배스용품
+					<span th:if="${room.roomAmenity1 eq 'Y'}">배스용품</span>
 					</div>
 					<div style="margin-top:5px">
-					배스타월
+					<span th:if="${room.roomAmenity2 eq 'Y'}">배스타월</span>					
 					</div>
 					<div style="margin-top:5px">
-					배스로브
+					<span th:if="${room.roomAmenity3 eq 'Y'}">배스로브</span>					
 					</div>
 					<div style="margin-top:5px">
-					헤어드라이어
+					<span th:if="${room.roomAmenity4 eq 'Y'}">헤어드라이어</span>					
 					</div>
 					<div style="margin-top:5px">
-					체중계
+					<span th:if="${room.roomAmenity5 eq 'Y'}">체중계</span>					
 					</div>
 				</div>
 			</div>

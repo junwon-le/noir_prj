@@ -117,6 +117,19 @@ $(function(){
 	//$('header').load('../../incheader.html');
 
 	$('.fullsizeImage ul').myFunction();
+	
+	var num=$("#typeNum").val();
+	$("#reserveBtn").click(function(){
+		location.href="/reserve/roomResSearch";
+	});
+	
+	$("#detailBtn").click(function(){
+		location.href="/roomDetailView?num="+num;
+	});
+	
+	
+	
+	
 })
 
 var CONTEXT = '';
@@ -131,6 +144,9 @@ $(document).on('click','.btn_pop_close',function(e){
 	$('#popIframe > iframe').attr('src','').hide();
 	e.preventDefault();
 })
+
+
+
 </script>
 
 
@@ -139,11 +155,11 @@ $(document).on('click','.btn_pop_close',function(e){
 	<div class="fullsizeImage">
  	<ul>
     
-    <li style="background-image:url(../common/images/homepage/bg01.jpg)" ></li>
-    <li style="background-image:url(../common/images/homepage/bg02.jpg)" ></li>
-    <li style="background-image:url(../common/images/homepage/bg03.jpg)" ></li>
-    <li style="background-image:url(../common/images/homepage/bg04.jpg)" ></li>
-    <li style="background-image:url(../common/images/homepage/bg01.jpg)" ></li>
+    <li th:style="'background-image: url(../common/images/homepage/' + ${room.roomImg1} + ')'" ></li>
+    <li th:style="'background-image: url(../common/images/homepage/' + ${room.roomImg2} + ')'" ></li>
+    <li th:style="'background-image: url(../common/images/homepage/' + ${room.roomImg3} + ')'" ></li>
+    <li th:style="'background-image: url(../common/images/homepage/' + ${room.roomImg4} + ')'" ></li>
+    <li th:style="'background-image: url(../common/images/homepage/' + ${room.roomImg5} + ')'" ></li>
     
     
 	</ul>
@@ -169,13 +185,14 @@ $(document).on('click','.btn_pop_close',function(e){
 		</div>
 		
 		<div>
+		<input type="hidden" id="typeNum" th:value="${room.roomTypeNum}">
 		<input type="button" id="detailBtn" value="상세보기">
 		</div>
 		<div>
 		<input type="button" id="reserveBtn" value="예약하기">
 		</div>
 		
-
+		
 		<div class="frame frame-rooms">
 			<nav class="frame-nav">
 				HOTEL / THE ROOMS / <span class="gold" th:text="${room.roomType}"></span>
@@ -185,7 +202,8 @@ $(document).on('click','.btn_pop_close',function(e){
 				<div class="room_summary">
 					<h4>BED TYPE</h4>
 					<th:block th:switch="${room.roomType}">
-					<p th:case="SEMI-DELUXE DOUBLE">2 SUPER<br>SINGLE</p>
+					<p th:case="'SEMI-DELUXE DOUBLE'" style="font-size: 35px">2 SUPER<br>SINGLE</p>
+					<p th:case="'DELUXE TWIN'" style="font-size: 30px">1 KING<br>1 SOFA BED</p>
 					<p th:case="*"><th:block th:text="${room.roomBadType}"></p>
 					</th:block>
 				</div>

@@ -10,7 +10,7 @@ import lombok.ToString;
 
 public class RoomDomain {
 	private String roomType, roomBadType, roomCheckIn, roomCheckOut, roomArea, roomDetail, roomTodayPrice, roomSelectPrice;
-	private int roomMaxPerson;
+	private int roomMaxPerson, roomTypeNum;
 	private String roomImg1;
 	private String roomImg2;
 	private String roomImg3;
