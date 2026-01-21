@@ -159,22 +159,83 @@ $(function(){
 	
 	
 });//ready
-	var roomCnt=1;
+	var roomCnt=0;
 	var divNum=1;
-	function selectRoom(roomName,personCnt){
+	var totalPrice=0;
+	
+	function selectRoom(roomName,personCnt,price){
 		var selectDiv="";
-		selectDiv+=`<div class='bg-gray-200 p-3 space-y-2 items-center rounded-sm'  id='${divNum}'> <span class='font-bold !text-black text-sm'>${roomName}</span>
-			<span class='font-bold !text-black text-sm'>${roomName}</span>
-			<button onclick="selectRoomRemove(${divNum})">삭제</button></div>`
+		selectDiv+=`<div style="background-color: #e5e7eb; border-radius: 2px; padding:3px; display: flex;" id='${divNum}'> 
+			<div style="width: 120px;">
+			<span class='font-bold !text-black text-sm'>${roomName}  |</span>
+			</div>
+			<div>
+			<span >인원 : ${personCnt}명</span>
+			</div>
+			<div style="margin-left:auto;">
+			<button onclick="selectRoomRemove(${divNum})">삭제</button>
+			</div>
+			</div>`
 		$("#selectRoom").append(selectDiv);
 		divNum+=1;
 		roomCnt+=1;
 		$("#roomCnt").text(roomCnt);
+		totalPrice+=price;
+		$("#totalPrice").text(totalprice);
 	}
 	function selectRoomRemove(divNum){
 		$("#selectRoom>#"+divNum).remove();
 		roomCnt-=1;
 		$("#roomCnt").text(roomCnt);
+	}
+	
+	function searchRoom(startDate, endDate ){
+		var param ={startDate : startDate, endDate : endDate};
+		$.ajax({
+			url:"/reserve/RoomSearchProcess",
+			type:"GET",
+			dataType: "JSON",
+			data : param,
+			success:function(list){
+				var output ="";
+				$.each(list,function(i,rd){
+					output += 
+						`
+			            <img src="/common/images/res_img/hr.png" />
+			            <div class="space-y-6">
+			                <div class="flex gap-6 py-6 border-b border-gray-800">
+			                    <div class="relative w-1/3 shrink-0">
+			                        <img src="/common/images/homepage/${rd.room_img1}" 
+			                             class="w-full h-44 object-cover rounded-sm bg-gray-700">
+			                        <button onclick="location.href='/roomDetailView?num=${rd.room_type_num}'"
+			                            class="absolute bottom-0 left-0 right-0 bg-blue-900/80 text-[10px] py-2 px-3 flex justify-between">
+			                            <span>객실 상세보기</span><span>→</span>
+			                        </button>
+			                    </div>
+			                    <div class="flex flex-col justify-between flex-1">
+			                        <div>
+			                            <h3 class="text-lg font-semibold" id="roomType${i}">${rd.room_type}</h3>
+			                            <p class="text-gray-500 text-xs" id="personCnt${i}">기준 ${rd.room_max_person} / 최대 ${rd.room_max_person}</p>
+			                        </div>
+			                        <div class="text-right">
+			                            <p class="text-[10px] text-gray-500">1박/VAT포함</p>
+			                            <p class="text-xl font-bold text-blue-400 mb-2">${rd.room_price.toLocaleString()}원~</p>
+			                            <button class="bg-[#8b7355] hover:bg-[#7a654a] px-8 py-2 text-sm rounded-sm transition" 
+			                                    id="select${i}" 
+			                                    onclick="selectRoom('${rd.room_type}', ${rd.room_max_person}, ${rd.room_price})">
+			                                선택
+			                            </button>
+			                        </div>
+			                    </div>
+			                </div>
+			            </div>`;;
+				})
+				$("#roomList").html(output);
+			},
+			error:function(xhr){
+				alert("룸 검색 실패"+xhr.status);
+			}
+		})
 	}
 </script>
 
@@ -192,36 +253,16 @@ $(function(){
 						상품</h2>
 
 					<!-- 룸 선택 개수 만큼 반복 시켜야함---------------------------------------------------------------------------------------------------  -->
-					<th:block th:each="a,i:${roomList}">
+					<div id="roomList">
 					<img src="/common/images/res_img/hr.png" />
 					<div class="space-y-6">
 						<div class="flex gap-6 py-6 border-b border-gray-800">
-							<div class="relative w-1/3 shrink-0">
-								<img src="/common/images/res_img/testroom.png"
-									class="w-full h-44 object-cover rounded-sm bg-gray-700">
-								<button onclick="location.href='/roomDetail'"
-									class="absolute bottom-0 left-0 right-0 bg-blue-900/80 text-[10px] py-2 px-3 flex justify-between">
-									<span>객실 상세보기</span><span>→</span>
-								</button>
-							</div>
-							<div class="flex flex-col justify-between flex-1">
-								<div>
-									<h3 class="text-lg font-semibold" th:text="${a}" th:id="'roomType'+${i.count}">디럭스 더블</h3>
-									<p class="text-gray-500 text-xs" th:text="${a}" th:id="'personCnt'+${i.count}" >기준 2 / 최대 2</p>
-								</div>
-								<div class="text-right">
-									<p class="text-[10px] text-gray-500">1박/VAT포함</p>
-									<p class="text-xl font-bold text-blue-400 mb-2">300,000원~</p>
-									<button
-										class="bg-[#8b7355] hover:bg-[#7a654a] px-8 py-2 text-sm rounded-sm transition" th:id="'select'+${i.count}" th:onclick="selectRoom([[${a}]],[[${a}]])">선택</button>
-										
-								</div>
-							</div>
+						숙박 날짜를 선택해주세요.
 						</div>
 
 					</div>
 				</div>
-			</th:block>
+					</div>
 				<!-- 룸 선택 끝 ---------------------------------------------------------------------------------------------------  -->
 				<form id="reserveFrm">
 				<div id="resInfoDiv" class="flex-1">
@@ -291,12 +332,13 @@ $(function(){
 							<div class="bg-gray-200 p-3  items-center rounded-sm">
 								<span class="font-bold !text-black text-sm" id="selectRoom">객실을 선택하세요</span>
 							</div>
+						
 						</div>
 						<div class="space-y-2">
 							<div
 								class="bg-gray-200 p-3 flex justify-between items-center rounded-sm">
 								<span class="font-bold !text-black text-sm">총 금액</span> <span
-									class="text-xl font-bold !text-black">0 원</span>
+									class="text-xl font-bold !text-black" id="totalPrice">0 원</span>
 							</div>
 							<div class="flex gap-2">
 								<button type="button"
@@ -330,6 +372,7 @@ $(function(){
 	<script type="text/javascript" src="/common/js/comm/kendo.web.min.js"></script>
 	<script>
 		flatpickr( "#inline-calendar",
+				
 				{
 					mode : "range",
 					inline : true, // 페이지에 달력을 바로 보여줌
@@ -339,7 +382,7 @@ $(function(){
 					dateFormat : "Y-m-d",
 				    enable: [
 				        {
-				            from: "2026-01-01",
+				            from: "today",
 				            to: "2026-03-01"
 				        }
 				    ],
@@ -347,11 +390,18 @@ $(function(){
 						if (selectedDates.length > 0) {
 							document.getElementById('display-checkin').innerText = instance
 									.formatDate(selectedDates[0], "Y-m-d (D)");
+							$("#display-checkout").text("-");
 						}
 						if (selectedDates.length > 1) {
 							document.getElementById('display-checkout').innerText = instance
 									.formatDate(selectedDates[1], "Y-m-d (D)");
+							startDate= instance.formatDate(selectedDates[0], "Y-m-d");
+							var endDate= instance.formatDate(selectedDates[1], "Y-m-d");
+							/* alert("방 검색 시작");
+							alert(endDate+startDate); */
+							searchRoom(startDate,endDate);
 						}
+						
 					}
 				});
 	</script>

@@ -12,11 +12,11 @@ public class RoomReserveService {
 	@Autowired
 	private RoomReserveDAO rrDAO;
 	
-	public List<RoomSearchDomain> searchRoom(){
+	public List<RoomSearchDomain> searchRoom(RoomSearchDTO rsDTO){
 		List<RoomSearchDomain> list = null;
 		
 		try {
-			list=rrDAO.selectRoom();
+			list=rrDAO.selectRoom(rsDTO);
 		}catch(SQLException se) {
 			se.printStackTrace();
 		}

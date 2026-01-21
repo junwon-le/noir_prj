@@ -7,6 +7,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import kr.co.noir.room.RoomDomain;
 
 @RequestMapping("/reserve")
 @Controller
@@ -25,10 +28,8 @@ public class ReserveController {
 	}
 	
 	@GetMapping("/roomResSearch")
-	public String roomResSearch(Model model) {
-		List<RoomSearchDomain> roomDomain = rrs.searchRoom();
+	public String roomResSearch(RoomSearchDTO rsDTO, Model model) {
 		
-		model.addAttribute("roomList",roomDomain);
 		return "/reserve/roomResSearch";
 	}
 	
@@ -52,5 +53,12 @@ public class ReserveController {
 	@GetMapping("/admin/nonDinningRes")
 	public String adminNonDinningRes() {
 		return "/manager/reserve/nonDinningRes";
+	}
+	
+	@GetMapping("/RoomSearchProcess")
+	@ResponseBody
+	public List<RoomSearchDomain> roomSearchProcess(RoomSearchDTO rsDTO) {
+		List<RoomSearchDomain> list = rrs.searchRoom(rsDTO);
+		return list;
 	}
 }

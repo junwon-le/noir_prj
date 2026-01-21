@@ -3,9 +3,29 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="kr.co.sist.reserve">
-  	<select id="selectRoom" resultType="roomSearchDomain">
-  		select room_type, room_detail, room_img1, room_max_person, room_price
-		from room_info ri , room_price rp
-		where rp.room_date='2026-05-13'
+  	<select id="selectRoom" parameterType="roomSearchDTO" resultType="roomSearchDomain">
+  	<![CDATA[
+  	  select
+        ri.room_type_num,
+        ri.room_type,
+        ri.room_detail,
+        ri.room_img1,
+        ri.room_max_person,
+        rp.room_price
+    from room_info ri
+    join room_price rp on ri.room_type_num = rp.room_type_num
+        and rp.room_date = to_date(#{startDate}, 'yyyy-mm-dd')
+    left outer join (
+        select
+            room_type_num,
+            count(*) as cnt
+        from room_res
+        where room_res_start_date < to_date(#{startDate}, 'yyyy-mm-dd') -- 내 체크아웃보다 먼저 시작
+          and room_res_end_date > to_date(#{endDate}, 'yyyy-mm-dd')   -- 내 체크인보다 늦게 종료
+        group by room_type_num
+    ) ra on ri.room_type_num = ra.room_type_num
+    where ri.room_count > nvl(ra.cnt, 0) -- 예약 없으면(null) 0으로 취급
+    order by ri.room_type_num
+  	]]>
   	</select>
   </mapper>

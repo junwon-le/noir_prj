@@ -9,5 +9,5 @@ import lombok.ToString;
 @ToString
 public class RoomSearchDomain {
 	private String room_type, room_detail, room_img1 ; 
-	private int room_price ,room_max_person;
+	private int room_price ,room_max_person,room_type_num;
 }

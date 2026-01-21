@@ -11,11 +11,11 @@ import kr.co.noir.dao.MyBatisHandler;
 @Repository
 public class RoomReserveDAO {
 	
-	public List<RoomSearchDomain> selectRoom() throws SQLException{
+	public List<RoomSearchDomain> selectRoom(RoomSearchDTO rsDTO) throws SQLException{
 		List<RoomSearchDomain> list = null;
 		
 		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
-		list=ss.selectList("kr.co.sist.reserve.selectRoom");
+		list=ss.selectList("kr.co.sist.reserve.selectRoom",rsDTO);
 		if(ss!=null) {	ss.close();	}
 		return list;
 	}
