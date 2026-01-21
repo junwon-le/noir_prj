@@ -31,6 +31,7 @@ public class MainController {
 	}
 	
 
+
 	
 	@GetMapping("/dinning")
 	public String Dinning() {
@@ -58,5 +59,5 @@ public class MainController {
 	public String dinningRevDetail() {
 		return "/manager/dinning_rev/dinningRev_detail.html";
 	}
-	
+
 }

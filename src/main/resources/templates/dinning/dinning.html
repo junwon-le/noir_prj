@@ -122,6 +122,14 @@ $(function(){
 	//$('header').load('../../incheader.html');
 
 	$('.fullsizeImage ul').myFunction();
+	$("#detailBtn").click(function(){
+		location.href="/dinningDetail";
+	});
+	$("#reserveBtn").click(function(){
+		location.href="/dinnigRes"
+	});
+	
+	
 })
 
 var CONTEXT = '';
@@ -144,11 +152,11 @@ $(document).on('click','.btn_pop_close',function(e){
 	<div class="fullsizeImage">
  	<ul>
     
-    <li style="background-image:url(../common/images/homepage/bg01.jpg)" ></li>
-    <li style="background-image:url(../common/images/homepage/bg02.jpg)" ></li>
-    <li style="background-image:url(../common/images/homepage/bg03.jpg)" ></li>
-    <li style="background-image:url(../common/images/homepage/bg04.jpg)" ></li>
-    <li style="background-image:url(../common/images/homepage/bg01.jpg)" ></li>
+    <li th:style="'background-image: url(../common/images/homepage/' + ${dinning.dinningImg1} + ')'" ></li>
+    <li th:style="'background-image: url(../common/images/homepage/' + ${dinning.dinningImg2} + ')'" ></li>
+    <li th:style="'background-image: url(../common/images/homepage/' + ${dinning.dinningImg3} + ')'" ></li>
+    <li th:style="'background-image: url(../common/images/homepage/' + ${dinning.dinningImg4} + ')'" ></li>
+    <li th:style="'background-image: url(../common/images/homepage/' + ${dinning.dinningImg5} + ')'" ></li>
     
     
 	</ul>
@@ -172,10 +180,10 @@ $(document).on('click','.btn_pop_close',function(e){
 
 		<div class="frame frame-dining">
 			<nav class="frame-nav">
-				HOME / DINING / <span class="gold">NOIR RESTAURANT</span>
+				HOME / DINING / <span class="gold" th:text=${dinning.dinningName}>NOIR RESTAURANT</span>
 			</nav>
-			<h2 class="frame-title gold">NOIR RESTAURANT</h2>
-			<p class="frame-detail gold">
+			<h2 class="frame-title gold" th:text=${dinning.dinningName}>NOIR RESTAURANT</h2>
+			<p class="frame-detail gold" >
 				빛과 그림자가 공존하는 미식의 무대, NOIR 레스토랑.<br>
 				NOIR는 클래식한 서양 요리의 기법을 기반으로,<br>
 				현대적인 감각과 섬세한 해석을 더한 컨템포러리 다이닝을 선보입니다.<br>
