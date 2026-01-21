@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.noir.mypage">
+
+
+
+
+	<select id="hotelRevCnt" parameterType="String" resultType="int">
+		SELECT COUNT(*)
+		FROM member m
+		JOIN reserve r ON m.member_num = r.member_num
+		JOIN room_res rr ON r.reserve_num = rr.reserve_num
+		WHERE m.member_id = #{memberId} and r.reserve_status='N'
+		
+	</select>
+	
+</mapper>
+
+
+
+

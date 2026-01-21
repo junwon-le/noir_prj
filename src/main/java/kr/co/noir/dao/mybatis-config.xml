@@ -22,5 +22,6 @@
   </environments>
   <mappers>
     <mapper resource="kr/co/noir/room/roomMapper.xml"/> <!-- select 연습 -->
+    <mapper resource="kr/co/noir/mypage/MypageMapper.xml"/> <!-- select 연습 -->
   </mappers>
 </configuration>
