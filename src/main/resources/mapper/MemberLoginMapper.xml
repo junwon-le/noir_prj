@@ -13,4 +13,10 @@
         WHERE TRIM(member_last_name) || TRIM(member_first_name) = #{memberName}
           AND member_email = #{memberEmail}
     </select>
+    <update id="updatePassword">
+        UPDATE member
+        SET password = #{newPw},
+            upd_date = NOW()
+        WHERE userId = #{userId}
+    </update>
 </mapper>
