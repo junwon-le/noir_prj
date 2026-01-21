@@ -41,7 +41,7 @@ public class MemberController {
 		return "/login/memberLogin";
 	}
 	
-	@GetMapping("/login/join")
+	@GetMapping("/join")
 	public String join() {
 		return "/login/join";
 	}
@@ -55,7 +55,18 @@ public class MemberController {
     public String findPwPage() {
         return "/login/findPw";          // templates/findPw.html 파일을 바라봄
     }	
-	
+
+    /**
+     * 로그아웃 처리
+     */
+    @GetMapping("/login/logout")
+    public String logout(HttpSession session) {
+        // 1. 세션 무효화 (저장된 member, admin 등 모든 속성 삭제)
+        session.invalidate();
+        
+        // 2. 로그아웃 후 메인 페이지(또는 로그인 페이지)로 리다이렉트
+        return "redirect:/main"; 
+    }
 	
 	@PostMapping("/member/login")
 	public String memberLoginProcess(@RequestParam("memberId") String memberId, @RequestParam("memberPass") String memberPass, HttpSession session) {
@@ -105,7 +116,9 @@ public class MemberController {
 	    
 	    // 다시 아이디 찾기 페이지(findId.html)로 돌아가서 스크립트를 실행
 	    return "/login/findId";   
+
 	}
+
 	
 	
 	
