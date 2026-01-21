@@ -31,13 +31,4 @@ public class MainController {
 	}
 	
 
-	
-	@GetMapping("/dinning")
-	public String Dinning() {
-		return "/dinning/dinning";
-	}
-	@GetMapping("/dinningDetail")
-	public String DinningDetail() {
-		return "/dinning/dinningDetail";
-	}
 }

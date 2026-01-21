@@ -16,7 +16,27 @@ public class MemberController {
 	@Autowired
 	private MemberService memberService;
 	
-	@GetMapping("/memberLogin")
+	@GetMapping("/hotel/about")
+	public String aboutHotel() {
+		return "/hotel/about";
+	}
+	
+	@GetMapping("/hotel/library")
+	public String hotelLibrary() {
+		return "/hotel/library";
+	}
+
+	@GetMapping("/hotel/gym")
+	public String hotelGym() {
+		return "/hotel/gym";
+	}	
+
+	@GetMapping("/hotel/laundry")
+	public String hotelLaundry() {
+		return "/hotel/laundry";
+	}	
+		
+	@GetMapping("/login/memberLogin")
 	public String memberLogin() {
 		return "/login/memberLogin";
 	}
@@ -35,7 +55,18 @@ public class MemberController {
     public String findPwPage() {
         return "/login/findPw";          // templates/findPw.html 파일을 바라봄
     }	
-	
+
+    /**
+     * 로그아웃 처리
+     */
+    @GetMapping("/login/logout")
+    public String logout(HttpSession session) {
+        // 1. 세션 무효화 (저장된 member, admin 등 모든 속성 삭제)
+        session.invalidate();
+        
+        // 2. 로그아웃 후 메인 페이지(또는 로그인 페이지)로 리다이렉트
+        return "redirect:/main"; 
+    }
 	
 	@PostMapping("/member/login")
 	public String memberLoginProcess(@RequestParam("memberId") String memberId, @RequestParam("memberPass") String memberPass, HttpSession session) {
@@ -48,7 +79,7 @@ public class MemberController {
 			return "redirect:/main"; // 첫화면으로 
 		} else {
 			// 로그인 실패: 에러 파라미터와 함께 로그인 페이지로 리다이렉트
-			return "redirect:/main/login?error=true";
+			return "redirect:/login/memberLogin?error=true";
 		}//end if
 		
 	} //memberLoginProcess
@@ -85,7 +116,9 @@ public class MemberController {
 	    
 	    // 다시 아이디 찾기 페이지(findId.html)로 돌아가서 스크립트를 실행
 	    return "/login/findId";   
+
 	}
+
 	
 	
 	

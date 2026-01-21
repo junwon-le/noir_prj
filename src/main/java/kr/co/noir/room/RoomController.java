@@ -25,7 +25,12 @@ public class RoomController {
 	
 	
 	@GetMapping("/roomDetailView")
-	public String roomDetailView() {
+	public String roomDetailView(String num, Model model) {
+		
+		int number =  Integer.parseInt(num);
+		model.addAttribute("room",rService.searchDetailRoom(number));
+		
+		
 		return "/room/roomDetail";
 	}
 	

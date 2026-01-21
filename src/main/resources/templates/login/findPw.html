@@ -82,7 +82,7 @@ $(document).ready(function(){
         $btn.prop("disabled", true).text("전송 중...");
 
         $.ajax({
-            // [변경] JSP -> Controller URL
+            // Controller URL
             url: "/member/sendAuthCode", 
             type: "POST",
             data: { userId: userId, userName: userName, userEmail: userEmail },
@@ -122,7 +122,7 @@ $(document).ready(function(){
         }
 
         $.ajax({
-            // [변경] JSP -> Controller URL
+            // Controller URL
             url: "/member/verifyAuthCode", 
             type: "POST",
             data: { authCode: code },

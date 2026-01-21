@@ -20,8 +20,19 @@ public class RoomDAO {
 		}
 
 		return rDomain;
+	}
 	
+	public RoomDomain selectDetailRoom(int num) throws PersistenceException{
 		
+		RoomDomain rDomain = null;
+		
+		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
+		rDomain = ss.selectOne("kr.co.noir.room.roomDetailSelect",num);
+		if(ss!=null) {
+			ss.close();
+		}
+
+		return rDomain;
 	}
 	
 }

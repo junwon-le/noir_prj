@@ -22,4 +22,15 @@ public class RoomService {
 		return rDomain; 
 	}
 	
+	public RoomDomain searchDetailRoom(int num) {
+		RoomDomain rDomain = null;
+		try {
+			rDomain = rDAO.selectDetailRoom(num);
+		}catch(PersistenceException pe) {
+			pe.printStackTrace();
+		}
+		
+		return rDomain; 
+	}
+	
 }

@@ -134,6 +134,10 @@ $(function(){
 		$('#popIframe > iframe').attr('src','').hide();
 		e.preventDefault();
 	})
+	
+	$("#reserveBtn").click(function(){
+		location.href="/dinnigRes"
+	});
 })
 </script>
 
@@ -141,11 +145,12 @@ $(function(){
 	<div class="fullsizeImage" style="width:762px; height:490px; margin:0px auto; margin-top:250px; margin-left:300px">
  	<ul>
     
-    <li style="background-image:url(../common/images/homepage/bg01.jpg)" ></li>
-    <li style="background-image:url(../common/images/homepage/bg02.jpg)" ></li>
-    <li style="background-image:url(../common/images/homepage/bg03.jpg)" ></li>
-    <li style="background-image:url(../common/images/homepage/bg04.jpg)" ></li>
-    <li style="background-image:url(../common/images/homepage/bg01.jpg)" ></li>
+    <li th:style="'background-image: url(../common/images/homepage/' + ${dinning.dinningImg1} + ')'" ></li>
+    <li th:style="'background-image: url(../common/images/homepage/' + ${dinning.dinningImg2} + ')'" ></li>
+    <li th:style="'background-image: url(../common/images/homepage/' + ${dinning.dinningImg3} + ')'" ></li>
+    <li th:style="'background-image: url(../common/images/homepage/' + ${dinning.dinningImg4} + ')'" ></li>
+    <li th:style="'background-image: url(../common/images/homepage/' + ${dinning.dinningImg5} + ')'" ></li>
+    
     
     
 	</ul>
@@ -168,7 +173,7 @@ $(function(){
 <div style="height:1000px">
 	<section>
 
-		<div class="bx-pager" style="margin-right:600px; margin-bottom:560px">
+		<div class="bx-pager" style="margin-right:600px; margin-bottom:540px">
 		</div>
 		
 		<div>
@@ -181,9 +186,9 @@ $(function(){
 
 		<div class="frame frame-rooms" style="position:relative; top:471px; right:0px; left:900px; width:1000px;">
 			<nav class="frame-nav">
-				HOME / DINING / <span class="gold">NOIR RESTAURANT</span>
+				HOME / DINING / <span class="gold" th:text="${dinning.dinningName}">NOIR RESTAURANT</span>
 			</nav>
-			<h2 class="frame-title gold">NOIR RESTAURANT</h2>	
+			<h2 class="frame-title gold" >NOIR RESTAURANT</h2>	
 		</div>
 		
 		
@@ -191,16 +196,10 @@ $(function(){
 			DINNING DETAILS
 			<div style="width:500px; height:1px; background:#fff;"></div>
 			<div style="margin-top:15px; font-size: 20px; font-weight: bold; color: #C8BD9E; ">
-			NOIR, 빛과 그림자가 완성하는 미식의 깊이<br>
+			N.O.R, 빛과 그림자가 완성하는 미식의 깊이<br>
 			</div>
-			<div style="margin-top:30px">
+			<div style="line-height:1.4; margin-top:30px; width:420px" th:text="${dinning.dinningDetail}">
 			클래식한 서양 요리의 기법 위에
-			</div>
-			<div style="margin-top:5px;">
-			현대적인 감각과 섬세한 해석을 더한
-			</div>
-			<div style="margin-top:5px;">
-			컨템포러리 다이닝의 새로운 경험
 			</div>
 
 
@@ -209,13 +208,13 @@ $(function(){
 			</div>
 			
 			<div style="margin-top:15px">
-			레스토랑명 : NOIR RESTAURANT
+			레스토랑명 : <span th:text=${dinning.dinningName}></span>
 			</div>
 			<div style="margin-top:5px">
 			다이닝 유형 : 클래식 프렌치 테크닉 기반의 컨템포러리 서양 요리
 			</div>
 			<div style="margin-top:5px">
-			좌석 수 : 총 80석 (개별 룸 포함)
+			좌석 수 : 총 <span th:text=${dinning.dinningMaxTable}>80</span>석 (개별 룸 포함)
 			</div>
 			<div style="margin-top:5px">
 			위치 : 호텔 1층 로비 옆
@@ -230,13 +229,13 @@ $(function(){
 			    운영 시간
 			    </div>
 			    <div style="margin-top:15px">
-			    조식 : 07:00 - 10:00 (마지막 입장 09:30)
+			    조식 : <span th:text="${dinningList[0].dinningMorningStr}">07:00</span> - <span th:text="${dinningList[0].dinningMorningEnd}">10:00 (마지막 입장 09:30)</span>
 			    </div>
 			    <div style="margin-top:5px">
-			    중식 : 평일 11:30 - 14:30
+			    중식 : <span th:text="${dinningList[0].dinningLunchStr}">07:00</span> - <span th:text="${dinningList[0].dinningLunchEnd}">10:00 (마지막 입장 09:30)</span>
 			    </div>
 			    <div style="margin-top:5px">
-			    석식 : 평일 17:30 - 21:30
+			    석식 : <span th:text="${dinningList[0].dinningDinnerStr}">07:00</span> - <span th:text="${dinningList[0].dinningDinnerEnd}">10:00 (마지막 입장 09:30)</span>
 			    </div>
 			    <div style="margin-top:5px">
 			    ※ 조식 뷔페는 예약 없이 이용 가능하며, 현장 대기 시간이 발생할 수 있습니다.
