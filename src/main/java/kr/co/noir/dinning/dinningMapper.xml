@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.noir.dinning">
+
+
+	<resultMap type="dinningDomain" id="dinningSelect">
+		<result column="dinning_name" property="dinningName"/>
+		<result column="dinning_ex" property="dinningEx"/>	
+		<result column="dinning_detail" property="dinningDetail"/>			
+		<result column="dinning_img1" property="dinningImg1"/>	
+		<result column="dinning_img2" property="dinningImg2"/>	
+		<result column="dinning_img3" property="dinningImg3"/>	
+		<result column="dinning_img4" property="dinningImg4"/>	
+		<result column="dinning_img5" property="dinningImg5"/>	
+		<result column="dinning_time" property="dinningTime"/>	
+		<result column="dinning_adult_price" property="adultPrice"/>	
+		<result column="dinning_kid_price" property="kidPrice"/>	
+		<result column="dinning_morning_str" property="dinningMorningStr"/>	
+		<result column="dinning_morning_end" property="dinningMorningEnd"/>	
+		<result column="dinning_lunch_str" property="dinningLunchStr"/>	
+		<result column="dinning_lunch_end" property="dinningLunchEnd"/>	
+		<result column="dinning_dinner_str" property="dinningDinnerStr"/>	
+		<result column="dinning_dinner_end" property="dinningDinnerEnd"/>
+		<result column="dinning_menu_type" property="dinningMenuType"/>
+		<result column="dinning_menu_main" property="dinningMenuMain"/>
+		<result column="dinning_menu_sub" property="dinningMenuSub"/>
+		<result column="dinning_max_table" property="dinningMaxTable"/>
+		
+	</resultMap> 
+
+
+
+		<select id="dinningSelect" resultMap="dinningSelect">
+		select dinning_img1, dinning_img2, dinning_img3, dinning_img4,dinning_img5, dinning_name, dinning_ex from dinning_info
+		</select>	
+		
+		<select id="dinningDetailSelect" resultMap="dinningSelect">
+		SELECT
+		    I.dinning_menu_num,
+		    I.dinning_img1, I.dinning_img2, I.dinning_img3, I.dinning_img4, I.dinning_img5,
+		    I.dinning_name,
+		    I.dinning_ex,
+		    I.dinning_detail,
+		    I.dinning_time,
+		    I.dinning_max_table,
+		    I.dining_schedule_num,
+		
+		    P.dinning_adult_price,
+		    P.dinning_kid_price,
+		
+		    T.dinning_morning_str, T.dinning_morning_end,
+		    T.dinning_lunch_str, T.dinning_lunch_end,
+		    T.dinning_dinner_str, T.dinning_dinner_end,
+		
+		    M.dinning_menu_type,
+		    M.dinning_menu_main,
+		    M.dinning_menu_sub
+		FROM dinning_info I
+		LEFT JOIN dinning_price P ON I.dinning_menu_num = P.dinning_menu_num
+		LEFT JOIN dinning_type_time T ON I.dinning_menu_num = T.dinning_menu_num
+		LEFT JOIN dinning_menu M ON I.dinning_menu_num = M.dinning_menu_num
+		</select>	
+</mapper>
+
+
+
+
