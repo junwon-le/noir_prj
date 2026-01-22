@@ -1,49 +1,79 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>NOIR - Find Password</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/common/css/homepage/base.css}">
-    <script th:src="@{/common/js/comm/jquery-3.5.1.min.js}"></script>
+    <title>Hotel Management - Find Password</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <style>
-        /* 기존 블랙톤 스타일 테마 적용 */
-        body { background: #0f1218; color: #fff; font-family: 'Noto Sans KR', sans-serif; }
-        .find-box { 
-            background: rgba(44, 41, 38, 0.95); padding: 40px; border-radius: 15px; 
-            border: 1px solid #7c6a52; text-align: center; max-width: 450px; margin: 100px auto;
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Noto Sans KR', sans-serif; }
+        body {
+            background: #0f1218;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('../images/hotel_bg.jpg') no-repeat center center/cover;
+            height: 100vh; display: flex; justify-content: center; align-items: center; color: #fff;
         }
-        .find-title { color: #C4A16F; font-size: 24px; margin-bottom: 30px; letter-spacing: 2px; }
-        .input-group { margin-bottom: 15px; }
-        input[type="text"], input[type="email"] { 
-            width: 100%; height: 42px; background: rgba(255, 255, 255, 0.05); 
-            border: 1px solid #5a4d3b; color: #fff; padding: 10px; border-radius: 4px;
+        .find-container { width: 100%; max-width: 400px; padding: 20px; }
+        .find-box {
+            background: rgba(44, 41, 38, 0.9); padding: 40px; border-radius: 15px;
+            border: 1px solid #7c6a52; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px); text-align: center;
         }
-        .submit-btn { 
-            width: 100%; padding: 12px; background: #C4A16F; border: none; 
-            color: #fff; font-weight: bold; cursor: pointer; transition: 0.3s;
+        .find-title { font-size: 28px; font-weight: 700; margin-bottom: 30px; letter-spacing: 2px; color: #C4A16F; }
+        .input-group { margin-bottom: 15px; text-align: left; }
+        input[type="text"], input[type="email"], input[type="password"] {
+            width: 100%; padding: 15px; background: rgba(255, 255, 255, 0.05);
+            border: 1px solid #7c6a52; border-radius: 6px; color: #FFFFFF; outline: none; transition: 0.3s; font-size: 15px;
         }
-        #auth-area { display: none; margin-top: 20px; border-top: 1px solid #5a4d3b; padding-top: 20px; }
-        .flex-group { display: flex; gap: 8px; }
-        .btn-small { background: #5a4d3b; color: #d7c4a5; border: 1px solid #7c6a52; padding: 0 15px; cursor: pointer; }
+        input:focus { border-color: #C4A16F; background: rgba(196, 161, 111, 0.1); }
+        .name-wrapper { display: flex; gap: 8px; }
+        .submit-btn {
+            width: 100%; padding: 15px; background: #C4A16F; border: none; border-radius: 6px;
+            color: #FFFFFF; font-size: 18px; font-weight: bold; cursor: pointer; transition: 0.3s;
+        }
+        .submit-btn:hover { background: #7c6a52; transform: translateY(-2px); }
+        .link-group { display: flex; justify-content: center; gap: 15px; margin: 20px 0 0 0; font-size: 13px; }
+        .link-group a { color: #D7c4a5; text-decoration: none; transition: 0.3s; }
+        .link-group a:hover { color: #C4A16F; }
+
+        /* 수정: 초기에는 보이지 않도록 display: none 설정 */
+        #auth-area { display: none; margin-top: 15px; border-top: 1px solid #7c6a52; padding-top: 15px; }
+        
+        .btn-small {
+            width: 32%; padding: 15px; background: #7c6a52; border: none;
+            border-radius: 6px; color: #fff; cursor: pointer; font-size: 14px; margin-left: 2%;
+        }
+        .flex-group { display: flex; justify-content: space-between; }
+        .flex-group input { width: 66%; }
     </style>
 </head>
 <body>
-    <header th:replace="~{fragments/header :: header}"></header>
-
-    <div class="find-box">
-        <h2 class="find-title">FIND PASSWORD</h2>
-        <div id="step1">
-            <div class="input-group"><input type="text" id="userId" placeholder="아이디"></div>
-            <div class="input-group"><input type="text" id="userName" placeholder="이름"></div>
-            <div class="input-group"><input type="email" id="userEmail" placeholder="이메일"></div>
-            <button type="button" class="submit-btn" id="btnSendCode">인증번호 받기</button>
-        </div>
-
-        <div id="auth-area">
-            <p style="font-size:13px; color:#C4A16F; margin-bottom:10px;">이메일로 전송된 6자리 코드를 입력하세요.</p>
-            <div class="input-group flex-group">
-                <input type="text" id="authCode" placeholder="인증번호 6자리" maxlength="6">
-                <button type="button" class="btn-small" id="btnVerify">확인</button>
+    <div class="find-container">
+        <div class="find-box">
+            <h2 class="find-title">FIND PW</h2>
+            <div id="step1">
+                <div class="input-group">
+                    <input type="text" id="memberId" placeholder="아이디" required>
+                </div>
+                <div class="input-group">
+                    <div class="name-wrapper">
+                        <input type="text" id="memberLastName" placeholder="성" required style="width: 35%;">
+                        <input type="text" id="memberFirstName" placeholder="이름" required style="width: 65%;">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <input type="email" id="memberEmail" placeholder="이메일" required>
+                </div>
+                <button type="button" class="submit-btn" id="btnSendCode">인증번호 받기</button>
+                <div id="auth-area">
+                    <p style="font-size:13px; color:#C4A16F; margin-bottom:10px;">이메일로 전송된 6자리 코드를 입력하세요.</p>
+                    <div class="input-group flex-group">
+                        <input type="text" id="authCode" placeholder="인증번호 6자리" maxlength="6">
+                        <button type="button" class="btn-small" id="btnVerify">확인</button>
+                    </div>
+                </div>
+            </div>
+            <div class="link-group">
+                <a href="login.html">로그인</a><span style="color: #c5b69f;">|</span><a href="findId.jsp">아이디 찾기</a><span style="color: #c5b69f;">|</span><a href="join.html">회원가입</a>
             </div>
         </div>
     </div>
@@ -52,10 +82,21 @@
     $(document).ready(function(){
         // 1. 인증번호 발송
         $("#btnSendCode").click(function(){
-            let data = { userId: $("#userId").val(), userName: $("#userName").val(), userEmail: $("#userEmail").val() };
-            if(!data.userId || !data.userName || !data.userEmail) return alert("정보를 모두 입력해주세요.");
+            // 수정: HTML ID와 일치하도록 변수 수집 로직 변경
+            let data = { 
+                memberId: $("#memberId").val(), 
+                memberLastName: $("#memberLastName").val(), 
+                memberFirstName: $("#memberFirstName").val(), 
+                memberEmail: $("#memberEmail").val() 
+            };
+
+            if(!data.memberId || !data.memberLastName || !data.memberFirstName || !data.memberEmail) {
+                return alert("정보를 모두 입력해주세요.");
+            }
 
             $(this).prop("disabled", true).text("전송 중...");
+            
+            // 수정: 서버 파라미터 명칭과 맞추기 위해 data 객체 그대로 전송
             $.post("/member/sendAuthCode", data, function(res) {
                 if(res.trim() === "OK") {
                     alert("인증번호가 발송되었습니다.");
@@ -69,10 +110,13 @@
 
         // 2. 인증번호 확인 및 토큰 획득
         $("#btnVerify").click(function(){
-            $.post("/member/verifyAuthCode", { authCode: $("#authCode").val() }, function(res) {
+            let authCode = $("#authCode").val();
+            if(authCode.length < 6) return alert("인증번호 6자리를 입력해주세요.");
+
+            $.post("/member/verifyAuthCode", { authCode: authCode }, function(res) {
+                // 서버 응답이 JSON 형식이므로 res.result 확인
                 if(res.result === "OK") {
                     alert("인증 성공!");
-                    // 서버에서 발행한 토큰을 가지고 이동
                     location.href = "/member/resetPw?token=" + res.token;
                 } else {
                     alert("인증번호가 일치하지 않습니다.");
