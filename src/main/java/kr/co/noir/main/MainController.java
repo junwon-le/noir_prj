@@ -33,31 +33,34 @@ public class MainController {
 
 
 	
-	@GetMapping("/dinning")
-	public String Dinning() {
-		return "/dinning/dinning";
-	}
+	/*
+	 @GetMapping("/dinning") 
+	 public String Dinning() { 
+		  return "/dinning/dinning";
+	  }
+	
 	@GetMapping("/dinningDetail")
 	public String DinningDetail() {
 		return "/dinning/dinningDetail";
 	}
+	
 	@GetMapping("/hotelRev")
 	public String hotelRev() {
-		return "/manager/hotel_rev/hotelRev.html";
+		return "/manager/hotel_rev/hotelRev";
 	}
 	
 	@GetMapping("/hotelRevDetail")
 	public String hotelRevDetail() {
-		return "/manager/hotel_rev/hotelRev_detail.html";
+		return "/manager/hotel_rev/hotelRev_detail";
 	}
 	@GetMapping("/dinningRev")
 	public String dinningRev() {
-		return "/manager/dinning_rev/dinningRev.html";
+		return "/manager/dinning_rev/dinningRev";
 	}
 	
 	@GetMapping("/dinningRevDetail")
 	public String dinningRevDetail() {
-		return "/manager/dinning_rev/dinningRev_detail.html";
+		return "/manager/dinning_rev/dinningRev_detail";
 	}
-
+*/
 }

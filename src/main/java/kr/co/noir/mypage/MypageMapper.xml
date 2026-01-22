@@ -4,18 +4,67 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.noir.mypage">
 
+	<!-- user이름을 가져오는 Query -->
+	<select id="memberName" parameterType="String" resultType="String">
+		 select MEMBER_LAST_NAME||MEMBER_FIRST_NAME mebmerName
+ 		 from member
+ 		 where member_id=#{memberId}
+		
+	</select>
 
-
-
+	<!-- 해당 member의 호텔이 예약된 개수를 가져오는 Query -->
 	<select id="hotelRevCnt" parameterType="String" resultType="int">
 		SELECT COUNT(*)
 		FROM member m
 		JOIN reserve r ON m.member_num = r.member_num
 		JOIN room_res rr ON r.reserve_num = rr.reserve_num
 		WHERE m.member_id = #{memberId} and r.reserve_status='N'
+		<![CDATA[
+      		AND rr.room_res_start_date >= TRUNC(SYSDATE)
+      		AND rr.room_res_start_date < ADD_MONTHS(TRUNC(SYSDATE), 3)
+      	]]>
+	
+	</select>
+	
+	
+	<!-- 해당 member의 다이닝이 예약된 개수를 가져오는 Query -->
+	<select id="dinningRevCnt" parameterType="String" resultType="int">
+		SELECT COUNT(*)
+		FROM member m
+		JOIN reserve r ON m.member_num = r.member_num
+		JOIN dinning_res dr ON r.reserve_num = dr.reserve_num
+		WHERE m.member_id = #{memberId} and r.reserve_status='N'
+		<![CDATA[
+      		AND dr.dinning_visit_date >= TRUNC(SYSDATE)
+      		AND dr.dinning_visit_date < ADD_MONTHS(TRUNC(SYSDATE), 3)
+      	]]>
 		
 	</select>
 	
+	
+	
+	<!-- 이벤트 리스트 3개를 무작위로 가져오는 Query -->
+	<resultMap type="eventDomain" id="evtDomain">
+		<result column="event_num" property="eventNum"/>
+		<result column="event_title" property="eventTitle"/>
+		<result column="event_img1" property="eventImg1"/>
+		<result column="event_start_date" property="eventStartDate"/>
+		<result column="event_end_date" property="eventEndDate"/>
+	
+	
+	</resultMap>
+
+	
+	<select id="eventList" parameterType="String" resultMap="evtDomain">
+		
+		select event_num, event_title, event_img1, event_start_date, event_end_date 
+		from event
+		where TRUNC(SYSDATE) BETWEEN TRUNC(event_start_date) AND TRUNC(event_end_date)
+		order by dbms_random.value()
+		fetch first 3 rows only
+		
+	
+	</select>
 </mapper>
 
 

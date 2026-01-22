@@ -235,7 +235,7 @@ $(document).on('click','.btn_pop_close',function(e){
             <div class="sidebar">
                 <div class="mypage-title">
                     <h2><a href="/mypage/">MYPAGE</a></h2>
-                    <p th:text="|님|">님</p>
+                    <p th:text="|${memberName}님|">님</p>
                 </div>
 
                 <div class="menu-group">
@@ -273,7 +273,7 @@ $(document).on('click','.btn_pop_close',function(e){
                             개인정보관리
                         </span>
                     </div>
-                    <a href="#" class="menu-item">회원정보 수정 <span class="badge-outline">Edit</span></a>
+                    <a href="/mypage/info/passwordCheck" class="menu-item">회원정보 수정 <span class="badge-outline">Edit</span></a>
                     <a href="#" class="menu-item">비밀번호 변경 <span class="badge-outline">Password</span></a>
                     <a href="#" class="menu-item">회원탈퇴 <span class="badge-outline">Leave</span></a>
                 </div>
@@ -302,7 +302,7 @@ $(document).on('click','.btn_pop_close',function(e){
                                     <div class="icon-circle">
                                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c5a47e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>
                                     </div>
-                                    <div><small class="text-secondary">다이닝 예약</small><h6 class="mb-0 fw-bold">방문 예정 0건</h6></div>
+                                    <div><small class="text-secondary">다이닝 예약</small><h6 class="mb-0 fw-bold" th:text="|방문 예정 ${dinningRevcnt}건|">방문 예정 0건</h6></div>
                                 </div>
                                 <svg viewBox="0 0 24 24" width="24" height="24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                             </a>
@@ -312,38 +312,22 @@ $(document).on('click','.btn_pop_close',function(e){
                 
                 <div class="content-section flex-fill-section">
                     <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h5 class="mb-0 fw-bold" th:text="|박현욱님을 위한 이벤트|">박현욱님을 위한 이벤트</h5>
-                        <a href="#" class="text-secondary text-decoration-none small">전체보기 <i class="bi bi-arrow-right"></i></a>
+                        <h5 class="mb-0 fw-bold" th:text="|${memberName}님을 위한 이벤트|">님을 위한 이벤트</h5>
+                        <a href="/Event/EventList" class="text-secondary text-decoration-none small">전체보기 <i class="bi bi-arrow-right"></i></a>
                     </div>
                     <div class="row g-4" style="margin-top: 40px;">
             
-                        <div class="col-md-4">
-                            <a href="#" class="siteBorder">
+                        <div class="col-md-4 " th:each="eList : ${eventList}" th:object="${eList}">
+                            <a th:href="@{{url}(url='/Event/EventDetail',eventNum=*{eventNum})}" class="siteBorder">
+                               
                                 <div class="event-card">
-                                    <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400" alt="Event">
-                                    <h6>Flash Deals</h6>
-                                    <p class="event-period">2026.01.05 ~ 2026.01.09</p>
+                                    <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400" alt="Event" th:id="*{eventNum}">
+                                    <h6 th:text="*{eventTitle}">Flash Deals</h6>
+                                    <p class="event-period" th:text="|*{eventStartDate} ~ *{eventEndDate} |">2026.01.05 ~ 2026.01.09</p>
                                 </div>
                             </a>
                         </div>
-                        <div class="col-md-4">
-                            <a href="#" class="siteBorder">
-                                <div class="event-card">
-                                    <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400" alt="Event">
-                                    <h6>Winter Bliss</h6>
-                                    <p class="event-period">2025.11.01 ~ 2026.02.28</p>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="col-md-4">
-                            <a href="#" class="siteBorder">
-                                <div class="event-card">
-                                    <img src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?w=400" alt="Event">
-                                    <h6>Cheers to the New Year!</h6>
-                                    <p class="event-period">2025.12.18 ~ 2026.02.28</p>
-                                </div>
-                            </a>
-                        </div>
+                      
                     </div>
                 </div>
             </div>
