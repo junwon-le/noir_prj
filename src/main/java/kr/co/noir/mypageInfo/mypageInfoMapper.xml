@@ -12,6 +12,16 @@
 		from member 
 		where member_id =#{memberid}
 	</select>
+	
+
+<!-- 	
+	<select id="memberInfo" parameterType="String" resultMap="" >
+		select member_pass
+		from member 
+		where member_id =#{memberid}
+	</select>
+	 -->
+	
 
 	
 </mapper>
