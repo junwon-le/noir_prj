@@ -12,16 +12,8 @@
 <link rel="stylesheet" type="text/css" th:href="@{/common/css/homepage/admin_style.css}">
 
 <script th:src="@{/common/js/comm/jquery-3.5.1.min.js}"></script>
-<script th:src="@{/common/js/comm/jquery.bxslider.js}"></script>
-<script th:src="@{/common/js/homepage/jquery.rwdImageMaps.min.js}"></script>
-<script th:src="@{/common/js/homepage/jquery.accessibility.modal.js}"></script>
-<script th:src="@{/common/js/comm/jquery.cookie.js}"></script>
-<script th:src="@{/common/js/homepage/plugin.js}"></script>
-<script type="text/javascript" th:src="@{/common/js/homepage/jquery.simpleWeather.js}"></script>
-<script th:src="@{/common/js/homepage/custom.js}"></script>
-
 <style>
-    /* 1. 기본 초기화 */
+    /* 1. 기본 초기화 및 레이아웃 (기존 스타일 유지) */
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Noto Sans KR', sans-serif; }
 
     body {
@@ -33,12 +25,9 @@
         position: relative;
     }
 
-    /* 2. 헤더/푸터 고정 */
     header { position: absolute; top: 0; left: 0; width: 100%; z-index: 100; }
     footer { position: relative; width: 100%; z-index: 100; }
-    #privacy-layer { position: absolute; bottom: 0; width: 100%; z-index: 101; }
 
-    /* 3. 메인 래퍼 */
     #main-wrapper {
         min-height: calc(100vh - 135px); 
         display: flex;
@@ -50,11 +39,7 @@
         padding: 140px 20px 80px 20px; 
     }
 
-    /* 4. 아이디 찾기 컨테이너 */
-    .find-container {
-        width: 100%;
-        max-width: 450px; 
-    }
+    .find-container { width: 100%; max-width: 450px; }
 
     .find-box {
         background: rgba(44, 41, 38, 0.95); 
@@ -75,8 +60,13 @@
         color: #C4A16F; 
     }
 
-    /* 5. 입력 그룹 */
     .input-group { margin-bottom: 15px; text-align: left; }
+
+    /* [추가] 성/이름 분리 레이아웃 스타일 */
+    .name-wrapper {
+        display: flex;
+        gap: 8px;
+    }
 
     input[type="text"], input[type="email"] {
         padding: 10px 12px; 
@@ -96,7 +86,6 @@
         background: rgba(196, 161, 111, 0.1);
     }
 
-    /* 6. 링크 그룹 */
     .link-group {
         display: flex;
         justify-content: center;
@@ -104,14 +93,12 @@
         gap: 15px;
         margin: 25px 0;
         font-size: 13px;
-        color: #666; 
     }
 
     .link-group a { color: #D7c4a5; text-decoration: none; transition: 0.3s; }
     .link-group a:hover { color: #C4A16F; }
     .divider { color: #7c6a52; }
 
-    /* 7. 버튼 스타일 */
     .submit-btn {
         width: 100%;
         padding: 12px;
@@ -127,92 +114,26 @@
 
     .submit-btn:hover { background: #7c6a52; }
 
-    /* =========================================
-       8. NOIR 모달 스타일 (이미지 디자인 반영)
-       ========================================= */
-    #idResultModal {
-        display: none; 
-        position: fixed; 
-        top: 0; left: 0; 
-        width: 100%; height: 100%; 
-        background: rgba(0,0,0,0.85); 
-        z-index: 9999; 
-        justify-content: center; 
-        align-items: center;
-    }
-
-    .noir-modal-card {
-        background-color: #050505; 
-        width: 100%;
-        max-width: 600px; 
-        padding: 60px 40px;
-        border-radius: 12px;
-        text-align: center;
-        box-shadow: 0 20px 50px rgba(0,0,0,0.9);
-        border: 1px solid #1a1a1a; 
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
-
-    /* [수정] 기존 임시 로고 스타일 삭제 및 새 이미지 스타일 추가 */
-    .noir-modal-logo {
-        width: 150px; /* 로고 크기 조절 */
-        height: auto;
-        margin-bottom: 25px; /* 슬로건과의 간격 */
-    }
-
-    .noir-slogan {
-        font-family: 'Times New Roman', serif;
-        color: #888;
-        font-size: 18px;
-        margin-bottom: 40px;
-        font-style: italic;
-    }
-
-    .noir-result-text {
-        color: #fff;
-        font-size: 22px;
-        margin-bottom: 40px;
-        font-weight: 300;
-    }
-
-    .noir-modal-btn {
-        background-color: #1f232e; 
-        color: #fff;
-        border: none;
-        padding: 15px 40px;
-        font-size: 16px;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: 0.3s;
-        min-width: 150px;
-    }
-
-    .noir-modal-btn:hover {
-        background-color: #2c3140;
-    }
-
+    /* 모달 스타일 생략 (기존과 동일) */
+    #idResultModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; justify-content: center; align-items: center; }
+    .noir-modal-card { background-color: #050505; width: 100%; max-width: 600px; padding: 60px 40px; border-radius: 12px; text-align: center; border: 1px solid #1a1a1a; display: flex; flex-direction: column; align-items: center; }
+    .noir-modal-logo { width: 150px; height: auto; margin-bottom: 25px; }
+    .noir-result-text { color: #fff; font-size: 22px; margin-bottom: 40px; font-weight: 300; }
+    .noir-modal-btn { background-color: #1f232e; color: #fff; border: none; padding: 15px 40px; font-size: 16px; border-radius: 5px; cursor: pointer; transition: 0.3s; }
 </style>
 </head>
 
 <body th:style="'background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url(' + @{/images/hotel_bg.jpg} + ') no-repeat center center/cover;'">
 
 <script th:inline="javascript" th:if="${searchResult != null}">
-    /*<![CDATA[*/
     $(document).ready(function() {
-        var searchResult = /*[[${searchResult}]]*/ null;
-        
+        var searchResult = [[${searchResult}]];
         if (searchResult === 'success') {
-            // 성공 시 모달 표시
             $("#idResultModal").css("display", "flex").hide().fadeIn();
         } else if (searchResult === 'fail') {
             alert("입력하신 정보와 일치하는 회원이 없습니다.");
-            history.back();
         }
     });
-    /*]]>*/
 </script>
 
     <header>
@@ -225,9 +146,12 @@
                 <h2 class="find-title">FIND ID</h2>
                 
                 <form th:action="@{/member/findId}" method="post">
-                            
+                    
                     <div class="input-group">
-                        <input type="text" name="memberName" placeholder="이름" required>
+                        <div class="name-wrapper">
+                            <input type="text" name="memberLastName" placeholder="성" required style="width: 35%;">
+                            <input type="text" name="memberFirstName" placeholder="이름" required style="width: 65%;">
+                        </div>
                     </div>
                     
                     <div class="input-group">
@@ -235,11 +159,11 @@
                     </div>
                     
                     <div class="link-group">
-                        <a href="memberLogin.html" th:href="@{/login/memberLogin}">로그인</a>                    
+                        <a th:href="@{/login/memberLogin}">로그인</a>                    
                         <span class="divider">|</span>
-                        <a href="findPw.html" th:href="@{/findPw}">비밀번호 찾기</a>
+                        <a th:href="@{/findPw}">비밀번호 찾기</a>
                         <span class="divider">|</span>
-                        <a href="join.html" th:href="@{/join}">회원가입</a>
+                        <a th:href="@{/join}">회원가입</a>
                     </div>
                     
                     <button type="submit" class="submit-btn">아이디 찾기</button>
@@ -249,29 +173,20 @@
         </div>
     </div>
 
-    <footer>
-        <div th:replace="~{fragments/footer :: footer}"></div>
-    </footer>
-    <div id="privacy-layer">
-        <div th:replace="~{fragments/privacy :: privacy}"></div>
-    </div>
-
     <div id="idResultModal">
         <div class="noir-modal-card">
-            
-            <img th:src="@{../common/images/homepage/logo_black.png}" alt="NOIR BOUTIQUE HOTEL Logo" class="noir-modal-logo">
-
-            
+            <img th:src="@{/common/images/homepage/logo_black.png}" alt="NOIR Logo" class="noir-modal-logo">
             <p class="noir-result-text" th:text="|회원님의 아이디는 ${maskedId}입니다.|">
                 회원님의 아이디는 sist****입니다.
             </p>
-
             <button type="button" class="noir-modal-btn" th:onclick="|location.href='@{/login/memberLogin}'|">
-                메인 페이지
+                로그인하러 가기
             </button>
-            
         </div>
     </div>
 
+    <footer>
+        <div th:replace="~{fragments/footer :: footer}"></div>
+    </footer>
 </body>
 </html>

@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 
@@ -40,23 +42,23 @@ public class MemberController {
 	public String hotelLaundry() {
 		return "/hotel/laundry";
 	}	
-		
+	
+	@GetMapping("/login/join")
+	public String join() {
+		return "/login/join";
+	}
+
 	@GetMapping("/login/memberLogin")
 	public String memberLogin() {
 		return "/login/memberLogin";
 	}
 	
-	@GetMapping("/join")
-	public String join() {
-		return "/login/join";
-	}
-	
-	@GetMapping("/findId") 
+	@GetMapping("/login/findId") 
     public String findIdPage() {
         return "/login/findId";           // templates/findId.html 파일을 바라봄
     }
 
-    @GetMapping("/findPw") 
+    @GetMapping("/login/findPw") 
     public String findPwPage() {
         return "/login/findPw";          // templates/findPw.html 파일을 바라봄
     }	
@@ -64,7 +66,7 @@ public class MemberController {
     /**
      * 로그아웃 처리
      */
-    @GetMapping("/login/logout")
+    @GetMapping("/logout")
     public String logout(HttpSession session) {
         // 1. 세션 무효화 (저장된 member, admin 등 모든 속성 삭제)
         session.invalidate();
@@ -73,7 +75,7 @@ public class MemberController {
         return "redirect:/main"; 
     }
 	
-	@PostMapping("/member/login")
+	@PostMapping("/login")
 	public String memberLoginProcess(@RequestParam("memberId") String memberId, @RequestParam("memberPass") String memberPass, HttpSession session) {
 		
 		MemberDTO member = memberService.login(memberId, memberPass);
@@ -90,12 +92,13 @@ public class MemberController {
 	} //memberLoginProcess
 	
 	
-	@PostMapping("/member/findId")
-	public String findIdProcess(@RequestParam("memberName") String memberName, @RequestParam("memberEmail") String memberEmail, Model model) {
+	@PostMapping("/login/findId")
+	public String findIdProcess(@RequestParam("memberLastName") String memberLastName, @RequestParam("memberFirstName") String memberFirstName, 
+								@RequestParam("memberEmail") String memberEmail, Model model) {
 	    
 	    // 1. 서비스에서 이름과 이메일로 ID 찾기 
 	    // 예: select member_id from member where member_name = ? and member_email = ?
-		MemberDTO mDTO=memberService.findIdByNameAndEmail(memberName, memberEmail);
+		MemberDTO mDTO=memberService.findIdByInfo(memberLastName, memberFirstName, memberEmail);
 		String foundId=mDTO.getMemberId();
 	    
 	    
@@ -124,8 +127,39 @@ public class MemberController {
 
 	}
 	
+
+	@Autowired
+	private MailService mailService; // 서비스 주입 확인
+
+	@PostMapping("/login/sendAuthCode") // HTML의 AJAX 경로와 일치
+	@ResponseBody
+	public String sendAuthCode(@RequestParam("memberId") String memberId,
+	                           @RequestParam("memberLastName") String memberLastName,
+	                           @RequestParam("memberFirstName") String memberFirstName,
+	                           @RequestParam("memberEmail") String memberEmail,
+	                           HttpSession session) {
+
+	    // 1. DB 사용자 정보 확인 (기존 서비스 활용)
+	    boolean userExists = memberService.checkUserForPasswordReset(memberId, memberLastName, memberFirstName, memberEmail);
+
+	    if (userExists) {
+	        // 2. MailService의 함수명 'sendMail'을 정확히 호출
+	        String authCode = mailService.sendMail(memberEmail);
+
+	        if (authCode != null) {
+	            // 3. 발송된 번호를 세션에 저장 (verifyAuthCode에서 확인용)
+	            session.setAttribute("authCode", authCode);
+	            session.setAttribute("resetUserId", memberId); 
+	            return "OK"; // HTML 스크립트의 res.trim() === "OK"와 일치
+	        }
+	        return "FAIL";
+	    }
+	    return "NO_USER";
+	}	
+	
+	
 	// 인증코드 검증
-	@PostMapping("/verifyAuthCode")
+	@PostMapping("/login/verifyAuthCode")
 	@ResponseBody
 	public Map<String, Object> verifyAuthCode(@RequestParam String authCode, HttpSession session) {
 	    Map<String, Object> response = new HashMap<>();
@@ -147,13 +181,13 @@ public class MemberController {
 	}//verifyAuthCode
 
 	// 비밀번호 재설정 페이지 이동 (토큰 검증)
-	@GetMapping("/resetPw")
+	@GetMapping("/login/resetPw")
 	public String resetPwPage(@RequestParam String token, HttpSession session, Model model) {
 	    String sessionToken = (String) session.getAttribute("resetToken");
 
 	    // 세션의 토큰과 URL의 토큰이 일치하는지 확인
 	    if (sessionToken == null || !sessionToken.equals(token)) {
-	        return "redirect:/member/findPw"; // 비정상 접근 시 차단
+	        return "redirect:/login/findPw"; // 비정상 접근 시 차단
 	    }
 	    
 	    model.addAttribute("token", token);
@@ -162,7 +196,7 @@ public class MemberController {
 	
 	
 	//비밀 번호 변경 
-	@PostMapping("/updatePw")
+	@PostMapping("/login/updatePw")
 	@ResponseBody
 	public String updatePw(@RequestParam String newPw, 
 	                       @RequestParam String token, 
@@ -190,7 +224,7 @@ public class MemberController {
 	}//updatePw	
 	
 	
-	@PostMapping("/modifyPwProcess")
+	@PostMapping("/login/modifyPwProcess")
 	@ResponseBody
 	public String modifyPwProcess(@RequestParam String newPw, @RequestParam String token, HttpSession session) {
 	    
@@ -216,5 +250,34 @@ public class MemberController {
 	        return "FAIL";
 	    }
 	}//modifyPwProcess	
+	
+
+    @GetMapping("/login/checkId")
+    public ResponseEntity<Map<String, Object>> checkId(@RequestParam("memberId") String memberId) {
+        Map<String, Object> response = new HashMap<>();
+        
+        // 아이디 존재 여부 확인 (있으면 true, 없으면 false)
+        boolean exists = memberService.existsById(memberId);
+        
+        response.put("exists", exists);
+        return ResponseEntity.ok(response);
+    }
+	
+    // 회원가입 처리 프로세스
+    @PostMapping("/login/joinProcess")
+    @ResponseBody // 성공 여부를 JSON이나 문자열로 응답
+    public String joinProcess(MemberDTO memberDTO, HttpServletRequest request) {
+        // 1. 비밀번호 암호화 (추후 BCrypt 적용 권장)
+        // 2. 성(lastName)과 이름(firstName)을 합쳐서 저장하거나 각각 저장하는 로직
+        
+        boolean isSuccess = memberService.registerMember(memberDTO, request);
+        
+        if(isSuccess) {
+            return "OK";
+        } else {
+            return "FAIL";
+        }
+    }
+    
 	
 }//class

@@ -12,8 +12,10 @@
 				    <li th:if="${session.member != null or session.admin != null}">
 				        <a href="/login/logout" >LOGOUT</a>
 				    </li>
+				    
 				    <li th:if="${session.member == null and session.admin == null}"> 
 				        <a href="/login/join" >JOIN</a>				    
+			    
 				    </li>
 				    <li th:if="${session.member != null or session.admin != null}"> 
 				        <a href="/mypage/" >MYPAPE</a>				    
