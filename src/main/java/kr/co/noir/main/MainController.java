@@ -21,14 +21,4 @@ public class MainController {
 		return "manager/main/adminMain";
 	}
 	
-	@GetMapping("/admin/dinningMgr")
-	public String dinningMgr() {
-		return "manager/dinning/dinningManage";
-	}
-	@GetMapping("/admin/adminRoom")
-	public String admin_room() {
-		return "manager/room/roomManagePrice";
-	}
-	
-
 }
