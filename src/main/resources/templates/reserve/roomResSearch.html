@@ -99,49 +99,45 @@ span {
 .personBtn {
 	border: solid 1px #8b7355;
 	width: 25px;
-	height: 40px;
+	height: 25px;
 }
 
 </style>
 <script type="text/javascript">
 	
 $(function(){
-	// 성인 수 설정
+// 성인 수 설정
 	var adultCnt=1;
 	$("#adultUp").click(function(){
 		adultCnt+=1;
 		$("#adultCnt").text(adultCnt);
 	})
 	$("#adultDown").click(function(){
-		if($("#adultCnt").text()==1){
-			return;
-		}
-		adultCnt-=1;
+		if(adultCnt > 1){ // 0보다 클 때만 감소
+			adultCnt--;
 		$("#adultCnt").text(adultCnt);
+	    }
 	})
-	// 어린이 수 설정
-	var kidCnt=1;
+// 어린이 수 설정
+	var kidCnt=0;
 	$("#kidUp").click(function(){
 		kidCnt+=1;
 		$("#kidCnt").text(kidCnt);
 	})
 	$("#kidDown").click(function(){
-		if($("#kidCnt").text()==0){
+		if(kidCnt > 0){ // 0보다 클 때만 감소
+	        kidCnt--;
+	        $("#kidCnt").text(kidCnt);
+	    }
+	})
+//예약 하기 버튼
+	$("#reserve").click(function(){
+		if(adultCnt > roomMaxPerson){
+			alert("객실 수와 인원 수를 확인해주세요.");
 			return;
 		}
-		kidCnt-=1;
-		$("#kidCnt").text(kidCnt);
-	})
-	
-	
-	$("#select1").click(function(){
-		var room = $("#roomType1").text();
-		$("#selectRoom").html(selectDiv);
-	})
-	
-	$("#reserve").click(function(){
-		if(adultCnt > roomCnt*2){
-			alert("객실 수와 인원 수를 확인해주세요.");
+		if($("#display-checkout").text() == "-" ){
+			alert("체크인/체크아웃 날짜를 확인해주세요.");
 			return;
 		}
 		$("#reserveFrm").attr("action","/reserve/roomReserve");
@@ -149,7 +145,7 @@ $(function(){
 	})
 	
 	$("#nonReserve").click(function(){
-		if(adultCnt > roomCnt*2){
+		if(adultCnt > roomMaxPerson){
 			alert("객실 수와 인원 수를 확인해주세요.");
 			return;
 		}
@@ -159,34 +155,47 @@ $(function(){
 	
 	
 });//ready
+	var selectedRoomCnt={1:0,2:0,3:0,4:0,5:0}; //선택된 각각의 객실 수를 저장하는 배열
+	var roomMaxPerson=0;
 	var roomCnt=0;
 	var divNum=1;
 	var totalPrice=0;
-	
-	function selectRoom(roomName,personCnt,price){
+	function selectRoom(roomName,personCnt,price,period,availableRoom,roomNum){
+		var currentRoomCnt = selectedRoomCnt[roomNum];
+		if(currentRoomCnt+1 > availableRoom){
+			alert("예약 가능한 객실이 없습니다.");
+			return;
+		}
+		selectedRoomCnt[roomNum]+=1
+		roomMaxPerson+=personCnt;
 		var selectDiv="";
 		selectDiv+=`<div style="background-color: #e5e7eb; border-radius: 2px; padding:3px; display: flex;" id='${divNum}'> 
-			<div style="width: 120px;">
+			<div style="display:flex; align-items: center; justify-content:space-between; width: 230px;">
 			<span class='font-bold !text-black text-sm'>${roomName}  |</span>
-			</div>
-			<div>
-			<span >인원 : ${personCnt}명</span>
+			<span class='font-bold !text-black text-sm' >인원 : ${personCnt}명</span>
 			</div>
 			<div style="margin-left:auto;">
-			<button onclick="selectRoomRemove(${divNum})">삭제</button>
+			<button onclick="selectRoomRemove(${divNum},${price},${period},${roomNum})"
+				class="text-white px-4 py-1 text-xs rounded-sm bg-[#8b7355] hover:bg-[#7a654a]">삭제</button>
 			</div>
 			</div>`
 		$("#selectRoom").append(selectDiv);
 		divNum+=1;
 		roomCnt+=1;
-		$("#roomCnt").text(roomCnt);
 		totalPrice+=price;
-		$("#totalPrice").text(totalprice);
-	}
-	function selectRoomRemove(divNum){
-		$("#selectRoom>#"+divNum).remove();
-		roomCnt-=1;
 		$("#roomCnt").text(roomCnt);
+		$("#totalPrice").text(totalPrice.toLocaleString()+"원");
+		$("#avePrice").text("1박 당 평균 : "+(totalPrice/period).toLocaleString()+"원");
+		
+	}
+	function selectRoomRemove(divNum,price,period,roomNum){
+		$("#selectRoom>#"+divNum).remove();
+		selectedRoomCnt[roomNum]-=1
+		roomCnt-=1;
+		totalPrice-=price;
+		$("#roomCnt").text(roomCnt);
+		$("#totalPrice").text(totalPrice.toLocaleString()+"원");
+		$("#avePrice").text("1박 당 평균 : "+(totalPrice/period).toLocaleString()+"원");
 	}
 	
 	function searchRoom(startDate, endDate ){
@@ -196,7 +205,13 @@ $(function(){
 			type:"GET",
 			dataType: "JSON",
 			data : param,
+			beforeSend: function() {
+	            // 1. 기존 목록을 지우고 로딩바(스켈레톤)를 보여줌
+	            $("#roomList").hide(); // 실제 리스트 숨김
+	            $("#roomLoader").show(); // 로딩 UI 노출
+	        },
 			success:function(list){
+				setTimeout(function() {
 				var output ="";
 				$.each(list,function(i,rd){
 					output += 
@@ -218,11 +233,12 @@ $(function(){
 			                            <p class="text-gray-500 text-xs" id="personCnt${i}">기준 ${rd.room_max_person} / 최대 ${rd.room_max_person}</p>
 			                        </div>
 			                        <div class="text-right">
-			                            <p class="text-[10px] text-gray-500">1박/VAT포함</p>
-			                            <p class="text-xl font-bold text-blue-400 mb-2">${rd.room_price.toLocaleString()}원~</p>
+			                            <p class="text-[11px] text-gray-500">1박/VAT포함</p>
+			                            <p class="text-[15px] text-gray-500">남은 객실:${rd.available_count}</p>
+			                            <p class="text-xl font-bold text-blue-400 mb-2">${rd.start_date_price.toLocaleString()}원~</p>
 			                            <button class="bg-[#8b7355] hover:bg-[#7a654a] px-8 py-2 text-sm rounded-sm transition" 
 			                                    id="select${i}" 
-			                                    onclick="selectRoom('${rd.room_type}', ${rd.room_max_person}, ${rd.room_price})">
+			                                    onclick="selectRoom('${rd.room_type}', ${rd.room_max_person}, ${rd.total_sum_price},${rd.period},${rd.available_count},${rd.room_type_num})">
 			                                선택
 			                            </button>
 			                        </div>
@@ -230,7 +246,9 @@ $(function(){
 			                </div>
 			            </div>`;;
 				})
-				$("#roomList").html(output);
+				$("#roomLoader").hide();
+            	$("#roomList").html(output).fadeIn();
+				}, 1000);
 			},
 			error:function(xhr){
 				alert("룸 검색 실패"+xhr.status);
@@ -253,6 +271,17 @@ $(function(){
 						상품</h2>
 
 					<!-- 룸 선택 개수 만큼 반복 시켜야함---------------------------------------------------------------------------------------------------  -->
+					<div id="roomLoader" style="display: none;">
+    					<div class="animate-pulse space-y-6">
+        					<div class="flex gap-6 py-6 border-b border-gray-800">
+            					<div class="w-1/3 h-44 bg-gray-700 rounded-sm"></div> 
+            					<div class="flex-1 space-y-4">
+                				<div class="h-6 bg-gray-700 rounded w-3/4"></div> <div class="h-4 bg-gray-700 rounded w-1/2"></div> <div class="h-10 bg-gray-700 rounded w-full mt-4"></div> 
+                				</div>
+        					</div>
+    					</div>
+    					<div class="text-center py-4 text-gray-400">객실을 검색 중입니다...</div>
+					</div>
 					<div id="roomList">
 					<img src="/common/images/res_img/hr.png" />
 					<div class="space-y-6">
@@ -286,15 +315,13 @@ $(function(){
 						<div class="bg-white text-black p-4 rounded-md shadow-md">
 							<div class="flex justify-between items-center mb-4">
 								<span class="font-bold">투숙인원</span>
-								<button type="button"
-									class="text-white px-4 py-1 text-xs rounded-sm bg-[#8b7355] hover:bg-[#7a654a]">조회</button>
 							</div>
 							<div class="flex gap-2 text-[10px] ">
 								<div
 									class="flex-1  !border-2 border-solid p-2 text-center !border-[#8b7355]">
 									객실수<br>
 									<div class="flex justify-center items-center ">
-										<span style="margin-top:5px;" class="text-lg font-bold" id="roomCnt">1</span>
+										<span  class="text-lg font-bold" id="roomCnt">0</span>
 									</div>
 								</div>
 								<div
@@ -319,7 +346,7 @@ $(function(){
 											<img src="/common/images/res_img/downbtn.png"
 												class="personBtn" />
 										</button>
-										<span class="text-lg font-bold" id="kidCnt">1</span>
+										<span class="text-lg font-bold" id="kidCnt">0</span>
 										<button id="kidUp" type="button">
 											<img src="/common/images/res_img/upbtn.png" class="personBtn" />
 										</button>
@@ -328,18 +355,18 @@ $(function(){
 							</div>
 						</div>
 				
-						<div class="space-y-2 " id="selcetedRoom">
-							<div class="bg-gray-200 p-3  items-center rounded-sm">
-								<span class="font-bold !text-black text-sm" id="selectRoom">객실을 선택하세요</span>
-							</div>
+						<div class="space-y-2 " id="selectRoom">
 						
 						</div>
 						<div class="space-y-2">
-							<div
-								class="bg-gray-200 p-3 flex justify-between items-center rounded-sm">
-								<span class="font-bold !text-black text-sm">총 금액</span> <span
-									class="text-xl font-bold !text-black" id="totalPrice">0 원</span>
-							</div>
+							<div class="bg-gray-200 p-3 flex justify-between items-center rounded-sm">
+    <span class="font-bold !text-black text-sm">총 금액</span>
+    
+    <div class="text-right">
+        <span class="text-xl font-bold !text-black block" id="totalPrice">0 원</span>
+        <span id="avePrice" style="font-size:10px; display: block; color: gray;">1박 평균 : 0원</span>
+    </div>
+</div>
 							<div class="flex gap-2">
 								<button type="button"
 									class="flex-1 bg-[#8b7355] hover:bg-[#7a654a] py-4 font-bold text-sm" id="reserve">예약하기</button>
@@ -391,14 +418,21 @@ $(function(){
 							document.getElementById('display-checkin').innerText = instance
 									.formatDate(selectedDates[0], "Y-m-d (D)");
 							$("#display-checkout").text("-");
+							$("#totalPrice").empty();
+							$("#avePrice").empty();
+							$("#selectRoom").empty();
+							$("#roomCnt").text("0");
+							roomCnt=0;
+							totalPrice=0;
+							roomMaxPerson=0;
+							selectedRoomCnt={1:0,2:0,3:0,4:0,5:0};
 						}
 						if (selectedDates.length > 1) {
 							document.getElementById('display-checkout').innerText = instance
 									.formatDate(selectedDates[1], "Y-m-d (D)");
 							startDate= instance.formatDate(selectedDates[0], "Y-m-d");
 							var endDate= instance.formatDate(selectedDates[1], "Y-m-d");
-							/* alert("방 검색 시작");
-							alert(endDate+startDate); */
+							//선택 기간 중 남은 방 검색
 							searchRoom(startDate,endDate);
 						}
 						

@@ -5,27 +5,44 @@
   <mapper namespace="kr.co.sist.reserve">
   	<select id="selectRoom" parameterType="roomSearchDTO" resultType="roomSearchDomain">
   	<![CDATA[
-  	  select
-        ri.room_type_num,
-        ri.room_type,
-        ri.room_detail,
-        ri.room_img1,
-        ri.room_max_person,
-        rp.room_price
-    from room_info ri
-    join room_price rp on ri.room_type_num = rp.room_type_num
-        and rp.room_date = to_date(#{startDate}, 'yyyy-mm-dd')
-    left outer join (
-        select
-            room_type_num,
-            count(*) as cnt
-        from room_res
-        where room_res_start_date < to_date(#{startDate}, 'yyyy-mm-dd') -- 내 체크아웃보다 먼저 시작
-          and room_res_end_date > to_date(#{endDate}, 'yyyy-mm-dd')   -- 내 체크인보다 늦게 종료
-        group by room_type_num
-    ) ra on ri.room_type_num = ra.room_type_num
-    where ri.room_count > nvl(ra.cnt, 0) -- 예약 없으면(null) 0으로 취급
-    order by ri.room_type_num
+  	SELECT
+    ri.room_type_num,
+    ri.room_type,
+    ri.room_detail,
+    ri.room_img1,
+    ri.room_max_person,
+    -- 1. 시작일(체크인)의 가격
+    MIN(CASE WHEN rp.room_date = TO_DATE(#{startDate}, 'yyyy-MM-dd') THEN rp.room_price END) AS start_date_price,
+    -- 2. 전체 숙박 기간의 총 요금 합계
+    SUM(rp.room_price) AS total_sum_price,
+    -- 3. 예약된 방 개수 (요청하신 부분)
+    NVL(ra.cnt, 0) AS reserved_count,
+    -- 4. (추가 추천) 남은 방 개수
+    (ri.room_count - NVL(ra.cnt, 0)) AS available_count
+FROM ROOM_INFO ri
+JOIN ROOM_PRICE rp ON ri.room_type_num = rp.room_type_num
+LEFT OUTER JOIN (
+    SELECT
+        ROOM_TYPE_NUM,
+        COUNT(*) AS cnt
+    FROM ROOM_RES
+    WHERE ROOM_RES_START_DATE < TO_DATE(#{endDate}, 'yyyy-MM-dd')
+      AND ROOM_RES_END_DATE > TO_DATE(#{startDate}, 'yyyy-MM-dd')
+    GROUP BY ROOM_TYPE_NUM
+) ra ON ri.room_type_num = ra.room_type_num
+WHERE ri.room_count > NVL(ra.cnt, 0)
+  AND rp.room_date >= TO_DATE(#{startDate}, 'yyyy-MM-dd')
+  AND rp.room_date < TO_DATE(#{endDate}, 'yyyy-MM-dd')
+GROUP BY
+    ri.room_type_num,
+    ri.room_type,
+    ri.room_detail,
+    ri.room_img1,
+    ri.room_max_person,
+    ri.room_count, -- 집계에 사용되는 원본 컬럼 추가
+    ra.cnt         -- 서브쿼리에서 가져온 count 값 추가
+ORDER BY ri.room_type_num
   	]]>
   	</select>
+  	
   </mapper>
