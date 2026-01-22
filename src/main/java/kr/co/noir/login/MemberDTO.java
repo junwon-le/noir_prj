@@ -6,6 +6,12 @@ import lombok.Data;
 public class MemberDTO {
 	private String memberId;    // MEMBER_ID
 	private String memberPass;  // MEMBER_PASS
-	private String memberName;  // MEMBER_NAME
+	private String memberLastName;  // MEMBER_NAME
+	private String memberFirstName;  // MEMBER_NAME
 	private String memberEmail; // MEMBER_EMAIL
+    private String memberTel;
+    private String memberBirth;
+    private String memberDelFlag;
+    private String memberInputDate;
+    private String memberIp;
 }
