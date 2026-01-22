@@ -10,10 +10,10 @@
 						<a href="/login/memberLogin">LOGIN</a>
 				    </li>
 				    <li th:if="${session.member != null or session.admin != null}">
-				        <a href="/login/logout" >LOGOUT</a>
+				        <a href="/logout" >LOGOUT</a>
 				    </li>
 				    <li th:if="${session.loginMember == null}"> 
-				        <a href="/join" >JOIN</a>				    
+				        <a href="/join" >JOIN</a>		 		    
 				    </li>
 				
 				<!-- <li>

@@ -131,16 +131,16 @@ $(document).ready(function(){
         $btn.prop("disabled", true).text("처리 중...");
 
         $.ajax({
-            url: "/member/modifyPwProcess", // 작성하신 Controller 경로
+            url: "/login/modifyPwProcess", // 작성하신 Controller 경로
             type: "POST",
             data: { newPw: newPw, token: token },
             success: function(res) {
                 if(res.trim() === "OK") {
                     alert("비밀번호가 변경되었습니다. 다시 로그인해 주세요.");
-                    location.href = "login.html";
+                    location.href = "/login/memberLogin";
                 } else if(res.trim() === "INVALID_ACCESS") {
                     alert("유효하지 않거나 만료된 요청입니다. 다시 인증해 주세요.");
-                    location.href = "findPw.html";
+                    location.href = "/login/findPw";
                 } else {
                     alert("비밀번호 변경 실패. 다시 시도해 주세요.");
                     $btn.prop("disabled", false).text("비밀번호 변경");
