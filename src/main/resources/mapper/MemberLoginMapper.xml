@@ -7,7 +7,7 @@
         WHERE member_id = #{memberId}
           AND member_pass = #{memberPass}
     </select>
-    <select id="findIdByInfo" resultType="kr.co.noir.login.MemberDTO">
+    <select id="findIdByInfo" resultType="String">
         SELECT member_id
         FROM member
         WHERE TRIM(member_last_name) = #{memberLastName} AND TRIM(member_first_name) = #{memberFirstName}
@@ -24,8 +24,7 @@
 	</select>    
     <update id="updatePassword">
         UPDATE member
-        SET password = #{newPw},
-            upd_date = NOW()
+        SET member_pass = #{newPw}
         WHERE member_Id = #{memberId}
     </update>
     <select id="selectIdCount" parameterType="String" resultType="int">
