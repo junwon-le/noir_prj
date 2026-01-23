@@ -10,7 +10,7 @@ public interface MemberMapper {
     MemberDTO login(@Param("memberId") String memberId, @Param("memberPass") String memberPass);
 
     // 아이디 찾기: 성, 이름, 이메일로 아이디 조회 (이미지 컬럼 반영)
-    MemberDTO findIdByInfo(@Param("memberLastName") String memberLastName, 
+    String findIdByInfo(@Param("memberLastName") String memberLastName, 
                           @Param("memberFirstName") String memberFirstName,
                           @Param("memberEmail") String memberEmail);
 

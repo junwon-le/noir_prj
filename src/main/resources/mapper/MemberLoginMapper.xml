@@ -2,12 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.noir.login.MemberMapper">
     <select id="login" resultType="kr.co.noir.login.MemberDTO">
-        SELECT member_id, member_pass
+        SELECT member_id, member_last_name, member_first_name, member_pass
         FROM member
         WHERE member_id = #{memberId}
           AND member_pass = #{memberPass}
     </select>
-    <select id="findIdByInfo" resultType="kr.co.noir.login.MemberDTO">
+    <select id="findIdByInfo" resultType="String">
         SELECT member_id
         FROM member
         WHERE TRIM(member_last_name) = #{memberLastName} AND TRIM(member_first_name) = #{memberFirstName}
@@ -24,8 +24,7 @@
 	</select>    
     <update id="updatePassword">
         UPDATE member
-        SET password = #{newPw},
-            upd_date = NOW()
+        SET member_pass = #{newPw}
         WHERE member_Id = #{memberId}
     </update>
     <select id="selectIdCount" parameterType="String" resultType="int">
