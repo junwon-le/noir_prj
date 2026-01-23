@@ -172,6 +172,7 @@ $(function(){
 		selectDiv+=`<div style="background-color: #e5e7eb; border-radius: 2px; padding:3px; display: flex;" id='${divNum}'> 
 			<div style="display:flex; align-items: center; justify-content:space-between; width: 230px;">
 			<span class='font-bold !text-black text-sm'>${roomName}  |</span>
+			<input type="hidden" name="roomName" value="${roomName}"/>
 			<span class='font-bold !text-black text-sm' >인원 : ${personCnt}명</span>
 			</div>
 			<div style="margin-left:auto;">
@@ -185,6 +186,7 @@ $(function(){
 		totalPrice+=price;
 		$("#roomCnt").text(roomCnt);
 		$("#totalPrice").text(totalPrice.toLocaleString()+"원");
+		$("#price").val(totalPrice.toLocaleString());
 		$("#avePrice").text("1박 당 평균 : "+(totalPrice/period).toLocaleString()+"원");
 		
 	}
@@ -195,6 +197,7 @@ $(function(){
 		totalPrice-=price;
 		$("#roomCnt").text(roomCnt);
 		$("#totalPrice").text(totalPrice.toLocaleString()+"원");
+		$("#price").val(totalPrice.toLocaleString()	);
 		$("#avePrice").text("1박 당 평균 : "+(totalPrice/period).toLocaleString()+"원");
 	}
 	
@@ -248,7 +251,7 @@ $(function(){
 				})
 				$("#roomLoader").hide();
             	$("#roomList").html(output).fadeIn();
-				}, 1000);
+				}, 200);
 			},
 			error:function(xhr){
 				alert("룸 검색 실패"+xhr.status);
@@ -305,9 +308,12 @@ $(function(){
 								<div class="p-3 border-t flex justify-between items-center text-sm bg-gray-50">
 									<span>체크인</span> <span id="display-checkin" class="font-bold">
 									날짜를 선택하세요</span>
+									<input type="hidden" name="checkin" id="checkin"/>
+									
 								</div>
 								<div class="p-3 border-t flex justify-between items-center text-sm bg-gray-50">
 									<span>체크아웃</span> <span id="display-checkout" class="font-bold">-</span>
+									<input type="hidden" name="checkout" id="checkout"/>
 								</div>
 							</div>
 						</div>
@@ -358,12 +364,14 @@ $(function(){
 						<div class="space-y-2 " id="selectRoom">
 						
 						</div>
+						
 						<div class="space-y-2">
 							<div class="bg-gray-200 p-3 flex justify-between items-center rounded-sm">
     <span class="font-bold !text-black text-sm">총 금액</span>
     
     <div class="text-right">
         <span class="text-xl font-bold !text-black block" id="totalPrice">0 원</span>
+        <input type="hidden" name="price" id="price"/>
         <span id="avePrice" style="font-size:10px; display: block; color: gray;">1박 평균 : 0원</span>
     </div>
 </div>
@@ -417,11 +425,13 @@ $(function(){
 						if (selectedDates.length > 0) {
 							document.getElementById('display-checkin').innerText = instance
 									.formatDate(selectedDates[0], "Y-m-d (D)");
+							$("#checkin").val(instance.formatDate(selectedDates[0], "Y-m-d (D)"));
 							$("#display-checkout").text("-");
 							$("#totalPrice").empty();
 							$("#avePrice").empty();
 							$("#selectRoom").empty();
 							$("#roomCnt").text("0");
+							// 변수 초기화
 							roomCnt=0;
 							totalPrice=0;
 							roomMaxPerson=0;
@@ -430,6 +440,7 @@ $(function(){
 						if (selectedDates.length > 1) {
 							document.getElementById('display-checkout').innerText = instance
 									.formatDate(selectedDates[1], "Y-m-d (D)");
+							$("#checkout").val(instance.formatDate(selectedDates[0], "Y-m-d (D)"));
 							startDate= instance.formatDate(selectedDates[0], "Y-m-d");
 							var endDate= instance.formatDate(selectedDates[1], "Y-m-d");
 							//선택 기간 중 남은 방 검색

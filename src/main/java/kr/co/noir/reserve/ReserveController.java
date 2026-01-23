@@ -2,7 +2,6 @@ package kr.co.noir.reserve;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Period;
 import java.util.Date;
 import java.util.List;
 
@@ -13,6 +12,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import jakarta.servlet.http.HttpSession;
+import kr.co.noir.login.MemberDTO;
+
 @RequestMapping("/reserve")
 @Controller
 public class ReserveController {
@@ -21,7 +23,13 @@ public class ReserveController {
 	private RoomReserveService rrs;
 	
 	@GetMapping("/roomReserve")
-	public String reserve() {
+	public String reserve(HttpSession session, Model model) {
+		//사용자 정보 가져와야함
+//		MemberDTO member = (MemberDTO)session.getAttribute("member");
+//		String id= member.getMemberId();
+		String id="user1";
+		model.addAttribute("member",rrs.searchMember(id));
+		
 		return "/reserve/roomRes";
 	}
 	@GetMapping("/nonRoomReserve")
@@ -31,7 +39,6 @@ public class ReserveController {
 	
 	@GetMapping("/roomResSearch")
 	public String roomResSearch(RoomSearchDTO rsDTO, Model model) {
-		
 		return "/reserve/roomResSearch";
 	}
 	

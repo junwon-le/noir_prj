@@ -18,6 +18,15 @@ public class RoomReserveDAO {
 		list=ss.selectList("kr.co.sist.reserve.selectRoom",rsDTO);
 		if(ss!=null) {	ss.close();	}
 		return list;
-	}
+	}//selectRoom
+	
+	public MemberDomain selectMember(String id) throws SQLException{
+		MemberDomain memberDomain = null;
+		
+		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
+		memberDomain=ss.selectOne("kr.co.sist.reserve.selectMember",id);
+		if(ss!=null) {	ss.close();	}
+		return memberDomain;
+	}//selectMember
 	
 }

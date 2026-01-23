@@ -45,4 +45,9 @@ ORDER BY ri.room_type_num
   	]]>
   	</select>
   	
+  	<select id="selectMember" parameterType="String" resultType="memberDomain">
+  		select member_num, member_id, member_last_name, member_pass, member_first_name, member_email, member_tel, member_birth, member_del_flag, 
+  		member_inputdate, member_ip, member_provider, member_provider_id, num 
+  		from member where member_id=#{member_id}
+  	</select>
   </mapper>

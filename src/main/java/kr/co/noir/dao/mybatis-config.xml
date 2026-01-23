@@ -6,9 +6,12 @@
 	<properties resource="properties/database.properties"/>
 	<typeAliases>
 		<typeAlias type="kr.co.noir.room.RoomDomain" alias="roomDomain"/>		
-		<typeAlias type="kr.co.noir.reserve.RoomSearchDomain" alias="roomSearchDomain"/>		
-		<typeAlias type="kr.co.noir.reserve.RoomSearchDTO" alias="roomSearchDTO"/>		
-		<typeAlias type="kr.co.noir.dinning.DinningDomain" alias="dinningDomain"/>		
+		<typeAlias type="kr.co.noir.dinning.DinningDomain" alias="dinningDomain"/>
+		<!-- 이준원 사용 -->
+		<typeAlias type="kr.co.noir.reserve.RoomSearchDomain" alias="roomSearchDomain"/><!-- 방 검색 -->		
+		<typeAlias type="kr.co.noir.reserve.RoomSearchDTO" alias="roomSearchDTO"/><!-- 방 검색 -->
+		<typeAlias type="kr.co.noir.reserve.MemberDomain" alias="memberDomain"/><!-- 회원 정보 채우기 -->
+				
 	</typeAliases>
 	
 	
