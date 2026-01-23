@@ -23,7 +23,9 @@ public class MypageController {
 	public String mypageView(HttpSession session, Model model) {
 		String uri="redirect:/main";
 		
-		MemberDTO member= (MemberDTO)session.getAttribute("member");
+//		MemberDTO member= (MemberDTO)session.getAttribute("member");
+		MemberDTO member=new MemberDTO();
+		member.setMemberId("user1");
 		if(member != null&&member.getMemberId()!=null) {
 
 			String memberId=member.getMemberId();

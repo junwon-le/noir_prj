@@ -47,4 +47,33 @@ public class MypageModifySevice {
 		return flag;
 		
 	}//loginChk
+	
+	public MemberInfoDomain searchMemmberInfo(String id) {
+		MemberInfoDomain miDomain=null;
+		try {
+			
+			
+			miDomain=mmDAO.selectMemberInfo(id);
+		}catch (PersistenceException pe) {
+			pe.printStackTrace();
+		
+		}//end catch
+		
+		return miDomain;
+	}//searchMemmberInfo
+	
+	public boolean modifyMemberInfo(MemberDTO mDTO) {
+		
+		boolean flag=false;
+		
+		try {
+			
+			flag=mmDAO.updateMemberModify(mDTO)==1;
+			
+		}catch (PersistenceException pe) {
+			pe.printStackTrace();
+		}//end catch
+		
+		return flag;
+	}//modifyMemberInfo
 }//class

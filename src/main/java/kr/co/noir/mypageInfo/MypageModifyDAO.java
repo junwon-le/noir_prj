@@ -5,6 +5,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
 import kr.co.noir.dao.MyBatisHandler;
+import kr.co.noir.login.MemberDTO;
 
 @Repository
 public class MypageModifyDAO {
@@ -21,14 +22,38 @@ public class MypageModifyDAO {
 		flag=pass.equals(password);
 		
 		System.out.println(flag);
-		
+		if(ss!=null) {ss.close();}//end if
 		return flag;
-		
-		
-		 
-		
+	
 	}//selectPasswordCheck
 	
+	public MemberInfoDomain selectMemberInfo(String id) throws PersistenceException {
+		
+		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
+		MemberInfoDomain miDomain=ss.selectOne("kr.co.noir.mypageInfo.memberInfo",id);
+		
+		
+		if(ss!=null) {ss.close();}//end if
+		
+		return miDomain;
+		
+		
+		
+		
+	}//selectMemberInfo
+	
+	public int updateMemberModify(MemberDTO mDTO) throws PersistenceException{
+		int cnt=0;
+		
+		SqlSession ss= MyBatisHandler.getInstance().getMyBatisHandler(true);
+		
+		System.out.println("------------"+mDTO);
+		cnt=ss.update("kr.co.noir.mypageInfo.updateMember",mDTO);
+		if(ss!=null) {ss.close();}//end if
+		
+		System.out.println("dao----"+cnt);
+		return cnt;
+	}///updateMemberModify
 	
 	
 }//class

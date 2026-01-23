@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.noir.mypageReserve">
+
+
+ 	<select id="hotelRevList" parameterType="reserveSearchDTO" resultType="hotelRevSearchDomain">
+r.reserve_num AS reserveNum,
+        m.member_id AS memberId,
+        TRUNC(r.reserve_time) AS reserveDate,
+        ri.room_type AS roomName,
+        TRUNC(rr.room_res_start_date) AS checkIn,
+        TRUNC(rr.room_res_end_date) AS checkOut,
+        (r.reserve_adult_count + r.reserve_kid_count) AS totalPeople,
+        r.reserve_status AS status
+    FROM member m
+    JOIN reserve r ON m.member_num = r.member_num
+    JOIN room_res rr ON r.reserve_num = rr.reserve_num
+    JOIN room_info ri ON rr.room_type_num = ri.room_type_num
+    WHERE m.member_id = #{memberId}
+      AND r.reserve_type = 'room'
+      <if test="startDate != null">
+          AND rr.room_res_start_date &gt;= #{startDate}
+      </if>
+      <if test="endDate != null">
+          AND rr.room_res_end_date &lt;= #{endDate}
+      </if>
+    ORDER BY r.reserve_num DESC
+ 	
+ 	</select>
+
+	
+	 
+	
+
+	
+</mapper>
+
+
+
+

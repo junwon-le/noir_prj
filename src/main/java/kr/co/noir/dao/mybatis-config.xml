@@ -12,6 +12,11 @@
 		<typeAlias type="kr.co.noir.mypage.EventDomain" alias="eventDomain"/>		
 		<typeAlias type="kr.co.noir.mypageInfo.PasswordDTO" alias="passwordDTO"/>		
 		<typeAlias type="kr.co.noir.mypageInfo.MemberInfoDomain" alias="mInfoDomain"/>		
+	     <typeAlias type="kr.co.noir.mypageInfo.MemberInfoDomain" alias="mInfoDomain"/>      
+     	 <typeAlias type="kr.co.noir.login.MemberDTO" alias="memberDTO"/>   
+     	 <typeAlias type="kr.co.noir.mypageReserve.HotelRevSearchDomain" alias="hotelRevSearchDomain"/>   
+     	 <typeAlias type="kr.co.noir.mypageReserve.ReserveSearchDTO" alias="reserveSearchDTO"/>   
+	
 	</typeAliases>
 	
 	
@@ -32,5 +37,6 @@
     <mapper resource="kr/co/noir/dinning/dinningMapper.xml"></mapper>
     <mapper resource="kr/co/noir/mypage/MypageMapper.xml"/> <!-- select 연습 -->
     <mapper resource="kr/co/noir/mypageInfo/mypageInfoMapper.xml"></mapper>
+    <mapper resource="kr/co/noir/mypageReserve/mypageRevMapper.xml"></mapper>
   </mappers>
 </configuration>
