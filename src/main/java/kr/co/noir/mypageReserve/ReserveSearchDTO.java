@@ -11,7 +11,7 @@ import lombok.ToString;
 @ToString
 public class ReserveSearchDTO extends RangeDTO{
 
-	 int memberNum; 
-	 Date startDate,endDate;
+	 String memberId; 
+	 String startDate,endDate;
 	
 }//class

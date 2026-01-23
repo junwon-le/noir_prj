@@ -1,5 +1,6 @@
 package kr.co.noir.mypageReserve;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +13,10 @@ import jakarta.servlet.http.HttpSession;
 @RequestMapping("/mypage/reserve")
 @Controller
 public class MypageReseveController {
+	
+	@Autowired
+	MypageReserveService mrs;
+	
 //=========호텔 에약 리스트==================
 	@GetMapping("/memberHotelList")
 	public String hotelReserveList(HttpSession session) {
@@ -20,13 +25,15 @@ public class MypageReseveController {
 		
 		
 	}//HotelReserveList
-	
+
 	@ResponseBody
 	@GetMapping("/hotelSearch")
 	public String searchRevHotel(ReserveSearchDTO rsDTO, Model model) {
 		
-		
-		return "";
+		rsDTO.setMemberId("user2");
+		System.out.println(mrs.searchHotelRev(rsDTO));
+		System.out.println(mrs.totalCnt(rsDTO));
+		return "/mypage/memberHotelRevList";
 	}//searchRevHotel
 	
 
