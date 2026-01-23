@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.noir.login.MemberMapper">
     <select id="login" resultType="kr.co.noir.login.MemberDTO">
-        SELECT member_id, member_pass
+        SELECT member_id, member_last_name, member_first_name, member_pass
         FROM member
         WHERE member_id = #{memberId}
           AND member_pass = #{memberPass}
