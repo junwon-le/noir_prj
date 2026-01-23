@@ -14,6 +14,10 @@
 		<typeAlias type="kr.co.noir.mypage.EventDomain" alias="eventDomain"/>		
 		<typeAlias type="kr.co.noir.mypageInfo.PasswordDTO" alias="passwordDTO"/>		
 		<typeAlias type="kr.co.noir.mypageInfo.MemberInfoDomain" alias="mInfoDomain"/>		
+		<!-- 이준원 사용 -->
+		<typeAlias type="kr.co.noir.reserve.RoomSearchDomain" alias="roomSearchDomain"/><!-- 방 검색 -->		
+		<typeAlias type="kr.co.noir.reserve.RoomSearchDTO" alias="roomSearchDTO"/><!-- 방 검색 -->
+		<typeAlias type="kr.co.noir.reserve.MemberDomain" alias="memberDomain"/><!-- 회원 정보 채우기 -->
 	</typeAliases>
 	
 	
