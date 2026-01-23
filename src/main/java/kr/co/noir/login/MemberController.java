@@ -278,5 +278,19 @@ public class MemberController {
         }
     }
     
+    @GetMapping("/login/result")
+    public String showResult(
+            @RequestParam(value = "message", required = false, defaultValue = "완료되었습니다.") String message,
+            @RequestParam(value = "url", required = false, defaultValue = "/") String url,
+            @RequestParam(value = "btnText", required = false, defaultValue = "메인 페이지") String btnText,
+            Model model) {
+        
+        // 타임리프 변수 ${message}, ${url}, ${btnText}에 값을 매핑합니다.
+        model.addAttribute("message", message);
+        model.addAttribute("url", url);
+        model.addAttribute("btnText", btnText);
+        
+        return "login/result"; // result.html 을 호출
+    }
 	
 }//class

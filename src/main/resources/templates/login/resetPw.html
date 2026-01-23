@@ -1,158 +1,229 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Hotel Management - Reset Password</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <style>
-        /* 전역 설정 (제공해주신 스타일과 동일하게 유지) */
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Noto Sans KR', sans-serif; }
+<meta charset="UTF-8">
+<title>Hotel Management - Reset Password</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<style>
+/* 전역 설정 */
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: 'Noto Sans KR', sans-serif;
+}
 
-        body {
-            background: #0f1218;
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('../images/hotel_bg.jpg') no-repeat center center/cover;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #fff;
-        }
+body {
+	background: #0f1218;
+	background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+		url('../images/hotel_bg.jpg') no-repeat center center/cover;
+	height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: #fff;
+}
 
-        .reset-container { width: 100%; max-width: 400px; padding: 20px; }
-        
-        .reset-box {
-            background: rgba(44, 41, 38, 0.9); padding: 40px; border-radius: 15px;
-            border: 1px solid #7c6a52; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(10px); text-align: center;
-        }
-        
-        .reset-title { font-size: 28px; font-weight: 700; margin-bottom: 20px; letter-spacing: 2px; color: #C4A16F; }
-        .reset-subtitle { font-size: 14px; color: #D7c4a5; margin-bottom: 30px; line-height: 1.5; }
-        
-        .input-group { margin-bottom: 20px; text-align: left; }
-        
-        input[type="password"] {
-            width: 100%; padding: 15px; background: rgba(255, 255, 255, 0.05);
-            border: 1px solid #7c6a52; border-radius: 6px; color: #FFFFFF; outline: none; transition: 0.3s; font-size: 15px;
-        }
-        input:focus { border-color: #C4A16F; background: rgba(196, 161, 111, 0.1); }
+.reset-container {
+	width: 100%;
+	max-width: 400px;
+	padding: 20px;
+}
 
-        /* 유효성 메시지 스타일 */
-        .msg { font-size: 12px; margin-top: 5px; min-height: 18px; }
-        .error { color: #ff5e5e; }
-        .success { color: #4CAF50; }
+.reset-box {
+	background: rgba(44, 41, 38, 0.9);
+	padding: 40px;
+	border-radius: 15px;
+	border: 1px solid #7c6a52;
+	box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+	backdrop-filter: blur(10px);
+	text-align: center;
+}
 
-        .submit-btn {
-            width: 100%; padding: 15px; background: #C4A16F; border: none; border-radius: 6px;
-            color: #FFFFFF; font-size: 18px; font-weight: bold;
-            cursor: pointer; transition: 0.3s; margin-top: 10px;
-        }
-        .submit-btn:hover { background: #7c6a52; transform: translateY(-2px); }
-        .submit-btn:disabled { background: #444; color: #888; cursor: not-allowed; transform: none; }
-    </style>
+.reset-title {
+	font-size: 28px;
+	font-weight: 700;
+	margin-bottom: 20px;
+	letter-spacing: 2px;
+	color: #C4A16F;
+}
+
+.reset-subtitle {
+	font-size: 14px;
+	color: #D7c4a5;
+	margin-bottom: 30px;
+	line-height: 1.5;
+}
+
+.input-group {
+	margin-bottom: 20px;
+	text-align: left;
+}
+
+input[type="password"] {
+	width: 100%;
+	padding: 15px;
+	background: rgba(255, 255, 255, 0.05);
+	border: 1px solid #7c6a52;
+	border-radius: 6px;
+	color: #FFFFFF;
+	outline: none;
+	transition: 0.3s;
+	font-size: 15px;
+}
+
+input:focus {
+	border-color: #C4A16F;
+	background: rgba(196, 161, 111, 0.1);
+}
+
+.msg {
+	font-size: 12px;
+	margin-top: 5px;
+	min-height: 18px;
+}
+
+.error {
+	color: #ff5e5e;
+}
+
+.success {
+	color: #4CAF50;
+}
+
+.submit-btn {
+	width: 100%;
+	padding: 15px;
+	background: #C4A16F;
+	border: none;
+	border-radius: 6px;
+	color: #FFFFFF;
+	font-size: 18px;
+	font-weight: bold;
+	cursor: pointer;
+	transition: 0.3s;
+	margin-top: 10px;
+}
+
+.submit-btn:hover {
+	background: #7c6a52;
+	transform: translateY(-2px);
+}
+
+.submit-btn:disabled {
+	background: #444;
+	color: #888;
+	cursor: not-allowed;
+	transform: none;
+}
+</style>
 </head>
 <body>
-    <div class="reset-container">
-        <div class="reset-box">
-            <h2 class="reset-title">RESET PW</h2>
-            <p class="reset-subtitle">보안을 위해 새로운 비밀번호를<br>설정해 주세요.</p>
-            
-            <input type="hidden" id="token" th:value="${param.token}">
+	<div class="reset-container">
+		<div class="reset-box">
+			<h2 class="reset-title">RESET PW</h2>
+			<p class="reset-subtitle">
+				보안을 위해 새로운 비밀번호를<br>설정해 주세요.
+			</p>
+			<input type="hidden" id="token" th:value="${param.token}">
+			<form id="resetPwFrm">
+				<div class="input-group">
+					<input type="password" id="newPw" placeholder="새 비밀번호" required>
+					<p id="pwPolicyMsg" class="msg"></p>
+				</div>
+				<div class="input-group">
+					<input type="password" id="confirmPw" placeholder="새 비밀번호 확인" required>
+					<p id="pwMatchMsg" class="msg"></p>
+				</div>
+				<button type="button" class="submit-btn" id="btnUpdatePw">비밀번호 변경</button>
+			</form>
+		</div>
+	</div>
 
-            <form id="resetPwFrm">
-                <div class="input-group">
-                    <input type="password" id="newPw" placeholder="새 비밀번호" required>
-                    <p id="pwPolicyMsg" class="msg"></p>
-                </div>
-                
-                <div class="input-group">
-                    <input type="password" id="confirmPw" placeholder="새 비밀번호 확인" required>
-                    <p id="pwMatchMsg" class="msg"></p>
-                </div>
-                
-                <button type="button" class="submit-btn" id="btnUpdatePw">비밀번호 변경</button>
-            </form>
-        </div>
-    </div>
+	<script>
+		$(document).ready(function() {
+			// 실시간 비밀번호 일치 및 유효성 검사
+			$("#newPw, #confirmPw").on("keyup", function() {
+				let pw = $("#newPw").val();
+				let confirm = $("#confirmPw").val();
 
-<script>
-$(document).ready(function(){
-    
-    // 실시간 비밀번호 일치 및 유효성 검사
-    $("#newPw, #confirmPw").on("keyup", function(){
-        let pw = $("#newPw").val();
-        let confirm = $("#confirmPw").val();
-        
-        // 1. 유효성 검사 (8자 이상)
-        if(pw.length > 0 && pw.length < 8) {
-            $("#pwPolicyMsg").text("비밀번호는 8자 이상이어야 합니다.").addClass("error").removeClass("success");
-        } else if(pw.length >= 8) {
-            $("#pwPolicyMsg").text("사용 가능한 비밀번호입니다.").addClass("success").removeClass("error");
-        } else {
-            $("#pwPolicyMsg").text("");
-        }
+				// 1. 유효성 검사 (4자 이상)
+				if (pw.length > 0 && pw.length < 4) {
+					$("#pwPolicyMsg").text("비밀번호는 4자 이상이어야 합니다.")
+						.addClass("error").removeClass("success");
+				} else if (pw.length >= 4) {
+					$("#pwPolicyMsg").text("사용 가능한 비밀번호입니다.")
+						.addClass("success").removeClass("error");
+				} else {
+					$("#pwPolicyMsg").text("");
+				}
 
-        // 2. 일치 검사
-        if(confirm.length > 0) {
-            if(pw === confirm) {
-                $("#pwMatchMsg").text("비밀번호가 일치합니다.").addClass("success").removeClass("error");
-            } else {
-                $("#pwMatchMsg").text("비밀번호가 일치하지 않습니다.").addClass("error").removeClass("success");
-            }
-        } else {
-            $("#pwMatchMsg").text("");
-        }
-    });
+				// 2. 일치 검사
+				if (confirm.length > 0) {
+					if (pw === confirm) {
+						$("#pwMatchMsg").text("비밀번호가 일치합니다.")
+							.addClass("success").removeClass("error");
+					} else {
+						$("#pwMatchMsg").text("비밀번호가 일치하지 않습니다.")
+							.addClass("error").removeClass("success");
+					}
+				} else {
+					$("#pwMatchMsg").text("");
+				}
+			});
 
-    // 변경 버튼 클릭
-    $("#btnUpdatePw").click(function(){
-        let newPw = $("#newPw").val();
-        let confirmPw = $("#confirmPw").val();
-        let token = $("#token").val();
+			// 변경 버튼 클릭
+			$("#btnUpdatePw").click(function() {
+				let newPw = $("#newPw").val();
+				let confirmPw = $("#confirmPw").val();
+				let token = $("#token").val();
 
-        if(!newPw || !confirmPw) {
-            alert("비밀번호를 입력해 주세요.");
-            return;
-        }
+				if (!newPw || !confirmPw) {
+					alert("비밀번호를 입력해 주세요.");
+					return;
+				}
+				if (newPw !== confirmPw) {
+					alert("비밀번호가 일치하지 않습니다.");
+					return;
+				}
+				if (newPw.length < 4) {
+					alert("비밀번호는 4자 이상으로 설정해 주세요.");
+					return;
+				}
 
-        if(newPw !== confirmPw) {
-            alert("비밀번호가 일치하지 않습니다.");
-            return;
-        }
+				// 서버 전송
+				let $btn = $(this);
+				$btn.prop("disabled", true).text("처리 중...");
 
-        if(newPw.length < 8) {
-            alert("비밀번호는 8자 이상으로 설정해 주세요.");
-            return;
-        }
-
-        // 서버 전송
-        let $btn = $(this);
-        $btn.prop("disabled", true).text("처리 중...");
-
-        $.ajax({
-            url: "/login/modifyPwProcess", // 작성하신 Controller 경로
-            type: "POST",
-            data: { newPw: newPw, token: token },
-            success: function(res) {
-                if(res.trim() === "OK") {
-                    alert("비밀번호가 변경되었습니다. 다시 로그인해 주세요.");
-                    location.href = "/login/memberLogin";
-                } else if(res.trim() === "INVALID_ACCESS") {
-                    alert("유효하지 않거나 만료된 요청입니다. 다시 인증해 주세요.");
-                    location.href = "/login/findPw";
-                } else {
-                    alert("비밀번호 변경 실패. 다시 시도해 주세요.");
-                    $btn.prop("disabled", false).text("비밀번호 변경");
-                }
-            },
-            error: function() {
-                alert("서버 통신 오류");
-                $btn.prop("disabled", false).text("비밀번호 변경");
-            }
-        });
-    });
-});
-</script>
+				$.ajax({
+					url : "/login/modifyPwProcess",
+					type : "POST",
+					data : {
+						newPw : newPw,
+						token : token
+					},
+					success : function(res) {
+						if (res.trim() === "OK") {
+							let msg=encodeURIComponent("비밀번호 변경이 완료되었습니다.");
+							let nextUrl=encodeURIComponent("/login/memberLogin");
+							let btnTxt=encodeURIComponent("로그인하러 가기");
+							location.href = "/login/result?message=" + msg + "&url=" + nextUrl + "&btnText=" + btnTxt;
+						} else if (res.trim() === "INVALID_ACCESS") {
+							alert("유효하지 않거나 만료된 요청입니다. 다시 인증해 주세요.");
+							location.href = "/login/findPw";
+						} else {
+							alert("비밀번호 변경 실패. 다시 시도해 주세요.");
+							$btn.prop("disabled", false).text("비밀번호 변경");
+						}
+					},
+					error : function() {
+						alert("서버 통신 오류");
+						$btn.prop("disabled", false).text("비밀번호 변경");
+					}
+				});
+			});
+		});
+	</script>
 </body>
 </html>
