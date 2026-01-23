@@ -6,13 +6,13 @@
  <div id="header_wrap">
 		<nav class="top_nav" style="height:50px">
 			<ul>
-				    <li th:if="${session.member == null and session.admin == null}">
+				    <li th:if="${session.memberId == null and session.admin == null}">
 						<a href="/login/memberLogin">LOGIN</a>
 				    </li>
-				    <li th:if="${session.member != null or session.admin != null}">
+				    <li th:if="${session.memberId != null or session.admin != null}">
 				        <a href="/logout" >LOGOUT</a>
 				    </li>
-				    <li th:if="${session.loginMember == null}"> 
+				    <li th:if="${session.memberId != null}"> 
 				        <a href="/mypage/">MYPAGE</a>		 		    
 				    </li>
 				
