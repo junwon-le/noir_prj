@@ -6,7 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-
 @Service
 public class MemberService {
 
@@ -17,10 +16,10 @@ public class MemberService {
 		return memberMapper.login(memberId, memberPass);
 	}//login
 	
-	public MemberDTO findIdByInfo(String memberLastName, String memberFirstName, String memberEmail) {
-		MemberDTO mDTO=null;
-		mDTO=memberMapper.findIdByInfo(memberLastName, memberFirstName, memberEmail);
-		return mDTO;
+	public String findIdByInfo(String memberLastName, String memberFirstName, String memberEmail) {
+		String foundId=null;
+		foundId=memberMapper.findIdByInfo(memberLastName, memberFirstName, memberEmail);
+		return foundId;
 	}//findIdByInfo
 
 	

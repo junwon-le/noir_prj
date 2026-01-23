@@ -43,7 +43,7 @@ public class MemberController {
 		return "/hotel/laundry";
 	}	
 	
-	@GetMapping("/login/join")
+	@GetMapping("/join")
 	public String join() {
 		return "/login/join";
 	}
@@ -60,7 +60,7 @@ public class MemberController {
 
     @GetMapping("/login/findPw") 
     public String findPwPage() {
-        return "/login/findPw";          // templates/findPw.html 파일을 바라봄
+        return "login/findPw";          // templates/findPw.html 파일을 바라봄
     }	
 
     /**
@@ -75,14 +75,23 @@ public class MemberController {
         return "redirect:/main"; 
     }
 	
-	@PostMapping("/login")
+	@PostMapping("/login/memberLogin")
 	public String memberLoginProcess(@RequestParam("memberId") String memberId, @RequestParam("memberPass") String memberPass, HttpSession session) {
 		
 		MemberDTO member = memberService.login(memberId, memberPass);
 		
 		if (member != null) {
 			// 로그인 성공: 세션에 member 정보 저장
-			session.setAttribute("member", member);
+			// 1. null 체크를 포함한 이름 가공
+		    String lastName = (member.getMemberLastName() != null) ? member.getMemberLastName().trim() : "";
+		    String firstName = (member.getMemberFirstName() != null) ? member.getMemberFirstName().trim() : "";
+		    
+		    String fullName = lastName + firstName;
+
+		    // 2. 세션 저장, id와 합쳐진 이름
+		    session.setAttribute("memberId", member.getMemberId());
+		    session.setAttribute("memberName", fullName);
+			
 			return "redirect:/main"; // 첫화면으로 
 		} else {
 			// 로그인 실패: 에러 파라미터와 함께 로그인 페이지로 리다이렉트
@@ -98,8 +107,8 @@ public class MemberController {
 	    
 	    // 1. 서비스에서 이름과 이메일로 ID 찾기 
 	    // 예: select member_id from member where member_name = ? and member_email = ?
-		MemberDTO mDTO=memberService.findIdByInfo(memberLastName, memberFirstName, memberEmail);
-		String foundId=mDTO.getMemberId();
+		String foundId=null;
+		foundId=memberService.findIdByInfo(memberLastName, memberFirstName, memberEmail);
 	    
 	    
 	    if (foundId != null && !foundId.isEmpty()) {
@@ -139,7 +148,7 @@ public class MemberController {
 	                           @RequestParam("memberEmail") String memberEmail,
 	                           HttpSession session) {
 
-	    // 1. DB 사용자 정보 확인 (기존 서비스 활용)
+	    // 1. DB 사용자 정보 확인 
 	    boolean userExists = memberService.checkUserForPasswordReset(memberId, memberLastName, memberFirstName, memberEmail);
 
 	    if (userExists) {
@@ -149,7 +158,7 @@ public class MemberController {
 	        if (authCode != null) {
 	            // 3. 발송된 번호를 세션에 저장 (verifyAuthCode에서 확인용)
 	            session.setAttribute("authCode", authCode);
-	            session.setAttribute("resetUserId", memberId); 
+	            session.setAttribute("resetMemberId", memberId); 
 	            return "OK"; // HTML 스크립트의 res.trim() === "OK"와 일치
 	        }
 	        return "FAIL";
@@ -187,63 +196,35 @@ public class MemberController {
 
 	    // 세션의 토큰과 URL의 토큰이 일치하는지 확인
 	    if (sessionToken == null || !sessionToken.equals(token)) {
-	        return "redirect:/login/findPw"; // 비정상 접근 시 차단
+	        return "redirect:/login/resetPw"; // 비정상 접근 시 차단
 	    }
 	    
 	    model.addAttribute("token", token);
-	    return "member/resetPw"; // 정상 접근 시 페이지 이동
+	    return "login/resetPw"; // 정상 접근 시 페이지 이동
 	}//resetPwPage
 	
 	
 	//비밀 번호 변경 
-	@PostMapping("/login/updatePw")
-	@ResponseBody
-	public String updatePw(@RequestParam String newPw, 
-	                       @RequestParam String token, 
-	                       HttpSession session) {
-	    String sessionToken = (String) session.getAttribute("resetToken");
-	    String userId = (String) session.getAttribute("resetUserId");
-
-	    // 최종 보안 검증
-	    if (sessionToken == null || !sessionToken.equals(token) || userId == null) {
-	        return "INVALID_ACCESS";
-	    }
-
-	    // 1. 비밀번호 암호화 및 DB 업데이트 (MyBatis 호출)
-	    // boolean success = memberService.modifyPassword(userId, newPw);
-	    boolean success = true; 
-
-	    if (success) {
-	        // 2. 사용 완료된 토큰 및 세션 정보 삭제 (재사용 방지)
-	        session.removeAttribute("resetToken");
-	        session.removeAttribute("authCode");
-	        return "OK";
-	    }
-	    
-	    return "FAIL";
-	}//updatePw	
-	
-	
 	@PostMapping("/login/modifyPwProcess")
 	@ResponseBody
 	public String modifyPwProcess(@RequestParam String newPw, @RequestParam String token, HttpSession session) {
 	    
 	    // 1. 세션에서 보안 정보 가져오기
 	    String sessionToken = (String) session.getAttribute("resetToken");
-	    String userId = (String) session.getAttribute("resetUserId");
+	    String memberId = (String) session.getAttribute("resetMemberId");
 
 	    // 2. 토큰 검증 (잘못된 접근 차단)
-	    if (sessionToken == null || !sessionToken.equals(token) || userId == null) {
+	    if (sessionToken == null || !sessionToken.equals(token) || memberId == null) {
 	        return "INVALID_ACCESS";
 	    }
 
 	    // 3. DB 업데이트 수행
-	    boolean isSuccess = memberService.modifyPassword(userId, newPw);
+	    boolean isSuccess = memberService.modifyPassword(memberId, newPw);
 
 	    if (isSuccess) {
 	        // 4. 보안을 위해 변경 완료 후 관련 세션 즉시 제거
 	        session.removeAttribute("resetToken");
-	        session.removeAttribute("resetUserId");
+	        session.removeAttribute("resetMemberId");
 	        session.removeAttribute("authCode");
 	        return "OK";
 	    } else {
@@ -279,5 +260,19 @@ public class MemberController {
         }
     }
     
+    @GetMapping("/login/result")
+    public String showResult(
+            @RequestParam(value = "message", required = false, defaultValue = "완료되었습니다.") String message,
+            @RequestParam(value = "url", required = false, defaultValue = "/") String url,
+            @RequestParam(value = "btnText", required = false, defaultValue = "메인 페이지") String btnText,
+            Model model) {
+        
+        // 타임리프 변수 ${message}, ${url}, ${btnText}에 값을 매핑합니다.
+        model.addAttribute("message", message);
+        model.addAttribute("url", url);
+        model.addAttribute("btnText", btnText);
+        
+        return "login/result"; // result.html 을 호출
+    }
 	
 }//class
