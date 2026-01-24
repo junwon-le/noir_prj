@@ -297,6 +297,15 @@
     pointer-events: none;
 }
 
+.table-responsive-custom{
+	height: 352px;
+
+}
+.trClick{
+	cursor: pointer;
+	
+}
+
 </style>
 
 <script>
@@ -305,9 +314,56 @@ $(function(){
 	
 	
 	$("#btn").click(function(){
+	 	var startDate=$("#startDate").val();
+	 	var endDate= $("#endDate").val();
 		
-		$("#frm").submit();
 		
+		var param={startDate:startDate,endDate:endDate};
+		$.ajax({
+			url:"/mypage/reserve/hotelSearch",
+			data:param,
+			type:"GET",
+			dataType:"JSON",
+			error:function(xhr){
+				alert("값이 없습니다");
+				console.log(xhr.status);
+				
+			},
+			success:function(jsonObj){
+				$(".reservation-table>tbody").empty();
+				if(jsonObj.data.length==0){
+					$(".reservation-table>tbody")
+					.append(`<tr> <td colspan='6'style="text-align:center">
+					검색된 예약 내용이 없습니다.</td></tr>`);
+	
+				}//end if
+				
+			
+				$.each(jsonObj.data, function(i,ele){
+					let statusClass = (ele.reserveFlag === 'N') ? '' : 'status-canceled';
+					let statusText  = (ele.reserveFlag === 'N') ? '예약완료' : '취소완료';
+					
+					
+					var createTr=`
+							
+						<tr onclick="location.href='/mypage/reserve/hotelRevDetail?reserveNum=${ele.reserveNum}'" class="trClick">
+								<td>${ele.reserveNum}</td>
+								<td>${ele.reserveDate}</td>
+								<td>${ele.roomType}</td>
+								<td>${ele.checkIn} ~ ${ele.checkOut}</td>
+								<td>${ele.reservePerson}</td>
+								
+								
+								<td><span class= "status-badge ${statusClass}">${statusText}</span></td>
+
+								</tr>`
+							$(".reservation-table>tbody").append(createTr);
+				});//end each
+				$("#Page-navigation").html(jsonObj.pagiNation);
+			}
+			
+		});//ajax
+			
 	});//click
 	
 	   var d= new Date();
@@ -414,7 +470,7 @@ $(function(){
                                 <th>상태</th>
                             </tr>
                         </thead>
-                        <tbody >
+                        <tbody>
                             <tr>
                                 <td>1241325</td>
                                 <td>2025.03.03</td>
@@ -423,42 +479,11 @@ $(function(){
                                 <td>1</td>
                                 <td><span class="status-badge">예약 완료</span></td>
                             </tr>
-                            <tr>
-                                <td>2314312</td>
-                                <td>2025.02.03</td>
-                                <td>Deluxe Double</td>
-                                <td>2026-01-11 ~ 2026-01-15</td>
-                                <td>2</td>
-                                <td><span class="status-badge status-canceled">취소 완료</span></td>
-                            </tr>
-                               <tr>
-                                <td>2314312</td>
-                                <td>2025.02.03</td>
-                                <td>Deluxe Double</td>
-                                <td>2026-01-11 ~ 2026-01-15</td>
-                                <td>2</td>
-                                <td><span class="status-badge status-canceled">취소 완료</span></td>
-                            </tr>
-                               <tr>
-                                <td>2314312</td>
-                                <td>2025.02.03</td>
-                                <td>Deluxe Double</td>
-                                <td>2026-01-11 ~ 2026-01-15</td>
-                                <td>2</td>
-                                <td><span class="status-badge status-canceled">취소 완료</span></td>
-                            </tr>
-                               <tr>
-                                <td>2314312</td>
-                                <td>2025.02.03</td>
-                                <td>Deluxe Double</td>
-                                <td>2026-01-11 ~ 2026-01-15</td>
-                                <td>2</td>
-                                <td><span class="status-badge status-canceled">취소 완료</span></td>
-                            </tr>
+                            
                         </tbody>
                     </table>
                 </div>
-                   <nav aria-label="Page navigation">
+                   <nav aria-label="Page navigation" id="Page-navigation">
     <ul class="pagination-wrapper">
         <li class="page-item">
             <a class="page-link" href="#" aria-label="Previous">

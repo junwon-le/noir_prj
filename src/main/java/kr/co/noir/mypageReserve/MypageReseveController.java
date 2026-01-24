@@ -27,31 +27,25 @@ public class MypageReseveController {
 		
 		
 	}//HotelReserveList
+	
+	@GetMapping("/hotelRevDetail")
+	public String hotelReserveDetail() {
+		
+		return "/mypage/memberHotelRevDetail";
+		
+		
+	}//hotelReserveDetail
 
 	@ResponseBody
 	@GetMapping("/hotelSearch")
 	public String searchRevHotel(ReserveSearchDTO rsDTO, Model model) {
 		
 		rsDTO.setMemberId("user2");
-		
-		int totalCount=mrs.totalCnt(rsDTO);
-		int pageScale=mrs.pageScale();
-		int totalPage=mrs.totalPage(totalCount, pageScale);
-		int currentPage=rsDTO.getCurrentPage();
-		int startNum=mrs.startNum(currentPage, pageScale);
-		int endNum=mrs.endNum(startNum, pageScale);
-		
-		rsDTO.setStartNum(startNum);
-		rsDTO.setEndNum(endNum);
-		rsDTO.setUrl("/mypage/memberHotelRevList");
-		
-		List<HotelRevSearchDomain> list = mrs.searchHotelRevList(rsDTO);
-		
-		model.addAttribute("hotelRevList", list);
-		
+
+
 		System.out.println(mrs.searchHotelRevList(rsDTO));
-		System.out.println(mrs.totalCnt(rsDTO));
-		return "/mypage/memberHotelRevList";
+		
+		return mrs.searchHotelRevList(rsDTO);
 	}//searchRevHotel
 	
 
