@@ -4,7 +4,6 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.noir.mypageReserve">
 
-
 	<select id="selectTotalCnt" parameterType="reserveSearchDTO" resultType="int">
 		
 		select count(*)
@@ -25,15 +24,105 @@
 	
 	</select>
 
-<!-- 매핑해야된다. -->
+<select id="hotelRevList" parameterType="reserveSearchDTO" resultType="hotelRevSearchDomain">
+    SELECT 
+        reserveNum, reserveDate, roomType, checkIn, checkOut, reservePerson, reserveFlag
+    FROM (
+        SELECT 
+            ROW_NUMBER() OVER (ORDER BY r.reserve_num DESC) AS rnum,
+            r.reserve_num AS reserveNum,      
+            TRUNC(r.reserve_time) AS reserveDate, 
+            ri.room_type AS roomType,         
+            TRUNC(rr.room_res_start_date) AS checkIn,
+            TRUNC(rr.room_res_end_date) AS checkOut,
+            (r.reserve_adult_count + r.reserve_kid_count) AS reservePerson, 
+            r.reserve_status AS reserveFlag   
+        FROM member m
+        JOIN reserve r ON m.member_num = r.member_num
+        JOIN room_res rr ON r.reserve_num = rr.reserve_num
+        JOIN room_info ri ON rr.room_type_num = ri.room_type_num
+        <where>
+            m.member_id = #{memberId}
+            AND r.reserve_type = 'room'
+            
+            <choose>
+                <when test="startDate != null">
+                    AND rr.room_res_start_date &gt;= #{startDate}
+                </when>
+                <otherwise>
+                    AND rr.room_res_start_date &gt;= TRUNC(SYSDATE)
+                </otherwise>
+            </choose>
+
+            <if test="endDate != null">
+                AND rr.room_res_end_date &lt;= #{endDate}
+            </if>
+        </where>
+          ) 
+    WHERE rnum BETWEEN #{startNum} AND #{endNum}
+</select>
 
 
- 	<select id="hotelRevList" parameterType="reserveSearchDTO" resultType="hotelRevSearchDomain">
+
+<!-- 이게 중욧 -->
+<!-- 	<select id="hotelRevList" parameterType="reserveSearchDTO" resultType="hotelRevSearchDomain">
+    SELECT 
+        reserveNum, reserveDate, roomType, checkIn, checkOut, reservePerson, reserveFlag
+    FROM (
+        SELECT 
+            ROW_NUMBER() OVER (ORDER BY r.reserve_num DESC) AS rnum, -- 번호만 매김
+            r.reserve_num AS reserveNum,      
+            TRUNC(r.reserve_time) AS reserveDate, 
+            ri.room_type AS roomType,         
+            TRUNC(rr.room_res_start_date) AS checkIn,
+            TRUNC(rr.room_res_end_date) AS checkOut,
+            (r.reserve_adult_count + r.reserve_kid_count) AS reservePerson, 
+            r.reserve_status AS reserveFlag   
+        FROM member m
+        JOIN reserve r ON m.member_num = r.member_num
+        JOIN room_res rr ON r.reserve_num = rr.reserve_num
+        JOIN room_info ri ON rr.room_type_num = ri.room_type_num
+        WHERE m.member_id = #{memberId}
+          AND r.reserve_type = 'room'
+          ) 
+    WHERE rnum BETWEEN #{startNum} AND #{endNum}
+</select> -->
+
+
+
+<!-- <select id="hotelRevList" parameterType="reserveSearchDTO" resultType="hotelRevSearchDomain">
+    SELECT
+        r.reserve_num AS reserveNum,      
+        TRUNC(r.reserve_time) AS reserveDate, 
+        ri.room_type AS roomType,         
+        TRUNC(rr.room_res_start_date) AS checkIn,
+        TRUNC(rr.room_res_end_date) AS checkOut,
+        (r.reserve_adult_count + r.reserve_kid_count) AS reservePerson, 
+        r.reserve_status AS reserveFlag   
+        FROM member m
+			    JOIN reserve r ON m.member_num = r.member_num
+			    JOIN room_res rr ON r.reserve_num = rr.reserve_num
+			    JOIN room_info ri ON rr.room_type_num = ri.room_type_num
+			    WHERE m.member_id = #{memberId}
+			      AND r.reserve_type = 'room'
+			      <if test="startDate != null">
+			          AND rr.room_res_start_date &gt;= #{startDate}
+			      </if>
+			      <if test="endDate != null">
+			          AND rr.room_res_end_date &lt;= #{endDate}
+			      </if>
+			    ORDER BY r.reserve_num DESC
+</select> -->
+
+
+
+<!-- 			        m.member_id AS memberId, -->
+
+ <!-- 	<select id="hotelRevList" parameterType="reserveSearchDTO" resultType="hotelRevSearchDomain">
 		select
-			r.reserve_num AS reserveNum,
-			        m.member_id AS memberId,
+					r.reserve_num AS reserveNum,
 			        TRUNC(r.reserve_time) AS reserveDate,
-			        ri.room_type AS roomName,
+			        ri.room_type AS roomType,
 			        TRUNC(rr.room_res_start_date) AS checkIn,
 			        TRUNC(rr.room_res_end_date) AS checkOut,
 			        (r.reserve_adult_count + r.reserve_kid_count) AS totalPeople,
@@ -53,7 +142,7 @@
 			    ORDER BY r.reserve_num DESC
  	
  	</select>
-
+ -->
 	
 	 
 	

@@ -3,8 +3,11 @@ package kr.co.noir.mypageReserve;
 import java.util.List;
 
 import org.apache.ibatis.exceptions.PersistenceException;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.databind.util.JSONPObject;
 @Service
 public class MypageReserveService {
 
@@ -78,17 +81,28 @@ public class MypageReserveService {
 	
 	
 	
-	public List<HotelRevSearchDomain> searchHotelRev(ReserveSearchDTO rsDTO){
-		List<HotelRevSearchDomain> list=null;
+//	public List<HotelRevSearchDomain> searchHotelRevList(ReserveSearchDTO rsDTO){
+//		List<HotelRevSearchDomain> list=null;
+//		
+//		try {
+//			list=mrDAO.selectHotelRevList(rsDTO);
+//			
+//		}catch (PersistenceException pe) {
+//			pe.printStackTrace();
+//		}//end catch
+//		
+//		return list;
+//		
+//	}//searchHotelRev
+	
+	public String searchHotelRevList(ReserveSearchDTO rsDTO) {
+		List<HotelRevSearchDomain> list =null;
+		JSONObject jsonObj=new JSONObject();
 		
-		try {
-			list=mrDAO.selectHotelRevList(rsDTO);
-			
-		}catch (PersistenceException pe) {
-			pe.printStackTrace();
-		}//end catch
 		
-		return list;
+		int totalCnt = totalCnt(rsDTO);
 		
-	}//searchHotelRev
+		return "";
+				
+	}
 }

@@ -9,7 +9,9 @@ import lombok.ToString;
 @ToString
 public class RangeDTO {
 
-	int startNum,endNum,currentPage,totalPage;
+	private int startNum,endNum;
+	private int currentPage=1;
+	private int totalPage=0;
 	String field,keyword,fieldStr,url;
 	
 }//class
