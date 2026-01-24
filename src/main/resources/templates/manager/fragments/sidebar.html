@@ -25,9 +25,9 @@
                             <i class="icon nalika-user icon-wrap"></i> <span>비회원 관리</span></a>
                         </li>
                         <li>
-                            <a th:href="@{/admin/roomMgr}" aria-expanded="false"><i class="icon nalika-settings icon-wrap"></i>
-                            <span>객실 관리</span></a>
-                            
+                            <a th:href="@{/admin/roomMgr(date=${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')})}" aria-expanded="false">
+							    <i class="icon nalika-settings icon-wrap"></i><span> 객실 관리</span>
+							</a>	                            
                         </li>
                         <li>
                             <a href="mailbox.html" aria-expanded="false"><i class="icon nalika-settings icon-wrap"></i>

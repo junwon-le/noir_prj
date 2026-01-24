@@ -11,6 +11,37 @@
 <link rel="stylesheet" type="text/css" href="/common/css/homepage/sub.css?v=0312">
 <!-- jQeury CDN 시작 -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<!-- PG사 CDN 시작 -->
+<script src="https://cdn.iamport.kr/v1/iamport.js"></script>
+<script>
+  var IMP = window.IMP;
+  IMP.init("imp03674114"); // 관리자 페이지 '식별코드'
+
+  function registerCard() {
+    IMP.request_pay({
+      pg: "tosspayments.iamporttest_4",            // 스크린샷에 있던 PG사
+      pay_method: "card",
+      merchant_uid: "issue_" + new Date().getTime(),
+      name: "호텔 예약 카드 등록",
+      amount: 0,                     // 실제 결제 안 함
+      customer_uid: "user_idx_1234"  // 이 값이 빌링키가 됩니다 (DB에 저장할 값)
+    }, function (rsp) {
+      if (rsp.success) {
+        // 서버로 customer_uid를 전달하여 DB에 저장 시킴
+        $.ajax({
+          url: "/api/payment/issue-billing",
+          method: "POST",
+          data: { customer_uid: rsp.customer_uid }
+        }).done(function() {
+          alert("카드가 정상적으로 등록되었습니다.");
+        });
+      } else {
+        alert("카드 등록 실패: " + rsp.error_msg);
+      }
+    });
+  }
+</script>
+
 <script src="/common/js/comm/jquery.bxslider.js"></script>
 <script src="/common/js/homepage/jquery.rwdImageMaps.min.js"></script>
 <script src="/common/js/homepage/jquery.accessibility.modal.js"></script>
@@ -39,6 +70,32 @@ $(document).on('click','.btn_pop_close',function(e){
 	$('#popIframe > iframe').attr('src','').hide();
 	e.preventDefault();
 })
+
+$(function(){
+	
+	$("#request").on('input', function() {
+  const length = $(this).val().length;
+  // 1. 현재 글자 수 업데이트
+  $("#reqCnt").text(length);
+  // 2. 글자 수에 따른 시각적 피드백 (선택사항)
+  if (length >= 100) {
+	  $("#reqCnt").css('color','red'); // 꽉 차면 빨간색
+  } else {
+	  $("#reqCnt").css('color','#fff');
+  }
+});//request input
+	$("#request").on('keyup', function() {
+	  const length = $(this).val().length;
+		if(length>=100){
+		alert("요청사항은 최대 100자까지 입력가능합니다.");
+		$("#request").val($(this).val().substring(0,100));
+		$("#reqCnt").text('100');
+		}		
+});//request keup
+
+})//ready
+
+
 </script>
 <style>
 .subject
@@ -102,30 +159,26 @@ margin-top: 10px;
 <div th:replace="~{fragments/header :: header}"></div>
 </header>
 <div id="container">
-
     <div class="max-w-5xl mx-auto flex flex-col md:flex-row gap-8">
         
-        <div class="flex-1" style="margin-right:100px;">
+        <div class="flex-1" style="margin-right:100px;" th:object="${member}">
             <h2 class="text-xl font-bold ">고객정보 입력</h2>
             <img src="/common/images/res_img/hr.png" class="hr"/>
             <form action="reservationProcess.jsp" method="POST" class="space-y-6">
                 <div>
                     <label class="block text-sm mb-1">투숙객명 <span class="text-red-500">*</span></label>
                     <div class="flex gap-4">
-                        <input type="text" name="lastName" placeholder="last name" class="w-1/2 bg-white text-black p-2 rounded bor">
-                        <input type="text" name="firstName" placeholder="first name" class="w-1/2 bg-white text-black p-2 rounded bor">
+                        <input type="text" name="lastName" placeholder="last name" class="w-1/2 bg-white text-black p-2 rounded bor" th:value="*{member_last_name}">
+                        <input type="text" name="firstName" placeholder="first name" class="w-1/2 bg-white text-black p-2 rounded bor" th:value="*{member_first_name}">
                     </div>
                 </div>
 
                 <div>
                     <label class="block text-sm mb-1">이메일 주소 <span class="text-red-500">*</span></label>
                     <div class="flex items-center gap-2">
-                        <input type="text" name="emailId" class="bg-white text-black p-2 rounded bor" style="width:300px;">
+                        <input type="text" name="emailId" class="bg-white text-black p-2 rounded bor" style="width:300px;" th:value="*{member_email_id}">
                         <span id="at">@</span>
-                        <input type="text" name="emailDomain" class=" bg-white text-black p-2 rounded bor">
-                        <select class="bg-white text-black p-2 rounded bor" style=" width:200px; ">
-                            <option>직접입력</option>
-                        </select>
+                        <input type="text" name="emailDomain" class=" bg-white text-black p-2 rounded bor" th:value="*{member_email_domain}">
                     </div>
                 </div>
 
@@ -135,20 +188,20 @@ margin-top: 10px;
                         <select class="w-1/3 bg-white text-black p-2 rounded bor">
                             <option>+82(대한민국)</option>
                         </select>
-                        <input type="text" name="phone" placeholder="01023507803" class="w-2/3 bg-white text-black p-2 rounded bor">
+                        <input type="text" name="phone" placeholder="01023507803" class="w-2/3 bg-white text-black p-2 rounded bor" th:value="*{member_tel}" >
                     </div>
                 </div>
                 <div>
                     <label class="block text-sm mb-1 ">요청 사항 </label>
                    <div class="w-full">
-   						<textarea class="bor w-full border p-2 text-black rounded bor" rows="1"></textarea>
+   						<textarea id="request" class="bor w-full border p-2 text-black rounded bor" rows="1"></textarea>
 						<div class="text-right">
-        					<span class="text-sm text-gray-500">0/100</span>
+        					<span class="text-sm text-gray-500"><span id="reqCnt">0</span>/100</span>
     					</div>
 					</div>
                 </div>
 
-                <div class="pt-6 border-t border-zinc-700">
+               <!--  <div class="pt-6 border-t border-zinc-700">
                     <h2 class="text-xl font-bold ">신용카드 정보</h2>
                     <img src="/common/images/res_img/hr.png" class="hr"/>
                     
@@ -190,7 +243,7 @@ margin-top: 10px;
                     ※ 신용카드 정보는 고객님의 투숙을 개런티하기 위한 용도 외에는 어떤 목적으로도 사용되지 않으며, 체크카드 및 일부 신용 카드의 경우 사용이 제한 될 수 있습니다.<br>
 					※ <span style="color:red">온라인 예약 시 직접 결제가 이루어지지 않으며</span>, 최종 결제는 프론트 데스크에서 해주시기 바랍니다. 
                     </div>
-                </div>
+                </div> -->
 
                 <div class="bg-zinc-800 p-4 rounded text-sm space-y-2">
                     <label class="flex items-center gap-2">
@@ -230,19 +283,23 @@ margin-top: 10px;
         	 </form>
         </div>
 
-        <div class="w-full md:w-80 h-fit text-black p-6 rounded shadow-lg" style="position: fixed; top:220px; right:100px; background-color: #eee8cc" >
+        <div class="w-full md:w-80 h-fit text-black p-6 rounded shadow-lg" style="position: fixed; top:220px; right:100px; background-color: #eee8cc; z-index:999;" >
             <h3 class="text-blue-900 font-bold border-b pb-2 mb-4">예약정보</h3>
             <div class=" space-y-3 mb-6">
-                <div class="flex justify-between"><span>체크인</span><span class="font-semibold">2026-01-07 (화)</span></div>
-                <div class="flex justify-between"><span>체크아웃</span><span class="font-semibold">2026-01-08 (수) · 1박</span></div>
-                <div class="flex justify-between"><span>객실</span><span class="font-semibold text-right">디럭스 트윈<br>Room Only</span></div>
+                <div class="flex justify-between"><span>체크인</span><span th:text="${param.checkin}" class="font-semibold">체크인 날짜</span></div>
+                <div class="flex justify-between"><span>체크아웃</span><span  th:text="${param.checkout}" class="font-semibold">체크아웃 날짜</span></div>
+                <th:block th:unless="${param.roomName.empty}">
+                <div th:each="roomName,i : ${param.roomName}" class="flex justify-between">
+                <div>객실<span th:text="${i.count}"></span></div><span class="font-semibold text-right" th:text="${roomName}">룸 타입</span>
+                </div>
+                </th:block>
             </div>
             <div class="border-t pt-4">
                 <div class="flex justify-between items-center mb-6">
                     <span class="font-bold">총 금액</span>
-                    <span class="!text-black text-xl font-bold">280,500 원</span>
+                    <div><span class="!text-black text-xl font-bold" th:text="${param.price}">총 금액</span><span class="!text-black text-xl font-bold">원</span></div>
                 </div>
-                <button class="w-full bg-[#1e293b] text-white py-3 rounded font-bold hover:bg-black transition">예약 하기</button>
+                <button class="w-full bg-[#1e293b] text-white py-3 rounded font-bold hover:bg-black transition" onclick="registerCard()">예약 하기</button>
             </div>
         </div>
     </div>

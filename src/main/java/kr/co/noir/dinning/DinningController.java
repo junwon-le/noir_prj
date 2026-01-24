@@ -14,7 +14,7 @@ public class DinningController {
 	private DinningService ds;
 	
 	@GetMapping("/dinning")
-	public String Dinning(Model model) {
+	public String dinning(Model model) {
 		DinningDomain dDomain=null;
 		dDomain=ds.searchDinning();
 		
@@ -24,7 +24,7 @@ public class DinningController {
 	}
 	
 	@GetMapping("/dinningDetail")
-	public String DinningDetail(Model model) {
+	public String dinningDetail(Model model) {
 		List<DinningDomain> list=null;
 		list=ds.searchDetailDinning();
 		
