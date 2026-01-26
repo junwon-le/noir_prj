@@ -108,7 +108,7 @@ public class MypageReserveService {
 		int currentPage=rsDTO.getCurrentPage();
 		int startNum=startNum(currentPage, pageScale);
 		int endNum=endNum(startNum, pageScale);
-		
+		rsDTO.setTotalPage(totalPage);
 		System.out.println("총 게시글 수: " + totalCount);
 		System.out.println("총 페이지 수: " + totalPage);
 		

@@ -310,59 +310,15 @@
 
 <script>
 $(function(){
-	
+
 	
 	
 	$("#btn").click(function(){
-	 	var startDate=$("#startDate").val();
-	 	var endDate= $("#endDate").val();
-		
-		
-		var param={startDate:startDate,endDate:endDate};
-		$.ajax({
-			url:"/mypage/reserve/hotelSearch",
-			data:param,
-			type:"GET",
-			dataType:"JSON",
-			error:function(xhr){
-				alert("값이 없습니다");
-				console.log(xhr.status);
-				
-			},
-			success:function(jsonObj){
-				$(".reservation-table>tbody").empty();
-				if(jsonObj.data.length==0){
-					$(".reservation-table>tbody")
-					.append(`<tr> <td colspan='6'style="text-align:center">
-					검색된 예약 내용이 없습니다.</td></tr>`);
-	
-				}//end if
-				
-			
-				$.each(jsonObj.data, function(i,ele){
-					let statusClass = (ele.reserveFlag === 'N') ? '' : 'status-canceled';
-					let statusText  = (ele.reserveFlag === 'N') ? '예약완료' : '취소완료';
-					
-					
-					var createTr=`
-							
-						<tr onclick="location.href='/mypage/reserve/hotelRevDetail?reserveNum=${ele.reserveNum}'" class="trClick">
-								<td>${ele.reserveNum}</td>
-								<td>${ele.reserveDate}</td>
-								<td>${ele.roomType}</td>
-								<td>${ele.checkIn} ~ ${ele.checkOut}</td>
-								<td>${ele.reservePerson}</td>
-								
-								
-								<td><span class= "status-badge ${statusClass}">${statusText}</span></td>
+	 	
 
-								</tr>`
-							$(".reservation-table>tbody").append(createTr);
-				});//end each
-				$("#Page-navigation").html(jsonObj.pagiNation);
-			}
+		searchPage(1);
 			
-		});//ajax
+			
 			
 	});//click
 	
@@ -422,6 +378,63 @@ $(function(){
 	   
 	   
 	});//ready
+	function movePage(num){
+		searchPage(num)
+		
+	}
+	
+	function searchPage(currentPage){
+		var startDate=$("#startDate").val();
+	 	var endDate= $("#endDate").val();
+		var currentPage=currentPage;
+		
+		var param={startDate:startDate,endDate:endDate,currentPage:currentPage};
+		$.ajax({
+			url:"/mypage/reserve/hotelSearch",
+			data:param,
+			type:"GET",
+			dataType:"JSON",
+			error:function(xhr){
+				alert("값이 없습니다");
+				console.log(xhr.status);
+				
+			},
+			success:function(jsonObj){
+				$(".reservation-table>tbody").empty();
+				if(jsonObj.data.length==0){
+					$(".reservation-table>tbody")
+					.append(`<tr> <td colspan='6'style="text-align:center">
+					검색된 예약 내용이 없습니다.</td></tr>`);
+	
+				}//end if
+				
+			
+				$.each(jsonObj.data, function(i,ele){
+					let statusClass = (ele.reserveFlag === 'N') ? '' : 'status-canceled';
+					let statusText  = (ele.reserveFlag === 'N') ? '예약완료' : '취소완료';
+					
+					
+					var createTr=`
+							
+						<tr onclick="location.href='/mypage/reserve/hotelRevDetail?reserveNum=${ele.reserveNum}'" class="trClick">
+								<td>${ele.reserveNum}</td>
+								<td>${ele.reserveDate}</td>
+								<td>${ele.roomType}</td>
+								<td>${ele.checkIn} ~ ${ele.checkOut}</td>
+								<td>${ele.reservePerson}</td>
+								
+								
+								<td><span class= "status-badge ${statusClass}">${statusText}</span></td>
+
+								</tr>`
+							$(".reservation-table>tbody").append(createTr);
+				});//end each
+				$("#Page-navigation").html(jsonObj.pagiNation);
+			}
+			
+		});//ajax
+		
+	}
 </script>
 
 </head>

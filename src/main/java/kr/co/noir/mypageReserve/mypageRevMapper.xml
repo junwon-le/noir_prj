@@ -52,7 +52,6 @@
 </select>
 	
 	
-<!-- 이게 실제로 페이지내이션에 쓸것
 <select id="hotelRevList" parameterType="reserveSearchDTO" resultType="hotelRevSearchDomain">
     SELECT 
         reserveNum, reserveDate, roomType, checkIn, checkOut, reservePerson, reserveFlag
@@ -89,7 +88,7 @@
         </where>
           ) 
     WHERE rnum BETWEEN #{startNum} AND #{endNum}
-</select> -->
+</select>
 
 
 
@@ -147,7 +146,7 @@
 
 <!-- 			        m.member_id AS memberId, -->
 
-  	<select id="hotelRevList" parameterType="reserveSearchDTO" resultType="hotelRevSearchDomain">
+  	<!-- <select id="hotelRevList" parameterType="reserveSearchDTO" resultType="hotelRevSearchDomain">
 		select
 					r.reserve_num AS reserveNum,
 			        TRUNC(r.reserve_time) AS reserveDate,
@@ -170,7 +169,7 @@
 			      </if>
 			    ORDER BY r.reserve_num DESC
  	
- 	</select>
+ 	</select> -->
  
 	
 	 

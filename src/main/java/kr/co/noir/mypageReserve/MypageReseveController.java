@@ -18,7 +18,6 @@ public class MypageReseveController {
 	
 	@Autowired
 	MypageReserveService mrs;
-	
 //=========호텔 에약 리스트==================
 	@GetMapping("/memberHotelList")
 	public String hotelReserveList(HttpSession session) {
@@ -28,13 +27,13 @@ public class MypageReseveController {
 		
 	}//HotelReserveList
 	
-	@GetMapping("/hotelRevDetail")
-	public String hotelReserveDetail() {
-		
-		return "/mypage/memberHotelRevDetail";
-		
-		
-	}//hotelReserveDetail
+//	@GetMapping("/hotelRevDetail")
+//	public String hotelReserveDetail() {
+//		
+//		return "/mypage/memberHotelRevDetail";
+//		
+//		
+//	}//hotelReserveDetail
 
 	@ResponseBody
 	@GetMapping("/hotelSearch")
@@ -47,6 +46,20 @@ public class MypageReseveController {
 		
 		return mrs.searchHotelRevList(rsDTO);
 	}//searchRevHotel
+	
+	
+	
+	  @GetMapping("/hotelRevDetail") 
+	  public String hotelRevDetail(ReserveDetailDTO rdDTO) { 
+		  rdDTO.setMemberId("user2");
+	  System.out.println(rdDTO.getReserveNum());
+	  System.out.println(rdDTO.getMemberId());
+	  
+	  
+	  return "/mypage/memberHotelRevDetail";
+	  
+	  }
+	 
 	
 
 	
