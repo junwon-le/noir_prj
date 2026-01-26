@@ -5,9 +5,12 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.UUID;
 
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.servlet.http.HttpSession;
@@ -118,7 +122,7 @@ public class RoomController {
 			@RequestParam(value="roomImgFile3") MultipartFile mf3,
 			@RequestParam(value="roomImgFile4") MultipartFile mf4,
 			@RequestParam(value="roomImgFile5") MultipartFile mf5,	
-			RoomDTO rDTO, Model model) throws IOException {
+			RoomDTO rDTO, Model model, String num) throws IOException {
 		
 		//System.out.println( mf1.getContentType() );
 		//System.out.println( mf1.getName() );
@@ -126,33 +130,37 @@ public class RoomController {
 		//System.out.println( mf1.getSize() );
 //		System.out.println( mf.isEmpty() );
 //		String fileName =System.currentTimeMillis()+"-"+mf.getOriginalFilename();
-		if(!mf1.getOriginalFilename().isEmpty()) {
+		rDTO.setRoomTypeNum(Integer.parseInt(num));
+		
+		if(mf1.getOriginalFilename()!=null && !mf1.getOriginalFilename().isEmpty()) {
 			String fileName1 =UUID.randomUUID()+"-"+mf1.getOriginalFilename();
 			File upFile1 = new File(uploadDir+fileName1);
 			mf1.transferTo(upFile1);
 			rDTO.setRoomImg1(fileName1);
 		}
-		if(!mf2.getOriginalFilename().isEmpty()) {
+		
+		
+		if(mf2.getOriginalFilename()!=null && !mf2.getOriginalFilename().isEmpty()) {
 			String fileName2 =UUID.randomUUID()+"-"+mf2.getOriginalFilename();
 			File upFile2 = new File(uploadDir+fileName2);
 			mf2.transferTo(upFile2);
 			rDTO.setRoomImg2(fileName2);
 		}
-		if(!mf3.getOriginalFilename().isEmpty()) {
+		if(mf3.getOriginalFilename()!=null && !mf3.getOriginalFilename().isEmpty()) {
 			String fileName3 =UUID.randomUUID()+"-"+mf3.getOriginalFilename();
 			File upFile3 = new File(uploadDir+fileName3);
 			mf3.transferTo(upFile3);
 			rDTO.setRoomImg3(fileName3);
 		}
 		
-		if(!mf4.getOriginalFilename().isEmpty()) {
+		if(mf4.getOriginalFilename()!=null && !mf4.getOriginalFilename().isEmpty()) {
 			String fileName4=UUID.randomUUID()+"-"+mf4.getOriginalFilename();
 			File upFile4 = new File(uploadDir+fileName4);
 			mf4.transferTo(upFile4);
 			rDTO.setRoomImg4(fileName4);
 		}
 		
-		if(!mf5.getOriginalFilename().isEmpty()) {
+		if(mf5.getOriginalFilename()!=null && !mf5.getOriginalFilename().isEmpty()) {
 			String fileName5=UUID.randomUUID()+"-"+mf5.getOriginalFilename();
 			File upFile5 = new File(uploadDir+fileName5);
 			mf5.transferTo(upFile5);
@@ -177,8 +185,8 @@ public class RoomController {
 		rDTO.setRoomService10(rDTO.getRoomService10()!=null?"Y":"N");
 		
 		
-		
-		System.out.println(rDTO);
+		int cnt = 0;
+		cnt = rService.modifyRoom(rDTO);
 		
 		
 //		File upFile = new File("C:/dev/workspace/spring_mvc/src/main/resources/static/upload/"+fileName);
@@ -186,7 +194,7 @@ public class RoomController {
 		//mf.transferTo(upFile); //파일 업로드를 수행
 		//FileDTO에 업로드된 파일명을 설정.
 		//rDTO.setUpFileName(fileName);		
-		model.addAttribute("rDTO", rDTO);
+		model.addAttribute("cnt", cnt);
 		
 		
 		
@@ -194,8 +202,33 @@ public class RoomController {
 		return "/manager/room/roomManage";
 	}
 	
+	@GetMapping("/admin/roomManagePrice")
+	public String roomPrice() {
+		
+		return "/manager/room/roomManagePrice.html";
+	}
 	
 	
+	@ResponseBody
+	@GetMapping("/room/calandarProcess")
+	public JSONObject calandarProcess(RoomPriceDTO rpDTO) {
+
+		JSONObject jsonObj = new JSONObject();
+
+	    YearMonth ym = YearMonth.parse(rpDTO.getRoomPriceDate());
+	    LocalDate first = ym.atDay(1);
+
+	    jsonObj.put("year", ym.getYear());
+	    jsonObj.put("month", ym.getMonthValue());
+	    jsonObj.put("firstDay", first.getDayOfWeek().getValue() % 7);
+	    jsonObj.put("lastDate", ym.lengthOfMonth());
+
+	    List<RoomPriceDomain> list = rService.searchRoomPriceView(rpDTO);
+	    
+	    jsonObj.put("priceList", list);
+
+	    return jsonObj;
+	}
 	
 	
 	

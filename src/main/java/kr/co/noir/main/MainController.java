@@ -20,4 +20,14 @@ public class MainController {
 		return "manager/main/adminMain";
 	}
 	
+	@GetMapping("/noticeList")
+	public String notice_list() {
+		return "/notice/noticeList";
+	}
+
+	@GetMapping("/inquiryList")
+	public String inquiry_list() {
+		return "/qna/inquiryList";
+	}
+	
 }

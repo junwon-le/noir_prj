@@ -6,6 +6,7 @@
 	<properties resource="properties/database.properties"/>
 	<typeAliases>
 		<typeAlias type="kr.co.noir.room.RoomDomain" alias="roomDomain"/>
+		<typeAlias type="kr.co.noir.room.RoomDTO" alias="roomDTO"/>
 		<typeAlias type="kr.co.noir.room.RoomPriceDomain" alias="roomPriceDomain"/>		
 		<typeAlias type="kr.co.noir.room.RoomPriceDTO" alias="roomPriceDTO"/>				
 		<typeAlias type="kr.co.noir.reserve.RoomSearchDomain" alias="roomSearchDomain"/>		
