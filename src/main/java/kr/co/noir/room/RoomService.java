@@ -74,4 +74,30 @@ public class RoomService {
 		return rpDomain;		
 	}
 	
+	public List<RoomPriceDomain> searchRoomPriceView(RoomPriceDTO rpDTO){
+		List<RoomPriceDomain> list=null;
+		try {
+		list = rDAO.selectMonthRoomPrice(rpDTO);
+		}catch(PersistenceException pe) {
+			pe.printStackTrace();
+		}
+		return list;
+	}
+	
+	
+	public int modifyRoom(RoomDTO rDTO) {
+		int cnt = 0;
+		
+		try {
+			cnt = rDAO.updateRoom(rDTO);			
+		}catch(PersistenceException pe) {
+			pe.printStackTrace();
+		}
+		
+		
+		
+		return cnt;
+	}
+	
+	
 }
