@@ -24,31 +24,23 @@
 	
 	</select>
  -->
-		
 <select id="selectTotalCnt" parameterType="reserveSearchDTO" resultType="int">
-			    SELECT 
-			        COUNT(*)
-			    FROM member m
-			    JOIN reserve r ON m.member_num = r.member_num
-			    JOIN room_res rr ON r.reserve_num = rr.reserve_num
-			    /* room_info 테이블은 개수 세는 데 필요 없으므로 성능을 위해 제외 가능 */
-			    <where>
-			        m.member_id = #{memberId}
-			        AND r.reserve_type = 'room'
-			        
-			        <choose>
-			            <when test="startDate != null and startDate != ''">
-			                AND rr.room_res_start_date &gt;= #{startDate}
-			            </when>
-			            <otherwise>
-			                AND rr.room_res_start_date &gt;= TRUNC(SYSDATE)
-			            </otherwise>
-			        </choose>
-			
-			        <if test="endDate != null and endDate != ''">
-			            AND rr.room_res_end_date &lt;= #{endDate}
-			        </if>
-			    </where>
+    SELECT COUNT(*)
+    FROM member m
+    JOIN reserve r ON m.member_num = r.member_num
+    JOIN room_res rr ON r.reserve_num = rr.reserve_num
+    <where>
+        m.member_id = #{memberId}
+        AND r.reserve_type = 'room'
+        
+        <if test="startDate != null and startDate != ''">
+            AND r.RESERVE_START_DATE &gt;= #{startDate}
+        </if>
+        
+        <if test="endDate != null and endDate != ''">
+            AND r.RESERVE_END_DATE &lt;= #{endDate}
+        </if>
+    </where>
 </select>
 	
 	
@@ -61,8 +53,8 @@
             r.reserve_num AS reserveNum,      
             TRUNC(r.reserve_time) AS reserveDate, 
             ri.room_type AS roomType,         
-           TRUNC(rr.room_res_start_date) AS checkIn,
-            TRUNC(rr.room_res_end_date) AS checkOut,
+            TRUNC(r.RESERVE_START_DATE) AS checkIn,
+            TRUNC(r.RESERVE_END_DATE) AS checkOut,
             (r.reserve_adult_count + r.reserve_kid_count) AS reservePerson, 
             r.reserve_status AS reserveFlag   
         FROM member m
@@ -74,21 +66,69 @@
             AND r.reserve_type = 'room'
             
             <choose>
-                <when test="startDate != null">
-                    AND rr.room_res_start_date &gt;= #{startDate}
+                <when test="startDate != null and startDate != ''">
+                    AND r.RESERVE_START_DATE &gt;= #{startDate}
                 </when>
                 <otherwise>
-                    AND rr.room_res_start_date &gt;= TRUNC(SYSDATE)
+                    AND r.RESERVE_START_DATE &gt;= TRUNC(SYSDATE)
                 </otherwise>
             </choose>
 
-            <if test="endDate != null">
-                AND rr.room_res_end_date &lt;= #{endDate}
+            <if test="endDate != null and endDate != ''">
+                AND r.RESERVE_END_DATE &lt;= #{endDate}
             </if>
         </where>
-          ) 
+    ) 
     WHERE rnum BETWEEN #{startNum} AND #{endNum}
 </select>
+
+
+
+ <select id="hotelRevDetail" parameterType="reserveDetailDTO" resultType="hotelRevDetailDomain">
+   
+			   SELECT
+			    m.member_email AS email,
+			    m.member_tel AS tel,
+			    r.reserve_num AS reserveNum,
+			    r.end_user_last_name || r.end_user_first_name AS reserveName,
+			    r.reserve_adult_count AS adultCount,
+			    r.reserve_kid_count AS kidCount,
+			    r.reserve_msg AS reserveMsg,
+			    r.reserve_time AS reserveDate,
+			    r.reserve_status AS reserveFlag,
+			    ri.room_type AS roomType,
+			    p.pay_price AS roomPriceTotal,
+			    TO_CHAR(r.RESERVE_START_DATE, 'yyyy-MM-dd') AS checkIn,
+			    TO_CHAR(r.RESERVE_END_DATE, 'yyyy-MM-dd') AS checkOut
+			FROM member m, reserve r, room_res rr, room_info ri, pay p
+			WHERE m.member_num = r.member_num
+			  AND r.reserve_num = rr.reserve_num
+			  AND rr.room_type_num = ri.room_type_num
+			  AND rr.room_res_num = p.room_res_num
+			  AND m.member_id = #{memberId}
+			  AND r.reserve_num = #{reserveNum}
+			  AND r.reserve_type = #{reserveType}
+</select> 
+
+<update id="removeHotelReserve" parameterType="int" >
+	update reserve
+	set reserve_status='Y'
+	where reserve_num=#{reserveNum}
+
+</update>
+<update id="removeRevPay" parameterType="int">
+	update pay 
+    set pay_refund_state = 'Y', 
+               pay_refund_time = sysdate 
+    where room_res_num = (
+             select room_res_num 
+             FROM room_res 
+             WHERE reserve_num = #{reserveNum}
+         )
+	
+
+</update>
+
 
 
 
@@ -170,6 +210,8 @@
 			    ORDER BY r.reserve_num DESC
  	
  	</select> -->
+ 	
+
  
 	
 	 

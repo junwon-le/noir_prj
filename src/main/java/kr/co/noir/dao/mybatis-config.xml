@@ -11,13 +11,17 @@
 		<typeAlias type="kr.co.noir.room.RoomPriceDTO" alias="roomPriceDTO"/>				
 		<typeAlias type="kr.co.noir.reserve.RoomSearchDomain" alias="roomSearchDomain"/>		
 		<typeAlias type="kr.co.noir.reserve.RoomSearchDTO" alias="roomSearchDTO"/>		
-		<typeAlias type="kr.co.noir.dinning.DinningDomain" alias="dinningDomain"/>		
+		<typeAlias type="kr.co.noir.dinning.DinningDomain" alias="dinningDomain"/>
+		
+		<!-- 박현욱 사용 -->		
 		<typeAlias type="kr.co.noir.mypage.EventDomain" alias="eventDomain"/>		
 		<typeAlias type="kr.co.noir.mypageInfo.PasswordDTO" alias="passwordDTO"/>		
 		<typeAlias type="kr.co.noir.mypageInfo.MemberInfoDomain" alias="mInfoDomain"/>		
      	 <typeAlias type="kr.co.noir.login.MemberDTO" alias="memberDTO"/>   
      	 <typeAlias type="kr.co.noir.mypageReserve.HotelRevSearchDomain" alias="hotelRevSearchDomain"/>   
      	 <typeAlias type="kr.co.noir.mypageReserve.ReserveSearchDTO" alias="reserveSearchDTO"/>   
+     	 <typeAlias type="kr.co.noir.mypageReserve.ReserveDetailDTO" alias="reserveDetailDTO"/>   
+     	 <typeAlias type="kr.co.noir.mypageReserve.HotelRevDetailDomain" alias="hotelRevDetailDomain"/>   
 	
 		<!-- 이준원 사용 -->
 		<typeAlias type="kr.co.noir.reserve.RoomSearchDomain" alias="roomSearchDomain"/><!-- 방 검색 -->		

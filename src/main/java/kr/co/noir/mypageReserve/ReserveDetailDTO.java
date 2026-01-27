@@ -6,9 +6,10 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
+@ToString 
 public class ReserveDetailDTO {
 	private String memberId;
 	private int reserveNum;
+	private String reserveType;
 	
 }//class

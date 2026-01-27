@@ -82,21 +82,7 @@ public class MypageReserveService {
 	
 	
 	
-	
-//	public List<HotelRevSearchDomain> searchHotelRevList(ReserveSearchDTO rsDTO){
-//		List<HotelRevSearchDomain> list=null;
-//		
-//		try {
-//			list=mrDAO.selectHotelRevList(rsDTO);
-//			
-//		}catch (PersistenceException pe) {
-//			pe.printStackTrace();
-//		}//end catch
-//		
-//		return list;
-//		
-//	}//searchHotelRev
-	
+
 	public String searchHotelRevList(ReserveSearchDTO rsDTO) {
 		List<HotelRevSearchDomain> list =null;
 		JSONObject jsonObj=new JSONObject();
@@ -152,66 +138,33 @@ public class MypageReserveService {
 				
 	}//searchHotelRevList
 	
-//	public String pagination(RangeDTO rDTO) {
-//	    StringBuilder pagiNation = new StringBuilder();
-//	    
-//	    // 1. 한 화면에 보여줄 pagination 번호 개수
-//	    int pageNumber = 5; // 스타일 예시에 맞춰 5로 설정 (원하시면 3으로 변경 가능)
-//	    
-//	    // 2. 시작 및 마지막 페이지 번호 계산
-//	    int startPage = ((rDTO.getCurrentPage() - 1) / pageNumber) * pageNumber + 1;
-//	    int endPage = startPage + pageNumber - 1;
-//	    
-//	    // 3. 총 페이지수가 계산된 마지막 페이지보다 작을 경우 조정
-//	    if (rDTO.getTotalPage() <= endPage) {
-//	        endPage = rDTO.getTotalPage();
-//	    }
-//	    
-//	    // 전체 감싸는 태그 시작
-//	    pagiNation.append("<ul class='pagination-wrapper'>");
-//
-//	    // 4. 이전(Previous) 버튼 처리
-//	    // 시작 페이지가 1보다 크면 이전 그룹으로 갈 수 있는 링크 활성화
-//	    pagiNation.append("<li class='page-item ").append(startPage <= 1 ? "disabled" : "").append("'>");
-//	    if (startPage > 1) {
-//	        int prevPage = startPage - 1;
-//	        pagiNation.append("<a class='page-link' href='javascript:movePage(").append(prevPage).append(")' aria-label='Previous'>");
-//	    } else {
-//	        pagiNation.append("<a class='page-link' href='javascript:void(0)' aria-label='Previous'>");
-//	    }
-//	    // 주신 SVG 아이콘 삽입
-//	    pagiNation.append("<svg viewBox='0 0 24 24'><path d='M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z'/></svg></a></li>");
-//
-//	    // 5. 페이지 숫자 리스트 출력
-//	    for (int i = startPage; i <= endPage; i++) {
-//	        if (i == rDTO.getCurrentPage()) {
-//	            // 현재 보고 있는 페이지 (active 클래스 추가)
-//	            pagiNation.append("<li class='page-item active'><a class='page-link' href='javascript:void(0)'>")
-//	                      .append(i).append("</a></li>");
-//	        } else {
-//	            // 클릭 가능한 다른 페이지
-//	            pagiNation.append("<li class='page-item'><a class='page-link' href='javascript:movePage(")
-//	                      .append(i).append(")'>").append(i).append("</a></li>");
-//	        }
-//	    }
-//
-//	    // 6. 다음(Next) 버튼 처리
-//	    // 마지막 페이지가 전체 페이지보다 작으면 다음 그룹으로 갈 수 있는 링크 활성화
-//	    pagiNation.append("<li class='page-item ").append(endPage >= rDTO.getTotalPage() ? "disabled" : "").append("'>");
-//	    if (endPage < rDTO.getTotalPage()) {
-//	        int nextPage = endPage + 1;
-//	        pagiNation.append("<a class='page-link' href='javascript:movePage(").append(nextPage).append(")' aria-label='Next'>");
-//	    } else {
-//	        pagiNation.append("<a class='page-link' href='javascript:void(0)' aria-label='Next'>");
-//	    }
-//	    // 주신 SVG 아이콘 삽입
-//	    pagiNation.append("<svg viewBox='0 0 24 24'><path d='M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z'/></svg></a></li>");
-//
-//	    pagiNation.append("</ul>");
-//	    
-//	    return pagiNation.toString();
-//	}
+	public HotelRevDetailDomain searchOneHotelRevDetail(ReserveDetailDTO rdDTO) {
+		HotelRevDetailDomain hrdDomain=null;
+		try {
+			
+			hrdDomain =mrDAO.selectHotelRevDetail(rdDTO);
+		}catch (PersistenceException pe) {
+			pe.printStackTrace();
+		}//end catch
+		
+		return hrdDomain;
+	}//searchOneHotelRevDetail
 	
+	public int removeHotelReserve(int RevNum) {
+		int cnt=0;
+		try {
+			cnt=mrDAO.updateHotelReserve(RevNum);
+			
+		}catch (PersistenceException pe) {
+			pe.printStackTrace();
+				
+		}//end catch
+		System.out.println("service++"+cnt);
+		return cnt;
+	}//removeHotelReserve
+	
+	
+
 	public String pagination(RangeDTO rDTO) {
 	    StringBuilder pagiNation = new StringBuilder();
 	    

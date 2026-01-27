@@ -36,4 +36,47 @@ public class MypageReserveDAO {
 		
 	}//selectHotelRevList
 	
+	public HotelRevDetailDomain selectHotelRevDetail(ReserveDetailDTO rdDTO) throws PersistenceException{
+		HotelRevDetailDomain hrdDomain=null;
+		
+		SqlSession ss= MyBatisHandler.getInstance().getMyBatisHandler(false);
+		
+		hrdDomain=ss.selectOne("kr.co.noir.mypageReserve.hotelRevDetail",rdDTO);
+		
+		if(ss !=null) {ss.close();}//end if
+		
+		
+		return hrdDomain;
+		
+		
+	}//selectHotelRevDetail
+	
+	
+	public int updateHotelReserve(int revNum) throws PersistenceException{
+		
+		int revCnt=0;
+		int payCnt=0;
+		int cnt=0;
+		
+		System.out.println("예약번호"+revNum);
+		SqlSession ss= MyBatisHandler.getInstance().getMyBatisHandler(false);
+		
+		revCnt=ss.update("kr.co.noir.mypageReserve.removeHotelReserve",revNum);
+		payCnt=ss.update("kr.co.noir.mypageReserve.removeRevPay",revNum);
+		
+		cnt=revCnt+payCnt;
+		if (cnt == 2) { 
+            ss.commit();
+            System.out.println("DB 커밋 성공!");
+        } else {
+            ss.rollback();
+            System.out.println("조건 미달로 인한 롤백");
+        }//end if
+		
+		if(ss !=null) {ss.close();}//end if
+		
+		
+		return cnt;
+	}
+	
 }

@@ -6,8 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.fasterxml.jackson.annotation.JsonCreator.Mode;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -26,20 +29,12 @@ public class MypageReseveController {
 		
 		
 	}//HotelReserveList
-	
-//	@GetMapping("/hotelRevDetail")
-//	public String hotelReserveDetail() {
-//		
-//		return "/mypage/memberHotelRevDetail";
-//		
-//		
-//	}//hotelReserveDetail
 
 	@ResponseBody
 	@GetMapping("/hotelSearch")
 	public String searchRevHotel(ReserveSearchDTO rsDTO, Model model) {
 		
-		rsDTO.setMemberId("user2");
+		rsDTO.setMemberId("user40");
 
 
 		System.out.println(mrs.searchHotelRevList(rsDTO));
@@ -49,15 +44,44 @@ public class MypageReseveController {
 	
 	
 	
-	  @GetMapping("/hotelRevDetail") 
-	  public String hotelRevDetail(ReserveDetailDTO rdDTO) { 
-		  rdDTO.setMemberId("user2");
+	  @PostMapping("/hotelRevDetail") 
+	  public String hotelRevDetail(ReserveDetailDTO rdDTO,HttpSession session, Model model) { 
+//		  rdDTO.setMemberId(((String)session.getAttribute("memberId")));
+		rdDTO.setMemberId("user40");
 	  System.out.println(rdDTO.getReserveNum());
 	  System.out.println(rdDTO.getMemberId());
+	  System.out.println(rdDTO.getReserveType());
+	  
+	  System.out.println(mrs.searchOneHotelRevDetail(rdDTO));
+	  model.addAttribute("hotelRevDetail",  mrs.searchOneHotelRevDetail(rdDTO));
 	  
 	  
 	  return "/mypage/memberHotelRevDetail";
 	  
+	  }
+	 
+	  @PostMapping("/cancelHotelReserve")
+	  public String cancelHotelReserve(HttpSession session,int reserveNum,Model model) {
+		  String uri="/mypage/memberHotelRevDetail";
+		  System.out.println(reserveNum);
+		  int cnt = mrs.removeHotelReserve(reserveNum);
+		  if(cnt<2) {
+			 model.addAttribute("cancelFlag",true); 
+			  
+			  
+		  }else {
+			  
+			  model.addAttribute("msg","예약취소가 완료되었습니다.");
+			  uri="/mypage/successPage";
+			  
+		  }//end else
+		  
+		  
+		  
+		  return uri;
+		 
+		  
+		  
 	  }
 	 
 	
