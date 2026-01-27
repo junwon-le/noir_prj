@@ -9,14 +9,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.servlet.http.HttpSession;
+import kr.co.noir.login.LoginController;
 import kr.co.noir.login.MemberDTO;
 
 @RequestMapping("/mypage/info")
 @Controller
 public class MyPageInfoController {
+
+    private final LoginController loginController;
 	
 	@Autowired
 	MypageModifySevice mms;
+
+    MyPageInfoController(LoginController loginController) {
+        this.loginController = loginController;
+    }
 	
 //============================회원정보 수정================================	
 	@GetMapping("/passwordCheck")
@@ -98,9 +105,22 @@ public class MyPageInfoController {
 //=====================회원탈퇴============================
 	
 	@GetMapping("/memberLeave")
-	public String memberLeave(HttpSession session) {
+	public String memberLeaveView(HttpSession session) {
 		
 		return "/mypage/memberLeave";
 		
 	}//memberLeave
+
+	@PostMapping("/removeMember")
+	public String removeMember(String password,Model model) {
+		
+		
+		System.out.println(password);
+		/*
+		 * model.addAttribute("msg","회원정보 수정이 완료되었습니다."); String
+		 * uri="/mypage/successPage";
+		 */
+		
+		return "";
+	}//removeMember
 }//class

@@ -329,7 +329,33 @@ $(document).ready(function($) {
         var hotelModal = new bootstrap.Modal(document.getElementById('hotelNotifyModal'));
         hotelModal.show();
     }
-
+    
+    
+    
+    $("#btn").click(function(){
+    	var isChecked=$("#agree").prop("checked");
+    	var password=$("#password").val();
+    	if(!isChecked){
+    		 showHotelAlert("회원탈퇴 유의사항을 확인하신 후<br>동의 체크박스를 클릭해 주세요.");
+    		 return false;
+    	}
+    	if(password==''){
+    		showHotelAlert("본인 확인을 위해<br>비밀번호를 입력해 주세요.");
+			$("#password").focus();   		
+    	
+    		 return false;
+    	}
+    	   var confirmModal = new bootstrap.Modal(document.getElementById('hotelConfirmModal'));
+           confirmModal.show();
+    });
+    
+    $("#Confirmbtn").click(function(){
+    	
+    	$("#passwordFrm").submit();
+    	
+    });//click
+    
+/* 
     // 회원탈퇴 폼 유효성 검사 및 최종 확인 모달 제어
     $('form[action="deleteAccount.do"]').on('submit', function(e) {
         var isChecked = $('input[name="agree"]').is(':checked');
@@ -354,11 +380,11 @@ $(document).ready(function($) {
         var confirmModal = new bootstrap.Modal(document.getElementById('hotelConfirmModal'));
         confirmModal.show();
     });
-
-    // 3. 커스텀 컨펌 모달에서 '최종 탈퇴' 클릭 시 실행
+ */
+/*     // 3. 커스텀 컨펌 모달에서 '최종 탈퇴' 클릭 시 실행
     $('#btnFinalSubmit').on('click', function() {
         $('form[action="deleteAccount.do"]')[0].submit();
-    });
+    }); */
 });
 </script>
 
@@ -410,19 +436,20 @@ $(document).ready(function($) {
                     </div>
                 </div>
 
-                <form action="deleteAccount.do" method="post">
+               <form th:action="@{/mypage/info/removeMember}" method="post" id="passwordFrm">
                     <div class="agree-check">
                         <label>
-                            <input type="checkbox" name="agree"> 
+                            <input type="checkbox" name="agree" id="agree"> 
                             위의 회원탈퇴 유의사항을 모두 확인하였으며, 이에 동의합니다.
                         </label>
                     </div>
-
+				
                     <div class="confirm-wrapper">
-                        <input type="password" name="password" class="pw-input" placeholder="PASSWORD" maxlength="20">
-                        <button type="submit" class="btn-confirm">CONFIRM</button>
+                        <input type="password" id="password" name="password" class="pw-input" placeholder="PASSWORD" maxlength="20">
+                        <!-- <button type="submit" class="btn-confirm">CONFIRM</button> -->
+                        <input type="button" id="btn" class="btn-confirm" value="확인"/> 
                     </div>
-                </form>
+               </form> 
             </div>
         </div>
         
@@ -455,7 +482,13 @@ $(document).ready(function($) {
             </div>
             <div class="modal-footer hotel-modal-footer">
                 <button type="button" class="btn hotel-modal-btn-secondary" data-bs-dismiss="modal">취소</button>
-                <button type="button" id="btnFinalSubmit" class="btn hotel-modal-btn">탈퇴하기</button>
+               <!-- 
+               
+               
+                <button type="button" id="btnFinalSubmit" class="btn hotel-modal-btn">탈퇴하기</button> -->
+<!--                 <from th:action="@{}"> -->
+                <input type="button" id="Confirmbtn" class="btn hotel-modal-btn" value="탈퇴하기"/>
+<!--           	</from>  --> 
             </div>
         </div>
     </div>

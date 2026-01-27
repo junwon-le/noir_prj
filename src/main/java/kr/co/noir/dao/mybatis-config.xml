@@ -49,7 +49,7 @@
     <mapper resource="kr/co/noir/mypage/MypageMapper.xml"/> <!-- select 연습 -->
     <mapper resource="kr/co/noir/mypageInfo/mypageInfoMapper.xml"></mapper>
     <mapper resource="kr/co/noir/mypageReserve/mypageRevMapper.xml"></mapper>
-    <mapper resource="mapper/LoginMemberMapper.xml"/>
-    <mapper resource="mapper/LoginAdminMapper.xml"/>
+     <mapper resource="mapper/LoginMemberMapper.xml"/>
+    <mapper resource="mapper/LoginAdminMapper.xml"/> 
   </mappers>
 </configuration>
