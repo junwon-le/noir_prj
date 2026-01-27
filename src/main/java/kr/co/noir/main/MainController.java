@@ -30,4 +30,30 @@ public class MainController {
 		return "/qna/inquiryList";
 	}
 	
+	@GetMapping("/hotel/about")
+	public String aboutHotel() {
+		return "/hotel/about";
+	}
+	
+	@GetMapping("/hotel/library")
+	public String hotelLibrary() {
+		return "/hotel/library";
+	}
+
+	@GetMapping("/hotel/gym")
+	public String hotelGym() {
+		return "/hotel/gym";
+	}	
+
+	@GetMapping("/hotel/laundry")
+	public String hotelLaundry() {
+		return "/hotel/laundry";
+	}	
+	
+	@GetMapping("/join")
+	public String join() {
+		return "/login/join";
+	}
+
+	
 }
