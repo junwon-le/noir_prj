@@ -11,4 +11,5 @@ public class PasswordCheckDTO {
 
 	private String memberid;
 	private String currentPassword;
+	private String newPassword,ConfirmPassword; 
 }

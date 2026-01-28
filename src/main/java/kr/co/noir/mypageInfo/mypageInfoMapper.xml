@@ -16,6 +16,7 @@
 	
 	<resultMap type="mInfoDomain" id="mInfoDomain">
 	
+		<result column="member_pass" property="pass"/>
 		<result column="member_last_name" property="lastName"/>
 		<result column="member_first_name" property="firstName"/>
 		<result column="member_email" property="email"/>
@@ -28,7 +29,7 @@
 
  	
 	<select id="memberInfo" parameterType="String" resultMap="mInfoDomain" >
-		select member_last_name, member_first_name, member_email, member_tel, member_birth
+		select member_pass,member_last_name, member_first_name, member_email, member_tel, member_birth
 		from member
 		where member_id =#{memberId}
 	</select>
@@ -45,9 +46,11 @@
 		</update>
 	
 	 
-	
-
-	
+	<update id="updatePassword" parameterType="passwordCheckDTO">
+		update member
+		set member_pass=#{newPassword}
+		where member_id = #{memberid}
+	</update>
 </mapper>
 
 

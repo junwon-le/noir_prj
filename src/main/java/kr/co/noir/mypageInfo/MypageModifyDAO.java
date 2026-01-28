@@ -10,20 +10,16 @@ import kr.co.noir.login.MemberDTO;
 @Repository
 public class MypageModifyDAO {
 
-	public boolean selectPasswordCheck(PasswordCheckDTO pcDTO) throws PersistenceException{
+	public String selectPasswordCheck(PasswordCheckDTO pcDTO) throws PersistenceException{
 		
-		boolean flag = false;
 		
-		String password=pcDTO.getCurrentPassword();
-		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(flag);
+		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
 		
 		String pass=ss.selectOne("kr.co.noir.mypageInfo.passwordCheck",pcDTO.getMemberid());
 		
-		flag=pass.equals(password);
-		
-		System.out.println(flag);
+		System.out.println(pass);
 		if(ss!=null) {ss.close();}//end if
-		return flag;
+		return pass;
 	
 	}//selectPasswordCheck
 	
@@ -54,6 +50,23 @@ public class MypageModifyDAO {
 		System.out.println("dao----"+cnt);
 		return cnt;
 	}///updateMemberModify
+	
+	
+	public int updatePassword(PasswordCheckDTO pcDTO) {
+		int cnt =0;
+		
+		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
+		
+		cnt=ss.update("kr.co.noir.mypageInfo.updatePassword",pcDTO);
+		
+		
+		
+		System.out.println("변경내역----------"+cnt);
+		if(ss!=null) {ss.close();}//end if
+		
+		
+		return cnt;
+	}//updatePassword
 	
 	
 }//class

@@ -21,14 +21,10 @@ public class MypageController {
 
 	@GetMapping("/")
 	public String mypageView(HttpSession session, Model model) {
-		String uri="redirect:/main";
+		String uri="/mypage/main";
 		
-//		MemberDTO member= (MemberDTO)session.getAttribute("member");
-		MemberDTO member=new MemberDTO();
-		member.setMemberId("user1");
-		if(member != null&&member.getMemberId()!=null) {
+		String memberId=(String)session.getAttribute("memberId");
 
-			String memberId=member.getMemberId();
 			
 			int hotelRevcnt =mps.searchHotelRevCnt(memberId);
 			int dinningRevcnt =mps.searchDinningRevCnt(memberId);
@@ -42,12 +38,6 @@ public class MypageController {
 			model.addAttribute("dinningRevcnt", dinningRevcnt);
 			model.addAttribute("eventList", eventList);
 			
-			uri="/mypage/main";
-		}//end if
-		
-		
-		
-		
 		return uri;
 	}//mypageView
 	

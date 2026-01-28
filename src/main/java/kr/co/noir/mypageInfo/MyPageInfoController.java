@@ -28,17 +28,7 @@ public class MyPageInfoController {
 //============================회원정보 수정================================	
 	@GetMapping("/passwordCheck")
 	public String passwoadCheck(HttpSession session) {
-		
-		String uri="redirect:/main";
-		
-//		MemberDTO mDTO = (MemberDTO)session.getAttribute("member");
-		MemberDTO mDTO=new MemberDTO();
-		mDTO.setMemberId("user1");
-		if(mms.loginChk(mDTO)) {
-			uri="/mypage/passwordCheck";
-		}//end if
-		
-		return uri; 
+		return "/mypage/passwordCheck";
 	}//passwoadCheck
 	
 	
@@ -46,22 +36,17 @@ public class MyPageInfoController {
 	public String passwordCheckProcess(String userPw,HttpSession session,PasswordCheckDTO pcDTO,Model model) {
 	
 		// 1. 세션 체크 (로그인 안 되어 있으면 즉시 로그인 페이지로)
-//	    MemberDTO mDTO = (MemberDTO)session.getAttribute("member");
-		MemberDTO mDTO=new MemberDTO();
-		mDTO.setMemberId("user1");
-		if (mDTO == null) {
-			return "redirect:/main";
-		}
+	    String userId = (String)session.getAttribute("memberId");
 
 	    // 2. 기본 결과 페이지는 다시 입력 폼으로 설정
 	    String uri = "/mypage/passwordCheck";
 	    
-	    pcDTO.setMemberid(mDTO.getMemberId());
+	    pcDTO.setMemberid(userId);
 	    pcDTO.setCurrentPassword(userPw);
 	    
 	    // 3. 비밀번호 검증 로직
 	    if (mms.searchPasswordCheck(pcDTO)) {
-	    	MemberInfoDomain miDomain = mms.searchMemmberInfo(mDTO.getMemberId());
+	    	MemberInfoDomain miDomain = mms.searchMemmberInfo(userId);
 	    	model.addAttribute("miDomain", miDomain);
 	    	uri = "/mypage/memberModify"; // 맞으면 이동할 페이지 변경
 	    } else {
@@ -76,7 +61,7 @@ public class MyPageInfoController {
 	
 	@PostMapping("/memberModityProcess")
 	public String memberModityProcess(HttpSession session, MemberDTO mDTO,Model model) {
-		mDTO.setMemberId("user1");
+		mDTO.setMemberId((String)session.getAttribute("memberId"));
 		String uri = "/mypage/memberModify";
 		if(mms.modifyMemberInfo(mDTO)) {
 			
@@ -92,12 +77,29 @@ public class MyPageInfoController {
 	
 //====================비밀번호 변경 =========================================
 	
-	
-	
 	@GetMapping("/passwordChangeFrm")	
 	public String passwordModifyFrm(HttpSession session) {
 		return "/mypage/passwordChange";
 	}//passwordModifyFrm
+	
+	@PostMapping("/updatePassword")
+	public String updatePassword(PasswordCheckDTO pcDTO,HttpSession session,Model model) {
+		String uri="/mypage/passwordChange";
+		boolean flag =false;
+		pcDTO.setMemberid((String)session.getAttribute("memberId"));
+		
+		flag=mms.modifyPassword(pcDTO);
+		System.out.println(pcDTO);
+		if(flag) {
+			model.addAttribute("msg","비밀번호 수정이 완료되었습니다.");
+			return"/mypage/successPage";
+		}else {
+			model.addAttribute("flag",flag);
+			model.addAttribute("pcDTO", pcDTO);
+		}//end else
+		
+		 return uri;
+	}//updatePassword
 	
 	
 	
