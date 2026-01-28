@@ -34,9 +34,8 @@
 		<result column="room_amenity3" property="roomAmenity3"/>
 		<result column="room_amenity4" property="roomAmenity4"/>
 		<result column="room_amenity5" property="roomAmenity5"/>
-			
 		
-			
+					
 	</resultMap> 
 
 
@@ -95,6 +94,87 @@
 			</otherwise>		
 		</choose>
 		</select>	
+		
+		<select id="roomList" resultMap="roomSelect">
+		select room_type_num,room_detail, room_type, room_img1, room_img2, room_img3, room_img4, room_img5, room_area, room_bad_type,
+		 room_max_person, room_check_in, room_check_out from room_info
+		</select>	
+		
+		<resultMap type="roomPriceDomain" id="roomPriceSelect">
+		<result column="room_type_num" property="roomTypeNum"/>
+		<result column="room_price" property="roomPrice"/>
+		<result column="room_date" property="roomPriceDate"/>
+		</resultMap>
+		
+		<select id="roomPriceTodayList" resultMap="roomPriceSelect">
+			select room_type_num, room_date, room_price
+			from room_price
+			where room_date=to_char(sysdate,'yyyy-mm-dd')
+		</select>	
+		
+		<select id="roomPriceList" parameterType="String" resultMap="roomPriceSelect">
+		select room_type_num, room_date, room_price
+		from room_price
+		where room_date= #{roomPriceDate}
+		</select>	
+		
+		
+		<select id="selectMonthRoom" parameterType="RoomPriceDTO" resultMap="roomPriceSelect">
+    	SELECT * FROM room_price 
+    	WHERE room_type_num=#{roomTypeNum} and INSTR(room_date, #{roomPriceDate}) = 1
+		</select>				
+		
+		
+		<update id="roomModify" parameterType="RoomDTO">
+		update room_info 
+    	<set>
+        <if test="roomImg1 != null">
+            room_img1 = #{roomImg1},
+        </if>
+        <if test="roomImg2 != null">
+            room_img2 = #{roomImg2},
+        </if>
+        <if test="roomImg3 != null">
+            room_img3 = #{roomImg3},
+        </if>
+        <if test="roomImg4 != null">
+            room_img4 = #{roomImg4},
+        </if>
+        <if test="roomImg5 != null">
+            room_img5 = #{roomImg5},
+        </if>
+        <if test="roomBadType != null">
+		room_bad_type=#{roomBadType},
+		</if>
+        <if test="roomCheckIn != null">
+		room_check_in=#{roomCheckIn},
+		</if>
+        <if test="roomCheckOut != null">
+		room_check_out=#{roomCheckOut}
+		</if>
+		</set>								
+		where room_type_num=#{roomTypeNum}
+		</update>
+		
+		<update id="amenityModify" parameterType="RoomDTO">
+		update room_amenity
+		set room_amenity1=#{roomAmenity1},room_amenity2=#{roomAmenity2},room_amenity3=#{roomAmenity3},room_amenity4=#{roomAmenity4},room_amenity5=#{roomAmenity5}
+		where room_type_num=#{roomTypeNum} 
+		</update>
+		
+		<update id="roomServiceModify" parameterType="RoomDTO">
+		update room_service
+		set room_service_1=#{roomService1},room_service_2=#{roomService2},room_service_3=#{roomService3},room_service_4=#{roomService4},room_service_5=#{roomService5},
+		room_service_6=#{roomService6},room_service_7=#{roomService7},room_service_8=#{roomService8},room_service_9=#{roomService9},room_service_10=#{roomService10}
+		where room_type_num=#{roomTypeNum} 
+		</update>
+		
+		
+		
+		
+		
+		
+	
 </mapper>
 
 

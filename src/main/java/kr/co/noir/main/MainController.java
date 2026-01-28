@@ -1,5 +1,4 @@
 package kr.co.noir.main;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -21,46 +20,40 @@ public class MainController {
 		return "manager/main/adminMain";
 	}
 	
-	@GetMapping("/admin/dinningMgr")
-	public String dinningMgr() {
-		return "manager/dinning/dinningManage";
+	@GetMapping("/noticeList")
+	public String notice_list() {
+		return "/notice/noticeList";
 	}
-	@GetMapping("/admin/adminRoom")
-	public String admin_room() {
-		return "manager/room/roomManagePrice";
-	}
-	
 
+	@GetMapping("/inquiryList")
+	public String inquiry_list() {
+		return "/qna/inquiryList";
+	}
+	
+	@GetMapping("/hotel/about")
+	public String aboutHotel() {
+		return "/hotel/about";
+	}
+	
+	@GetMapping("/hotel/library")
+	public String hotelLibrary() {
+		return "/hotel/library";
+	}
+
+	@GetMapping("/hotel/gym")
+	public String hotelGym() {
+		return "/hotel/gym";
+	}	
+
+	@GetMapping("/hotel/laundry")
+	public String hotelLaundry() {
+		return "/hotel/laundry";
+	}	
+	
+	@GetMapping("/join")
+	public String join() {
+		return "/login/join";
+	}
 
 	
-	/*
-	 @GetMapping("/dinning") 
-	 public String Dinning() { 
-		  return "/dinning/dinning";
-	  }
-	
-	@GetMapping("/dinningDetail")
-	public String DinningDetail() {
-		return "/dinning/dinningDetail";
-	}
-	
-	@GetMapping("/hotelRev")
-	public String hotelRev() {
-		return "/manager/hotel_rev/hotelRev";
-	}
-	
-	@GetMapping("/hotelRevDetail")
-	public String hotelRevDetail() {
-		return "/manager/hotel_rev/hotelRev_detail";
-	}
-	@GetMapping("/dinningRev")
-	public String dinningRev() {
-		return "/manager/dinning_rev/dinningRev";
-	}
-	
-	@GetMapping("/dinningRevDetail")
-	public String dinningRevDetail() {
-		return "/manager/dinning_rev/dinningRev_detail";
-	}
-*/
 }

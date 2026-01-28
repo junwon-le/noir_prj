@@ -4,34 +4,34 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.servlet.http.HttpSession;
 
-
+@RequestMapping("/admin")
 @Controller
 public class AdminController {
 
 	@Autowired
 	private AdminService adminService;
 	
-	@GetMapping("/admin/login")
+	@GetMapping("/login")
 	public String login() {
 		return "adminLogin";
 	}
 
-	@GetMapping("/admin/dashboard")
+	@GetMapping("/dashboard")
 	public String dashboard() {
 		return "adminDashboard";
 	}
 	
-	@PostMapping("/admin/login")
+	@PostMapping("/login")
 	public String loginProcess(@RequestParam("adminId") String adminId,
 			@RequestParam("adminPass") String adminPass,
 			HttpSession session) {
 		
 		AdminDTO admin = adminService.login(adminId, adminPass);
-		System.out.println(adminId +" / " + adminPass +" / " +  admin);
 		
 		if (admin != null) {
 			

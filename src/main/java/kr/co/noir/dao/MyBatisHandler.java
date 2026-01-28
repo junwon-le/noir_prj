@@ -3,11 +3,13 @@ package kr.co.noir.dao;
 import java.io.IOException;
 import java.io.Reader;
 
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
+@Mapper
 public class MyBatisHandler {
 	private static MyBatisHandler mbh;	
 	private static SqlSessionFactory ssf;

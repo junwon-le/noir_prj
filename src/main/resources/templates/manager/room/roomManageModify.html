@@ -47,7 +47,43 @@
     <script src="/admin_common/js/flot/flot-active.js"></script>
     <script src="/admin_common/js/plugins.js"></script>
     <script src="/admin_common/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/javascript">
+$(function(){
+
+	
+	$('#roomImgFile1').change(function(e) {
+        var file = e.target.files[0];
+        if (file) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                // 선택한 이미지로 src 변경 (미리보기)
+                $('#roomImgPreview1').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+	
+	$("#modfiyBtn").click(function(){
+		$("#frm").submit();
+	});
+	
+	$("#cancleBtn").click(function(){
+		history.back();
+	});
+})
+</script>
+
 </head>
+
+
+
+
 
 <body>
     <div th:replace="~{manager/fragments/sidebar :: sidebar}"></div>  
@@ -73,24 +109,36 @@
         </div>
 
         <div class="contatiner" style="height:850px; color:#ffffff">
+        <form id="frm" th:action="@{/admin/roomModifyProcess}" enctype="multipart/form-data" method="post">
             <div>
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="display:flex; margin-left:20px;" >
                     <div style="height:200px; width:18%; margin-top:30px; margin-left:20px">
-                        <img src="/admin_common/img/room/bg01.jpg" style="height: 100%; width: 100%; object-fit: cover;">
+                        <img th:src="@{|/common/images/homepage/${room.roomImg1}|}" style="cursor:pointer; height: 100%; width: 100%; object-fit: cover;"
+                        onclick="$('#roomImgFile1').click();" id="roomImgPreview1">
+                        <input type="file" id="roomImgFile1" name="roomImgFile1" style="display: none;" accept="image/*">
                     </div>
                     <div style="height:200px; width:18%; margin-top:30px; margin-left:30px">
-                        <img src="/admin_common/img/room/bg01.jpg" style="height: 100%; width: 100%; object-fit: cover;">
+                        <img th:src="@{|/common/images/homepage/${room.roomImg2}|}" style="cursor:pointer; height: 100%; width: 100%; object-fit: cover;"
+                        onclick="$('#roomImgFile2').click();" id="roomImgPreview2">
+                        <input type="file" id="roomImgFile2" name="roomImgFile2" style="display: none;" accept="image/*">
                     </div>
                     <div style="height:200px; width:18%; margin-top:30px; margin-left:30px">
-                        <img src="/admin_common/img/room/bg01.jpg" style="height: 100%; width: 100%; object-fit: cover;">
+                        <img th:src="@{|/common/images/homepage/${room.roomImg3}|}" style="cursor:pointer; height: 100%; width: 100%; object-fit: cover;"
+                        onclick="$('#roomImgFile3').click();" id="roomImgPreview3">
+                        <input type="file" id="roomImgFile3" name="roomImgFile3" style="display: none;" accept="image/*">
                     </div>
                     <div style="height:200px; width:18%; margin-top:30px; margin-left:30px">
-                        <img src="/admin_common/img/room/bg01.jpg" style="height: 100%; width: 100%; object-fit: cover;">
+                        <img th:src="@{|/common/images/homepage/${room.roomImg4}|}" style="cursor:pointer; height: 100%; width: 100%; object-fit: cover;"
+                        onclick="$('#roomImgFile4').click();" id="roomImgPreview4">
+                        <input type="file" id="roomImgFile4" name="roomImgFile4" style="display: none;" accept="image/*">
                     </div>
                     <div style="height:200px; width:18%; margin-top:30px; margin-left:30px">
-                        <img src="/admin_common/img/room/bg01.jpg" style="height: 100%; width: 100%; object-fit: cover;">
+                        <img th:src="@{|/common/images/homepage/${room.roomImg5}|}" style="cursor:pointer; height: 100%; width: 100%; object-fit: cover;"
+                        onclick="$('#roomImgFile5').click();" id="roomImgPreview5">
+                        <input type="file" id="roomImgFile5" name="roomImgFile5" style="display: none;" accept="image/*">
                     </div>
                 </div>
+                <input type="hidden" name="num" th:value="${param.num}">
 
                 <div class="breadcome-list" style="margin-left:35px; width:1655px; border-radius: 20px;">
                     <div style="
@@ -112,20 +160,20 @@
                             <div style="flex: 2; background: #f0f4ff; padding: 15px 20px; border-radius: 12px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.05); display: flex; flex-direction: column; justify-content: center;">
                                 <h4 style="margin:0 0 12px; color: #2a3a6b; font-weight: 600; font-size: 14px; text-align: center;">어매니티</h4>
                                 <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; align-items: center;">
-                                    <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox" style="width: 16px; height: 16px;"> 배스용품</label>
-                                    <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox" style="width: 16px; height: 16px;"> 배스타월</label>
-                                    <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox" style="width: 16px; height: 16px;"> 배스로브</label>
-                                    <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox" style="width: 16px; height: 16px;"> 헤어드라이어</label>
-                                    <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox" style="width: 16px; height: 16px;"> 체중계</label>
+                                    <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox" style="width: 16px; height: 16px;" th:checked="${room.roomAmenity1 == 'Y'}" name="roomAmenity1"> 배스용품</label>
+                                    <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox" style="width: 16px; height: 16px;" th:checked="${room.roomAmenity2 == 'Y'}" name="roomAmenity2"> 배스타월</label>
+                                    <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox" style="width: 16px; height: 16px;" th:checked="${room.roomAmenity3 == 'Y'}" name="roomAmenity3"> 배스로브</label>
+                                    <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox" style="width: 16px; height: 16px;" th:checked="${room.roomAmenity4 == 'Y'}" name="roomAmenity4"> 헤어드라이어</label>
+                                    <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox" style="width: 16px; height: 16px;" th:checked="${room.roomAmenity5 == 'Y'}" name="roomAmenity5"> 체중계</label>
                                 </div>
                             </div>
                             <div style="flex: 1; background: #f0f4ff; border-radius: 10px; padding: 15px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.1); display: flex; flex-direction: column; justify-content: center;">
                                 <h4 style="margin:0 0 10px; color:#2a3a6b; font-weight:600; font-size:14px; text-align: center;">베드 타입</h4>
-                                <select id="bedType" class="form-control" style="width: 100%; background-color: white; color: #000000; border: 1px solid #ccc; border-radius: 5px; padding: 6px; font-size: 14px; font-weight: 500; cursor: pointer;">
-                                    <option value="KING">KING</option>
-                                    <option value="2_SUPER_SINGLE">2 SUPER SINGLE</option>
-                                    <option value="2_QUEEN">2 QUEEN</option>
-                                    <option value="1_KING_1_SOFA_BED">1 KING 1 SOFA BED</option>
+                                <select name="bedType" id="bedType" class="form-control" style="width: 100%; background-color: white; color: #000000; border: 1px solid #ccc; border-radius: 5px; padding: 6px; font-size: 14px; font-weight: 500; cursor: pointer;">
+                                    <option value="KING" th:selected="${room.roomBadType=='KING'}">KING</option>
+                                    <option value="2 SUPER SINGLE" th:selected="${room.roomBadType=='2 SUPER SINGLE'}">2 SUPER SINGLE</option>
+                                    <option value="2 QUEEN" th:selected="${room.roomBadType=='2 QUEEN'}">2 QUEEN</option>
+                                    <option value="1 KING 1 SOFA BED" th:selected="${room.roomBadType=='1 KING 1 SOFA BED'}">1 KING 1 SOFA BED</option>
                                 </select>
                             </div>
                         </div>
@@ -134,27 +182,27 @@
                             <div style="flex: 2; background: #f0f4ff; padding: 15px 20px; border-radius: 12px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.05);">
                                 <h4 style="margin:0 0 15px; color: #2a3a6b; font-weight: 600; font-size: 14px; text-align: center;">객실 서비스</h4>
                                 <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px 8px; justify-items: start; align-items: center;">
-                                    <label style="display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox"> 레스토랑</label>
-                                    <label style="display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox"> 라운지</label>
-                                    <label style="display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox"> 실내수영장</label>
-                                    <label style="display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox"> 디지털채팅</label>
-                                    <label style="display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox"> 피트니스</label>
-                                    <label style="display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox"> 세탁서비스</label>
-                                    <label style="display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox"> 무료WiFi</label>
-                                    <label style="display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox"> 룸서비스</label>
-                                    <label style="display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox"> 컨시어지</label>
-                                    <label style="display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox"> 하우스키핑</label>
+                                    <label style="display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox" th:checked="${room.roomService1 == 'Y'}" name="roomService1"> 레스토랑</label>
+                                    <label style="display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox" th:checked="${room.roomService2 == 'Y'}" name="roomService2"> 라운지</label>
+                                    <label style="display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox" th:checked="${room.roomService3 == 'Y'}" name="roomService3"> 실내수영장</label>
+                                    <label style="display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox" th:checked="${room.roomService4 == 'Y'}" name="roomService4"> 디지털채팅</label>
+                                    <label style="display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox" th:checked="${room.roomService5 == 'Y'}" name="roomService5"> 피트니스</label>
+                                    <label style="display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox" th:checked="${room.roomService6 == 'Y'}" name="roomService6"> 세탁서비스</label>
+                                    <label style="display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox" th:checked="${room.roomService7 == 'Y'}" name="roomService7"> 무료WiFi</label>
+                                    <label style="display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox" th:checked="${room.roomService8 == 'Y'}" name="roomService8"> 룸서비스</label>
+                                    <label style="display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox" th:checked="${room.roomService9 == 'Y'}" name="roomService9"> 컨시어지</label>
+                                    <label style="display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; color: #333; cursor: pointer;"><input type="checkbox" th:checked="${room.roomService10 == 'Y'}" name="roomService10"> 하우스키핑</label>
                                 </div>
                             </div>
                             <div style="flex: 1; background: #f0f4ff; border-radius: 12px; padding: 15px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.08); display: flex; flex-direction: column; justify-content: center;">
                                 <h4 style="margin:0 0 10px; color:#2a3a6b; font-weight:600; font-size:13px; text-align: center;">체크인/아웃 시간</h4>
                                 <div style="display: flex; align-items: center; gap: 8px;">
-                                    <select id="checkInTime" style="flex: 1; background-color: white; color: #000000; border: 1px solid #ccc; border-radius: 5px; padding: 6px 2px; font-size: 13px; font-weight: 500; cursor: pointer; text-align: center;">
-                                        <option value="15:00" selected>15:00</option>
+                                    <select name="roomCheckIn" id="checkInTime" style="flex: 1; background-color: white; color: #000000; border: 1px solid #ccc; border-radius: 5px; padding: 6px 2px; font-size: 13px; font-weight: 500; cursor: pointer; text-align: center;">
+                                        <option th:value="${room.roomCheckIn}" th:text="${room.roomCheckIn}" selected></option>
                                     </select>
                                     <span style="color: #2a3a6b; font-weight: bold; font-size: 14px; opacity: 0.5;">/</span>
-                                    <select id="checkOutTime" style="flex: 1; background-color: white; color: #000000; border: 1px solid #ccc; border-radius: 5px; padding: 6px 2px; font-size: 13px; font-weight: 500; cursor: pointer; text-align: center;">
-                                        <option value="11:00" selected>11:00</option>
+                                    <select name="roomCheckOut" id="checkOutTime" style="flex: 1; background-color: white; color: #000000; border: 1px solid #ccc; border-radius: 5px; padding: 6px 2px; font-size: 13px; font-weight: 500; cursor: pointer; text-align: center;">
+                                        <option th:value="${room.roomCheckOut}" th:text="${room.roomCheckOut}" selected></option>
                                     </select>
                                 </div>
                             </div>
@@ -162,7 +210,7 @@
 
                         <div style="width:100%; background: #f0f4ff; padding: 15px; border-radius: 12px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.05); display: flex; flex-direction: column;">
                             <h4 style="margin: 0 0 10px 5px; color: #2a3a6b; font-weight: 600; font-size: 14px; text-align: left;">소개글</h4>
-                            <textarea id="introText" placeholder="여기에 객실 소개글을 입력하세요..." style="
+                            <textarea id="introText" name="roomDetail" placeholder="여기에 객실 소개글을 입력하세요..." style="
                                 width: 100%;
                                 min-height: 100px; 
                                 padding: 10px;
@@ -175,16 +223,17 @@
                                 box-sizing: border-box;
                                 outline: none;
                                 line-height: 1.5;
-                            "></textarea>
+                            " th:text=${room.roomDetail}></textarea>
                         </div>
 
                         <div style="display: flex; gap: 15px; justify-content: flex-end; margin-top: 10px; border-top: 1px solid #eee; padding-top: 20px;">
-                            <button style="padding: 10px 35px; border: 2px solid #7495CC; border-radius: 10px; background-color: white; color: #7495CC; font-weight: 600; cursor: pointer; font-size: 15px; transition: all 0.3s ease;" onmouseover="this.style.backgroundColor='#f0f4ff';" onmouseout="this.style.backgroundColor='white';">취소</button>
-                            <button style="padding: 10px 35px; border: none; border-radius: 10px; background-color: #7495CC; color: white; font-weight: 600; cursor: pointer; font-size: 15px; box-shadow: 0 3px 8px rgba(116, 149, 204, 0.3); transition: background-color 0.3s ease;" onmouseover="this.style.backgroundColor='#6482FF';" onmouseout="this.style.backgroundColor='#7495CC';">수정</button>
+                            <button style="padding: 10px 35px; border: 2px solid #7495CC; border-radius: 10px; background-color: white; color: #7495CC; font-weight: 600; cursor: pointer; font-size: 15px; transition: all 0.3s ease;" onmouseover="this.style.backgroundColor='#f0f4ff';" onmouseout="this.style.backgroundColor='white';" id="cancelBtn">취소</button>
+                            <button style="padding: 10px 35px; border: none; border-radius: 10px; background-color: #7495CC; color: white; font-weight: 600; cursor: pointer; font-size: 15px; box-shadow: 0 3px 8px rgba(116, 149, 204, 0.3); transition: background-color 0.3s ease;" onmouseover="this.style.backgroundColor='#6482FF';" id="modfiyBtn" onmouseout="this.style.backgroundColor='#7495CC';">수정</button>
                         </div>
                     </div>
                 </div>
             </div>
+            </form>
         </div>
         <div th:replace="~{manager/fragments/footer :: footer}"></div>  
     </div>
