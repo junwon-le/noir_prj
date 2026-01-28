@@ -55,7 +55,7 @@
 
 <script type="text/javascript">
 $(function(){
-if("[[${flag}]]"){
+if("[[${cnt eq 3}]]"){
 alert("변경에 성공했습니다.");
 location.href = "/admin/roomMgr?date=[[${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}]]";
 }else{

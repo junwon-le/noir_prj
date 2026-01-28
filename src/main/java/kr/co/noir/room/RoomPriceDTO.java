@@ -9,6 +9,6 @@ import lombok.ToString;
 @Getter
 @ToString
 public class RoomPriceDTO {
-	private String roomPriceDate;
-	private int roomPrice,roomTypeNum;
+	private String roomPriceDate, roomPriceMonth;
+	private Integer roomPrice,roomTypeNum;
 }

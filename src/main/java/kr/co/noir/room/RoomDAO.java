@@ -128,5 +128,20 @@ public class RoomDAO {
 		return cnt;
 	}
 	
-	
+	public int updateRoomPrice(RoomPriceDTO rpDTO) {
+		int cnt = 0;
+		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
+		cnt = ss.update("kr.co.noir.room.roomPriceModify",rpDTO);
+		if(cnt==1) {
+			ss.commit();			
+		}else {
+			ss.rollback();
+		}
+		
+		if(ss!=null) {
+			ss.close();			
+		}
+		
+		return cnt;
+	}
 }
