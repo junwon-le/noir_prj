@@ -6,6 +6,8 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface MemberMapper { 
     
+	LoginMemberDomain selectOneUserInfo(String memberId);
+    
     // 로그인: 아이디와 비밀번호로 회원 조회
     MemberDTO login(@Param("memberId") String memberId, @Param("memberPass") String memberPass);
 
@@ -16,12 +18,11 @@ public interface MemberMapper {
 
     /**
      * 비밀번호 재설정 전 사용자 정보 일치 여부 확인
-     * @return 일치하는 행의 개수 (1이면 존재, 0이면 없음)
      */
-    int checkUserForPasswordReset(@Param("memberId") String memberId, 
-                                  @Param("memberLastName") String memberLastName, 
-                                  @Param("memberFirstName") String memberFirstName, 
-                                  @Param("memberEmail") String memberEmail);
+    // 	리턴타입      메서드명(매개변수들...)
+    MemberDTO checkUserForReset(@Param("memberId") String memberId, 
+                                        @Param("memberLastName") String memberLastName, 
+                                        @Param("memberFirstName") String memberFirstName);
     
     // 비밀번호 변경: 아이디를 기준으로 새 비밀번호 업데이트
     int updatePassword(@Param("memberId") String memberId, @Param("newPw") String newPw);
