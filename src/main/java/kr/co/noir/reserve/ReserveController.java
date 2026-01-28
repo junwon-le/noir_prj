@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.servlet.http.HttpSession;
-import kr.co.noir.login.MemberDTO;
 
 @RequestMapping("/reserve")
 @Controller
@@ -38,7 +37,7 @@ public class ReserveController {
 	}
 	
 	@GetMapping("/roomResSearch")
-	public String roomResSearch(RoomSearchDTO rsDTO, Model model) {
+	public String roomResSearch() {
 		return "/reserve/roomResSearch";
 	}
 	
