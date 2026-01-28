@@ -68,6 +68,18 @@ public class MypageModifyDAO {
 		return cnt;
 	}//updatePassword
 	
+	public boolean removeMember(PasswordCheckDTO pcDTO) throws PersistenceException{
+		int cnt =0;
+
+		SqlSession ss= MyBatisHandler.getInstance().getMyBatisHandler(true);
+		cnt=ss.update("kr.co.noir.mypageInfo.removeMember",pcDTO);
+		
+		if(ss!=null) {ss.close();}//end if
+		return cnt==1;
+		
+		
+	}//removeMember
+	
 	
 }//class
 

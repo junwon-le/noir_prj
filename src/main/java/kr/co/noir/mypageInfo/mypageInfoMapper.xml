@@ -51,6 +51,13 @@
 		set member_pass=#{newPassword}
 		where member_id = #{memberid}
 	</update>
+	
+	
+	<update id="removeMember" parameterType="passwordCheckDTO">
+		update member
+		set member_id='',member_pass='',member_email='',member_tel='',member_ip='',member_first_name='',member_last_name='',member_birth=''
+		where member_id=#{memberid}
+	</update>
 </mapper>
 
 

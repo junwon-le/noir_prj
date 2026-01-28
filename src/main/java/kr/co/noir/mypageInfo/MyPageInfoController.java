@@ -16,15 +16,11 @@ import kr.co.noir.login.MemberDTO;
 @Controller
 public class MyPageInfoController {
 
-    private final LoginController loginController;
 	
 	@Autowired
 	MypageModifySevice mms;
 
-    MyPageInfoController(LoginController loginController) {
-        this.loginController = loginController;
-    }
-	
+
 //============================회원정보 수정================================	
 	@GetMapping("/passwordCheck")
 	public String passwoadCheck(HttpSession session) {
@@ -35,7 +31,6 @@ public class MyPageInfoController {
 	@PostMapping("/passwordCheckProcess")
 	public String passwordCheckProcess(String userPw,HttpSession session,PasswordCheckDTO pcDTO,Model model) {
 	
-		// 1. 세션 체크 (로그인 안 되어 있으면 즉시 로그인 페이지로)
 	    String userId = (String)session.getAttribute("memberId");
 
 	    // 2. 기본 결과 페이지는 다시 입력 폼으로 설정
@@ -91,6 +86,7 @@ public class MyPageInfoController {
 		flag=mms.modifyPassword(pcDTO);
 		System.out.println(pcDTO);
 		if(flag) {
+			session.invalidate();
 			model.addAttribute("msg","비밀번호 수정이 완료되었습니다.");
 			return"/mypage/successPage";
 		}else {
@@ -112,17 +108,33 @@ public class MyPageInfoController {
 		return "/mypage/memberLeave";
 		
 	}//memberLeave
-
+	
 	@PostMapping("/removeMember")
-	public String removeMember(String password,Model model) {
+	public String removeMember(PasswordCheckDTO pcDTO,HttpSession session,Model model) {
 		
 		
-		System.out.println(password);
-		/*
-		 * model.addAttribute("msg","회원정보 수정이 완료되었습니다."); String
-		 * uri="/mypage/successPage";
-		 */
-		
-		return "";
+		String userId = (String)session.getAttribute("memberId");
+
+	    // 2. 기본 결과 페이지는 다시 입력 폼으로 설정
+	    String uri = "/mypage/memberLeave";
+	    
+	    pcDTO.setMemberid(userId);
+	    
+	    // 3. 비밀번호 검증 로직
+	    if (mms.searchPasswordCheck(pcDTO)) {
+	    	
+	    	boolean flag=mms.removeMember(pcDTO);
+	    	if(flag) {
+	    		session.invalidate();
+	    		model.addAttribute("msg","회원탈퇴가 정상적으로 완료되었습니다.");
+	    		return"/mypage/successPage";
+	    	}else {
+	    		model.addAttribute("flag", true); // 틀리면 경고용 플래그 전달
+	    	}//end else
+	    } else {
+	        model.addAttribute("flag", true); // 틀리면 경고용 플래그 전달
+	    }//end else
+	    
+	    return uri;
 	}//removeMember
 }//class

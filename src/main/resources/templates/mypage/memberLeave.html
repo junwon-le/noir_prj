@@ -312,6 +312,13 @@ height:auto;
 /* 스크립트 상단 배치 */
 var CONTEXT = '';
 $(document).ready(function($) {
+	
+	var flag=[[${flag==true}]];
+	if(flag){
+		showHotelAlert("비밀번호가 일치하기 않습니다.");
+		
+	}//end if
+	
     // 기존 모달 로직
     $('.open_modal').click(function(e) {    	
         $("iframe").attr("src", $(this).attr('url')).show();        	
@@ -445,7 +452,7 @@ $(document).ready(function($) {
                     </div>
 				
                     <div class="confirm-wrapper">
-                        <input type="password" id="password" name="password" class="pw-input" placeholder="PASSWORD" maxlength="20">
+                        <input type="password" id="password" name="currentPassword" class="pw-input" placeholder="PASSWORD" maxlength="20">
                         <!-- <button type="submit" class="btn-confirm">CONFIRM</button> -->
                         <input type="button" id="btn" class="btn-confirm" value="확인"/> 
                     </div>

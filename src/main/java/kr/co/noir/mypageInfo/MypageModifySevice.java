@@ -123,4 +123,23 @@ public class MypageModifySevice {
 		
 		
 	}//modifyPassword
+	
+	public boolean removeMember(PasswordCheckDTO pcDTO) {
+		boolean flag=false;
+		
+		try {
+			flag=mmDAO.removeMember(pcDTO);
+			
+			
+		}catch (PersistenceException pe) {
+			pe.printStackTrace();
+		}//end catch
+		
+		
+		return flag;
+		
+		
+	}//removeMember
+	
+	
 }//class
