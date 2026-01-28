@@ -28,8 +28,6 @@
 		<typeAlias type="kr.co.noir.reserve.RoomSearchDomain" alias="roomSearchDomain"/><!-- 방 검색 -->		
 		<typeAlias type="kr.co.noir.reserve.RoomSearchDTO" alias="roomSearchDTO"/><!-- 방 검색 -->
 		<typeAlias type="kr.co.noir.reserve.MemberDomain" alias="memberDomain"/><!-- 회원 정보 채우기 -->
-		<!-- 박진규 사용 -->
-        <typeAlias type="kr.co.noir.login.MemberDTO" alias="MemberDTO"/>
     </typeAliases>
 	
   	<environments default="development">
@@ -52,5 +50,6 @@
     <mapper resource="kr/co/noir/mypageReserve/mypageRevMapper.xml"></mapper>
      <mapper resource="mapper/LoginMemberMapper.xml"/>
     <mapper resource="mapper/LoginAdminMapper.xml"/> 
+    <mapper resource="mapper/LoginMapper.xml"/>
   </mappers>
 </configuration>

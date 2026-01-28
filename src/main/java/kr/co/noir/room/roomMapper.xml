@@ -170,6 +170,12 @@
 		</update>
 		
 		
+		<update id="roomPriceModify" parameterType="RoomPriceDTO">
+		update room_price
+		set room_price=#{roomPrice}
+		where room_date=#{roomPriceDate}
+		</update>
+		
 		
 		
 		

@@ -10,6 +10,7 @@ import java.time.YearMonth;
 import java.util.List;
 import java.util.UUID;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -199,13 +200,16 @@ public class RoomController {
 		
 		
 		
-		return "/manager/room/roomManage";
+		return "/manager/room/roomMgrModifyProcess";
 	}
+	
+	
+	
 	
 	@GetMapping("/admin/roomManagePrice")
 	public String roomPrice() {
 		
-		return "/manager/room/roomManagePrice.html";
+		return "/manager/room/roomManagePrice";
 	}
 	
 	
@@ -230,6 +234,55 @@ public class RoomController {
 	    return jsonObj;
 	}
 	
+	@GetMapping("/admin/roomManagePriceProcess")
+	public String roomManagePriceProcess(@RequestParam("roomPrices") List<Integer> roomPriceList, @RequestParam("roomPriceDates") List<Integer> roomPriceDate, RoomPriceDTO rDTO, Model model) {
+		
+		int cnt=0;
+		JSONArray jsonArr = new JSONArray();
+		String msg ="실패";
+		  for(int i=0; i<roomPriceList.size(); i++) { 
+			  JSONObject jsonObj = new JSONObject();
+			  if(i<9) {
+				  jsonObj.put("date", rDTO.getRoomPriceMonth()+"-0"+(i+1));
+			  }else {
+				  jsonObj.put("date", rDTO.getRoomPriceMonth()+"-"+(i+1));
+			  }
+			  
+			  jsonObj.put("price", rDTO.getRoomPrice());			  
+			  
+			   
+			  for(int j=0; j<roomPriceDate.size();j++) {				  
+				  if(roomPriceDate.get(j)==i+1) {
+					  jsonObj.put("flag", "on");
+					  jsonArr.add(jsonObj);
+					  break;
+				  }
+			  }
+		  }
+		  
+		  
+		  for(int i=0; i<jsonArr.size();i++) {
+			  JSONObject obj = new JSONObject();
+			  obj = (JSONObject)jsonArr.get(i);
+			  String parseDate = (String)obj.get("date");
+			  Integer parsePrice = (Integer)obj.get("price");
+			  RoomPriceDTO rpDTO = new RoomPriceDTO();
+			  rpDTO.setRoomPriceDate(parseDate);
+			  rpDTO.setRoomPrice(parsePrice);
+			  
+			  cnt = rService.modfiyRoomPrice(rpDTO);
+			  if(cnt==1) {
+				  msg="성공";
+			  }
+		  }
+		  
+		  model.addAttribute("msg",msg);
+		  model.addAttribute("num",rDTO.getRoomTypeNum());
+		  
+		  
+		  
+		return "/manager/room/roomManagePriceProcess";
+	}
 	
 	
 	

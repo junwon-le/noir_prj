@@ -136,6 +136,10 @@ vertical-align: top;
 }
 
 
+.price{
+border:0px solid #333;
+
+}
 
 
 </style>
@@ -143,12 +147,26 @@ vertical-align: top;
 <script>
 
 $(function(){
+	
+	$(".sel").change(function () {
+		if ($(this).prop("checked")) {
+		    $(".sel").not(this).prop("checked", false);
+	    }
+	});
+	
+	
+	
 	$("#modifyBtn").click(function(){
-		$("#frm").submit();
+		
+			$("#frm").submit();
+		
 	})
 	
 	$("#allSel").change(function(){
-		$(".holiday, .workday").prop("checked", false);
+		if ($("#allSel").is(":checked")) {
+		    $(".holiday, .workday").prop("checked", false);
+		}
+		
 		
 		$(".holiday").prop("checked", function(i,ele){
 			return !ele;
@@ -158,39 +176,49 @@ $(function(){
 		$(".workday").prop("checked", function(i,ele){
 			return !ele;
 		});
+						
 	});
 	
 	$("#holSel").change(function(){
-		$(".holiday, .workday").prop("checked", false);
-		$(".holiday").prop("checked", function(i,ele){
-			return !ele;
-		});
+	    if ($(this).is(":checked")) {
+	        $(".holiday, .workday").prop("checked", false);
+	        $(".holiday").prop("checked", true);
+	    } else {
+	        $(".holiday").prop("checked", false);
+	    }
 	});
 	
-	$("#workSel").change(function(){
-		$(".holiday, .workday").prop("checked", false);
-		$(".workday").prop("checked", function(i,ele){
-			return !ele;
-		});
+	$("#workSel").change(function () {
+	    resetAll();
+
+	    if (this.checked) {
+	        $(".workday").prop("checked", true);
+	    }
 	});
 	
-	
+	function resetAll() {
+	    $(".holiday, .workday").prop("checked", false);
+	}
+
+	$("#cancelBtn").click(function(){
+		history.back();
+	})
 	
 	
 	
 	var today = new Date();
 	var year = today.getFullYear();
 	var month = today.getMonth()+1;
-	var roomTypeNum = $("#num").val();
+	var roomTypeNum = $("#roomTypeNum").val();
 	var selectedDay = year+"-0"+month;
 	if(month>9){
 		selectedDay = year+"-"+month;
 	}
 	
-	$("#month").val(selectedDay);
+	$("#roomPriceMonth").val(selectedDay);
     createCalandar(selectedDay, roomTypeNum);
 
-    $("#month").change(function(){
+    $("#roomPriceMonth").change(function(){
         createCalandar($(this).val(), roomTypeNum);
     });
 });
@@ -222,34 +250,37 @@ function drawCalandar(e) {
     }
 
     for (var day = 1; day <= e.lastDate; day++) {
-
+		var idx= day-1;
         var weekday = (e.firstDay + day - 1) % 7;
         var price = getPriceByDay(e.priceList, day);
 
         var priceHtml = "";
         if (price !== null) {
-            priceHtml = "<div class='price'>" 
+            priceHtml = "<input type='text' class='price' value='" 
                       + price.toLocaleString() 
-                      + "원</div>";
+                      + "'><input type='hidden' name='roomPrices' value='"+price+"'>";
         }
-
+		
         if (weekday === 0) {
             html += "<td style='color:red'>"
                  + day
-                 + "<input type='checkbox' name='roomPriceDate' class='holiday'>"
+                 //+ "<input type='hidden' name='roomPriceDates' value='off'>"
+                 + "<input type='checkbox' name='roomPriceDates' class='holiday' value='"+day+"'><br>"
                  + priceHtml
                  + "</td>";
 
         } else if (weekday === 6) {
             html += "<td style='color:blue'>"
                  + day
-                 + "<input type='checkbox' name='roomPriceDate' class='holiday'>"
+  //               +"<input type='hidden' name='roomPriceDates' value='off'>"
+                 +"<input type='checkbox' name='roomPriceDates' class='holiday' value='"+day+"'><br>"
                  + priceHtml
                  + "</td>";
         } else {
             html += "<td>"
                  + day
-                 + "<input type='checkbox' name='roomPriceDate' class='workday'>"
+//                 + "<input type='hidden' name='roomPriceDates' value='off'>"
+                 + "<input type='checkbox' name='roomPriceDates' class='workday' value='"+day+"'><br>"
                  + priceHtml
                  + "</td>";
         }
@@ -320,8 +351,8 @@ function getPriceByDay(priceList, day) {
 					<div style="background: #1a233b; padding: 30px; border-radius: 15px; color: #ffffff; font-family: 'Pretendard', sans-serif; min-width: 800px;">
     
     <div style="text-align: center; margin-bottom: 25px;">
-    	<input type="hidden" id="num" th:value="${param.num}">
-        <input type="month" id="month" value="2025-01" style="padding: 8px 15px; border-radius: 6px; border: 1px solid #3d4b7a; background: #252f4a; color: white; font-weight: bold; font-size: 16px; outline: none;">
+    	<input type="hidden" name="roomTypeNum" id="roomTypeNum" th:value="${param.num}">
+        <input type="month" name="roomPriceMonth" id="roomPriceMonth" th:value="${#temporals.format(#temporals.createNow(), 'yyyy-MM')}" style="padding: 8px 15px; border-radius: 6px; border: 1px solid #3d4b7a; background: #252f4a; color: white; font-weight: bold; font-size: 16px; outline: none;">
     </div>
 
     <div style="
@@ -358,10 +389,11 @@ function getPriceByDay(priceList, day) {
 
     <div style="margin-top: 25px; display: flex; flex-direction: column; align-items: center; gap: 20px;">
         <div style="display: flex; align-items: center; gap: 20px; font-size: 15px;">
-            <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;"><input type="radio" style="width: 16px; height: 16px;" name="selName" class="sel" id="allSel"> 전체선택</label>
-            <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;"><input type="radio" style="width: 16px; height: 16px;" name="selName" class="sel" id="workSel"> 평일만선택</label>
-            <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;"><input type="radio" style="width: 16px; height: 16px;" name="selName" class="sel" id="holSel"> 주말만선택</label>
-            <input type="text" placeholder="가격을 입력하세요." style="color:#000000; padding: 10px 15px; border-radius: 8px; border: none; width: 180px; font-size: 14px; outline: none;">
+            <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;"><input type="checkbox" style="width: 16px; height: 16px;" name="selName" class="sel" id="allSel"> 전체선택</label>
+            <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;"><input type="checkbox" style="width: 16px; height: 16px;" name="selName" class="sel" id="workSel"> 평일만선택</label>
+            <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;"><input type="checkbox" style="width: 16px; height: 16px;" name="selName" class="sel" id="holSel"> 주말만선택</label>
+            <input type="text" name="roomPrice" placeholder="가격을 입력하세요." style="color:#000000; padding: 10px 15px; border-radius: 8px; border: none; width: 180px; font-size: 14px; outline: none;">
+            
         </div>
         
     </div>
@@ -369,7 +401,7 @@ function getPriceByDay(priceList, day) {
 </div>
 
     <div style="display: flex; gap: 15px; justify-content: flex-end; margin-top: 10px; border-top: 1px solid #eee; padding-top: 20px;">
-        <input type="button" style="
+        <input id="cancelBtn" type="button" style="
             padding: 10px 35px; 
             border: 2px solid #7495CC; 
             border-radius: 10px; 
@@ -385,7 +417,7 @@ function getPriceByDay(priceList, day) {
          
         
 
-        <button id="modifyBtn" style="
+        <input type="button" id="modifyBtn" style="
             padding: 10px 35px; 
             border: none; 
             border-radius: 10px; 
@@ -398,9 +430,8 @@ function getPriceByDay(priceList, day) {
             transition: background-color 0.3s ease;
         " 
         onmouseover="this.style.backgroundColor='#6482FF';" 
-        onmouseout="this.style.backgroundColor='#7495CC';">
-            수정
-        </button>
+        onmouseout="this.style.backgroundColor='#7495CC';" value="수정">
+            
     </div>
 </div>
 	 </form>	

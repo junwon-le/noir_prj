@@ -11,7 +11,7 @@ public class AdminService {
 	private AdminMapper adminMapper;
 	
 	public AdminDTO login(String adminId, String adminPass) {
-		return adminMapper.login(adminId, adminPass);
+		return adminMapper.adminLogin(adminId, adminPass);
 	}
 }
 
