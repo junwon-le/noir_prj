@@ -9,7 +9,8 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
 import java.util.UUID;
-
+import kr.co.noir.interceptor.UserInterceptor;
+import kr.co.noir.login.LoginController;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,16 +23,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class RoomController {
 
+    private final UserInterceptor userInterceptor;
+
+
+
 	@Autowired
 	private RoomService rService;
-	
-	
+
+    RoomController(UserInterceptor userInterceptor) {
+        this.userInterceptor = userInterceptor;
+    }
+
 	/**
 	 * 사용자 숙소 보기
 	 * @param num
@@ -92,6 +101,7 @@ public class RoomController {
 		
 		rpDomain=rService.searchTodayRoomPrice();
 		rpDomain2=rService.searchDayRoomPrice(date);
+		
 		
 		model.addAttribute("room",list);
 		model.addAttribute("todayPrice",rpDomain);
@@ -234,54 +244,44 @@ public class RoomController {
 	    return jsonObj;
 	}
 	
-	@GetMapping("/admin/roomManagePriceProcess")
-	public String roomManagePriceProcess(@RequestParam("roomPrices") List<Integer> roomPriceList, @RequestParam("roomPriceDates") List<Integer> roomPriceDate, RoomPriceDTO rDTO, Model model) {
+	@PostMapping("/admin/roomManagePriceProcess")
+	public String roomManagePriceProcess(@RequestParam("roomPriceDates") List<Integer> roomPriceDate, RoomPriceDTO rDTO, RedirectAttributes ra) {
 		
 		int cnt=0;
-		JSONArray jsonArr = new JSONArray();
 		String msg ="실패";
-		  for(int i=0; i<roomPriceList.size(); i++) { 
-			  JSONObject jsonObj = new JSONObject();
-			  if(i<9) {
-				  jsonObj.put("date", rDTO.getRoomPriceMonth()+"-0"+(i+1));
-			  }else {
-				  jsonObj.put("date", rDTO.getRoomPriceMonth()+"-"+(i+1));
-			  }
-			  
-			  jsonObj.put("price", rDTO.getRoomPrice());			  
-			  
-			   
-			  for(int j=0; j<roomPriceDate.size();j++) {				  
-				  if(roomPriceDate.get(j)==i+1) {
-					  jsonObj.put("flag", "on");
-					  jsonArr.add(jsonObj);
-					  break;
-				  }
-			  }
-		  }
-		  
-		  
-		  for(int i=0; i<jsonArr.size();i++) {
-			  JSONObject obj = new JSONObject();
-			  obj = (JSONObject)jsonArr.get(i);
-			  String parseDate = (String)obj.get("date");
-			  Integer parsePrice = (Integer)obj.get("price");
-			  RoomPriceDTO rpDTO = new RoomPriceDTO();
-			  rpDTO.setRoomPriceDate(parseDate);
-			  rpDTO.setRoomPrice(parsePrice);
-			  
-			  cnt = rService.modfiyRoomPrice(rpDTO);
-			  if(cnt==1) {
-				  msg="성공";
-			  }
-		  }
-		  
-		  model.addAttribute("msg",msg);
-		  model.addAttribute("num",rDTO.getRoomTypeNum());
-		  
-		  
-		  
-		return "/manager/room/roomManagePriceProcess";
+		
+		for(int i = 0; i<roomPriceDate.size();i++) {
+			String selectedDate = rDTO.getRoomPriceMonth();
+			if(roomPriceDate.get(i)<9) {
+				selectedDate += "-0"+roomPriceDate.get(i);
+			}else {
+				selectedDate += "-"+roomPriceDate.get(i);
+			}
+			
+			RoomPriceDTO rpDTO = new RoomPriceDTO();
+			rpDTO.setRoomTypeNum(rDTO.getRoomTypeNum());
+			rpDTO.setRoomPriceDate(selectedDate);
+			rpDTO.setRoomPrice(rDTO.getRoomPrice());
+			
+			//DB불러서 값 넣자
+			RoomPriceDomain rpd = new RoomPriceDomain();
+			rpd = rService.searchRoomCheckPrice(rpDTO);
+			if(rpd==null) {
+				cnt+=rService.addRoomPrice(rpDTO);
+			}else {
+				cnt+=rService.modfiyRoomPrice(rpDTO);				
+			}
+			
+		}
+		
+		if (cnt == roomPriceDate.size()) {
+	        ra.addFlashAttribute("msg", "가격이 정상적으로 저장되었습니다.");
+	    } else {
+	        ra.addFlashAttribute("msg", "가격 저장 중 오류가 발생했습니다.");
+	    }
+	
+		
+		return "redirect:/admin/roomManagePrice?num=" + rDTO.getRoomTypeNum();
 	}
 	
 	
