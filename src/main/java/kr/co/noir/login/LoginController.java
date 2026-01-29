@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,6 +43,12 @@ public class LoginController {
         return "login/findPw";          // templates/findPw.html 파일을 바라봄
     }	
 
+    
+	@Value("${user.crypto.key}")
+	private String key;
+	@Value("${user.crypto.salt}")
+	private String salt;	    
+    
     /**
      * 로그아웃 처리
      */
@@ -133,24 +140,27 @@ public class LoginController {
 	                           @RequestParam("memberEmail") String memberEmail,
 	                           HttpSession session) {
 
-	    // 1. DB 사용자 정보 확인 
-	    boolean userExists = ls.checkUserForPasswordReset(memberId, memberLastName, memberFirstName, memberEmail);
-
-	    if (userExists) {
-	        // 2. MailService의 함수명 'sendMail'을 정확히 호출
+	// 1. 서비스에서 아이디, 이름, 이메일이 모두 일치하는지 확인 (이미 내부에서 복호화 비교 완료)
+	   boolean isUserValid = ls.checkUserForPasswordReset(memberId, memberLastName, memberFirstName, memberEmail);
+	   
+	   System.out.println(isUserValid);
+	   
+	   // 2. 검증 통과 (chk가 true) -> 메일 발송
+	   if (isUserValid) {
+            // 입력받은 이메일(memberEmail)이 맞다는 것이 증명되었으므로 바로 전송
 	        String authCode = mailService.sendMail(memberEmail);
-
+	
 	        if (authCode != null) {
-	            // 3. 발송된 번호를 세션에 저장 (verifyAuthCode에서 확인용)
 	            session.setAttribute("authCode", authCode);
 	            session.setAttribute("resetMemberId", memberId); 
-	            return "OK"; // HTML 스크립트의 res.trim() === "OK"와 일치
+	            return "OK"; // 성공
 	        }
-	        return "FAIL";
-	    }
-	    return "NO_USER";
-	}	
-	
+            return "FAIL"; // 메일 서버 오류 등으로 발송 실패
+	   }
+       
+	   return "NO_USER"; // 회원 정보가 틀림
+	}
+		
 	
 	// 인증코드 검증
 	@PostMapping("/verifyAuthCode")
