@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping("/admin/nonMembers")
+@RequestMapping("/admin")
 public class NonMemberController {
     @Autowired private NonMemberService nonMemberService;
 
-    @GetMapping
+    @GetMapping("/nonMembers")
     public String list(@RequestParam(defaultValue = "1") int page,
                        @RequestParam(required = false) String searchType,
                        @RequestParam(required = false) String keyword, Model model) {

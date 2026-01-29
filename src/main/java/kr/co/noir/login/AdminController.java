@@ -24,7 +24,7 @@ public class AdminController {
 
     @GetMapping("/dashboard")
     public String dashboard() {
-        return "adminDashboard";
+        return "manager/dashboard/dashBoard";
     }
 
     @PostMapping("/adminLogin")
@@ -42,7 +42,7 @@ public class AdminController {
             session.setAttribute("adminId", aDTO.getAdminId());
             // 성공 시 관리자 메인(대시보드)으로 리다이렉트 -- 나중에 작업
 //            return "redirect:/admin/dashboard"; 
-            return "redirect:/"; // 이건 임시
+            return "redirect:/admin/dashBoard"; // 이건 임시
         }
         
         // [실패] 서비스에서 담아온 메시지를 그대로 화면에 전달

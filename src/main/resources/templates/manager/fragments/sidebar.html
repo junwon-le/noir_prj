@@ -11,17 +11,17 @@
                 <nav class="sidebar-nav left-sidebar-menu-pro">
                     <ul class="metismenu" id="menu1">
                         <li class="active">
-                            <a href="dashboard.html">
+                            <a th:href="@{/admin/dashBoard}">
 							   <i class="icon nalika-pie-chart icon-wrap"></i>
 							   <span>대시보드</span>
 							</a>
                         </li>
                         <li>
-                            <a href="memberMgr.html" aria-expanded="false">
+                            <a th:href="@{/admin/members}">
                             <i class="icon nalika-user icon-wrap"></i> <span>회원 관리</span></a>
                         </li>
                         <li>
-                            <a href="nonMemberMgr.html" aria-expanded="false">
+                            <a th:href="@{/admin/nonMembers}">                            
                             <i class="icon nalika-user icon-wrap"></i> <span>비회원 관리</span></a>
                         </li>
                         <li>
