@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fasterxml.jackson.annotation.JsonCreator.Mode;
 
 import jakarta.servlet.http.HttpSession;
+import retrofit2.http.GET;
 
 
 @RequestMapping("/mypage/reserve")
@@ -76,14 +77,18 @@ public class MypageReseveController {
 			  
 		  }//end else
 		  
-		  
-		  
 		  return uri;
-		 
+	  }//cancelHotelReserve
+	  
+	  @GetMapping("/hotelRevDetail2")
+	  public String hotelRevDetail2() {
 		  
-		  
+		  return "/mypage/memberHotelRevDetail2";
 	  }
-	 
+		  
+		 
+	  
+	
 	
 
 	
@@ -95,6 +100,16 @@ public class MypageReseveController {
 		
 		return "/mypage/memberDinningRevList";
 	}//dinningReserveList
+	
+	
+	@GetMapping("/memberDinningDetail")
+	public String memberDinningDetail(HttpSession session) {
+		
+		return "/mypage/memberHotelDinningDetail";
+	}//memberDinningDetail
+	
+	
+	
 	
 	
 }//class

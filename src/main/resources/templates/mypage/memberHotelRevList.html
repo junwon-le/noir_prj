@@ -313,13 +313,22 @@ $(function(){
 
 	
 	
+	
 	$("#btn").click(function(){
-	 	
+		//시작날짜/끝날짜가 있는지 없는지 확인하는 것
+		var startDate =$("#startDate").val();
+		var endDate =$("#endDate").val();
+		if(startDate==''){
+			alert('시작날짜를 입력해주세요');
+			return ;
+		}//end if
+		if(endDate==''){
+			alert('끝날짜를 입력해주세요');
+			return ;
+		}//end if
 
 		searchPage(1);
-			
-			
-			
+				
 	});//click
 	
 	   var d= new Date();
@@ -328,7 +337,7 @@ $(function(){
 	   var d = String(d.getDate()).padStart(2,'0');
 	   
 	   var today=y+"-"+m+"-"+d;
-	   
+	  
 	   $("#startDate").val(today);
 	   $("#endDate").val(today);
 	   

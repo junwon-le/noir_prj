@@ -24,7 +24,9 @@
 	
 	</select>
  -->
-<select id="selectTotalCnt" parameterType="reserveSearchDTO" resultType="int">
+ 
+<!-- 구조변경으로 다시해야됨 -->
+<!-- <select id="selectTotalCnt" parameterType="reserveSearchDTO" resultType="int">
     SELECT COUNT(*)
     FROM member m
     JOIN reserve r ON m.member_num = r.member_num
@@ -128,8 +130,10 @@
 	
 
 </update>
+ -->
 
 
+<!-- =====================================끝===================================== -->
 
 
 <!-- 이게 중욧 -->
