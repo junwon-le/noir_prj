@@ -115,6 +115,12 @@ public class MypageReserveService {
 				jsonTemp.put("reserveNum", hsd.getReserveNum());
 				jsonTemp.put("reservePerson", hsd.getReservePerson());
 				jsonTemp.put("reserveDate", sdf.format(hsd.getReserveDate()));
+				
+				System.out.println("----------"+hsd.getRoomType().length());
+				if(hsd.getRoomType().length()>20) {
+					hsd.setRoomType(hsd.getRoomType().substring(0, 19)+"...");
+					System.out.println("---------"+hsd.getRoomType());
+				}//end if
 				jsonTemp.put("roomType", hsd.getRoomType());
 				jsonTemp.put("checkIn", sdf.format(hsd.getCheckIn()));
 				jsonTemp.put("checkOut", sdf.format(hsd.getCheckOut()));

@@ -33,11 +33,11 @@ public class MypageReseveController {
 
 	@ResponseBody
 	@GetMapping("/hotelSearch")
-	public String searchRevHotel(ReserveSearchDTO rsDTO, Model model) {
+	public String searchRevHotel(ReserveSearchDTO rsDTO, Model model,HttpSession session) {
 		
-		rsDTO.setMemberId("user40");
+		rsDTO.setMemberId((String)session.getAttribute("memberId"));
 
-
+		System.out.println(rsDTO.getMemberId());
 		System.out.println(mrs.searchHotelRevList(rsDTO));
 		
 		return mrs.searchHotelRevList(rsDTO);

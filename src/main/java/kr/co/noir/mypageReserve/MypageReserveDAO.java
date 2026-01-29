@@ -19,10 +19,10 @@ public class MypageReserveDAO {
 		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
 		totalCnt=ss.selectOne("kr.co.noir.mypageReserve.selectTotalCnt",rsDTO);
 		if(ss !=null) {ss.close();}//end if
-		
+		System.out.println(totalCnt);
 		return totalCnt;
 		
-	}
+	}//selectTotalCnt
 
 	public List<HotelRevSearchDomain> selectHotelRevList(ReserveSearchDTO rsDTO) throws PersistenceException{
 		List<HotelRevSearchDomain> list = new ArrayList<HotelRevSearchDomain>();
