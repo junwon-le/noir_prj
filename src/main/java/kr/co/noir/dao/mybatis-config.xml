@@ -19,6 +19,8 @@
 		<typeAlias type="kr.co.noir.reserve.RoomSearchDomain" alias="roomSearchDomain"/><!-- 방 검색 -->		
 		<typeAlias type="kr.co.noir.reserve.RoomSearchDTO" alias="roomSearchDTO"/><!-- 방 검색 -->
 		<typeAlias type="kr.co.noir.reserve.MemberDomain" alias="memberDomain"/><!-- 회원 정보 채우기 -->
+		<typeAlias type="kr.co.noir.reserve.RoomDependingDTO" alias="roomDependingDTO"/><!-- 회원 정보 채우기 -->
+		<typeAlias type="kr.co.noir.reserve.RoomReserveDTO" alias="roomReserveDTO"/><!-- 회원 정보 채우기 -->
 		<!-- 박진규 사용 -->
         <typeAlias type="kr.co.noir.login.MemberDTO" alias="MemberDTO"/>
     </typeAliases>
