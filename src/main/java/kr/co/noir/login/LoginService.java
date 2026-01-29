@@ -18,7 +18,6 @@ public class LoginService {
 
 	@Autowired(required = false)
 	private final MemberMapper memberMapper;
-	private final AESUtil aesUtil; //  AESUtil 주입 받기
 	
 	@Value("${user.crypto.key}")
 	private String key;
