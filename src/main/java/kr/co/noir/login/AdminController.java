@@ -1,10 +1,16 @@
 package kr.co.noir.login;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -52,4 +58,36 @@ public class AdminController {
         session.invalidate(); // 세션 무효화
         return "redirect:/adminLogin";
     }
-}
+    
+
+    @Autowired
+    private MemberService memberService;
+
+    @GetMapping("/admin/members")
+    public String listMembers(@RequestParam(defaultValue = "1") int page,
+                              @RequestParam(required = false) String searchType,
+                              @RequestParam(required = false) String keyword,
+                              Model model) {
+        
+        Map<String, Object> result = memberService.getMemberPage(page, searchType, keyword);
+        
+        model.addAttribute("memberList", result.get("memberList"));
+        model.addAttribute("totalPage", result.get("totalPage"));
+        model.addAttribute("currentPage", page);
+        model.addAttribute("searchType", searchType);
+        model.addAttribute("keyword", keyword);
+        
+        return "manager/manageUser/manageMember"; // HTML 파일명
+    }
+
+    @PostMapping("/admin/members/delete")
+    @ResponseBody
+    public String deleteMembers(@RequestBody List<Integer> memberNums) {
+        if (memberService.removeMembers(memberNums)) {
+            return "OK";
+        }
+        return "FAIL";
+    }
+
+    
+}//AdminController

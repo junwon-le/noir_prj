@@ -243,6 +243,13 @@ public class LoginController {
     @PostMapping("/joinProcess")
     @ResponseBody // 성공 여부를 JSON이나 문자열로 응답
     public String joinProcess(MemberDTO memberDTO, HttpServletRequest request) {
+
+    	String telPattern = "^010-\\d{4}-\\d{4}$";
+        if (!memberDTO.getMemberTel().matches(telPattern)) {
+            // 에러 처리: 다시 가입 폼으로 리턴
+            return "redirect:/join?error=tel";
+        }    	
+    	
         // 1. 비밀번호 암호화 (BCrypt 적용)
         // 2. 성(lastName)과 이름(firstName)을 합쳐서 저장하거나 각각 저장하는 로직
         

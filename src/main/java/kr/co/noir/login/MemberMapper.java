@@ -1,5 +1,8 @@
 package kr.co.noir.login;
 
+import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -18,8 +21,8 @@ public interface MemberMapper {
 
     /**
      * 비밀번호 재설정 전 사용자 정보 일치 여부 확인
+     * 리턴타입      메서드명(매개변수들...)
      */
-    // 	리턴타입      메서드명(매개변수들...)
     MemberDTO checkUserForReset(@Param("memberId") String memberId, 
                                         @Param("memberLastName") String memberLastName, 
                                         @Param("memberFirstName") String memberFirstName);
@@ -33,6 +36,14 @@ public interface MemberMapper {
     // 회원가입: DTO에 담긴 정보를 MEMBER 테이블에 삽입 (이미지 컬럼 전체 반영)
     int insertMember(MemberDTO memberDTO);
     
+    // 검색 조건 및 페이징을 포함한 목록 조회
+    List<MemberDTO> selectMemberList(Map<String, Object> params);
+    
+    // 전체 레코드 수 (페이징용)
+    int selectTotalCount(Map<String, Object> params);
+    
+    // 선택된 회원들 탈퇴 처리 (MEMBER_DEL_FLAG = 'Y')
+    int updateMembersDelete(@Param("memberNums") List<Integer> memberNums);    
     
     
 }

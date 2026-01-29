@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <title>NOIR Admin - 회원 관리</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
-        /* [레이아웃] */
+        /* [레이아웃 유지] */
         body { margin: 0; padding: 0; display: flex; height: 100vh; font-family: 'Noto Sans KR', sans-serif; background-color: #f4f6f9; }
         
-        /* [사이드바 - Dark Navy] */
+        /* [사이드바 디자인 유지] */
         .sidebar { width: 250px; background-color: #1a253a; color: white; display: flex; flex-direction: column; }
         .logo { height: 80px; display: flex; justify-content: center; align-items: center; font-size: 24px; font-weight: bold; border-bottom: 1px solid #2c3e50; }
         .menu { list-style: none; padding: 0; margin-top: 20px; }
@@ -17,28 +17,31 @@
         .menu li a:hover, .menu li a.active { background-color: #2c3e50; color: white; border-left: 4px solid #fff; }
         .menu li a i { margin-right: 10px; width: 20px; text-align: center; }
 
-        /* [메인 컨텐츠] */
-        .main-content { flex: 1; padding: 40px; overflow-y: auto; background-color: #151c2c; /* 배경색을 어둡게 처리하여 헤더 영역 느낌 내기 */ }
+        /* [메인 컨텐츠 유지] */
+        .main-content { flex: 1; padding: 40px; overflow-y: auto; background-color: #151c2c; }
         
-        /* [헤더 타이틀] */
+        /* [헤더 타이틀 유지] */
         .page-header { background-color: #1f2d44; padding: 30px; border-radius: 50px; color: white; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         .page-title { margin: 0; font-size: 24px; font-weight: bold; }
 
-        /* [테이블 카드 영역] */
+        /* [카드 및 검색 바 유지] */
         .content-card { background: white; border-radius: 8px; padding: 20px; min-height: 600px; }
-
-        /* [검색 바] */
-        .search-bar { display: flex; justify-content: flex-end; margin-bottom: 20px; gap: 10px; }
+        .table-top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .search-bar { display: flex; gap: 10px; }
         .form-select, .form-input { padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; }
         .btn-search { background-color: #6c757d; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; }
 
-        /* [테이블 스타일] */
+        /* [추가: 선택 탈퇴 버튼 스타일] */
+        .btn-delete-selected { background-color: #e74c3c; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .btn-delete-selected:hover { background-color: #c0392b; }
+
+        /* [테이블 스타일 유지 및 체크박스 정렬] */
         .custom-table { width: 100%; border-collapse: collapse; text-align: center; }
-        .custom-table th { background-color: #f8f9fa; color: #333; padding: 15px; font-weight: 600; border-bottom: 2px solid #e9ecef; color: #495057; }
+        .custom-table th { background-color: #f8f9fa; padding: 15px; font-weight: 600; border-bottom: 2px solid #e9ecef; color: #495057; }
         .custom-table td { padding: 15px; border-bottom: 1px solid #eee; color: #555; vertical-align: middle; }
         .custom-table tr:hover { background-color: #f1f3f5; }
 
-        /* [페이지네이션] */
+        /* [페이지네이션 유지] */
         .pagination { display: flex; justify-content: center; margin-top: 30px; gap: 5px; }
         .page-link { padding: 8px 12px; border: 1px solid #ddd; color: #333; text-decoration: none; border-radius: 4px; }
         .page-link.active { background-color: #1a253a; color: white; border-color: #1a253a; }
@@ -70,55 +73,160 @@
 
         <div class="content-card">
             
-            <form action="/admin/members" method="get" class="search-bar">
-                <select name="searchType" class="form-select">
-                    <option value="num" th:selected="${searchType == 'num'}">회원번호</option>
-                    <option value="id" th:selected="${searchType == 'id'}">아이디</option>
-                    <option value="tel" th:selected="${searchType == 'tel'}">전화번호</option>
-                </select>
-                <input type="text" name="keyword" class="form-input" placeholder="Search..." th:value="${keyword}">
-                <button type="submit" class="btn-search">조회</button>
-            </form>
+            <div class="table-top-bar">
+                <button type="button" class="btn-delete-selected" onclick="deleteChecked()">선택 회원 탈퇴</button>
+                
+				<form action="/admin/members" method="get" class="search-bar" id="searchForm" onsubmit="return validateSearch()">
+				    <select name="searchType" id="searchType" class="form-select">
+				        <option value="num" th:selected="${searchType == 'num'}">회원번호</option>
+				        <option value="id" th:selected="${searchType == 'id'}">아이디</option>
+				        <option value="tel" th:selected="${searchType == 'tel'}">전화번호</option>
+				    </select>
+				    <input type="text" name="keyword" id="keyword" class="form-input" placeholder="Search..." th:value="${keyword}">
+				    <button type="submit" class="btn-search">조회</button>
+				</form>
+            </div>
 
-            <table class="custom-table">
-                <thead>
-                    <tr>
-                        <th width="10%">회원번호</th>
-                        <th width="15%">이름</th>
-                        <th width="15%">아이디</th>
-                        <th width="25%">이메일</th>
-                        <th width="15%">가입일</th>
-                        <th width="10%">탈퇴여부</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:if="${#lists.isEmpty(memberList)}">
-                        <td colspan="6">검색된 회원이 없습니다.</td>
-                    </tr>
-                    
-                    <tr th:each="member : ${memberList}">
-                        <td th:text="${#numbers.formatInteger(member.memberNum, 4)}">0001</td>
-                        <td th:text="${member.memberName}">홍길동</td>
-                        <td th:text="${member.memberId}">hong123</td>
-                        <td th:text="${member.memberEmail}">hong@test.com</td>
-                        <td th:text="${#dates.format(member.memberInputDate, 'yyyy-MM-dd')}">2026-01-01</td>
-                        <td th:text="${member.memberDelFlag}">N</td>
-                    </tr>
-                </tbody>
-            </table>
-
+<table class="custom-table">
+    <thead>
+        <tr>
+            <th width="5%"><input type="checkbox" id="checkAll"></th>
+            <th width="8%">회원번호</th>
+            <th width="12%">이름</th>
+            <th width="12%">아이디</th>
+            <th width="18%">이메일</th>
+            <th width="15%">전화번호</th> <th width="12%">가입일</th>
+            <th width="8%">탈퇴여부</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:if="${#lists.isEmpty(memberList)}">
+            <td colspan="8">검색된 회원이 없습니다.</td>
+        </tr>
+        
+        <tr th:each="member : ${memberList}">
+            <td><input type="checkbox" name="memberCheck" th:value="${member.memberNum}"></td>
+            <td th:text="${#numbers.formatInteger(member.memberNum, 4)}">0001</td>
+            <td th:text="${member.memberName}">홍길동</td>
+            <td th:text="${member.memberId}">hong123</td>
+            <td th:text="${member.memberEmail}">email@test.com</td>
+            <td th:text="${member.memberTel != null ? member.memberTel : '-'}">010-1234-5678</td>
+            <td th:text="${member.memberInputDate != null ? #strings.substring(member.memberInputDate, 0, 10) : '-'}">2026-01-01</td>
+            <td th:text="${member.memberDelFlag}">N</td>
+        </tr>
+    </tbody>
+</table>
             <div class="pagination" th:if="${totalPage > 0}">
                 <a th:if="${currentPage > 1}" th:href="@{/admin/members(page=${currentPage - 1}, searchType=${searchType}, keyword=${keyword})}" class="page-link">&lt;</a>
-                
                 <th:block th:each="pageNum : ${#numbers.sequence(1, totalPage)}">
                     <a th:href="@{/admin/members(page=${pageNum}, searchType=${searchType}, keyword=${keyword})}" 
                        th:text="${pageNum}" 
                        th:classappend="${pageNum == currentPage} ? 'active'" 
                        class="page-link">1</a>
                 </th:block>
-
                 <a th:if="${currentPage < totalPage}" th:href="@{/admin/members(page=${currentPage + 1}, searchType=${searchType}, keyword=${keyword})}" class="page-link">&gt;</a>
             </div>
+        </div>
+    </div>
 
-        </div> </div> </body>
+<script th:inline="javascript">
+// 전체 선택/해제 로직
+$(document).on('change', '#checkAll', function() {
+    $("input[name='memberCheck']").prop('checked', this.checked);
+});
+
+$(function() {
+    const $keyword = $('#keyword');
+    const $searchType = $('#searchType');
+
+    // 검색 타입이 바뀔 때마다 입력창 초기화 및 플레이스홀더 변경
+    $searchType.on('change', function() {
+        $keyword.val("").focus();
+        if ($(this).val() === 'num') {
+            $keyword.attr("placeholder", "숫자만 입력 (예: 102)");
+        } else if ($(this).val() === 'tel') {
+            $keyword.attr("placeholder", "010-0000-0000");
+        } else {
+            $keyword.attr("placeholder", "아이디 검색...");
+        }
+    });
+
+    // 전화번호 검색일 경우 입력 시 자동으로 하이픈(-) 추가
+    $keyword.on('input', function() {
+        if ($searchType.val() === 'tel') {
+            let val = $(this).val().replace(/[^0-9]/g, '');
+            if (val.length <= 3) { $(this).val(val); }
+            else if (val.length <= 7) { $(this).val(val.substring(0, 3) + '-' + val.substring(3)); }
+            else { $(this).val(val.substring(0, 3) + '-' + val.substring(3, 7) + '-' + val.substring(7, 11)); }
+        }
+    });
+});
+
+// 전송 전 최종 체크 함수
+function validateSearch() {
+    const type = $('#searchType').val();
+    const keyword = $('#keyword').val().trim();
+
+    if (keyword === "") {
+        alert("검색어를 입력해주세요.");
+        return false;
+    }
+
+    // 1. 회원번호 검색 시 숫자인지 체크 (ORA-01722 방지)
+    if (type === 'num') {
+        if (!/^\d+$/.test(keyword)) {
+            alert("회원번호는 숫자만 입력 가능합니다.");
+            $('#keyword').focus();
+            return false;
+        }
+    }
+
+    // 2. 전화번호 검색 시 규격 체크 (3-4-4)
+    if (type === 'tel') {
+        if (!/^010-\d{4}-\d{4}$/.test(keyword)) {
+            alert("전화번호 형식이 올바르지 않습니다. (010-0000-0000)");
+            $('#keyword').focus();
+            return false;
+        }
+    }
+
+    return true; // 검사 통과 시 전송
+}
+
+function deleteChecked() {
+    const selectedIds = [];
+    
+    // 체크된 항목의 value(memberNum)를 배열에 담기
+    $("input[name='memberCheck']:checked").each(function() {
+        selectedIds.push($(this).val());
+    });
+
+    if (selectedIds.length === 0) {
+        alert("탈퇴 처리할 회원을 선택해주세요.");
+        return;
+    }
+
+    if (confirm("선택한 " + selectedIds.length + "명의 회원을 탈퇴 처리하시겠습니까?")) {
+        $.ajax({
+            url: "/admin/members/delete", // 컨트롤러의 @PostMapping 주소와 일치해야 함
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(selectedIds), // 배열을 JSON으로 변환
+            success: function(res) {
+                if (res === "OK") {
+                    alert("탈퇴 처리가 완료되었습니다.");
+                    location.reload(); // 성공 시 페이지 새로고침
+                } else {
+                    alert("처리 중 오류가 발생했습니다.");
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("에러 발생:", error);
+                alert("서버 통신 오류가 발생했습니다. (상태코드: " + xhr.status + ")");
+            }
+        });
+    }
+}
+</script>
+</body>
 </html>

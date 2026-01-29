@@ -96,44 +96,44 @@
 
 <script type="text/javascript">
     $(function(){
+        // 1. UI 요소 캐싱
         const $btnJoin = $('#btnJoin');
         const $agreeTerms = $('#agreeTerms');
         const $agreePrivacy = $('#agreePrivacy');
-        let isIdChecked = false; // 아이디 중복체크 여부 플래그
+        const $memberId = $('#memberId');
+        const $idCheckMsg = $("#idCheckMsg");
+        let isIdChecked = false; // 중복체크 확인 플래그
 
-        function checkAgreements() {
-            if ($agreeTerms.is(':checked') && $agreePrivacy.is(':checked')) {
+        // 2. 통합 유효성 검사 (버튼 활성화 로직)
+        function validateForm() {
+            const isAgreed = $agreeTerms.is(':checked') && $agreePrivacy.is(':checked');
+            // 약관 동의 + 아이디 중복확인이 모두 완료되어야 버튼 활성화
+            if (isAgreed && isIdChecked) {
                 $btnJoin.prop('disabled', false);
             } else {
                 $btnJoin.prop('disabled', true);
             }
         }
 
-        // 약관 관련 이벤트
-        $('input[type="checkbox"]').change(checkAgreements);
-        $('#btnViewTerms').click(function() { $('#modalTerms').css('display', 'flex'); });
-        $('#btnViewPrivacy').click(function() { $('#modalPrivacy').css('display', 'flex'); });
-        $('.modal-btn.close').click(function() { $(this).closest('.modal-overlay').hide(); });
-
-        $('#btnAgreeTerms').click(function() {
-            $agreeTerms.prop('checked', true);
-            $(this).closest('.modal-overlay').hide();
-            checkAgreements();
-        });
-        $('#btnAgreePrivacy').click(function() {
-            $agreePrivacy.prop('checked', true);
-            $(this).closest('.modal-overlay').hide();
-            checkAgreements();
+        // 3. 전화번호 자동 하이픈 (3-4-4 규격)
+        $('input[name="memberTel"]').on('input', function (e) {
+            let val = e.target.value.replace(/[^0-9]/g, ''); 
+            if (val.length <= 3) {
+                e.target.value = val;
+            } else if (val.length <= 7) {
+                e.target.value = val.substring(0, 3) + '-' + val.substring(3);
+            } else {
+                e.target.value = val.substring(0, 3) + '-' + val.substring(3, 7) + '-' + val.substring(7, 11);
+            }
         });
 
-        // 1. 아이디 중복 체크
+        // 4. 아이디 중복 확인 로직
         $('#btnIdCheck').click(function(){
-            const memberId = $('#memberId').val().trim();
-            const $msg = $("#idCheckMsg");
+            const memberId = $memberId.val().trim();
 
-            if(!memberId) { alert("아이디를 입력해주세요."); return; }
+            if(!memberId) { alert("아이디를 입력해주세요."); $memberId.focus(); return; }
             if(memberId.length < 4) {
-                $msg.text("아이디는 4자 이상 입력해주세요.").css("color", "#ff4d4d");
+                $idCheckMsg.text("아이디는 4자 이상 입력해주세요.").css("color", "#ff4d4d");
                 return;
             }
 
@@ -142,46 +142,67 @@
                 type: "GET",
                 data: { memberId: memberId },
                 success: function(res) {
-                    if(res.exists) {
-                        $msg.text("이미 사용 중인 아이디입니다.").css("color", "#ff4d4d");
+                    if(res.exists || res === true) {
+                        $idCheckMsg.text("이미 사용 중인 아이디입니다.").css("color", "#ff4d4d");
                         isIdChecked = false;
                     } else {
-                        $msg.text("사용 가능한 아이디입니다.").css("color", "#4CAF50");
+                        $idCheckMsg.text("사용 가능한 아이디입니다.").css("color", "#4CAF50");
                         isIdChecked = true;
                     }
+                    validateForm(); // 상태 변경 후 버튼 체크
                 },
-                error: function() { alert("서버 통신 오류"); }
+                error: function() { alert("서버 통신 오류가 발생했습니다."); }
             });
         });
 
-        $('#memberId').on('input', function() {
-            $("#idCheckMsg").text("");
+        // 아이디 재입력 시 중복체크 초기화
+        $memberId.on('input', function() {
+            $idCheckMsg.text("");
             isIdChecked = false;
+            validateForm();
         });
 
-        // 2. 회원가입 폼 제출 (AJAX 방식으로 개선)
+        // 5. 약관 모달 제어 로직
+        // 모달 열기
+        $('#btnViewTerms').click(function() { $('#modalTerms').css('display', 'flex'); });
+        $('#btnViewPrivacy').click(function() { $('#modalPrivacy').css('display', 'flex'); });
+
+        // 모달 닫기 (공통)
+        $('.modal-btn.close').click(function() { $(this).closest('.modal-overlay').hide(); });
+
+        // 모달 내 동의 버튼 클릭 시
+        $('#btnAgreeTerms').click(function() {
+            $agreeTerms.prop('checked', true);
+            $(this).closest('.modal-overlay').hide();
+            validateForm();
+        });
+        $('#btnAgreePrivacy').click(function() {
+            $agreePrivacy.prop('checked', true);
+            $(this).closest('.modal-overlay').hide();
+            validateForm();
+        });
+
+        // 체크박스 직접 클릭 시
+        $('input[type="checkbox"]').change(validateForm);
+
+        // 6. 회원가입 폼 제출 (AJAX)
         $('#joinForm').on('submit', function(e){
             e.preventDefault();
-
-            if(!isIdChecked) {
-                alert("아이디 중복확인을 진행해주세요.");
-                return;
-            }
+            if(!isIdChecked) { alert("아이디 중복확인을 진행해주세요."); return; }
 
             const formData = $(this).serialize();
-
             $.ajax({
                 url: "/login/joinProcess",
                 type: "POST",
                 data: formData,
                 success: function(res) {
                     if(res === "OK") {
-						let msg=encodeURIComponent("NOIR 호텔의 회원이 되신 것을 축하드립니다!");
-						let nextUrl=encodeURIComponent("/login/memberLogin");
-						let btnTxt=encodeURIComponent("로그인하러 가기");
-						location.href = "/login/result?message=" + msg + "&url=" + nextUrl + "&btnText=" + btnTxt;                    	
+                        let msg = encodeURIComponent("NOIR 호텔의 회원이 되신 것을 축하드립니다!");
+                        let nextUrl = encodeURIComponent("/login/memberLogin");
+                        let btnTxt = encodeURIComponent("로그인하러 가기");
+                        location.href = "/login/result?message=" + msg + "&url=" + nextUrl + "&btnText=" + btnTxt;
                     } else {
-                        alert("회원가입에 실패했습니다. 다시 시도해주세요.");
+                        alert("회원가입에 실패했습니다.");
                     }
                 },
                 error: function() { alert("회원가입 처리 중 오류 발생"); }
@@ -235,7 +256,8 @@
 
                         <div class="input-group">
                             <label for="memberTel">전화번호</label>
-                            <input type="tel" id="memberTel" name="memberTel" placeholder="010-0000-0000" required>
+                            <input type="tel" id="memberTel" name="memberTel" pattern="010-[0-9]{4}-[0-9]{4}" title="010-0000-0000 형식으로 입력해주세요." placeholder="010-0000-0000" required>
+                            
                         </div>
 
                         <div class="full-width terms-wrapper">
