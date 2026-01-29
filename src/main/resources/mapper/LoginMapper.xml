@@ -24,26 +24,25 @@
     WHERE TRIM(member_last_name) = #{memberLastName} AND TRIM(member_first_name) = #{memberFirstName}
       AND member_email = #{memberEmail}
 </select>
-<select id="checkUserForPasswordReset" parameterType="map" resultType="int">
-   SELECT COUNT(*)
-   FROM member
-   WHERE MEMBER_ID = #{memberId}
-     AND MEMBER_LAST_NAME = #{memberLastName}
-     AND MEMBER_FIRST_NAME = #{memberFirstName}
-     AND MEMBER_EMAIL = #{memberEmail}
-     AND MEMBER_DEL_FLAG = 'N' -- 탈퇴하지 않은 회원만 대상
+<select id="checkUserForReset" parameterType="map" resultType="kr.co.noir.login.MemberDTO">
+   select member_id, member_email
+   from member
+   where member_id = #{memberId}
+     and member_last_name = #{memberLastName}
+     and member_first_name = #{memberFirstName}
+     and member_del_flag = 'N' -- 탈퇴하지 않은 회원만 대상
 </select>    
-   <update id="updatePassword">
+<update id="updatePassword">
        UPDATE member
        SET member_pass = #{newPw}
        WHERE member_Id = #{memberId}
-   </update>
-   <select id="selectIdCount" parameterType="String" resultType="int">
+</update>
+<select id="selectIdCount" parameterType="String" resultType="int">
     SELECT COUNT(*)
     FROM member
     WHERE member_id = #{memberId}
 </select>
-<insert id="insertMember" parameterType="MemberDTO">
+<insert id="insertMember" parameterType="kr.co.noir.login.MemberDTO">
 INSERT INTO member (
     MEMBER_NUM,
     MEMBER_ID,

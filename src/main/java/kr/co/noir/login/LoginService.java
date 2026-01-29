@@ -4,6 +4,8 @@ import org.apache.ibatis.exceptions.PersistenceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.encrypt.Encryptors;
+import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 public class LoginService {
 
 	@Autowired(required = false)
-	private LoginDAO lDAO;
 	private final MemberMapper memberMapper;
 	
 	@Value("${user.crypto.key}")
@@ -23,54 +24,53 @@ public class LoginService {
 	@Value("${user.crypto.salt}")
 	private String salt;	
 	
-	
-	public LoginMemberDomain searchOneMember(LoginDTO lDTO) throws PersistenceException {
-		LoginMemberDomain md=null;
-		
-		try {
-			md=lDAO.selectOneMember(lDTO.getMemberId()); //아이디를 넣어서 이름, 이메일, 비밀번호 검색
+	// BCrypt 객체는 하나만 생성해서 재사용하는 것이 성능상 유리합니다.
+    private final BCryptPasswordEncoder bce = new BCryptPasswordEncoder();
 
-			if( md==null) { //아이디가 존재하지 않음.
-				md=new LoginMemberDomain();
-			   	md.setResultMsg("아이디가 존재하지 않습니다.");
-			}else { //아이디는 존재함
-				// 비밀번호 검색 : BcryptPasswordEncorder 사용. 
-				// 암호화된 자료 비교는 matches로만 해야 한다.
-				// 암호화된 경우에만 암호화 하여 비교한다. 암호화된 자료는 항상60자리
-				if (md.getMemberPass().length()==60) {
-					BCryptPasswordEncoder bce=new BCryptPasswordEncoder();
-				 
-					if(bce.matches(lDTO.getMemberPass(), md.getMemberPass())) {
-						//비번 일치
-						md.setResultMsg("로그인 성공");
-						lDTO.setResult("S");
-						
-					}else {
-						//비번 불일치
-						md.setResultMsg("로그인 실패");
-						lDTO.setResult("F");
-					}
-					
-				}else { //암호화 된 자료가 아니면 
-						if(lDTO.getMemberPass().equals(md.getMemberPass())) {
-							//비번 일치
-							md.setResultMsg("로그인 성공");
-							lDTO.setResult("S");
-							
-						}else {
-							//비번 불일치
-							md.setResultMsg("로그인 실패");
-							lDTO.setResult("F");
-						}
-				}
-				
-			}
-			
-		}catch(PersistenceException pe) {
-			pe.printStackTrace();
-		}//end catch
-		
-		return md;
+    public LoginMemberDomain searchOneMember(LoginDTO lDTO) {
+        LoginMemberDomain md = null;
+        
+        try {
+            // 1. DB에서 사용자 정보 조회
+            md = memberMapper.selectOneUserInfo(lDTO.getMemberId());
+
+            if (md == null) {
+                // 2. 아이디가 존재하지 않는 경우
+                md = new LoginMemberDomain();
+                md.setResultMsg("아이디가 존재하지 않습니다.");
+                lDTO.setResult("F");
+            } else {
+                // 3. 아이디가 존재하는 경우 비밀번호 검증
+                String inputPw = lDTO.getMemberPass(); // 사용자가 입력한 비번
+                String dbPw = md.getMemberPass();      // DB에 저장된 비번 (암호문 또는 평문)
+                boolean isMatch = false;
+
+                // 암호화된 데이터(BCrypt는 항상 60자)인지 확인
+                if (dbPw != null && dbPw.length() == 60) {
+                    isMatch = bce.matches(inputPw, dbPw);
+                } else {
+                    // 암호화되지 않은 평문 데이터 비교
+                    isMatch = inputPw.equals(dbPw);
+                }
+
+                // 4. 검증 결과 세팅
+                if (isMatch) {
+                    md.setResultMsg("로그인 성공");
+                    lDTO.setResult("S");
+                } else {
+                    md.setResultMsg("비밀번호가 일치하지 않습니다.");
+                    lDTO.setResult("F");
+                }
+            }
+        } catch (PersistenceException pe) {
+            pe.printStackTrace();
+            // 에러 발생 시 처리
+            if(md == null) md = new LoginMemberDomain();
+            md.setResultMsg("시스템 오류가 발생했습니다.");
+            lDTO.setResult("E");
+        }
+        
+        return md;
 		
 	}//searchOneMember
 	
@@ -86,16 +86,33 @@ public class LoginService {
 	/**
      * 비밀번호 찾기 시 입력한 정보가 실제 DB 정보와 일치하는지 확인
      */
-    public boolean checkUserForPasswordReset(String memberId, String memberLastName, 
-                                            String memberFirstName, String memberEmail) {
-        
-        // 4가지 조건이 모두 일치하는 데이터가 있는지 조회
-        int count = memberMapper.checkUserForPasswordReset(memberId, memberLastName, memberFirstName, memberEmail);
-        
-        // 결과가 1이면 일치하는 회원이 있는 것으로 판단하여 true 반환
-        return count == 1;
-    }
-	
+	public boolean checkUserForPasswordReset(String memberId, String memberLastName, 
+            String memberFirstName, String inputEmail) {
+
+		// 1. ID와 이름으로 DB 회원 정보 조회 (이메일 제외하고 조회)
+		MemberDTO mDTO = memberMapper.checkUserForReset(memberId, memberLastName, memberFirstName);
+		
+		// 2. 회원이 없으면 false
+		if (mDTO == null || mDTO.getMemberEmail() == null) {
+		return false;
+		}
+
+		TextEncryptor te= Encryptors.text(key, salt);
+		
+		// 3. DB에 있는 암호문 가져오기
+		String dbEncEmail = mDTO.getMemberEmail();
+		
+		// 4. 복호화 (DB값 -> 평문)
+		String dbDecEmail = te.decrypt(dbEncEmail);
+		
+		System.out.println(dbEncEmail);
+		
+		System.out.println(inputEmail);
+		System.out.println(dbDecEmail);
+		
+		// 5. 사용자가 입력한 이메일과 비교
+		return inputEmail.equals(dbDecEmail);
+		}
     
 	
     @Transactional
@@ -129,13 +146,20 @@ public class LoginService {
         // 2. 가입 시 기본값 설정 (이미지의 MEMBER_DEL_FLAG)
         memberDTO.setMemberDelFlag("N");
         
-		// 3. Password 암호화 일방향 해시 : 비번
+		// 3. Password 암호화 일방향 해시 : 비번, Bcrypt
 		BCryptPasswordEncoder bpe=new BCryptPasswordEncoder(10);
 		memberDTO.setMemberPass(bpe.encode(memberDTO.getMemberPass()));
+
+		TextEncryptor te= Encryptors.text(key, salt);
+		// 4. 이메일, 전화번호 
+		if (memberDTO.getMemberEmail() != null) {
+			memberDTO.setMemberEmail(te.encrypt(memberDTO.getMemberEmail()));
+		}
+		if (memberDTO.getMemberTel() != null) {
+			memberDTO.setMemberTel(te.encrypt(memberDTO.getMemberTel()));
+		}
 		
-		//암호화 : 이름, 이메일, - 컬럼 크기가 작아서 암호화 하면 오류 발생 
-		
-		// 4. DB Insert 실행
+		// 5. DB Insert 실행
 		try {
 			result = memberMapper.insertMember(memberDTO);
 		}catch(PersistenceException pe) {

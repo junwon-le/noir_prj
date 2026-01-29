@@ -1,115 +1,224 @@
-<!DOCTYPE html>
+<!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>NOIR Admin - 비회원 예약자 정보</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>NOIR Admin - 비회원 관리</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900" rel="stylesheet">
+    <link rel="stylesheet" href="/admin_common/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/admin_common/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/admin_common/css/nalika-icon.css">
+    <link rel="stylesheet" href="/admin_common/style.css">
+    <link rel="stylesheet" href="/admin_common/css/responsive.css">
+    
+    <script src="/admin_common/js/vendor/jquery-1.12.4.min.js"></script>
+
     <style>
-        /* 공통 스타일 (이전 회원관리 CSS와 동일) */
-        body { margin: 0; padding: 0; display: flex; height: 100vh; font-family: 'Noto Sans KR', sans-serif; background-color: #f4f6f9; }
-        
-        /* 사이드바 스타일 */
-        .sidebar { width: 250px; background-color: #1a253a; color: white; display: flex; flex-direction: column; }
-        .logo { height: 80px; display: flex; justify-content: center; align-items: center; font-size: 24px; font-weight: bold; border-bottom: 1px solid #2c3e50; }
-        .menu { list-style: none; padding: 0; margin-top: 20px; }
-        .menu li a { display: block; padding: 15px 25px; color: #b0b8c5; text-decoration: none; font-size: 15px; display: flex; align-items: center; }
-        .menu li a:hover, .menu li a.active { background-color: #2c3e50; color: white; border-left: 4px solid #fff; }
-        .menu li a i { margin-right: 10px; width: 20px; text-align: center; }
+        /* [사이드바 디자인 보존] */
+        .left-sidebar-pro { background: #152036 !important; width: 220px !important; }
+        .sidebar-nav .metismenu a {
+            color: #ffffff !important;
+            font-size: 16px !important;
+            padding: 15px 20px !important;
+            display: flex !important;
+            align-items: center !important;
+        }
+        .sidebar-nav .metismenu a i { font-size: 20px !important; margin-right: 15px !important; }
 
-        /* 메인 컨텐츠 스타일 */
-        .main-content { flex: 1; padding: 40px; overflow-y: auto; background-color: #151c2c; }
-        .page-header { background-color: #1f2d44; padding: 30px; border-radius: 50px; color: white; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .page-title { margin: 0; font-size: 24px; font-weight: bold; }
+        /* [좌우 여백 대칭 레이아웃 조정] */
+        .all-content-wrapper { 
+            margin-left: 220px; 
+            background-color: #151c2c;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center; 
+        }
 
-        .content-card { background: white; border-radius: 8px; padding: 20px; min-height: 600px; }
+        .main-content-container {
+            width: 92%; 
+            max-width: 1500px; 
+            padding-left: 60px;  
+            padding-right: 60px; 
+            margin: 0 auto;
+        }
+
+        .page-header-title {
+            background-color: #1a253a;
+            padding: 25px 40px;
+            border-radius: 15px;
+            margin-top: 30px;
+            margin-bottom: 25px;
+            color: white;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .main-content-card {
+            background: #1a253a;
+            border-radius: 12px;
+            padding: 35px;
+            margin-bottom: 40px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+        }
+
+        /* [테이블 컬럼 폭 최적화] */
+        .custom-table { width: 100%; border-collapse: collapse; text-align: center; color: #b0b8c5; table-layout: fixed; }
+        .custom-table th, .custom-table td { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 15px 5px; }
         
-        /* 검색바 & 테이블 */
-        .search-bar { display: flex; justify-content: flex-end; margin-bottom: 20px; gap: 10px; }
-        .form-select, .form-input { padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; }
-        .btn-search { background-color: #5d6b82; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; }
-        
-        .custom-table { width: 100%; border-collapse: collapse; text-align: center; }
-        .custom-table th { background-color: #f8f9fa; padding: 15px; font-weight: 600; border-bottom: 2px solid #e9ecef; color: #495057; }
-        .custom-table td { padding: 15px; border-bottom: 1px solid #eee; color: #555; vertical-align: middle; }
-        
-        .pagination { display: flex; justify-content: center; margin-top: 30px; gap: 5px; }
-        .page-link { padding: 8px 12px; border: 1px solid #ddd; color: #333; text-decoration: none; border-radius: 4px; }
-        .page-link.active { background-color: #1a253a; color: white; border-color: #1a253a; }
+        .custom-table th { background-color: #243149; border-bottom: 2px solid #2c3e50; color: white; }
+        .custom-table td { border-bottom: 1px solid #2c3e50; }
+        .custom-table tr:hover { background-color: #243149; color: white; }
+
+        /* 비회원용 컬럼 폭 지정 */
+        .col-check { width: 40px; }
+        .col-num { width: 70px; }
+        .col-name { width: 90px; }
+        .col-email { width: 160px; }
+        .col-tel { width: 140px; }
+        .col-ip { width: 120px; }
+        .col-date { width: 110px; }
+        .col-rev { width: 70px; }
+
+        .form-select, .form-input { padding: 10px; border: 1px solid #2c3e50; border-radius: 6px; background: #151c2c; color: white; }
+        .btn-delete-selected { background-color: #e74c3c; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; }
+        .btn-search { background-color: #2c3e50; color: white; border: 1px solid #4a5a71; padding: 10px 20px; border-radius: 6px; cursor: pointer; }
+
+        .pagination .page-link { background: #243149; color: #b0b8c5; border: 1px solid #2c3e50; padding: 10px 15px; border-radius: 4px; }
+        .pagination .active .page-link { background: white; color: #1a253a; border-color: white; }
     </style>
 </head>
+
 <body>
+    <div th:replace="~{manager/fragments/sidebar :: sidebar}"></div>  
 
-    <div class="sidebar">
-        <div class="logo">NOIR</div>
-        <div style="padding: 10px 20px;">
-            <button style="width:100%; padding:10px; background:white; color:#333; border:none; border-radius:5px; font-weight:bold;">
-                <i class="fas fa-th-large"></i> Dashboard
-            </button>
-        </div>
-        <ul class="menu">
-            <li><a href="/admin/members"><i class="fas fa-user"></i> 회원 관리</a></li>
-            <li><a href="/admin/non-members" class="active"><i class="fas fa-user-clock"></i> 비회원 관리</a></li>
-            <li><a href="#"><i class="far fa-folder"></i> 객실 관리</a></li>
-            <li><a href="#"><i class="far fa-calendar-check"></i> 객실 예약 관리</a></li>
-            </ul>
-    </div>
-
-    <div class="main-content">
-        <div class="page-header">
-            <h2 class="page-title">비회원 예약자 정보</h2>
-        </div>
-
-        <div class="content-card">
-            <form action="/admin/non-members" method="get" class="search-bar">
-                <select name="searchType" class="form-select">
-                    <option value="name" th:selected="${searchType == 'name'}">이름</option>
-                    <option value="tel" th:selected="${searchType == 'tel'}">연락처</option>
-                    <option value="email" th:selected="${searchType == 'email'}">이메일</option>
-                </select>
-                <input type="text" name="keyword" class="form-input" placeholder="Search..." th:value="${keyword}">
-                <button type="submit" class="btn-search">조회</button>
-            </form>
-
-            <table class="custom-table">
-                <thead>
-                    <tr>
-                        <th width="10%">번호</th> <th width="15%">이름</th>
-                        <th width="25%">이메일</th>
-                        <th width="20%">연락처</th>
-                        <th width="20%">등록일(예약일)</th>
-                        <th width="10%">예약번호(FK)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:if="${#lists.isEmpty(nonMemberList)}">
-                        <td colspan="6">조회된 비회원 예약자가 없습니다.</td>
-                    </tr>
-                    
-                    <tr th:each="user : ${nonMemberList}">
-                        <td th:text="${user.nonUserNum}">1001</td>
-                        <td th:text="${user.nonUserName}">홍길동</td>
-                        <td th:text="${user.nonUserEmail}">hong@test.com</td>
-                        <td th:text="${user.nonUserTel}">010-1234-5678</td>
-                        <td th:text="${#dates.format(user.nonUserInputDate, 'yyyy-MM-dd')}">2026-01-01</td>
-                        <td th:text="${user.num}">55</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <div class="pagination" th:if="${totalPage > 0}">
-                <a th:if="${currentPage > 1}" th:href="@{/admin/non-members(page=${currentPage - 1}, searchType=${searchType}, keyword=${keyword})}" class="page-link">&lt;</a>
-                
-                <th:block th:each="pageNum : ${#numbers.sequence(1, totalPage)}">
-                    <a th:href="@{/admin/non-members(page=${pageNum}, searchType=${searchType}, keyword=${keyword})}" 
-                       th:text="${pageNum}" 
-                       th:classappend="${pageNum == currentPage} ? 'active'" 
-                       class="page-link">1</a>
-                </th:block>
-
-                <a th:if="${currentPage < totalPage}" th:href="@{/admin/non-members(page=${currentPage + 1}, searchType=${searchType}, keyword=${keyword})}" class="page-link">&gt;</a>
+    <div class="all-content-wrapper">
+        <div class="main-content-container">
+            
+            <div class="page-header-title">
+                <i class="icon nalika-user"></i> 비회원 정보 관리
             </div>
 
+            <div class="main-content-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                    <button type="button" class="btn-delete-selected" onclick="deleteChecked()">선택 비회원 삭제</button>
+                    
+                    <form th:action="@{/admin/nonMembers}" method="get" style="display: flex; gap: 10px;" id="searchForm" onsubmit="return validateSearch()">
+                        <select name="searchType" id="searchType" class="form-select">
+                            <option value="num" th:selected="${searchType == 'num'}">번호</option>
+                            <option value="name" th:selected="${searchType == 'name'}">이름</option>
+                            <option value="tel" th:selected="${searchType == 'tel'}">전화번호</option>
+                        </select>
+                        <input type="text" name="keyword" id="keyword" class="form-input" placeholder="Search..." th:value="${keyword}">
+                        <button type="submit" class="btn-search">조회</button>
+                    </form>
+                </div>
+
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th class="col-check"><input type="checkbox" id="checkAll"></th>
+                            <th class="col-num">번호</th>
+                            <th class="col-name">이름</th>
+                            <th class="col-email">이메일</th>
+                            <th class="col-tel">전화번호</th>
+                            <th class="col-ip">접속 IP</th>
+                            <th class="col-date">등록일</th>
+                            <th class="col-rev">예약번호</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:if="${#lists.isEmpty(nonMemberList)}">
+                            <td colspan="8" style="padding: 50px;">검색된 비회원이 없습니다.</td>
+                        </tr>
+                        <tr th:each="m : ${nonMemberList}">
+                            <td><input type="checkbox" name="memberCheck" th:value="${m.nonUserNum}"></td>
+                            <td th:text="${#numbers.formatInteger(m.nonUserNum, 4)}">0001</td>
+                            <td th:text="${m.nonMemberName}" style="color: white; font-weight: bold;">홍길동</td>
+                            <td th:text="${m.nonUserEmail}" style="text-align: left; padding-left: 10px;">email@test.com</td>
+                            <td th:text="${m.nonUserTel}">010-1234-5678</td>
+                            <td th:text="${m.nonUserIp}">127.0.0.1</td>
+                            <td th:text="${m.nonUserInputDate != null ? #strings.substring(m.nonUserInputDate, 0, 10) : '-'}">2026-01-01</td>
+                            <td th:text="${m.num}">102</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="pagination" th:if="${totalPage > 0}" style="display: flex; justify-content: center; margin-top: 35px;">
+                    <a th:if="${currentPage > 1}" th:href="@{/admin/nonMembers(page=${currentPage - 1}, searchType=${searchType}, keyword=${keyword})}" class="page-link">&laquo;</a>
+                    <th:block th:each="pageNum : ${#numbers.sequence(1, totalPage)}">
+                        <a th:href="@{/admin/nonMembers(page=${pageNum}, searchType=${searchType}, keyword=${keyword})}" 
+                           th:text="${pageNum}" 
+                           th:classappend="${pageNum == currentPage} ? 'active'" 
+                           class="page-link">1</a>
+                    </th:block>
+                    <a th:if="${currentPage < totalPage}" th:href="@{/admin/nonMembers(page=${currentPage + 1}, searchType=${searchType}, keyword=${keyword})}" class="page-link">&raquo;</a>
+                </div>
+            </div>
+            
         </div>
+
+        <div th:replace="~{manager/fragments/footer :: footer}" style="width: 100%;"></div>  
     </div>
+
+    <script th:inline="javascript">
+    $(document).on('change', '#checkAll', function() {
+        $("input[name='memberCheck']").prop('checked', this.checked);
+    });
+
+    $(function() {
+        const $keyword = $('#keyword');
+        const $searchType = $('#searchType');
+
+        $searchType.on('change', function() {
+            $keyword.val("").focus();
+            if ($(this).val() === 'num') {
+                $keyword.attr("placeholder", "번호 입력 (예: 1)");
+            } else if ($(this).val() === 'tel') {
+                $keyword.attr("placeholder", "010-0000-0000");
+            } else {
+                $keyword.attr("placeholder", "이름 검색...");
+            }
+        });
+
+        $keyword.on('input', function() {
+            if ($searchType.val() === 'tel') {
+                let val = $(this).val().replace(/[^0-9]/g, '');
+                if (val.length <= 3) { $(this).val(val); }
+                else if (val.length <= 7) { $(this).val(val.substring(0, 3) + '-' + val.substring(3)); }
+                else { $(this).val(val.substring(0, 3) + '-' + val.substring(3, 7) + '-' + val.substring(7, 11)); }
+            }
+        });
+    });
+
+    function validateSearch() {
+        const type = $('#searchType').val();
+        const keyword = $('#keyword').val().trim();
+        if (keyword === "") { alert("검색어를 입력해주세요."); return false; }
+        if (type === 'num' && !/^\d+$/.test(keyword)) { alert("번호는 숫자만 입력 가능합니다."); return false; }
+        if (type === 'tel' && !/^010-\d{4}-\d{4}$/.test(keyword)) { alert("전화번호 형식이 올바르지 않습니다."); return false; }
+        return true;
+    }
+
+    function deleteChecked() {
+        const selectedIds = [];
+        $("input[name='memberCheck']:checked").each(function() { selectedIds.push($(this).val()); });
+        if (selectedIds.length === 0) { alert("삭제 처리할 데이터를 선택해주세요."); return; }
+        if (confirm("선택한 데이터를 삭제하시겠습니까?")) {
+            $.ajax({
+                url: "/admin/nonMembers/delete", 
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(selectedIds),
+                success: function(res) {
+                    if (res === "OK") { alert("삭제 처리가 완료되었습니다."); location.reload(); }
+                    else { alert("처리 중 오류가 발생했습니다."); }
+                }
+            });
+        }
+    }
+    </script>
 </body>
 </html>

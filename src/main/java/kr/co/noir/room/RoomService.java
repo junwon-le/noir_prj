@@ -99,5 +99,19 @@ public class RoomService {
 		return cnt;
 	}
 	
+	public int modfiyRoomPrice(RoomPriceDTO rpDTO) {
+		
+		int cnt=0;
+		try {
+			cnt=rDAO.updateRoomPrice(rpDTO);
+		}catch(PersistenceException pe) {
+			pe.printStackTrace();
+		}
+		
+		
+		return cnt;
+		
+	}
+	
 	
 }

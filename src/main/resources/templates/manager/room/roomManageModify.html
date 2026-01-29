@@ -55,7 +55,22 @@
 
 <script type="text/javascript">
 $(function(){
-
+	
+	var inTime = $("#roomCheckIn").val();
+	var outTime = $("#roomCheckOut").val();
+	
+	
+	
+	
+	if(inTime) {
+	    $("#checkInTime").val(inTime).prop("selected", true);
+	}
+	if(outTime) {
+	    $("#checkOutTime").val(outTime).prop("selected", true);
+	}
+	
+	
+	
 	
 	$('#roomImgFile1').change(function(e) {
         var file = e.target.files[0];
@@ -68,14 +83,77 @@ $(function(){
             reader.readAsDataURL(file);
         }
     });
+	$('#roomImgFile2').change(function(e) {
+        var file = e.target.files[0];
+        if (file) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                // 선택한 이미지로 src 변경 (미리보기)
+                $('#roomImgPreview2').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+	
+	
+	
+	
+	$('#roomImgFile3').change(function(e) {
+        var file = e.target.files[0];
+        if (file) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                // 선택한 이미지로 src 변경 (미리보기)
+                $('#roomImgPreview3').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+	
+	
+	
+	
+	$('#roomImgFile4').change(function(e) {
+        var file = e.target.files[0];
+        if (file) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                // 선택한 이미지로 src 변경 (미리보기)
+                $('#roomImgPreview4').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+	
+	
+	
+	
+	$('#roomImgFile5').change(function(e) {
+        var file = e.target.files[0];
+        if (file) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                // 선택한 이미지로 src 변경 (미리보기)
+                $('#roomImgPreview5').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+	
+	
+	
+	
+	
 	
 	$("#modfiyBtn").click(function(){
 		$("#frm").submit();
 	});
 	
-	$("#cancleBtn").click(function(){
+	$("#cancelBtn").click(function(){
 		history.back();
 	});
+	
+	
 })
 </script>
 
@@ -139,6 +217,8 @@ $(function(){
                     </div>
                 </div>
                 <input type="hidden" name="num" th:value="${param.num}">
+                <input type="hidden" id="roomCheckIn" th:value="${room.roomCheckIn}">
+                <input type="hidden" id="roomCheckOut" th:value="${room.roomCheckOut}">
 
                 <div class="breadcome-list" style="margin-left:35px; width:1655px; border-radius: 20px;">
                     <div style="
@@ -198,11 +278,11 @@ $(function(){
                                 <h4 style="margin:0 0 10px; color:#2a3a6b; font-weight:600; font-size:13px; text-align: center;">체크인/아웃 시간</h4>
                                 <div style="display: flex; align-items: center; gap: 8px;">
                                     <select name="roomCheckIn" id="checkInTime" style="flex: 1; background-color: white; color: #000000; border: 1px solid #ccc; border-radius: 5px; padding: 6px 2px; font-size: 13px; font-weight: 500; cursor: pointer; text-align: center;">
-                                        <option th:value="${room.roomCheckIn}" th:text="${room.roomCheckIn}" selected></option>
+                                        <option th:each="hour : ${#numbers.sequence(00, 24)}" th:value="${#numbers.formatInteger(hour, 2) + ':00'}" th:text="${#numbers.formatInteger(hour, 2) + ':00'}"></option>
                                     </select>
                                     <span style="color: #2a3a6b; font-weight: bold; font-size: 14px; opacity: 0.5;">/</span>
                                     <select name="roomCheckOut" id="checkOutTime" style="flex: 1; background-color: white; color: #000000; border: 1px solid #ccc; border-radius: 5px; padding: 6px 2px; font-size: 13px; font-weight: 500; cursor: pointer; text-align: center;">
-                                        <option th:value="${room.roomCheckOut}" th:text="${room.roomCheckOut}" selected></option>
+                                        <option th:each="hour : ${#numbers.sequence(00, 24)}" th:value="${#numbers.formatInteger(hour, 2) + ':00'}" th:text="${#numbers.formatInteger(hour, 2) + ':00'}"></option>
                                     </select>
                                 </div>
                             </div>
