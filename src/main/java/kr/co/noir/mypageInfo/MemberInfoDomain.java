@@ -12,7 +12,7 @@ import lombok.ToString;
 @ToString
 public class MemberInfoDomain {
 
-	private String lastName, firstName,email,tel,emailIdStr,emailDomain;
+	private String lastName, firstName,email,tel,emailIdStr,emailDomain,pass;
 	private Date birth;
 	public String getLastName() {
 		return lastName;
@@ -36,6 +36,9 @@ public class MemberInfoDomain {
 	}
 	public Date getBirth() {
 		return birth;
+	}
+	public String getPass() {
+		return pass;
 	}
 
 	

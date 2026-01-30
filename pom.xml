@@ -125,7 +125,12 @@
 		    <artifactId>spring-security-crypto</artifactId>
 		    <version>7.0.2</version>
 		    <scope>compile</scope>
-		</dependency> 
+		</dependency>
+		<dependency>
+			<groupId>kr.co.sist</groupId>
+			<artifactId>spring_prj</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple -->
 		<dependency>
     	<groupId>com.googlecode.json-simple</groupId>

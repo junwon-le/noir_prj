@@ -84,6 +84,16 @@ public class RoomService {
 		return list;
 	}
 	
+	public RoomPriceDomain searchRoomCheckPrice(RoomPriceDTO rpDTO){
+		RoomPriceDomain list=null;
+		try {
+			list = rDAO.selectCheckRoomPrice(rpDTO);
+		}catch(PersistenceException pe) {
+			pe.printStackTrace();
+		}
+		return list;
+	}
+	
 	
 	public int modifyRoom(RoomDTO rDTO) {
 		int cnt = 0;
@@ -104,6 +114,19 @@ public class RoomService {
 		int cnt=0;
 		try {
 			cnt=rDAO.updateRoomPrice(rpDTO);
+		}catch(PersistenceException pe) {
+			pe.printStackTrace();
+		}
+		
+		
+		return cnt;
+		
+	}
+	public int addRoomPrice(RoomPriceDTO rpDTO) {
+		
+		int cnt=0;
+		try {
+			cnt=rDAO.insertRoomPrice(rpDTO);
 		}catch(PersistenceException pe) {
 			pe.printStackTrace();
 		}

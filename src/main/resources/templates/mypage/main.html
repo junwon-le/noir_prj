@@ -231,54 +231,7 @@ $(document).on('click','.btn_pop_close',function(e){
 
 <div class="container">
     <div class="row equal-height-row g-4">
-        <div class="col-lg-3">
-            <div class="sidebar">
-                <div class="mypage-title">
-                    <h2><a href="/mypage/">MYPAGE</a></h2>
-                    <p th:text="|${memberName}님|">님</p>
-                </div>
-
-                <div class="menu-group">
-                    <div class="menu-header">
-                        <span class="header-content">
-                            <span class="icon-wrapper">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line><polyline points="9 16 11 18 15 14"></polyline></svg>
-                            </span>
-                            예약확인
-                        </span>
-                    </div>
-                    <a href="#" class="menu-item">객실 예약 내역 <span class="badge-outline">Room</span></a>
-                    <a href="#" class="menu-item">다이닝 예약 내역 <span class="badge-outline">Dining</span></a>
-                </div>
-
-                <div class="menu-group">
-                    <div class="menu-header">
-                        <span class="header-content">
-                            <span class="icon-wrapper">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                            </span>
-                            기타 관리
-                        </span>
-                    </div>
-                    <a href="#" class="menu-item">후기 작성 <span class="badge-outline">Review</span></a>
-                    <a href="#" class="menu-item">문의 내역 <span class="badge-outline">Q&A</span></a>
-                </div>
-
-                <div class="menu-group">
-                    <div class="menu-header">
-                        <span class="header-content">
-                            <span class="icon-wrapper">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                            </span>
-                            개인정보관리
-                        </span>
-                    </div>
-                    <a href="/mypage/info/passwordCheck" class="menu-item">회원정보 수정 <span class="badge-outline">Edit</span></a>
-                    <a href="#" class="menu-item">비밀번호 변경 <span class="badge-outline">Password</span></a>
-                    <a href="#" class="menu-item">회원탈퇴 <span class="badge-outline">Leave</span></a>
-                </div>
-            </div>
-        </div>
+        <th:block th:replace="~{fragments/myPageSideBar :: myPageSideBar}"></th:block>
 
         <div class="col-lg-9">
             <div class="main-content-wrapper">
