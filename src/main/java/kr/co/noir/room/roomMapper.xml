@@ -151,6 +151,9 @@
         <if test="roomBadType != null">
 		room_bad_type=#{roomBadType},
 		</if>
+		<if test="roomDetail != null">
+		room_detail=#{roomDetail},
+		</if>
         <if test="roomCheckIn != null">
 		room_check_in=#{roomCheckIn},
 		</if>

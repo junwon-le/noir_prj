@@ -9,9 +9,7 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
 import java.util.UUID;
-import kr.co.noir.interceptor.UserInterceptor;
-import kr.co.noir.login.LoginController;
-import org.json.simple.JSONArray;
+
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,20 +24,17 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.servlet.http.HttpSession;
+import kr.co.noir.interceptor.UserInterceptor;
 
 @Controller
 public class RoomController {
 
-    private final UserInterceptor userInterceptor;
 
 
 
 	@Autowired
 	private RoomService rService;
 
-    RoomController(UserInterceptor userInterceptor) {
-        this.userInterceptor = userInterceptor;
-    }
 
 	/**
 	 * 사용자 숙소 보기
@@ -198,7 +193,7 @@ public class RoomController {
 		
 		int cnt = 0;
 		cnt = rService.modifyRoom(rDTO);
-		
+		System.out.println(rDTO);
 		
 //		File upFile = new File("C:/dev/workspace/spring_mvc/src/main/resources/static/upload/"+fileName);
 		
@@ -206,10 +201,7 @@ public class RoomController {
 		//FileDTO에 업로드된 파일명을 설정.
 		//rDTO.setUpFileName(fileName);		
 		model.addAttribute("cnt", cnt);
-		
-		
-		
-		
+
 		return "/manager/room/roomMgrModifyProcess";
 	}
 	

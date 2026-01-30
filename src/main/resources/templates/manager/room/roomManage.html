@@ -125,7 +125,7 @@
     	
         $('.modifyBtn').click(function(){
         	var idx = $('.modifyBtn').index(this) + 1;
-        	location.href="/admin/roomMgrModify?num="+idx;
+        	location.href="/admin/roomMgrModify?num="+idx+"&date=[[${param.date}]]";
         })
         
         

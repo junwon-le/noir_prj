@@ -102,31 +102,48 @@
 		============================================ -->
     <script src="/admin_common/js/main.js"></script>
     
-<script>
-	$(function () {
-    	const today = new Date().toISOString().slice(0, 10);
-    	$('#dateInput').val(today);
-    	
-     	$('#dateInput').change(function(){
+    
+<style>
+    /* 마우스 호버 및 포커스 시 효과 */
+    .custom-editor:hover {
+        background-color: #ffffff !important;
+        border-color: #cbd5e1 !important;
+    }
+    .custom-editor:focus {
+        background-color: #ffffff !important;
+        border-color: #4f46e5 !important;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+    /* 에디터 호버/포커스 효과 */
+    .custom-editor:hover { background-color: #ffffff !important; border-color: #cbd5e1 !important; }
+    .custom-editor:focus { background-color: #ffffff !important; border-color: #4f46e5 !important; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
 
-    		
-    		var date = $('#dateInput').val();
-    		if(date==""){
-    			alert("날짜를 선택해주세요(미선택시 오늘 날짜로 처리됩니다.)");
-    			$('#dateInput').val(today);
-    		}else{
-    			$('#dateInput').val(date);
-    		}
-    		
-    		location.href="roomManage.jsp?date="+date;
-    		
-    	}); 
-    		
-    	
-	});
+    /* 슬림 스크롤바 디자인 (Webkit 브라우저 전용) */
+    .scrollable-content::-webkit-scrollbar {
+        width: 6px;
+    }
+    .scrollable-content::-webkit-scrollbar-track {
+        background: #f1f5f9;
+        border-radius: 10px;
+    }
+    .scrollable-content::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 10px;
+    }
+    .scrollable-content::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+    }
+</style>
+<script>
+	
+	
+	
 	
 </script>
-    
+<script th:if="${msg != null}">
+    alert("[[${msg}]]");
+</script>
+        
 </head>
 
 <body>
@@ -175,44 +192,84 @@
     ">
         
         <div style="width: 100%; height: 100%; overflow: hidden; border-radius: 10px;">
-            <img src="/common/images/homepage/bg01.jpg" style="width: 100%; height: 100%; object-fit: cover;">
+            <img th:src="|/common/images/homepage/${dinning.dinningImg1}|" style="width: 100%; height: 100%; object-fit: cover;">
         </div>
 
-        <div class="breadcome-list" style="margin: 0; padding: 20px; background: #ffffff; border-radius: 10px;">
-            <label style="display: block; color: #666; font-size: 12px; margin-bottom: 8px; font-weight: 600;">운영 정보 1</label>
-            <textarea style="width: 100%; height: calc(100% - 30px); border: none; resize: none; font-size: 14px; line-height: 1.6; color: #333; outline: none;" readonly>
-Breakfast : 06:30 ~ 10:30
-Lunch : 12:00 ~ 14:30
-Dinner : 18:00 ~ 21:30
+<div class="breadcome-list" style="margin: 0; padding: 25px; background: #ffffff; border-radius: 12px; box-shadow: 0 2px 15px rgba(0,0,0,0.05); border: 1px solid #eef2f6;">
+    <div style="display: flex; align-items: center; margin-bottom: 15px; padding-bottom: 12px; border-bottom: 1px dashed #ebedf2;">
+        <label style="display: block; color: #334155; font-size: 14px; font-weight: 700;" th:text="|${dinning.dinningName} 정보 관리|">정보 관리</label>
+    </div>
 
-좌석수 : 280석
-            </textarea>
+    <div contenteditable="true" class="custom-editor scrollable-content" 
+         style="max-height: 300px; overflow-y: auto; padding: 20px; color: #475569; font-size: 13px; line-height: 1.8; border: 1px solid #f1f5f9; border-radius: 8px; background-color: #f8fafc; outline: none; transition: all 0.2s ease;">
+        
+        
+
+        <div style="margin-bottom: 20px;">
+            <div style="color: #94a3b8; margin-bottom: 15px;">
+            <strong style="color: #1e293b; display: block; margin-bottom: 8px; font-size: 12px; border-left: 3px solid #4f46e5; padding-left: 8px;">[부제목]</strong>
+                <div th:text="${dinning.dinningDetail}" style="color: #64748b;"></div>
+                
+            </div>
+            <div style="color: #94a3b8; margin-bottom: 15px;">
+            <strong style="color: #1e293b; display: block; margin-bottom: 8px; font-size: 12px; border-left: 3px solid #4f46e5; padding-left: 8px;">[운영시간]</strong>
+                <div th:text="|조식 : ${dinning.dinningMorningStr} ~ ${dinning.dinningMorningEnd}|" style="color: #64748b;"></div>
+                <div th:text="|중식 : ${dinning.dinningLunchStr} ~ ${dinning.dinningLunchEnd}|" style="color: #64748b;"></div>
+                <div th:text="|석식 : ${dinning.dinningDinnerStr} ~ ${dinning.dinningDinnerEnd}|" style="color: #64748b;"></div>                
+            </div>
+            
+            <div style="color: #94a3b8; margin-bottom: 15px;">
+            <strong style="color: #1e293b; display: block; margin-bottom: 8px; font-size: 12px; border-left: 3px solid #4f46e5; padding-left: 8px;">[운영시간]</strong>
+                <div th:text="|조식 : ${dinning.dinningMorningStr} ~ ${dinning.dinningMorningEnd}|" style="color: #64748b;"></div>
+                <div th:text="|중식 : ${dinning.dinningLunchStr} ~ ${dinning.dinningLunchEnd}|" style="color: #64748b;"></div>
+                <div th:text="|석식 : ${dinning.dinningDinnerStr} ~ ${dinning.dinningDinnerEnd}|" style="color: #64748b;"></div>                
+            </div>
+            
+            <div style="color: #94a3b8; margin-bottom: 15px;">
+            <strong style="color: #1e293b; display: block; margin-bottom: 8px; font-size: 12px; border-left: 3px solid #4f46e5; padding-left: 8px;">[최대 인원]</strong>
+                <div th:text="|${dinning.dinningMaxTable}명|" style="color: #64748b;"></div>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+            <strong style="color: #1e293b; display: block; margin-bottom: 8px; font-size: 12px; border-left: 3px solid #4f46e5; padding-left: 8px;">[다이닝 소개]</strong>
+            <div th:text="${dinning.dinningEx}" style="color: #64748b; white-space: pre-wrap;">
+                이곳에 내용을 입력하세요. 내용이 많아지면 자동으로 우측에 스크롤이 생성됩니다.
+            </div>
         </div>
+            
+             
+        </div>
+    </div>
+</div>
+            
+             
+
+
 
        <div class="breadcome-list" style="flex: 1; margin: 0; padding: 0; background: #ffffff; border-radius: 10px; overflow: hidden; box-shadow: none; min-height: 0; height: fit-content;">
     <table style="width: 100%; border-collapse: collapse; color: #333; text-align: center; font-size: 13px; margin-bottom: 0;">
         <thead style="background: #f9faff; border-bottom: 1px solid #eff2f7;">
             <tr>
-                <th style="padding: 10px; color: #2a3a6b; font-weight: 700; width: 30%;">가격</th>
-                <th style="padding: 10px; color: #2a3a6b; font-weight: 700;">어른</th>
-                <th style="padding: 10px; color: #2a3a6b; font-weight: 700;">어린이</th>
+                <th style="text-align:center; padding: 10px; color: #2a3a6b; font-weight: 700; width: 30%;">가격</th>
+                <th style="text-align:center; padding: 10px; color: #2a3a6b; font-weight: 700;">어른</th>
+                <th style="text-align:center; padding: 10px; color: #2a3a6b; font-weight: 700;">어린이</th>
             </tr>
         </thead>
         <tbody>
             <tr style="border-bottom: 1px solid #eff2f7;">
-                <td style="padding: 6px; font-weight: 600; background: #fdfdfd;">조식</td>
-                <td style="padding: 4px;"><input type="text" value="Content" style="width: 90%; height: 28px; border: 1px solid #eee; border-radius: 4px; text-align: center;"></td>
-                <td style="padding: 4px;"><input type="text" style="width: 90%; height: 28px; border: 1px solid #eee; border-radius: 4px; text-align: center;"></td>
+                <td style="padding: 6px; font-weight: 600; background: #fdfdfd;" th:text="${dinningList[0].dinningMenuType}">조식</td>
+                <td style="padding: 4px;"><input type="text" readonly="readonly" value="Content" style="width: 90%; height: 28px; border: 1px solid #eee; border-radius: 4px; text-align: center;" th:value="${dinningList[0].adultPrice}"></td>
+                <td style="padding: 4px;"><input type="text" readonly="readonly" style="width: 90%; height: 28px; border: 1px solid #eee; border-radius: 4px; text-align: center;" th:value="${dinningList[0].kidPrice}"></td>
             </tr>
             <tr style="border-bottom: 1px solid #eff2f7;">
-                <td style="padding: 6px; font-weight: 600; background: #fdfdfd;">중식</td>
-                <td style="padding: 4px;"><input type="text" value="Content" style="width: 90%; height: 28px; border: 1px solid #eee; border-radius: 4px; text-align: center;"></td>
-                <td style="padding: 4px;"><input type="text" style="width: 90%; height: 28px; border: 1px solid #eee; border-radius: 4px; text-align: center;"></td>
+                <td style="padding: 6px; font-weight: 600; background: #fdfdfd;" th:text="${dinningList[1].dinningMenuType}">중식</td>
+                <td style="padding: 4px;"><input type="text" readonly="readonly"   value="Content" style="width: 90%; height: 28px; border: 1px solid #eee; border-radius: 4px; text-align: center;" th:value="${dinningList[1].adultPrice}"></td>
+                <td style="padding: 4px;"><input type="text" readonly="readonly" style="width: 90%; height: 28px; border: 1px solid #eee; border-radius: 4px; text-align: center;" th:value="${dinningList[1].kidPrice}"></td>
             </tr>
             <tr style="border-bottom: none;">
-                <td style="padding: 6px; font-weight: 600; background: #fdfdfd;">석식</td>
-                <td style="padding: 4px;"><input type="text" value="Content" style="width: 90%; height: 28px; border: 1px solid #eee; border-radius: 4px; text-align: center;"></td>
-                <td style="padding: 4px;"><input type="text" style="width: 90%; height: 28px; border: 1px solid #eee; border-radius: 4px; text-align: center;"></td>
+                <td style="padding: 6px; font-weight: 600; background: #fdfdfd;" th:text="${dinningList[2].dinningMenuType}">석식</td>
+                <td style="padding: 4px;"><input type="text" readonly="readonly" value="Content" style="width: 90%; height: 28px; border: 1px solid #eee; border-radius: 4px; text-align: center;" th:value="${dinningList[2].adultPrice}"></td>
+                <td style="padding: 4px;"><input type="text" readonly="readonly" style="width: 90%; height: 28px; border: 1px solid #eee; border-radius: 4px; text-align: center;" th:value="${dinningList[2].kidPrice}"></td>
             </tr>
         </tbody>
     </table>
@@ -229,26 +286,26 @@ Dinner : 18:00 ~ 21:30
         </thead>
         <tbody>
             <tr style="border-bottom: 1px solid #eff2f7;">
-                <td style="padding: 6px; font-weight: 600; background: #fdfdfd; color: #333;">조식</td>
-                <td style="padding: 4px;"><input type="text" value="Content" style="width: 90%; height: 28px; padding: 2px 8px; border: 1px solid #eee; border-radius: 4px; text-align: center; color: #333; font-size: 13px;"></td>
-                <td style="padding: 4px;"><input type="text" style="width: 90%; height: 28px; padding: 2px 8px; border: 1px solid #eee; border-radius: 4px; text-align: center; color: #333; font-size: 13px;"></td>
+                <td style="padding: 6px; font-weight: 600; background: #fdfdfd; color: #333;" th:text="${dinningList[0].dinningMenuType}">조식</td>
+                <td style="padding: 4px;"><input type="text"  th:value="${dinningList[0].dinningMenuMain}" value="Content" style="width: 90%; height: 28px; padding: 2px 8px; border: 1px solid #eee; border-radius: 4px; text-align: center; color: #333; font-size: 13px;"></td>
+                <td style="padding: 4px;"><input type="text" th:value="${dinningList[0].dinningMenuSub}" style="width: 90%; height: 28px; padding: 2px 8px; border: 1px solid #eee; border-radius: 4px; text-align: center; color: #333; font-size: 13px;"></td>
             </tr>
             <tr style="border-bottom: 1px solid #eff2f7;">
-                <td style="padding: 6px; font-weight: 600; background: #fdfdfd; color: #333;">중식</td>
-                <td style="padding: 4px;"><input type="text" value="Content" style="width: 90%; height: 28px; padding: 2px 8px; border: 1px solid #eee; border-radius: 4px; text-align: center; color: #333; font-size: 13px;"></td>
-                <td style="padding: 4px;"><input type="text" style="width: 90%; height: 28px; padding: 2px 8px; border: 1px solid #eee; border-radius: 4px; text-align: center; color: #333; font-size: 13px;"></td>
+                <td style="padding: 6px; font-weight: 600; background: #fdfdfd; color: #333;" th:text="${dinningList[1].dinningMenuType}">중식</td>
+                <td style="padding: 4px;"><input type="text" th:value="${dinningList[1].dinningMenuMain}" value="Content" style="width: 90%; height: 28px; padding: 2px 8px; border: 1px solid #eee; border-radius: 4px; text-align: center; color: #333; font-size: 13px;"></td>
+                <td style="padding: 4px;"><input type="text" th:value="${dinningList[1].dinningMenuSub}" style="width: 90%; height: 28px; padding: 2px 8px; border: 1px solid #eee; border-radius: 4px; text-align: center; color: #333; font-size: 13px;"></td>
             </tr>
             <tr style="border-bottom: none;">
-                <td style="padding: 6px; font-weight: 600; background: #fdfdfd; color: #333;">석식</td>
-                <td style="padding: 4px;"><input type="text" value="Content" style="width: 90%; height: 28px; padding: 2px 8px; border: 1px solid #eee; border-radius: 4px; text-align: center; color: #333; font-size: 13px;"></td>
-                <td style="padding: 4px;"><input type="text" style="width: 90%; height: 28px; padding: 2px 8px; border: 1px solid #eee; border-radius: 4px; text-align: center; color: #333; font-size: 13px;"></td>
+                <td style="padding: 6px; font-weight: 600; background: #fdfdfd; color: #333;" th:text="${dinningList[2].dinningMenuType}">석식</td>
+                <td style="padding: 4px;"><input type="text" th:value="${dinningList[2].dinningMenuMain}" value="Content" style="width: 90%; height: 28px; padding: 2px 8px; border: 1px solid #eee; border-radius: 4px; text-align: center; color: #333; font-size: 13px;"></td>
+                <td style="padding: 4px;"><input type="text" th:value="${dinningList[2].dinningMenuSub}" style="width: 90%; height: 28px; padding: 2px 8px; border: 1px solid #eee; border-radius: 4px; text-align: center; color: #333; font-size: 13px;"></td>
             </tr>
         </tbody>
     </table>
 </div>
         </div>
 		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="display: flex; justify-content: flex-end; padding: 0 40px; margin-top: 20px; margin-bottom: 50px;">
-   			<button style="background: #7d9ad1; color: white; border: none; padding: 12px 30px; border-radius: 6px; font-weight: 600; font-size: 14px; cursor: pointer; transition: 0.2s;">
+   			<button th:onclick="|location.href='@{/admin/dinningMgrDetail}'|" id="modifyBtn" style="background: #7d9ad1; color: white; border: none; padding: 12px 30px; border-radius: 6px; font-weight: 600; font-size: 14px; cursor: pointer; transition: 0.2s;">
       		메뉴 및 정보 수정
     		</button>
 		</div>
