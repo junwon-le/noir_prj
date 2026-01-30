@@ -61,6 +61,11 @@ public class MainController {
 		return "/hotel/laundry";
 	}	
 	
+	@GetMapping("/hotel/location")
+	public String location() {
+		return "/hotel/location";
+	}	
+	
 	@GetMapping("/join")
 	public String join() {
 		return "/login/join";
