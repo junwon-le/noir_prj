@@ -128,7 +128,6 @@ $(function(){
 	$("#kidUp").click(function(){
 		kidCnt+=1;
 		$("#showKidCnt").text(kidCnt);
-		
 	})
 	$("#kidDown").click(function(){
 		if(kidCnt > 0){ // 0보다 클 때만 감소
@@ -146,6 +145,10 @@ $(function(){
 		}
 		if($("#display-checkout").text() == "-" ){
 			alert("체크인/체크아웃 날짜를 확인해주세요.");
+			return;
+		}
+		if(kidCnt > roomCnt*2 ){
+			alert("어린이 인원을 확인해 주세요.( 어린이는 객실 당 2명까지 동반가능합니다. )");
 			return;
 		}
 		//예약하는 방 정보 넘기기
@@ -212,7 +215,8 @@ $(function(){
 		selectDiv+=`<div style="background-color: #e5e7eb; border-radius: 2px; padding:3px; display: flex;" id='${divNum}'> 
 			<div style="display:flex; align-items: center; justify-content:space-between; width: 230px;">
 			<span class='font-bold !text-black text-sm'>${roomName}  |</span>
-			<input type="hidden" name="room_type" value="${roomNum}"/>
+			<input type="hidden" name="room_num" value="${roomNum}"/>
+			<input type="hidden" name="room_type" value="${roomName}"/>
 			<span class='font-bold !text-black text-sm' >인원 : ${personCnt}명</span>
 			</div>
 			<div style="margin-left:auto;">
@@ -401,6 +405,10 @@ $(function(){
 									</div>
 								</div>
 							</div>
+									<span style="margin-top: 10px; font-size:10px; line-height: 1.2; display: inline-block;">
+    									*만 14세까지 어린이에 해당합니다.<br/>
+    									*어린이는 객실 당 2명까지 동반 가능합니다.
+									</span>
 						</div>
 				
 						<div class="space-y-2 " id="selectRoom">
@@ -482,7 +490,7 @@ $(function(){
 						if (selectedDates.length > 1) {
 							document.getElementById('display-checkout').innerText = instance
 									.formatDate(selectedDates[1], "Y-m-d (D)");
-							$("#checkout").val(instance.formatDate(selectedDates[0], "Y-m-d (D)"));
+							$("#checkout").val(instance.formatDate(selectedDates[1], "Y-m-d (D)"));
 							startDate= instance.formatDate(selectedDates[0], "Y-m-d");
 							var endDate= instance.formatDate(selectedDates[1], "Y-m-d");
 							//선택 기간 중 남은 방 검색

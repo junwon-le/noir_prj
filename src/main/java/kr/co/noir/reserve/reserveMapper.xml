@@ -3,6 +3,7 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="kr.co.sist.reserve">
+  	<!-- 선택된 날짜에 남은 객실 검색 보류 중인 방 제외 -->
   	<select id="selectRoom" parameterType="roomSearchDTO" resultType="roomSearchDomain">
   	<![CDATA[
 SELECT 
@@ -73,7 +74,61 @@ HAVING
     -- 최종적으로 방이 남아있는 객실만 조회
     (ri.room_count - NVL(ra.cnt, 0) - NVL(rd.pending_cnt, 0)) > 0
 ORDER BY 
-    start_date_price ASC
+    room_type_num ASC
+  	]]>
+  	</select>
+  	<!-- 서버에서 해당 날짜에 남은 객실 조회하여 검증  -->
+  	<select id="selectRoomServer" parameterType="roomSearchDTO" resultType="roomSearchDomain">
+  	<![CDATA[
+SELECT 
+    ri.room_type_num,
+    ri.room_type,
+    ri.room_detail,
+    ri.room_img1,
+    ri.room_max_person,
+    -- 첫날 가격
+    MIN(CASE WHEN rp.room_date = TO_DATE(#{startDate}, 'yyyy-MM-dd') THEN rp.room_price END) AS start_date_price,
+    -- 총 요금 (NULL인 경우 0으로 표시)
+    NVL(SUM(rp.room_price), 0) AS total_sum_price,
+    -- 예약된 방 개수
+    NVL(ra.cnt, 0) AS reserved_count,
+    -- 잔여 방 개수 (결과가 0이어도 표시됨)
+    (ri.room_count - NVL(ra.cnt, 0)) AS available_count
+FROM 
+    room_info ri
+-- 가격 정보가 없어도 방 목록은 나와야 하므로 LEFT JOIN으로 변경
+LEFT JOIN 
+    room_price rp ON ri.room_type_num = rp.room_type_num
+    AND rp.room_date >= TO_DATE(#{startDate}, 'yyyy-MM-dd')
+    AND rp.room_date < TO_DATE(#{endDate}, 'yyyy-MM-dd')
+LEFT JOIN (
+    SELECT 
+        rr.room_type_num, 
+        COUNT(*) AS cnt
+    FROM 
+        room_res rr
+    JOIN 
+        reserve r ON rr.reserve_num = r.reserve_num
+    WHERE 
+        r.reserve_status = 'N'
+        AND r.reserve_start_date < TO_DATE(#{endDate}, 'yyyy-MM-dd')
+        AND r.reserve_end_date > TO_DATE(#{startDate}, 'yyyy-MM-dd')
+    GROUP BY 
+        rr.room_type_num
+) ra ON ri.room_type_num = ra.room_type_num
+WHERE 
+    1=1
+GROUP BY 
+    ri.room_type_num, 
+    ri.room_type, 
+    ri.room_detail, 
+    ri.room_img1, 
+    ri.room_max_person,
+    ri.room_count,
+    ra.cnt
+-- HAVING 절의 (ri.room_count - NVL(ra.cnt, 0)) > 0 조건을 제거함
+ORDER BY 
+    room_type_num ASC
   	]]>
   	</select>
   	
@@ -105,8 +160,16 @@ ORDER BY
 		values( room_res_seq.nextval, #{temp_room_type} ,#{reserve_num})		
 	</insert>
 	<!-- 결제 테이블에 추가 -->
-	<insert id="insertPay" parameterType="roomReserveDTO">
-		insert into pay (pay_num, reserve_num, pay_price) values( pay_seq.nextval , #{reserve_num},#{pay_price} )		
+	<insert id="insertPay" parameterType="payInfoDTO">
+		<selectKey keyProperty="pay_num" resultType="int" order="BEFORE">
+	        select pay_seq.nextval from dual
+	    </selectKey>
+		insert into pay (pay_num, reserve_num, pay_price) values( #{pay_num} , #{reserve_num},#{pay_price} )		
+	</insert>
+	<!-- 결제 정보 테이블에 추가 -->
+	<insert id="insertPayInfo" parameterType="payInfoDTO">
+		insert into pay_info (payinfo_num, pay_num, pay_agency, billing_key, card_num, pg_provider, input_date,merchant_uid)
+		values(pay_info_seq.nextval, #{pay_num},#{agency},#{billing_key},#{card_number},#{pg_provider},systimestamp,#{merchant_uid})		
 	</insert>
 	
 	<delete id="deletePending" parameterType="String">

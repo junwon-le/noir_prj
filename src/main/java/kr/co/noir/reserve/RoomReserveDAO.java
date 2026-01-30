@@ -21,6 +21,15 @@ public class RoomReserveDAO {
 		return list;
 	}//selectRoom
 	
+	public List<RoomSearchDomain> selectRoomServer(RoomSearchDTO rsDTO) throws SQLException{
+		List<RoomSearchDomain> list = null;
+		
+		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
+		list=ss.selectList("kr.co.sist.reserve.selectRoomServer",rsDTO);
+		if(ss!=null) {	ss.close();	}
+		return list;
+	}//selectRoomServer
+	
 	public MemberDomain selectMember(String id) throws SQLException{
 		MemberDomain memberDomain = null;
 		
@@ -50,9 +59,9 @@ public class RoomReserveDAO {
 		return cnt; 
 	}//deleteDepending
 	
-	public int insertRoomReserve(PayInfoDTO pDTO, RoomReserveDTO rrDTO) {
+	public int insertRoomReserve(PayInfoDTO pDTO, RoomReserveDTO rrDTO) throws PersistenceException {
 		int cnt =0;
-		int ok= 1+rrDTO.getRoom_type().size()+1;
+		int ok= 1+rrDTO.getRoom_type().size()+1+1;
 		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
 		//예약 테이블에 추가
 		cnt = ss.insert("kr.co.sist.reserve.insertRoomReserve",rrDTO);
@@ -62,10 +71,10 @@ public class RoomReserveDAO {
 			cnt += ss.insert("kr.co.sist.reserve.insertParlor",rrDTO);
 		}
 		//결제 테이블 추가
-		pDTO.setReserve_num(rrDTO.getReserve_num());
+		pDTO.setReserve_num(rrDTO.getReserve_num());//예약번호
 		cnt += ss.insert("kr.co.sist.reserve.insertPay",pDTO);
 		//결제 정보 테이블 추가
-		
+		cnt += ss.insert("kr.co.sist.reserve.insertPayInfo",pDTO);
 		if(cnt == ok) {	
 			ss.commit();
 			ss.close();	
@@ -74,7 +83,7 @@ public class RoomReserveDAO {
 		}
 	
 		
-		return 0;
+		return cnt;
 	}
 	
 	

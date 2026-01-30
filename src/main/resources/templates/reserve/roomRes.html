@@ -30,6 +30,7 @@
     }, function (rsp) {
       if (rsp.success) {
         	$("#billing_key").val(rsp.customer_uid);
+        	$("#merchant_uid").val(rsp.merchant_uid);
         /* 	$("#card_number").val(rsp.card_number);
         	$("#agency").val(rsp.card_name);
         	$("#pg_provider").val(rsp.pg_provider);
@@ -309,8 +310,8 @@ margin-top: 10px;
                 </div>
                 <!-- pg사 정보  -->
                 <input type="hidden" value="" id="billing_key" name="billing_key"/>
-<!--                 <input type="hidden" value="" id="merchant_uid" name="merchant_uid"/>
-                <input type="hidden" value="" id="card_number" name="card_number"/>
+                <input type="hidden" value="" id="merchant_uid" name="merchant_uid"/>
+<!--            <input type="hidden" value="" id="card_number" name="card_number"/>
                 <input type="hidden" value="" id="agency" name="agency"/>
                 <input type="hidden" value="" id="pg_provider" name="pg_provider"/> -->
  <!--                <input type="hidden" value="" id="pay_price"/>
@@ -330,8 +331,10 @@ margin-top: 10px;
                 <th:block th:unless="${param.room_type.empty}">
                 <div th:each="roomName,i : ${param.room_type}" class="flex justify-between">
                 <div>객실<span th:text="${i.count}"></span></div><span class="font-semibold text-right" th:text="${roomName}">룸 타입</span>
-                <input type="hidden" th:value="${roomName}" name="room_type" />
                 </div>
+                </th:block>
+                <th:block th:unless="${param.room_num.empty}">
+                <input type="hidden" th:each="roomNum,i : ${param.room_num}" th:value="${roomNum}" name="room_type" />
                 </th:block>
             </div>
             <div class="border-t pt-4">

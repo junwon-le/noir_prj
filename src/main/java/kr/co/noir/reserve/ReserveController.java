@@ -91,7 +91,8 @@ public class ReserveController {
 	}
 	
 	@PostMapping("/complete")
-	public String reserveComplete(RoomReserveDTO rrDTO ,PayInfoDTO pDTO, HttpSession session, HttpServletRequest request) {
+	public String reserveComplete(RoomReserveDTO rrDTO ,PayInfoDTO pDTO, HttpSession session, HttpServletRequest request, Model model) {
+		String url ="/reserve/complete";
 		//session id 가져오기
 		//String id=session.getAttribute("userId");
 		String id="user1";
@@ -102,12 +103,14 @@ public class ReserveController {
 		rrDTO.setReserve_type("room");
 		
 		//예약 완료 시 테이블에 정보 추가
-		rrs.addRoomReserve(pDTO,rrDTO);
-		
+		boolean flag = rrs.addRoomReserve(pDTO,rrDTO);
+		if(!flag) {
+			url="reserve/err";
+		}
 		//예약 완료 시 보류 테이블에서 삭제 
 		rrs.deleteDepending(id);
 		
-		return "/reserve/complete";
+		return url;
 	}
 	
 	@ResponseBody
