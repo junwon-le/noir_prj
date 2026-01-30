@@ -35,6 +35,18 @@ public class DinningService {
 		return list; 
 	}
 	
+	public int modifyDinning(DinningDTO dDTO) {
+		int cnt=0;
+		
+		try {
+			cnt=dDAO.updateDinning(dDTO);
+		}catch(PersistenceException pe) {
+			pe.printStackTrace();
+		}
+		
+		return cnt;
+	}
+	
 
 	
 }

@@ -143,85 +143,111 @@ border:0px solid #333;
 
 
 </style>
+
+<script th:if="${msg != null}">
+    alert("[[${msg}]]");
+</script>
     
 <script>
 
-$(function(){
-	
-	$(".sel").change(function () {
-		if ($(this).prop("checked")) {
-		    $(".sel").not(this).prop("checked", false);
-	    }
-	});
-	
-	
-	
-	$("#modifyBtn").click(function(){
-		
-			$("#frm").submit();
-		
-	})
-	
-	$("#allSel").change(function(){
-		if ($("#allSel").is(":checked")) {
-		    $(".holiday, .workday").prop("checked", false);
-		}
-		
-		
-		$(".holiday").prop("checked", function(i,ele){
-			return !ele;
-		});
-		
-		
-		$(".workday").prop("checked", function(i,ele){
-			return !ele;
-		});
-						
-	});
-	
-	$("#holSel").change(function(){
-	    if ($(this).is(":checked")) {
-	        $(".holiday, .workday").prop("checked", false);
-	        $(".holiday").prop("checked", true);
-	    } else {
-	        $(".holiday").prop("checked", false);
-	    }
-	});
-	
-	$("#workSel").change(function () {
-	    resetAll();
+$(function () {
 
-	    if (this.checked) {
-	        $(".workday").prop("checked", true);
-	    }
-	});
-	
-	function resetAll() {
-	    $(".holiday, .workday").prop("checked", false);
-	}
-
-	$("#cancelBtn").click(function(){
-		history.back();
-	})
-	
-	
-	
-	var today = new Date();
-	var year = today.getFullYear();
-	var month = today.getMonth()+1;
-	var roomTypeNum = $("#roomTypeNum").val();
-	var selectedDay = year+"-0"+month;
-	if(month>9){
-		selectedDay = year+"-"+month;
-	}
-	
-	$("#roomPriceMonth").val(selectedDay);
-    createCalandar(selectedDay, roomTypeNum);
-
-    $("#roomPriceMonth").change(function(){
-        createCalandar($(this).val(), roomTypeNum);
+    /* ===============================
+       체크박스 단일 선택
+    =============================== */
+    $(".sel").change(function () {
+        if ($(this).prop("checked")) {
+            $(".sel").not(this).prop("checked", false);
+        }
     });
+
+    /* ===============================
+       수정 버튼
+    =============================== */
+    $("#modifyBtn").click(function () {
+
+        const price = $("#roomPrice").val();
+
+        if (price === "") {
+            alert("가격을 입력하세요");
+            return;
+        }
+
+        if (!isNumberOnly(price)) {
+            alert("가격을 잘못입력하였습니다.");
+            return;
+        }
+
+        if (!$(".holiday:checked").length && !$(".workday:checked").length) {
+            alert("날짜를 선택해주세요.");
+            return;
+        }
+
+        const month = $("#roomPriceMonth").val();
+        sessionStorage.setItem("roomPriceMonth", month);
+
+        $("#frm").submit();
+    });
+
+    /* ===============================
+       선택 옵션들
+    =============================== */
+    $("#allSel").change(function () {
+        $(".holiday, .workday").prop("checked", false);
+
+        $(".holiday").prop("checked", function (i, ele) {
+            return !ele;
+        });
+
+        $(".workday").prop("checked", function (i, ele) {
+            return !ele;
+        });
+    });
+
+    $("#holSel").change(function () {
+        $(".holiday, .workday").prop("checked", false);
+
+        if (this.checked) {
+            $(".holiday").prop("checked", true);
+        }
+    });
+
+    $("#workSel").change(function () {
+        $(".holiday, .workday").prop("checked", false);
+
+        if (this.checked) {
+            $(".workday").prop("checked", true);
+        }
+    });
+
+    $("#cancelBtn").click(function () {
+        history.back();
+    });
+
+    /* ===============================
+       ✅ 달력 초기화 (중요)
+    =============================== */
+    const roomTypeNum = $("#roomTypeNum").val();
+
+    // sessionStorage → 없으면 현재 월
+    const savedMonth = sessionStorage.getItem("roomPriceMonth");
+    const initMonth = savedMonth ?? new Date().toISOString().slice(0, 7);
+
+    // input[type=month] 맞추기
+    $("#roomPriceMonth").val(initMonth);
+
+    // 최초 달력 생성
+    createCalandar(initMonth, roomTypeNum);
+
+    // 월 변경 시
+    $("#roomPriceMonth").change(function () {
+        const month = $(this).val();
+        sessionStorage.setItem("roomPriceMonth", month);
+        createCalandar(month, roomTypeNum);
+    });
+
 });
+
 
 function createCalandar(e,n){
 	$.ajax({
@@ -243,56 +269,70 @@ function createCalandar(e,n){
 }
 function drawCalandar(e) {
 
-    var html = "<tr>";
+    const $tbody = $("#calandar tbody");
+    $tbody.empty(); // ⭐ 완전 초기화
 
-    for (var i = 0; i < e.firstDay; i++) {
+    let html = "<tr>";
+    let cellCount = 0; // 전체 셀 카운트 (7칸 기준)
+
+    // 1️⃣ 첫 요일 이전 빈칸
+    for (let i = 0; i < e.firstDay; i++) {
         html += "<td></td>";
+        cellCount++;
     }
 
-    for (var day = 1; day <= e.lastDate; day++) {
-		var idx= day-1;
-        var weekday = (e.firstDay + day - 1) % 7;
-        var price = getPriceByDay(e.priceList, day);
+    // 2️⃣ 날짜 출력
+    for (let day = 1; day <= e.lastDate; day++) {
 
-        var priceHtml = "";
+        const price = getPriceByDay(e.priceList, day);
+        const weekday = cellCount % 7;
+
+        let priceHtml =
+            "<input type='text' class='price' value=''>" +
+            "<input type='hidden' value='-1'>";
+
         if (price !== null) {
-            priceHtml = "<input type='text' class='price' value='" 
-                      + price.toLocaleString() 
-                      + "'><input type='hidden' name='roomPrices' value='"+price+"'>";
+            priceHtml =
+                "<input type='text' class='price' value='" + price.toLocaleString() + "'>" +
+                "<input type='hidden' value='" + price + "'>";
         }
-		
+
+        let tdStyle = "";
+        let checkboxClass = "workday";
+
         if (weekday === 0) {
-            html += "<td style='color:red'>"
-                 + day
-                 //+ "<input type='hidden' name='roomPriceDates' value='off'>"
-                 + "<input type='checkbox' name='roomPriceDates' class='holiday' value='"+day+"'><br>"
-                 + priceHtml
-                 + "</td>";
-
+            tdStyle = "style='color:red'";
+            checkboxClass = "holiday";
         } else if (weekday === 6) {
-            html += "<td style='color:blue'>"
-                 + day
-  //               +"<input type='hidden' name='roomPriceDates' value='off'>"
-                 +"<input type='checkbox' name='roomPriceDates' class='holiday' value='"+day+"'><br>"
-                 + priceHtml
-                 + "</td>";
-        } else {
-            html += "<td>"
-                 + day
-//                 + "<input type='hidden' name='roomPriceDates' value='off'>"
-                 + "<input type='checkbox' name='roomPriceDates' class='workday' value='"+day+"'><br>"
-                 + priceHtml
-                 + "</td>";
+            tdStyle = "style='color:blue'";
+            checkboxClass = "holiday";
         }
 
-        if (weekday === 6 && day !== e.lastDate) {
+        html += `
+            <td ${tdStyle}>
+                ${day}
+                <input type="checkbox" name="roomPriceDates" class="${checkboxClass}" value="${day}"><br>
+                ${priceHtml}
+            </td>
+        `;
+
+        cellCount++;
+
+        // 3️⃣ 7칸마다 줄바꿈
+        if (cellCount % 7 === 0 && day !== e.lastDate) {
             html += "</tr><tr>";
         }
     }
 
+    // 4️⃣ 마지막 주 빈칸 채우기
+    while (cellCount % 7 !== 0) {
+        html += "<td></td>";
+        cellCount++;
+    }
+
     html += "</tr>";
 
-    $("#calandar tbody").html(html);
+    $tbody.html(html);
 }
 
 
@@ -310,6 +350,17 @@ function getPriceByDay(priceList, day) {
         }
     }
     return null;
+}
+
+
+function isNumberOnly(value) {
+    for (let i = 0; i < value.length; i++) {
+        const code = value.charCodeAt(i);
+        if (code < 48 || code > 57) {
+            return false;
+        }
+    }
+    return true;
 }
 
 	
@@ -346,13 +397,18 @@ function getPriceByDay(priceList, day) {
         </div>
         <div class="contatiner" style="height:1050px; color:#ffffff">
         <div>
-			<form action="/admin/roomManagePriceProcess" id="frm">					
+			<form action="/admin/roomManagePriceProcess" id="frm" method="post">					
                    <div class="breadcome-list" style="margin-left:35px; width:1655px; border-radius: 20px;">
 					<div style="background: #1a233b; padding: 30px; border-radius: 15px; color: #ffffff; font-family: 'Pretendard', sans-serif; min-width: 800px;">
     
     <div style="text-align: center; margin-bottom: 25px;">
     	<input type="hidden" name="roomTypeNum" id="roomTypeNum" th:value="${param.num}">
-        <input type="month" name="roomPriceMonth" id="roomPriceMonth" th:value="${#temporals.format(#temporals.createNow(), 'yyyy-MM')}" style="padding: 8px 15px; border-radius: 6px; border: 1px solid #3d4b7a; background: #252f4a; color: white; font-weight: bold; font-size: 16px; outline: none;">
+        <input type="month"
+       name="roomPriceMonth"
+       id="roomPriceMonth"
+       style="padding: 8px 15px; border-radius: 6px; border: 1px solid #3d4b7a; background: #252f4a; color: white; font-weight: bold; font-size: 16px; outline: none;">
+
+        <input type="hidden" name="paramMonth">
     </div>
 
     <div style="
@@ -392,7 +448,7 @@ function getPriceByDay(priceList, day) {
             <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;"><input type="checkbox" style="width: 16px; height: 16px;" name="selName" class="sel" id="allSel"> 전체선택</label>
             <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;"><input type="checkbox" style="width: 16px; height: 16px;" name="selName" class="sel" id="workSel"> 평일만선택</label>
             <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;"><input type="checkbox" style="width: 16px; height: 16px;" name="selName" class="sel" id="holSel"> 주말만선택</label>
-            <input type="text" name="roomPrice" placeholder="가격을 입력하세요." style="color:#000000; padding: 10px 15px; border-radius: 8px; border: none; width: 180px; font-size: 14px; outline: none;">
+            <input type="text" id="roomPrice" name="roomPrice" placeholder="가격을 입력하세요." style="color:#000000; padding: 10px 15px; border-radius: 8px; border: none; width: 180px; font-size: 14px; outline: none;">
             
         </div>
         

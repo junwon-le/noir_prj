@@ -38,10 +38,9 @@ $(function() {
       return;
     }
 
-    const msgVal = $('[name="msg"]').first().val();
-    if (!msgVal || msgVal.trim() === "") {
-      alert("문의 내용을 입력해주세요.");
-      return;
+    if ($('#summernote').summernote('isEmpty')) {
+        alert("문의 내용을 입력해주세요.");
+        return;
     }
 
     if (!$("#check").is(":checked")) {
@@ -49,7 +48,9 @@ $(function() {
       return;
     }
 
-    $("#frm").submit();
+    if (confirm("작성하신 문의내용을 접수하시겠습니까?")) {
+        $("#frm").submit();
+    }
   });
 
   $(document).on("click", ".agreement-item", function(e) {
@@ -351,12 +352,13 @@ background-color: #FFF;
 </header>
 <div class="title-box">
 </div>
+	<form th:action="@{/inquiry/writeInquiry}" method="post" id="frm">
 		<div class="maincontainer">
 				
 				<div class="minimenu">
-				<a href="#" id="qna">문의 하기</a><br>
-				<a href="#" id="qnaList">문의 내역</a><br>
-				<a href="#" id="notice">공지 사항</a>
+				<a th:href="@{/inquiry/writeInquiry}" id="qna">문의 하기</a><br>
+				<a th:href="@{/inquiry/inquiryList}" id="qnaList">문의 내역</a><br>
+				<a th:href="@{/notice/noticeList}" id="notice">공지 사항</a>
 				</div>
 				
 					
@@ -364,35 +366,37 @@ background-color: #FFF;
 					<div class="input-container">                
 						
 						<h2 class="section-title">문의 하기</h2>
-						<input type="text" name="title" id="title" placeholder="제목">
+						<input type="text" name="inquiryTitle" id="title" placeholder="제목">
 				</div>
 				<div style="min-height: 250px; max-width: 1000px; margin: 0px auto;">
-					<textarea id="summernote" name="msg" class="summernote"></textarea>
+					<textarea id="summernote" name="inquiryMsg" class="summernote"></textarea>
 				</div>
 				
 				<div class="infoContainer">
 
 				 <div class="cleanForm">
+    <input type="hidden" name="memberNum" th:value="${member?.memberNum}">
 
-				  <div class="field">
-				    <label class="field-label">작성자명</label>
-				    <input type="text" name="name" id="name" value="${user.name}">
-				  </div>
-				
-				  <div class="field">
-				    <label class="field-label">핸드폰번호</label>
-				    <input type="text" name="tel" id="tel" value="${user.tel}" >
-				  </div>
-				
-				  <div class="field">
-				    <label class="field-label">이메일</label>
-				
-				    <div class="emailRow">
-				      <input type="text" name="emailId" id="emailId" value="${user.emailId}" >
-				    </div>
-				  </div>
-				
-				</div>
+<div class="field">
+    <label class="field-label">작성자명</label>
+    <input type="text" name="name" id="name" 
+           th:value="${member?.memberLastName != null ? (member.memberLastName + member.memberFirstName) : ''}" readonly>
+</div>
+
+<div class="field">
+    <label class="field-label">핸드폰번호</label>
+    <input type="text" name="memberTel" id="tel" 
+           th:value="${member?.memberTel}" readonly>
+</div>
+
+<div class="field">
+    <label class="field-label">이메일</label>
+    <div class="emailRow">
+        <input type="text" name="emailId" id="emailId" 
+               th:value="${member?.memberEmail}" readonly>
+    </div>
+</div>
+</div>
 
 				
 				</div>
@@ -429,6 +433,7 @@ background-color: #FFF;
 					<div style="text-align: center;">
 				<button type="button" class="btn btn-dark" id="submitBtn">문의 접수</button>
 					</div>
+	</form>
 <footer>
         <div th:replace="~{fragments/footer :: footer}"></div>
     </footer>
@@ -437,12 +442,10 @@ background-color: #FFF;
         <div th:replace="~{fragments/privacy :: privacy}"></div>
     </div>
 
-<!-- <script type="text/javascript" src="/Hotel28NewCMS_common/js/jquery.modalLayer.js"></script>
-<script type="text/javascript" src="/Hotel28NewCMS_common/js/common_dev.js"></script> -->
-<script type="text/javascript" src="${pageContext.request.contextPath}/common/js/comm/jquery.validate.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/common/js/comm/wings.core.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/common/js/comm/PAGING_HOMEPAGE.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/common/js/comm/kendo.web.min.js"></script>
+<script type="text/javascript" th:src="@{/common/js/comm/jquery.validate.js}"></script>
+<script type="text/javascript" th:src="@{/common/js/comm/wings.core.js}"></script>
+<script type="text/javascript" th:src="@{/common/js/comm/PAGING_HOMEPAGE.js}"></script>
+<script type="text/javascript" th:src="@{/common/js/comm/kendo.web.min.js}"></script>
 
 
 

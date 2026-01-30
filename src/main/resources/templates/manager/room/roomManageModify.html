@@ -95,9 +95,6 @@ $(function(){
         }
     });
 	
-	
-	
-	
 	$('#roomImgFile3').change(function(e) {
         var file = e.target.files[0];
         if (file) {
@@ -111,8 +108,6 @@ $(function(){
     });
 	
 	
-	
-	
 	$('#roomImgFile4').change(function(e) {
         var file = e.target.files[0];
         if (file) {
@@ -124,9 +119,6 @@ $(function(){
             reader.readAsDataURL(file);
         }
     });
-	
-	
-	
 	
 	$('#roomImgFile5').change(function(e) {
         var file = e.target.files[0];
@@ -150,11 +142,16 @@ $(function(){
 	});
 	
 	$("#cancelBtn").click(function(){
-		history.back();
+		location.href="/admin/roomMgr?date=[[${param.date}]]";
 	});
 	
 	
 })
+
+
+
+
+
 </script>
 
 </head>
@@ -249,7 +246,7 @@ $(function(){
                             </div>
                             <div style="flex: 1; background: #f0f4ff; border-radius: 10px; padding: 15px; box-shadow: inset 0 0 5px rgba(42, 58, 107, 0.1); display: flex; flex-direction: column; justify-content: center;">
                                 <h4 style="margin:0 0 10px; color:#2a3a6b; font-weight:600; font-size:14px; text-align: center;">베드 타입</h4>
-                                <select name="bedType" id="bedType" class="form-control" style="width: 100%; background-color: white; color: #000000; border: 1px solid #ccc; border-radius: 5px; padding: 6px; font-size: 14px; font-weight: 500; cursor: pointer;">
+                                <select name="roomBadType" id="roomBadType" class="form-control" style="width: 100%; background-color: white; color: #000000; border: 1px solid #ccc; border-radius: 5px; padding: 6px; font-size: 14px; font-weight: 500; cursor: pointer;">
                                     <option value="KING" th:selected="${room.roomBadType=='KING'}">KING</option>
                                     <option value="2 SUPER SINGLE" th:selected="${room.roomBadType=='2 SUPER SINGLE'}">2 SUPER SINGLE</option>
                                     <option value="2 QUEEN" th:selected="${room.roomBadType=='2 QUEEN'}">2 QUEEN</option>
@@ -307,7 +304,7 @@ $(function(){
                         </div>
 
                         <div style="display: flex; gap: 15px; justify-content: flex-end; margin-top: 10px; border-top: 1px solid #eee; padding-top: 20px;">
-                            <button style="padding: 10px 35px; border: 2px solid #7495CC; border-radius: 10px; background-color: white; color: #7495CC; font-weight: 600; cursor: pointer; font-size: 15px; transition: all 0.3s ease;" onmouseover="this.style.backgroundColor='#f0f4ff';" onmouseout="this.style.backgroundColor='white';" id="cancelBtn">취소</button>
+                            <input type="button" style="padding: 10px 35px; border: 2px solid #7495CC; border-radius: 10px; background-color: white; color: #7495CC; font-weight: 600; cursor: pointer; font-size: 15px; transition: all 0.3s ease;" onmouseover="this.style.backgroundColor='#f0f4ff';" onmouseout="this.style.backgroundColor='white';" id="cancelBtn" value="취소">
                             <button style="padding: 10px 35px; border: none; border-radius: 10px; background-color: #7495CC; color: white; font-weight: 600; cursor: pointer; font-size: 15px; box-shadow: 0 3px 8px rgba(116, 149, 204, 0.3); transition: background-color 0.3s ease;" onmouseover="this.style.backgroundColor='#6482FF';" id="modfiyBtn" onmouseout="this.style.backgroundColor='#7495CC';">수정</button>
                         </div>
                     </div>

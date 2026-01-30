@@ -124,6 +124,11 @@
     	WHERE room_type_num=#{roomTypeNum} and INSTR(room_date, #{roomPriceDate}) = 1
 		</select>				
 		
+		<select id="selectCheckRoom" parameterType="RoomPriceDTO" resultMap="roomPriceSelect">
+    	SELECT * FROM room_price 
+    	WHERE room_type_num=#{roomTypeNum} and room_date = #{roomPriceDate}
+		</select>				
+		
 		
 		<update id="roomModify" parameterType="RoomDTO">
 		update room_info 
@@ -145,6 +150,9 @@
         </if>
         <if test="roomBadType != null">
 		room_bad_type=#{roomBadType},
+		</if>
+		<if test="roomDetail != null">
+		room_detail=#{roomDetail},
 		</if>
         <if test="roomCheckIn != null">
 		room_check_in=#{roomCheckIn},
@@ -173,8 +181,13 @@
 		<update id="roomPriceModify" parameterType="RoomPriceDTO">
 		update room_price
 		set room_price=#{roomPrice}
-		where room_date=#{roomPriceDate}
+		where room_date=#{roomPriceDate} and room_type_num=#{roomTypeNum}
 		</update>
+		
+		<insert id="roomPriceInsert" parameterType="RoomPriceDTO">
+		insert into room_price (room_date, room_type_num, room_price)
+		values( #{roomPriceDate} ,#{roomTypeNum} ,#{roomPrice})
+		</insert>
 		
 		
 		
