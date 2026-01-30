@@ -18,7 +18,6 @@ public class LoginService {
 
 	@Autowired(required = false)
 	private final MemberMapper memberMapper;
-	private final AESUtil aesUtil; //  AESUtil 주입 받기
 	
 	@Value("${user.crypto.key}")
 	private String key;
@@ -152,7 +151,7 @@ public class LoginService {
 		memberDTO.setMemberPass(bpe.encode(memberDTO.getMemberPass()));
 
 		TextEncryptor te= Encryptors.text(key, salt);
-		// 4. 이메일, 전화번호- AES 암호화 
+		// 4. 이메일, 전화번호 
 		if (memberDTO.getMemberEmail() != null) {
 			memberDTO.setMemberEmail(te.encrypt(memberDTO.getMemberEmail()));
 		}
