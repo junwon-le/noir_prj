@@ -59,7 +59,7 @@ public class MypageReseveController {
 	  @PostMapping("/cancelHotelReserve")
 	  public String cancelHotelReserve(HttpSession session,int reserveNum,Model model) {
 		  String uri="/mypage/memberHotelRevDetail";
-		  System.out.println(reserveNum);
+		  System.out.println("예약번호--------"+reserveNum);
 		  int cnt = mrs.removeHotelReserve(reserveNum);
 		  if(cnt<2) {
 			 model.addAttribute("cancelFlag",true); 

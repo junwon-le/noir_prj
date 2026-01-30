@@ -65,6 +65,9 @@ public class MypageReserveDAO {
 		revCnt=ss.update("kr.co.noir.mypageReserve.removeHotelReserve",revNum);
 		payCnt=ss.update("kr.co.noir.mypageReserve.removeRevPay",revNum);
 		
+		System.out.println("revCnt---"+revCnt);
+		System.out.println("payCnt---"+payCnt);
+		
 		cnt=revCnt+payCnt;
 		if (cnt == 2) { 
             ss.commit();

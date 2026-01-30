@@ -14,15 +14,16 @@
 
 	<!-- 해당 member의 호텔이 예약된 개수를 가져오는 Query -->
 	<select id="hotelRevCnt" parameterType="String" resultType="int">
-		SELECT COUNT(*)
-		FROM member m
-		JOIN reserve r ON m.member_num = r.member_num
-		JOIN room_res rr ON r.reserve_num = rr.reserve_num
-		WHERE m.member_id = #{memberId} and r.reserve_status='N'
+		select count(*)
+		from member m, reserve r
+		where r.member_num=m.member_num
+		and r.RESERVE_TYPE='room'
+		and r.reserve_status='N'
 		<![CDATA[
-      		AND rr.room_res_start_date >= TRUNC(SYSDATE)
-      		AND rr.room_res_start_date < ADD_MONTHS(TRUNC(SYSDATE), 3)
+      		AND r.reserve_start_date >= TRUNC(SYSDATE)
+      		AND r.reserve_start_date < ADD_MONTHS(TRUNC(SYSDATE), 3)
       	]]>
+      	and m.member_id=#{memberId}
 	
 	</select>
 	

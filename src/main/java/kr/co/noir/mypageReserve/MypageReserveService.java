@@ -7,6 +7,9 @@ import org.apache.ibatis.exceptions.PersistenceException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.encrypt.Encryptors;
+import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.util.JSONPObject;
@@ -17,6 +20,11 @@ public class MypageReserveService {
 	private MypageReserveDAO mrDAO;
 	
 	
+	@Value("${user.crypto.key}")
+	private String key;
+
+	@Value("${user.crypto.salt}")
+	private String salt;
 	
 	
 	/**
@@ -146,14 +154,22 @@ public class MypageReserveService {
 	
 	public List<HotelRevDetailDomain> searchOneHotelRevDetail(ReserveDetailDTO rdDTO) {
 		List<HotelRevDetailDomain> hrdDomain=null;
+		TextEncryptor te = Encryptors.text(key,salt);
 		try {
 			
 			hrdDomain =mrDAO.selectHotelRevDetail(rdDTO);
+			for(HotelRevDetailDomain hd:hrdDomain) {
+				hd.setEmail(te.decrypt(hd.getEmail()));
+				hd.setTel(te.decrypt(hd.getTel()));
+			}//end for
 		}catch (PersistenceException pe) {
 			pe.printStackTrace();
 		}//end catch
 		
 		return hrdDomain;
+		
+		
+		
 	}//searchOneHotelRevDetail
 	
 	public int removeHotelReserve(int RevNum) {
