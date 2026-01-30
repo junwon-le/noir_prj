@@ -2,13 +2,80 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="kr.co.noir.notice">
+<mapper namespace="kr.co.noir.inquiry">
 	
 	<!-- board 테이블에 추가하는 작업 -->
 	
+	<!-- 회원에 대한 문의조회 -->
 	<select id="selectInquiryByMember" parameterType="kr.co.noir.notice.BoardRangeDTO" resultType="kr.co.noir.inquiry.InquiryDomain">
+	select 
+        memberNum, inquiryNum, inquiryTitle, inquiryMsg, inquiryReturn, inquiryDate, inquiryDelFlag,
+        memberLastName, memberFirstName
+    from (
+        select 
+            i.member_num as memberNum,
+            i.inquiry_num as inquiryNum,
+            i.inquiry_title as inquiryTitle,
+            i.inquiry_msg as inquiryMsg,
+            i.inquiry_return as inquiryReturn,
+            i.inquiry_date as inquiryDate,
+            i.inquiry_del_flag as inquiryDelFlag,
+            m.member_last_name as memberLastName,   m.member_first_name as memberFirstName, ROW_NUMBER() OVER(ORDER BY i.inquiry_date DESC) as rnum
+        from inquiry i
+        inner join member m on i.member_num = m.member_num <where>
+            i.inquiry_del_flag = 'N'
+            and i.member_num = #{memberNum}
+            <if test="keyword != null and keyword != ''">
+                and instr(i.inquiry_title, #{keyword}) != 0
+            </if>
+        </where>
+    ) 
+    where rnum between #{startNum} and #{endNum}
+</select>
 	
-	
+	<select id="selectBoardTotalCnt" parameterType="kr.co.noir.notice.BoardRangeDTO" resultType="int">
+	select count(*) cnt from inquiry
+	<where>
+		inquiry_del_flag='N'
+		and member_num = #{memberNum}<if test="keyword neq null and keyword neq ''">
+		and instr( inquiry_title, #{keyword}) !=0
+		</if>	
+	</where>
 	</select>
+	
+	<select id="selectBoardDetail" parameterType="int" resultType="kr.co.noir.inquiry.InquiryDomain">
+	select 
+        i.member_num as memberNum,
+        i.inquiry_num as inquiryNum,
+        i.inquiry_title as inquiryTitle,
+        i.inquiry_msg as inquiryMsg,
+        i.inquiry_return as inquiryReturn,
+        i.inquiry_date as inquiryDate,
+        m.member_last_name as memberLastName,   
+        m.member_first_name as memberFirstName
+    from inquiry i
+    inner JOIN member m on i.member_num = m.member_num
+  	where i.inquiry_num = #{value}
+	</select>
+	
+	<!-- 문의작성 -->
+	<insert id="insertInquiryByMember" parameterType="kr.co.noir.inquiry.InquiryDTO">
+		insert into inquiry(
+		 inquiry_num, member_num, inquiry_title, inquiry_msg
+		)values(
+			NOIR.INQUIRY_SEQ.NEXTVAL,#{memberNum},#{inquiryTitle},#{inquiryMsg}
+		)
+	</insert>
+	
+	<select id="selectMemberInfo" resultType="kr.co.noir.inquiry.InquiryDomain" parameterType="int">
+    select 
+        member_num as memberNum,
+        member_last_name as memberLastName,
+        member_first_name as memberFirstName,
+        member_tel as memberTel,
+        member_email as memberEmail
+    from   member
+    where  member_num = #{memberNum}
+</select>
 	
 </mapper>

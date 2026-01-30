@@ -30,45 +30,54 @@
 
 <script>
 $(function() {
+    $(document).on("click", ".agreement-item", function(e) {
+        if ($(e.target).closest(".toggle-btn").length) return;
 
-  $("#submitBtn").on("click", function(e) {
-    if ($("#title").val().trim() === "") {
-      alert("제목을 입력해주세요.");
-      return;
-    }
+        const $item = $(this);
+        const inquiryNum = $item.data("num");
+        const $detail = $item.next(".agreement-detail");
 
-    const msgVal = $('[name="msg"]').first().val();
-    if (!msgVal || msgVal.trim() === "") {
-      alert("문의 내용을 입력해주세요.");
-      return;
-    }
+        $detail.toggleClass("is-open");
+        $item.find(".detail-arrow").toggleClass("rotated");
 
-    if (!$("#check").is(":checked")) {
-      alert("문의하시려면 약관에 동의해주세요.");
-      return;
-    }
+        if ($detail.data("loaded")) return;
 
-    $("#frm").submit();
-  });
+        $.ajax({
+            url: "/inquiry/inquiryDetail", // 문의 상세 정보를 가져올 URL
+            type: "GET",
+            dataType: "json",
+            data: { inquiryNum: inquiryNum },
+            error: function(xhr) {
+                console.log("에러 발생: " + xhr.status);
+            },
+            success: function(data) {
+                // 1. 내용을 textarea에 넣기
+                const $textarea = $detail.find(".inquiry-msg");
+                $textarea.val(data.inquiryMsg);
 
-  $(document).on("click", ".agreement-item", function(e) {
-    if ($(e.target).closest(".toggle-btn").length) return;
+                // 2. Summernote 실행 (읽기 전용 모드)
+                $textarea.summernote({
+                    height: 250,
+                    toolbar: [], // 툴바 제거
+                    focus: false
+                }).summernote('disable'); // 편집 비활성화
 
-    const $detail = $(this).next(".agreement-detail");
-    $detail.toggleClass("is-open");
-    $(this).find(".detail-arrow").toggleClass("rotated");
-  });
+                // 3. 이름(작성자) 업데이트 (데이터에 이름이 있다면)
+                if(data.memberLastName || data.memberFirstName) {
+                    $detail.find(".inquiryname").text(`${data.memberLastName}${data.memberFirstName}`);
+                }
 
-  $(document).on("click", ".toggle-btn", function(e) {
-    e.stopPropagation();
+                if (data.inquiryReturn && data.inquiryReturn.trim() !== "") {
+                    $detail.find(".inquiry-reply").html(data.inquiryReturn);
+                    $detail.find(".return-box").show();
+                } else {
+                    $detail.find(".return-box").hide();
+                }
 
-    const $item = $(this).closest(".agreement-item");
-    const $detail = $item.next(".agreement-detail");
-
-    $detail.toggleClass("is-open");
-    $(this).toggleClass("rotated");
-  });
-
+                $detail.data("loaded", true);
+            }
+        });
+    });
 });
 </script>
 
@@ -382,6 +391,71 @@ background-color: #FFF;
   font-weight: 800;
   
 }
+
+.pagination{
+  padding:60px 60px 40px 40px;
+  gap: 8px;
+}
+
+.pagination .page-link{
+  border: 1px solid #ddd;
+  background: #fff;
+  color: #333;
+  border-radius: 999px;
+  padding: 20px 25px;
+  font-size:20px;
+  font-weight: 600;
+}
+
+.pagination .page-link:hover{
+  border-color: #000;
+  color: #fff;
+}
+
+.pagination .page-item.active .page-link,
+.pagination .page-item.active span{
+  background: #000;
+  border-color: #000;
+  color: #fff;
+}
+
+.inquiry-row{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.inquiry-left{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.inquiry-category{
+  font-size: 14px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background-color: #eee;
+  color: #333;
+}
+
+.agreement-text{
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.inquiry-right{
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.inquiry-date{
+  font-size: 14px;
+  color: #777;
+}
+
 </style>
 
 
@@ -402,55 +476,84 @@ background-color: #FFF;
 		<div class="maincontainer">
 				
 				<div class="minimenu">
-				<a href="#" id="qna">문의 하기</a><br>
-				<a href="#" id="qnaList">문의 내역</a><br>
-				<a href="#" id="notice">공지 사항</a>
+				<a th:href="@{/inquiry/writeInquiry}" id="qna">문의 하기</a><br>
+				<a th:href="@{/inquiry/inquiryList}" id="qnaList">문의 내역</a><br>
+				<a th:href="@{/notice/noticeList}" id="notice">공지 사항</a>
 				</div>
 				
 					
 				<div style="max-width: 1000px; margin: 0px auto; ">
 					<div class="input-container">  
-						<h2 class="section-title">문의내역</h2>
+						<h2 class="section-title">문의 내역</h2>
 					</div>              
 						
 				</div>
 				
 				
 					<div style="text-align: center;">
+					<form th:action="@{/inquiry/inquiryList}" id="boardSearchFrm" method="get">
 					<div class="searchInput">                
-					<input type="text" name="title" id="title" placeholder="제목">
-					<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-				  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
-				</svg>
-				</div>
-				</div>
-			
-			<div class="agreement-section" style="max-width: 1000px; margin: 0px auto;">
-			  <div style="text-align: center;">
-			    <h4 class="section-title">내 전체 문의 내역</h4>
-			  </div>
-			
-			  <div class="agreement-item" style="border-bottom: 1px solid #333; padding: 10px;">
-			    <label class="agreement-label">
-			      <span class="agreement-text" style="font-size: 20px;">문의제목입니둥</span>
-			    </label>
-			    <span class="detail-arrow toggle-btn"></span>
-			  </div>
-			
-			  <div class="agreement-detail">
-			    <div class="detail-box">
-			      <span class="label">이름&nbsp;&nbsp;: </span><span class="inquiryname">&nbsp;안뇽 </span><br>
-			      <div style="min-height: 250px; max-width: 1000px; margin: 0px auto;">
-			      <span class="label">내용&nbsp;&nbsp;: </span>
-			        <textarea class="summernote" name="msg"></textarea>
-			      </div>
-			    </div>
-			      <div class="return-box">
-			      <p><b>Re.</b><br>답변입니다우</p>
-			      </div>
-			  </div>
-			</div>
+					<input type="text"
+             name="keyword"
+             id="keyword"
+             placeholder="검색할 제목을 입력하세요"
+             th:value="${param.keyword}"/>
 
+      <input type="hidden"
+             name="currentPage"
+             id="currentPage"
+             th:value="${param.currentPage eq null ? 1 : param.currentPage}"/>
+
+      <button type="submit" id="btnSearch" style="border:none; background:none;">
+        <svg xmlns="http://www.w3.org/2000/svg"
+             width="20" height="20"
+             fill="currentColor"
+             class="bi bi-search"
+             viewBox="0 0 16 16">
+          <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+        </svg>
+      </button>
+
+    </div>
+				</form>
+				</div>
+			<div class="agreement-section" style="max-width: 1000px; margin: 0px auto;">
+  <div style="text-align: center;">
+    <h4 class="section-title">내 문의 내역</h4>
+  </div>
+			<th:block th:each="i : ${inquiryList}">
+    <div class="agreement-item"
+         th:attr="data-num=${i.inquiryNum}"
+         style="border-bottom: 1px solid #333; padding: 14px 10px;">
+        <div class="inquiry-row">
+            <div class="-left">
+                <span class="agreement-text" th:text="${i.inquiryTitle}">공지제목</span>
+            </div>
+            <div class="inquiry-right">
+                <span class="inquiry-date" th:text="${#dates.format(i.inquiryDate,'yyyy.MM.dd')}">2026.01.22</span>
+                <span class="detail-arrow toggle-btn"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="agreement-detail">
+        <div class="detail-box">
+            <span class="label">이름&nbsp;&nbsp;: </span><span class="inquiryname"></span><br>
+            <div style="min-height: 250px; max-width: 1000px; margin: 0px auto;">
+                <span class="label">내용&nbsp;&nbsp;: </span>
+                <textarea class="summernote inquiry-msg" name="msg" th:utext="${i.inquiryMsg}"></textarea>
+            </div>
+        </div>
+        <div class="return-box" style="display:none;">
+            <p><b>Re.</b><br><span class="inquiry-reply"></span></p>
+        </div>
+    </div>
+</th:block>
+			
+			</div>
+			<div id="pagenation" style="margin:0px auto">
+			<div class="pagenation" th:utext="${pagenation}"></div>		
+			</div>
 					<div class="ffffff"></div>
 		</div>
 					
@@ -462,13 +565,11 @@ background-color: #FFF;
         <div th:replace="~{fragments/privacy :: privacy}"></div>
     </div>
     
-<script type="text/javascript" src="${pageContext.request.contextPath}/common/js/comm/jquery.validate.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/common/js/comm/wings.core.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/common/js/comm/PAGING_HOMEPAGE.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/common/js/comm/kendo.web.min.js"></script>
+<script type="text/javascript" th:src="@{/common/js/comm/jquery.validate.js}"></script>
+<script type="text/javascript" th:src="@{/common/js/comm/wings.core.js}"></script>
+<script type="text/javascript" th:src="@{/common/js/comm/PAGING_HOMEPAGE.js}"></script>
+<script type="text/javascript" th:src="@{/common/js/comm/kendo.web.min.js}"></script>
 
 
-
-</div>
 </body>
 </html>
