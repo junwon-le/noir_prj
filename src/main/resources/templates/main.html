@@ -200,10 +200,10 @@ function updateBg(index) {
 
 	<div class="fullsizeImage">
 		<ul>
-			<li style="background-image:url(../common/images/homepage/bg01.jpg);"></li>
-			<li style="background-image:url(../common/images/homepage/bg02.jpg);"></li>	
-			<li style="background-image:url(../common/images/homepage/bg03.jpg);"></li>
-			<li style="background-image:url(../common/images/homepage/bg04.jpg);"></li>
+			<li style="background-image:url(../common/images/homepage/queen_1.jpg);"></li>
+			<li style="background-image:url(../common/images/homepage/다이닝1.jpg);"></li>	
+			<li style="background-image:url(../common/images/homepage/double_1.jpg);"></li>
+			<li style="background-image:url(../common/images/homepage/twin_1.jpg);"></li>
 		</ul>
     </div>
 <div id="container">
@@ -229,12 +229,12 @@ function updateBg(index) {
 				<p class="fade03 fadeDiv">
 					Noir 호텔은 도심 속에서 만나는 품격 있는 휴식 공간입니다.<br>
 					세련된 인테리어와 세심한 맞춤 서비스로 특별한 하루를 완성하며,<br>
-					고요하고 안락한 객실과 감각적인 라운지에서 잊지 못할 경험을 선사합니다. 당신만의 프리미엄 휴식을 Noir에서 누려보세요<br/>
+					고요하고 안락한 객실과 감각적인 라운지에서 잊지 못할 경험을 선사합니다. 당신만의 프리미엄 휴식을 NOIR에서 누려보세요<br/>
 				</p>
 				<p class="fade04 fadeDiv">
 				
 				</p>
-				<p class="fade05 fadeDiv"><a href="/view/viewLink.do?page=homepage/ENG/hotel/about">READ ABOUT</a></p>
+				<p class="fade05 fadeDiv"><a href="/hotel/about">READ ABOUT</a></p>
 				<!-- area01 section END -->
 			</li>
 			<li class="area02">
@@ -250,7 +250,7 @@ function updateBg(index) {
 				<p class="fade04 fadeDiv">
 					<img src="/common/images/homepage/hotel28location.png" alt="hotel28">
 				</p>
-				<p class="fade05 fadeDiv"><a th:href="@{/room}">SITE NOW</a></p>				
+				<p class="fade05 fadeDiv"><a th:href="@{/dinning}">READ ABOUT</a></p>				
 			</li>
 			
 			<li class="area03">
@@ -263,7 +263,7 @@ function updateBg(index) {
 				</p>
 				<p class="fade04 fadeDiv">
 				</p>
-				<p class="fade05 fadeDiv"><a th:href="@{/room}">BOOK NOW</a></p>
+				<p class="fade05 fadeDiv"><a th:href="@{{url}(url='/roomDetailView', num=3)}">BOOK NOW</a></p>
 				<!-- area04 section END -->
 			</li>
 			<li class="area04">
@@ -277,7 +277,7 @@ function updateBg(index) {
 				<p class="fade04 fadeDiv">
 					<img src="/common/images/homepage/hotel28room.png" alt="hotel28">
 				</p>
-				<p class="fade05 fadeDiv"><a href="#popIframe" class="open_modal" url="view/roomReservationStep1.jsp">BOOK NOW</a></p>
+				<p class="fade05 fadeDiv"><a th:href="@{{url}(url='/roomDetailView', num=4)}">BOOK NOW</a></p>
 				<!-- area04 section END -->
 			</li>
 			
