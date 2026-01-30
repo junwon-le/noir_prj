@@ -8,6 +8,7 @@ public class NoirPrjApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(NoirPrjApplication.class, args);
-	}
+	}//main
+	
 
 }
