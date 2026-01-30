@@ -12,6 +12,11 @@
 	href="/common/css/homepage/style.css?v=0312">
 <link rel="stylesheet" type="text/css"
 	href="/common/css/homepage/sub.css?v=0312">
+<!--  -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+    axios.post('/reserve/pending', pendingRoomDTO) ...
+</script>
 <!-- jQeury CDN 시작 -->
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -110,28 +115,30 @@ $(function(){
 	var adultCnt=1;
 	$("#adultUp").click(function(){
 		adultCnt+=1;
-		$("#adultCnt").text(adultCnt);
+		$("#showAdultCnt").text(adultCnt);
 	})
 	$("#adultDown").click(function(){
 		if(adultCnt > 1){ // 0보다 클 때만 감소
 			adultCnt--;
-		$("#adultCnt").text(adultCnt);
+		$("#showAdultCnt").text(adultCnt);
 	    }
 	})
 // 어린이 수 설정
 	var kidCnt=0;
 	$("#kidUp").click(function(){
 		kidCnt+=1;
-		$("#kidCnt").text(kidCnt);
+		$("#showKidCnt").text(kidCnt);
 	})
 	$("#kidDown").click(function(){
 		if(kidCnt > 0){ // 0보다 클 때만 감소
 	        kidCnt--;
-	        $("#kidCnt").text(kidCnt);
+	        $("#showKidCnt").text(kidCnt);
 	    }
 	})
 //예약 하기 버튼
 	$("#reserve").click(function(){
+		$("#adultCnt").val(adultCnt);
+		$("#kidCnt").val(kidCnt);
 		if(adultCnt > roomMaxPerson){
 			alert("객실 수와 인원 수를 확인해주세요.");
 			return;
@@ -140,8 +147,43 @@ $(function(){
 			alert("체크인/체크아웃 날짜를 확인해주세요.");
 			return;
 		}
-		$("#reserveFrm").attr("action","/reserve/roomReserve");
-		$("#reserveFrm").submit();
+		if(kidCnt > roomCnt*2 ){
+			alert("어린이 인원을 확인해 주세요.( 어린이는 객실 당 2명까지 동반가능합니다. )");
+			return;
+		}
+		//예약하는 방 정보 넘기기
+		//
+		var id ="user1" 
+		var start=$("#checkin").val();
+		var end=$("#checkout").val();
+		for (const key in selectedRoomCnt){
+			if(selectedRoomCnt[key]!=0){
+				pendingRoomDTO.push({
+					id:id,
+					room_res_start_date : start,
+					room_res_end_date:end,room_cnt:Number(selectedRoomCnt[key]),
+					room_type_num : Number(key)
+					});
+			}
+		}
+		axios.post('/reserve/pending', pendingRoomDTO)
+	    .then(response => {
+	        // 성공 시 로직
+	        const frm = $("#reserveFrm");
+	        frm.attr("action", "/reserve/roomReserve");
+	        frm.submit();
+	    })
+	    .catch(error => {
+	        // 실패 시 로직
+	        
+	        // 서버에서 보낸 에러 메시지 추출 (ResponseEntity.body에 담긴 내용)
+	        const errorMessage = error.response ? error.response.data : "알 수 없는 오류가 발생했습니다.";
+	        
+	        alert("이미 진행 중인 예약이 있습니다. 잠시 후 다시 시도 해주세요: " + errorMessage);
+	        
+	        // 연타 방지를 위해 비활성화했던 버튼이 있다면 다시 활성화
+	        $("#reserve").prop("disabled", false).text("예약하기");
+	    });
 	})
 	
 	$("#nonReserve").click(function(){
@@ -155,6 +197,7 @@ $(function(){
 	
 	
 });//ready
+	var pendingRoomDTO=[]
 	var selectedRoomCnt={1:0,2:0,3:0,4:0,5:0}; //선택된 각각의 객실 수를 저장하는 배열
 	var roomMaxPerson=0;
 	var roomCnt=0;
@@ -172,7 +215,8 @@ $(function(){
 		selectDiv+=`<div style="background-color: #e5e7eb; border-radius: 2px; padding:3px; display: flex;" id='${divNum}'> 
 			<div style="display:flex; align-items: center; justify-content:space-between; width: 230px;">
 			<span class='font-bold !text-black text-sm'>${roomName}  |</span>
-			<input type="hidden" name="roomName" value="${roomName}"/>
+			<input type="hidden" name="room_num" value="${roomNum}"/>
+			<input type="hidden" name="room_type" value="${roomName}"/>
 			<span class='font-bold !text-black text-sm' >인원 : ${personCnt}명</span>
 			</div>
 			<div style="margin-left:auto;">
@@ -333,12 +377,13 @@ $(function(){
 								<div
 									class="flex-1 !border-2 border-solid !border-[#8b7355] p-2 p-2 text-center">
 									성인<br>
+									<input type="hidden" name="adultCnt" id="adultCnt"/>
 									<div class="flex justify-between items-center ">
 										<button id="adultDown" type="button">
 											<img src="/common/images/res_img/downbtn.png"
 												class="personBtn" />
 										</button>
-										<span class="text-lg font-bold" id="adultCnt">1</span>
+										<span class="text-lg font-bold" id="showAdultCnt">1</span>
 										<button id="adultUp" type="button">
 											<img src="/common/images/res_img/upbtn.png" class="personBtn" />
 										</button>
@@ -347,18 +392,23 @@ $(function(){
 								<div
 									class="flex-1 !border-2 border-solid !border-[#8b7355] p-2 p-2 text-center">
 									아동<br>
+									<input type="hidden" name="kidCnt" id="kidCnt"/>
 									<div class="flex justify-between items-center ">
 										<button id="kidDown" type="button">
 											<img src="/common/images/res_img/downbtn.png"
 												class="personBtn" />
 										</button>
-										<span class="text-lg font-bold" id="kidCnt">0</span>
+										<span class="text-lg font-bold" id="showKidCnt">0</span>
 										<button id="kidUp" type="button">
 											<img src="/common/images/res_img/upbtn.png" class="personBtn" />
 										</button>
 									</div>
 								</div>
 							</div>
+									<span style="margin-top: 10px; font-size:10px; line-height: 1.2; display: inline-block;">
+    									*만 14세까지 어린이에 해당합니다.<br/>
+    									*어린이는 객실 당 2명까지 동반 가능합니다.
+									</span>
 						</div>
 				
 						<div class="space-y-2 " id="selectRoom">
@@ -440,7 +490,7 @@ $(function(){
 						if (selectedDates.length > 1) {
 							document.getElementById('display-checkout').innerText = instance
 									.formatDate(selectedDates[1], "Y-m-d (D)");
-							$("#checkout").val(instance.formatDate(selectedDates[0], "Y-m-d (D)"));
+							$("#checkout").val(instance.formatDate(selectedDates[1], "Y-m-d (D)"));
 							startDate= instance.formatDate(selectedDates[0], "Y-m-d");
 							var endDate= instance.formatDate(selectedDates[1], "Y-m-d");
 							//선택 기간 중 남은 방 검색
