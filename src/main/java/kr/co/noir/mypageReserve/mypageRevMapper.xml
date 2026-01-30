@@ -52,34 +52,56 @@
 </select>
 
 
-<!-- 
- <select id="hotelRevDetail" parameterType="reserveDetailDTO" resultType="hotelRevDetailDomain">
+<resultMap type="hotelRevDetailDomain" id="hrdDomain">
+	<result column="reserve_num" property="reserveNum"></result>
+	<result column="room_type" property="roomType"></result>
+	<result column="reserveName" property="reserveName"></result>
+	<result column="reserve_start_date" property="startDate"></result>
+	<result column="reserve_end_date" property="endDate"></result>
+	<result column="checkInTime" property="checkInTime"></result>
+	<result column="checkOutTime" property="checkOutTime"></result>
+	<result column="reserveDate" property="reserveDate"></result>
+	<result column="reserve_email" property="email"></result>
+	<result column="reserve_tel" property="tel"></result>
+	<result column="reserve_adult_count" property="adultCount"></result>
+	<result column="reserve_kid_count" property="childCount"></result>
+	<result column="pay_agency" property="payAgency"></result>
+	<result column="card_num" property="cardData"></result>
+	<result column="reserve_msg" property="reserveMsg"></result>
+	<result column="reserve_status" property="reserveFlag"></result>
+	<result column="pay_price" property="roomPriceTotal"></result>
+	<result column="payInputDate" property="payInputDate"></result>
+</resultMap>
+
+ 
+ <select id="hotelRevDetail" parameterType="reserveDetailDTO" resultMap="hrdDomain">
    
-			   SELECT
-			    m.member_email AS email,
-			    m.member_tel AS tel,
-			    r.reserve_num AS reserveNum,
-			    r.end_user_last_name || r.end_user_first_name AS reserveName,
-			    r.reserve_adult_count AS adultCount,
-			    r.reserve_kid_count AS kidCount,
-			    r.reserve_msg AS reserveMsg,
-			    r.reserve_time AS reserveDate,
-			    r.reserve_status AS reserveFlag,
-			    ri.room_type AS roomType,
-			    p.pay_price AS roomPriceTotal,
-			    TO_CHAR(r.RESERVE_START_DATE, 'yyyy-MM-dd') AS checkIn,
-			    TO_CHAR(r.RESERVE_END_DATE, 'yyyy-MM-dd') AS checkOut
-			FROM member m, reserve r, room_res rr, room_info ri, pay p
-			WHERE m.member_num = r.member_num
-			  AND r.reserve_num = rr.reserve_num
-			  AND rr.room_type_num = ri.room_type_num
-			  AND rr.room_res_num = p.room_res_num
-			  AND m.member_id = #{memberId}
-			  AND r.reserve_num = #{reserveNum}
-			  AND r.reserve_type = #{reserveType}
+	select r.reserve_num,ri.room_type,r.END_USER_LAST_NAME||r.END_USER_FIRST_NAME as reserveName,
+	r.reserve_start_date,r.reserve_end_date
+	,to_char(to_date(ri.room_check_in,'HH24:MI') ,'HH24:MI AM','NLS_DATE_LANGUAGE=AMERICAN') as checkInTime
+	,to_char(to_date(ri.room_check_out,'HH24:MI') ,'HH24:MI AM','NLS_DATE_LANGUAGE=AMERICAN') as checkOutTime
+	,to_char(r.reserve_time,'yyyy-MM-dd')as reserveDate
+	,r.reserve_email
+	,r.reserve_tel
+	,r.reserve_adult_count
+	,r.reserve_kid_count
+	,pi.pay_agency
+	,pi.card_num
+	,to_char(pi.input_date,'yyyy-MM-dd AM HH24:MI') as payInputDate
+	,r.reserve_msg
+	,p.pay_price
+	,r.reserve_status
+	from  reserve r,room_res rr,room_info ri,pay p,pay_info pi
+	where r.reserve_num=rr.reserve_num
+		and rr.room_type_num=ri.room_type_num
+		and p.reserve_num=r.reserve_num
+		and p.pay_num=pi.pay_num
+		and r.member_num=(select member_num from member where member_id=#{memberId})
+		and r.RESERVE_TYPE='room'
+		and r.reserve_num=#{reserveNum}
 </select> 
 
-<update id="removeHotelReserve" parameterType="int" >
+<!-- <update id="removeHotelReserve" parameterType="int" >
 	update reserve
 	set reserve_status='Y'
 	where reserve_num=#{reserveNum}
@@ -96,8 +118,8 @@
          )
 	
 
-</update>
- -->
+</update> -->
+ 
 
 
 <!-- =====================================끝===================================== -->

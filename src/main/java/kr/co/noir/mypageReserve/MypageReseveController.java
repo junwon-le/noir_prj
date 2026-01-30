@@ -1,7 +1,5 @@
 package kr.co.noir.mypageReserve;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,10 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.fasterxml.jackson.annotation.JsonCreator.Mode;
-
 import jakarta.servlet.http.HttpSession;
-import retrofit2.http.GET;
 
 
 @RequestMapping("/mypage/reserve")
@@ -37,8 +32,8 @@ public class MypageReseveController {
 		
 		rsDTO.setMemberId((String)session.getAttribute("memberId"));
 
-		System.out.println(rsDTO.getMemberId());
-		System.out.println(mrs.searchHotelRevList(rsDTO));
+//		System.out.println(rsDTO.getMemberId());
+//		System.out.println(mrs.searchHotelRevList(rsDTO));
 		
 		return mrs.searchHotelRevList(rsDTO);
 	}//searchRevHotel
@@ -47,13 +42,13 @@ public class MypageReseveController {
 	
 	  @PostMapping("/hotelRevDetail") 
 	  public String hotelRevDetail(ReserveDetailDTO rdDTO,HttpSession session, Model model) { 
-//		  rdDTO.setMemberId(((String)session.getAttribute("memberId")));
-		rdDTO.setMemberId("user40");
+		  rdDTO.setMemberId(((String)session.getAttribute("memberId")));
+		  
 	  System.out.println(rdDTO.getReserveNum());
 	  System.out.println(rdDTO.getMemberId());
 	  System.out.println(rdDTO.getReserveType());
 	  
-	  System.out.println(mrs.searchOneHotelRevDetail(rdDTO));
+	  System.out.println("출력된 리스트---------"+mrs.searchOneHotelRevDetail(rdDTO));
 	  model.addAttribute("hotelRevDetail",  mrs.searchOneHotelRevDetail(rdDTO));
 	  
 	  
@@ -83,7 +78,7 @@ public class MypageReseveController {
 	  @GetMapping("/hotelRevDetail2")
 	  public String hotelRevDetail2() {
 		  
-		  return "/mypage/memberHotelRevDetail2";
+		  return "/mypage/memberHotelRevDetail";
 	  }
 		  
 		 

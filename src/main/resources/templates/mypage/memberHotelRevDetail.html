@@ -397,6 +397,11 @@ font-family: 'Nanum Myeongjo', serif;
 		text-decoration: none;
 	
 	}
+	
+	  .footer-title{
+    
+    	margin-top: 5px;
+    }
 </style>
 <script type="text/javascript">
 $(function(){
@@ -428,47 +433,56 @@ $(function(){
 
         <div class="col-lg-9">
             <div class="main-content-wrapper">
-    <div class="reservation-detail-container" th:object="${hotelRevDetail}">
+    <div class="reservation-detail-container" >
         
         <div class="res-header">
             <div class="res-status-badge">RESERVATION CONFIRMED</div>
             <h2 class="fw-bold text-white mb-2" style="font-family: 'Nanum Myeongjo', serif; letter-spacing: 2px;">YOUR STAY AT NOIR HOTEL</h2>
-            <p class="res-id-number" style="font-family: 'Nanum Myeongjo', serif;" ><span th:text="|No.*{reserveNum}|">No.1</span> <span class="text-secondary mx-2">|</span><span th:text="|*{reserveName} 님|"> 박현욱 님 </span></p>
+            <p class="res-id-number" style="font-family: 'Nanum Myeongjo', serif;" ><span th:text="|No. ${hotelRevDetail[0].reserveNum}|">No.1</span> <span class="text-secondary mx-2">|</span>
+            <span th:text="| ${hotelRevDetail[0].reserveName} 님|"> 박현욱 님 </span></p>
         </div>
 
         <div class="row">
+    <th:block th:each="hotelRev:${hotelRevDetail}" th:object="${hotelRev}">
+<div class="rounded-4 mb-4 bg-transparent" 
+     style="border: 1px solid #2a2a2a !important;">
+	<div class="card-body p-4">
     <div class="col-md-12">
         <div class="res-info-label"><i class="bi bi-door-open me-2"></i>Room Type</div>
-        <div class="res-info-value text-uppercase" th:text="*{roomType}" >SUITE ROOM</div>
+        <div class="res-info-value text-uppercase"  th:text="*{roomType}">SUITE ROOM</div>
     </div>
-
     <div class="col-md-12">
         <div class="res-info-label"><i class="bi bi-calendar-range me-2"></i>Stay Period (Check-in & Check-out)</div>
         <div class="res-info-value d-flex align-items-center flex-wrap">
-           <span th:text="*{checkIn}">2026-01-07</span>
+           <span >2026-01-07</span>
             <small class="text-secondary ms-2">15:00 PM</small>
             
             <i class="bi bi-arrow-right mx-3" style="color: #c5a47e; opacity: 0.5;"></i>
             
-            <span th:text="*{checkOut}" >2026-01-10</span>
+            <span  >2026-01-10</span>
             <small class="text-secondary ms-2">12:00 AM</small>
         </div>
     </div>
+    </div>
+    </div>
+ </th:block>
+
+   
 
     <div class="col-md-6 mt-3">
         <div class="res-info-label"><i class="bi bi-clock-history me-2"></i>Reservation Date</div>
-        <div class="res-info-value" th:text="*{reserveDate}">2026-01-01</div>
+        <div class="res-info-value" >2026-01-01</div>
         
         <div class="info-label-noir"><i class="bi bi-people me-2"></i>Guest Count</div>
-        <div class="info-value-noir" th:text="|성인 *{adultCount} / 아동 *{kidCount}|">성인 1 / 아동 2</div>
+        <div class="info-value-noir" >성인 1 / 아동 2</div>
     </div>
 
     <div class="col-md-6 mt-3 border-start border-secondary short-divider" style="--bs-border-opacity: .2;">
         <div class="info-label-noir"><i class="bi bi-envelope me-2"></i>Contact</div>
-        <div class="info-value-noir" th:text="*{email}">mellifluous53@gmail.com</div>
+        <div class="info-value-noir" >mellifluous53@gmail.com</div>
 
 		<div class="info-label-noir"><i class="bi bi-telephone me-2"></i>TEL</div>
-        <div class="info-value-noir" th:text="*{tel}">01012345678</div>
+        <div class="info-value-noir" >01012345678</div>
     </div>
         <div class="info-label-noir"><i class="bi bi-chat-left-text me-2"></i>Special Request</div>
         <div class="info-value-noir text-secondary small">
@@ -483,9 +497,19 @@ $(function(){
 </div>
 
         <div class="row mt-4 pt-4 border-top border-secondary" style="--bs-border-opacity: .2;">
+            <div class="col-md-5">
+                <h6 class="res-info-label mb-3" style="color: #c5a47e;">Payment Information</h6>
+                <div class="d-flex align-items-center mb-2">
+                    <i class="bi bi-credit-card-2-front fs-4 me-3 text-secondary"></i>
+                    <div>
+                        <div class="small">MasterCard (Debit)</div>
+                        <div class="text-secondary small text-uppercase">**** **** **** 5678</div>
+                    </div>
+                </div>
+                <div class="small text-secondary mt-2">Paid on: 2025.12.20 14:30:22</div>
+            </div>
             
-            
-            <div class="col-md-12">
+            <div class="col-md-7">
                 <div class="payment-summary-noir">
                     <div class="d-flex justify-content-between mb-2">
                         <span class="small text-secondary">Room Rate (Total)</span>
@@ -529,11 +553,11 @@ $(function(){
                     <button class="btn btn-action me-2" onclick="window.print()">
                         <i class="bi bi-printer me-2"></i>출력
                     </button>
-                    <th:block th:if="*{reserveFlag eq 'N'}">
+                  <!--   <th:block th:if="*{reserveFlag eq 'N'}"> -->
                     <button class="btn btn-noir-cancel" data-bs-toggle="modal" data-bs-target="#cancelModal">
                        예약취소
                     </button>
-                    </th:block>
+                    <!-- </th:block> -->
                 </div>
                 <button class="btn btn-link text-secondary text-decoration-none small backBtn" onclick="history.back()">뒤로가기</button>
             </div>
@@ -542,28 +566,7 @@ $(function(){
     
   	
 </div>
-<!-- 
-<div class="modal fade" id="cancelModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content noir-modal-content p-3">
-            <div class="modal-header noir-modal-header border-0">
-                <h5 class="modal-title fw-bold" style="color: #c5a47e; letter-spacing: 1px;">CANCELLATION CONFIRM</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body py-4 text-center">
-                <p class="mb-2">정말로 예약을 취소하시겠습니까?</p>
-                <p class="small text-danger mb-0">* 규정에 따라 체크인 2일 전부터는 취소 수수료가 발생합니다.</p>
-            </div>
-            <div class="modal-footer noir-modal-footer border-0">
-                <button type="button" class="btn btn-secondary btn-sm rounded-0 px-4" data-bs-dismiss="modal">아니오</button>
-                <form action="cancelReservation.do" method="post" style="display: inline;">
-                    <input type="hidden" name="reserveNum" value="${hotelRevDetail.reserveNum}">
-                    <button type="submit" class="btn btn-danger btn-sm rounded-0 px-4">네, 취소합니다</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div> -->
+
         </div>
     </div>
 </div>
@@ -583,7 +586,7 @@ $(function(){
             <div class="modal-footer border-0 justify-content-center">
                 <button type="button" class="btn btn-secondary btn-sm rounded-0 px-4" data-bs-dismiss="modal">아니오</button>
                 <form th:action="@{/mypage/reserve/cancelHotelReserve}" method="post" style="display:inline;">
-                    <input type="hidden" name="reserveNum" th:value="${hotelRevDetail.reserveNum}">
+                     <input type="hidden" name="reserveNum" /> 
                     <button type="submit" class="btn btn-danger btn-sm rounded-0 px-4">네, 취소합니다</button>
                 </form>
             </div>

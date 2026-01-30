@@ -12,7 +12,7 @@ import lombok.ToString;
 public class DinningRevDetailDomain extends ReserveDetailDomain {
 
 	private String dinningName,dinningType,visitTime;
-	private Date reserveDate,visitDate;
+	private Date visitDate;
 	
 	
 	

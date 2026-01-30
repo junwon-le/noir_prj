@@ -144,8 +144,8 @@ public class MypageReserveService {
 				
 	}//searchHotelRevList
 	
-	public HotelRevDetailDomain searchOneHotelRevDetail(ReserveDetailDTO rdDTO) {
-		HotelRevDetailDomain hrdDomain=null;
+	public List<HotelRevDetailDomain> searchOneHotelRevDetail(ReserveDetailDTO rdDTO) {
+		List<HotelRevDetailDomain> hrdDomain=null;
 		try {
 			
 			hrdDomain =mrDAO.selectHotelRevDetail(rdDTO);

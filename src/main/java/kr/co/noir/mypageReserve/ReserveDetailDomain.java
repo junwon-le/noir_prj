@@ -9,11 +9,23 @@ import lombok.ToString;
 @ToString
 public class ReserveDetailDomain {
 
+	/*같은거
+	 * reserveNum,reserveName,reserveDate,reserveEmail,reserveTel,adultCnt,kidCnt
+	 * payAgency,cardNum,payInputDate,reserveStatus,reserveMsg
+	 */
+	
+	/*다른거
+	 * roomType,startDate,endDate,checkInTime,checkOutTime
+	 * 
+	 * 
+	 * */
+	
+	
 	private int reserveNum,adultCount,childCount,cancelFee,
 	roomPrice,roomTax,roomPriceTotal;
 	private String reserveName,email,tel,reserveMsg,reserveFlag,
-	payAgency,cardData;
-	private Date payInputDate;
+	payAgency,cardData,reserveDate;
+	private String payInputDate;
 	
 	public int getRoomPrice() {
 		roomPrice = (int)(roomPriceTotal / 1.1);
@@ -59,7 +71,10 @@ public class ReserveDetailDomain {
 	public String getCardData() {
 		return cardData;
 	}
-	public Date getPayInputDate() {
+	public String getPayInputDate() {
 		return payInputDate;
+	}
+	public String getReserveDate() {
+		return reserveDate;
 	}
 }

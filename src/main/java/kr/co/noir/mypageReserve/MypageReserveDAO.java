@@ -36,15 +36,16 @@ public class MypageReserveDAO {
 		
 	}//selectHotelRevList
 	
-	public HotelRevDetailDomain selectHotelRevDetail(ReserveDetailDTO rdDTO) throws PersistenceException{
-		HotelRevDetailDomain hrdDomain=null;
+	public List<HotelRevDetailDomain> selectHotelRevDetail(ReserveDetailDTO rdDTO) throws PersistenceException{
+		List<HotelRevDetailDomain> hrdDomain=null;
 		
 		SqlSession ss= MyBatisHandler.getInstance().getMyBatisHandler(false);
 		
-		hrdDomain=ss.selectOne("kr.co.noir.mypageReserve.hotelRevDetail",rdDTO);
+		hrdDomain=ss.selectList("kr.co.noir.mypageReserve.hotelRevDetail",rdDTO);
 		
 		if(ss !=null) {ss.close();}//end if
 		
+		System.out.println(hrdDomain);
 		
 		return hrdDomain;
 		
