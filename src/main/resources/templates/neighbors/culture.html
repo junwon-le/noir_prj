@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>NOIR HOTEL</title>
+
+<!-- <link rel="stylesheet" type="text/css" href="/Hotel28NewCMS_common/js/homepage/jquery.bxslider/jquery.bxslider.css"> -->
+<link rel="stylesheet" type="text/css" href="../common/css/homepage/base.css">
+<link rel="stylesheet" type="text/css" href="../common/css/homepage/style.css?v=0312">
+<link rel="stylesheet" type="text/css" href="../common/css/homepage/sub.css?v=0312">
+
+<script src="../common/js/comm/jquery-3.5.1.min.js"></script>
+<script src="../common/js/comm/jquery.bxslider.js"></script>
+<!-- <script src="/Hotel28NewCMS_common/js/homepage/jquery.mobile.custom.min.js"></script> -->
+<script src="../common/js/homepage/jquery.rwdImageMaps.min.js"></script>
+<script src="../common/js/homepage/jquery.accessibility.modal.js"></script>
+<script src="../common/js/comm/jquery.cookie.js"></script>
+<script src="../common/js/homepage/plugin.js"></script>
+<script type="text/javascript" src="../common/js/homepage/jquery.simpleWeather.js"></script>
+<script src="../common/js/homepage/custom.js"></script>
+
+<style>
+
+#detailBtn{
+width:150px;
+height:50px;
+position:absolute;
+top:690px;
+left:1230px;
+ background: rgba(50, 50, 50, 0.95);
+  border: 1px solid rgba(216, 203, 168, 0.25);
+  color: #CFC4A3;
+  letter-spacing: 0.08em;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+#detailBtn:hover{
+ background: rgba(30, 30, 30, 0.95);
+  border-color: rgba(216, 203, 168, 0.6);
+}
+
+#reserveBtn{
+width:150px;
+height:50px;
+position:absolute;
+top:690px;
+left:1400px;
+ background: rgba(50, 50, 50, 0.95);
+  border: 1px solid rgba(216, 203, 168, 0.25);
+  color: #CFC4A3;
+  letter-spacing: 0.08em;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+#reserveBtn:hover{
+ background: rgba(30, 30, 30, 0.95);
+  border-color: rgba(216, 203, 168, 0.6);
+}
+
+.fullsizeImage>ul>li::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at center,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.12) 25%,
+    rgba(0, 0, 0, 0.35) 50%,
+    rgba(0, 0, 0, 0.6) 75%,
+    rgba(0, 0, 0, 0.75) 100%
+  );
+  pointer-events: none;
+}
+
+
+.btn_pop_close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+    background: yellow;
+    z-index: 99999;
+
+    /* 기존 텍스트 완전 무시 */
+    font-size: 0 !important;
+    text-indent: 0 !important;
+    overflow: visible !important;
+}
+
+.btn_pop_close::before {
+    content: '✕';          /* ← 강제 출력 */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
+    line-height: 1;
+    font-family: Arial, sans-serif;
+}
+
+.footer_bot{
+padding:0px;
+}
+
+</style>
+
+<body>
+
+<script>
+$(function(){
+	//$('header').load('../../incheader.html');
+
+	$('.fullsizeImage ul').myFunction();
+	
+	var num=$("#typeNum").val();
+	$("#reserveBtn").click(function(){
+		location.href="/reserve/roomResSearch";
+	});
+	
+	$("#detailBtn").click(function(){
+		location.href="/roomDetailView?num="+num;
+	});
+	
+	
+	
+	
+})
+
+var CONTEXT = '';
+$(document).ready(function($) {
+    $('.open_modal').click(function(e) {    	
+        $("iframe").attr("src", $(this).attr('url')).show();        	
+        e.preventDefault();
+    });
+});
+
+$(document).on('click','.btn_pop_close',function(e){
+	$('#popIframe > iframe').attr('src','').hide();
+	e.preventDefault();
+})
+
+
+
+</script>
+
+
+
+    
+	<div class="fullsizeImage">
+ 	<ul>
+    
+    <li th:style="'background-image: url(../common/images/homepage/culture.jpg)'"></li>
+    
+    
+	</ul>
+	</div>	
+
+	
+
+
+
+
+
+
+<div class="movie-frame">
+	<div class="movie-frame-left"></div>
+	<div class="movie-frame-right"></div>
+</div>
+<header>
+	  <div th:replace="~{fragments/header :: header}"></div>
+</header>
+	<section id="rooms">
+
+		<div class="bx-pager">
+		</div>
+		
+		<div class="frame frame-rooms">
+			<nav class="frame-nav">
+				HOTEL / NEIGHBORS / <span class="gold">CULTURE</span>
+			</nav>
+			<h2 class="frame-title gold">CULTURE</h2>
+		</div>
+	</section>
+	<section id="hotel-detail">
+		<div class="detail_wrap offers">
+			<ul class="board" id="list_view">
+				<li class="col2">
+				    <div class="img">
+				    	<img src="../common/images/homepage/culimg01.jpg" alt="culture">
+				    </div>
+                    <div class="con">
+						<p class="rtitle">국립민속박물관</p>
+						<p class="rtxt">경복궁 내에 있는 국립민속박물관은 민속 자료를 연구하고 보존하기 <br>
+						위해 설립된 생활사박물관이다.  우리나라 전통 생활 양식과 관련된 <br>
+						4,000여점의 민속 자료가 전시되고 있어, 한국의 전통 생활문화를<br>
+						 느끼고 체험할 수 있다. 3개의 상설 전시실과 2개의 기획전시실이 <br>있으며. 전통과 현대가 어우러진 문화의 전당이다. </p>
+						<div class="info">
+							<div class="addr">서울 종로구 삼청로 37</div>
+							<div class="tel">TEL 02 3704 3114</div>
+						</div>
+					</div>			
+				</li>
+				<li class="col2">
+                    <div class="img">
+						<img src="../common/images/homepage/culimg02.jpg" alt="culture">
+					</div>
+					<div class="con">
+						<p class="rtitle">대한민국 역사박물관</p>
+						<p class="rtxt">19세기말 개항기부터 오늘날에 이르는 대한민국의 역사를 종합적으로<br> 
+						보여주는 국내 최초의 국립 근대사 박물관이다. 대한민국의 주요한 <br>
+						역사적 순간과 정치, 사회, 문화 등 다양한 분야를 알 수 있다. 1919년 <br>
+						3.1운동 결과 탄생했던 임시정부부터 시작하여 1945년 해방, 1948년 <br>
+						대한민국 정부 수립 후 오늘날까지의 역사를 다룬다.</p>
+						<div class="info">
+							<div class="addr">서울 종로구 세종대로 198</div>
+							<div class="tel">TEL 02 3703 9200</div>
+						</div>
+					</div>
+				</li>
+				<li class="col2">
+				    <div class="img">
+				    	<img src="../common/images/homepage/culimg03.jpg" alt="culture">
+				    </div>
+                    <div class="con">
+						<p class="rtitle">국립현대미술관 덕수궁관</p>
+						<p class="rtxt">'마당'개념을 도입하여 건축한 국립현대미술관은 누구나 즐기고 휴식을 <br>
+						취할 수 있는 공간으로 꾸며져 있다. 전시실을 비롯하여 디지털정보실, <br>
+						멀티미디어홀, 영화관 등 다양한 시설을 갖춘 복합문화예술센터로 <br>현대미술품 및 신매체 융복합 전시를 진행한다. </p>
+						<div class="info">
+							<div class="addr">서울 중구 세종대로 99(정동) 덕수궁</div>
+							<div class="tel">TEL 02 2022 0600</div>
+						</div>
+					</div>				
+				</li>
+				<li class="col2">
+                    <div class="img">
+						<img src="../common/images/homepage/culimg04.jpg" alt="culture">
+					</div>
+					<div class="con">
+						<p class="rtitle">서울시립미술관</p>
+						<p class="rtxt">서울시립미술관 전시는 세계 유명 화가들 전시회 뿐만 아니라 다양한 <br>
+						미디어 아트 전시도 함께 기획하여 전문성과 대중성을 적절히 <br>
+						조화시키는 것으로 유명하다. 또한 맞춤형 교육 및 국제교류 <br>
+						프로그램등을 운영하는 등 미술 작품을 체계적으로 수집,보존하고 <br>
+						다양한 기획전을 통해 미술 문화 발전에 기여한다. 르네상스 양식인 옛 <br>
+						대법원 건물의 전면부는 그대로 보존하고 후문에는 현대적 건물을 <br>신축했다. </p>
+						<div class="info">
+							<div class="addr">서울 중구 덕수궁길 61</div>
+							<div class="tel">TEL 02 2124 8800</div>
+						</div>
+					</div>
+				</li>
+				<li class="col2">
+                    <div class="img">
+						<img src="../common/images/homepage/culimg05.jpg" alt="culture">
+					</div>
+					<div class="con">
+						<p class="rtitle">세종문화회관</p>
+						<p class="rtxt">전통공연과 클래식, 크로스오버 공연까지 다양한 장르의 공연을 하는 <br>
+						서울 문화예술의 허브다.  지하 3층 지상 6층 규모로 한국의 옛 <br>
+						건축양식을 현대적으로 조합해 만들었으며, 공연예술의 질적 향상을 <br>
+						추구함과 동시에 편안한 휴식공간을 제공한다. </p>
+						<div class="info">
+							<div class="addr">서울 종로구 세종대로 175</div>
+							<div class="tel">TEL 02 399 1114</div>
+						</div>
+					</div>
+				</li>
+				<li class="col2">
+                    <div class="img">
+						<img src="../common/images/homepage/culimg06.jpg" alt="culture">
+					</div>
+					<div class="con">
+						<p class="rtitle">난타공연</p>
+						<p class="rtxt">한국의 전통악기 공연인 사물놀이 리듬을 소재로 주방에서 일어나는 <br>
+						일들을 코믹하게 그려낸 넌버벌 아크로바틱 퍼포먼스 극이다. 영국 <br>
+						에던버러 프린지 페스티벌 전석 매진, 북미 55개도시 순회 공연, 한국 <br>
+						최초 브로드웨이 참가 공연 등 화려한 이력을 지녔다.</p>
+						<div class="info">
+							<div class="addr">서울 중구 명동길 26 유네스코회관</div>
+							<div class="tel">TEL 02 739 8288</div>
+						</div>
+					</div>
+				</li>
+				<li class="col2">
+                    <div class="img">
+						<img src="../common/images/homepage/culimg07.jpg" alt="culture">
+					</div>
+					<div class="con">
+						<p class="rtitle">점프공연</p>
+						<p class="rtxt"><점프>는 무술 고수 가족의 집에 엉뚱한 도둑이 들어와 벌어지는 일을 <br>
+						대사 없이 재미있게 표현한 엔터테인먼트 공연이다. 전통 한국 무술인 <br>
+						태권도와 택견을 중심으로 고난이도 동양무술과 함께 유쾌한 코미디를 <br>
+						혼합하여 화려하면서도 짜릿한 공연이다.</p>
+						<div class="info">
+							<div class="addr">서울 중구 마른내로 47</div>
+							<div class="tel">TEL 02 722 3995</div>
+						</div>
+					</div>
+				</li>
+				<li class="col2">
+                    <div class="img">
+						<img src="../common/images/homepage/culimg08.jpg" alt="culture">
+					</div>
+					<div class="con">
+						<p class="rtitle">명동예술극장</p>
+						<p class="rtxt">명동역과 을지로 입구역 사이에 있는 연극 전문 공연장으로 과거 한국 <br>
+						문화 예술의 선구자 역할을 했던 국립극장을 재복원하였다. 이곳에서는 <br>
+						정통연극, 실험극, 논버벌 퍼포먼스, 뮤지컬 등 다양한 공연들 뿐만 <br>
+						아니라 연기경연, 연극제, 공연예술제 등 다채로운 행사도 즐길 수 있다. <br>
+						객석과 무대가 가까워 보다 생동감 넘치는 공연을 감상할 수 있다.</p>
+						<div class="info">
+							<div class="addr">서울 중구 명동길 35</div>
+							<div class="tel">TEL 1644 2003</div>
+						</div>
+					</div>
+				</li>
+				<li class="col2">
+                    <div class="img">
+						<img src="../common/images/homepage/culimg09.jpg" alt="culture">
+					</div>
+					<div class="con">
+						<p class="rtitle">정동극장</p>
+						<p class="rtxt">정동극장은 한국 전통의 춤사위, 장단과 선율, 민속놀이가 함께 <br>
+						어우러진 종합 공연물을 제작하여 상연하는 전통공연장이다. 한국 <br>
+						최초의 근대식 극장인 원각사를 복원한 복합공연장으로 고전을 <br>
+						무대화한 전통공연, 창작 공연을 통해 전통 공연의 대중화에 기여하고 <br>
+						있다. 정동극장은 전통예술, 음악, 무용, 연극 등 모든 장르의 공연예술이 <br>
+						이뤄질 수 있도로 기획되었으며 정기공연과 맞춤공연이 있다. </p>
+						<div class="info">
+							<div class="addr">서울 중구 정동길 43</div>
+							<div class="tel">TEL 02 751 1500</div>
+						</div>
+					</div>
+				</li>
+			</ul>
+
+		</div>
+	</section>
+  
+<footer>
+<div th:replace="~{fragments/footer :: footer}"></div>
+</footer>
+<div th:replace="~{fragments/privacy :: privacy}"></div>
+
+<!-- <script type="text/javascript" src="/Hotel28NewCMS_common/js/jquery.modalLayer.js"></script>
+<script type="text/javascript" src="/Hotel28NewCMS_common/js/common_dev.js"></script> -->
+<script type="text/javascript" src="${pageContext.request.contextPath}/common/js/comm/jquery.validate.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/common/js/comm/wings.core.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/common/js/comm/PAGING_HOMEPAGE.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/common/js/comm/kendo.web.min.js"></script>
+
+
+</body>
+</html>
