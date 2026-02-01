@@ -45,5 +45,13 @@ public interface MemberMapper {
     // 선택된 회원들 탈퇴 처리 (MEMBER_DEL_FLAG = 'Y')
     int updateMembersDelete(@Param("memberNums") List<Integer> memberNums);    
     
+    // SNS 가입 처리 
+    // 1. 기존 가입 여부 확인 (Provider와 ProviderId의 조합으로 조회)
+    MemberDTO findByProviderAndId(@Param("provider") String provider, 
+                                  @Param("providerId") String providerId);
+
+    // 2. 신규 SNS 유저 등록
+    int insertSnsMember(MemberDTO member);    
+    
     
 }
