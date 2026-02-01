@@ -7,9 +7,12 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,46 +29,16 @@ public class LoginController {
 
 	@Autowired
 	private LoginService ls;
-	
-	
+
 	@GetMapping("/memberLogin")
 	public String memberLogin() {
-		return "/login/memberLogin";
+		return "login/memberLogin";
 	}
-	
-	@GetMapping("/findId") 
-    public String findIdPage() {
-        return "/login/findId";           // templates/findId.html 파일을 바라봄
-    }
-
-    @GetMapping("/findPw") 
-    public String findPwPage() {
-        return "login/findPw";          // templates/findPw.html 파일을 바라봄
-    }	
-
     
-	@Value("${user.crypto.key}")
-	private String key;
-	@Value("${user.crypto.salt}")
-	private String salt;	    
-    
-    /**
-     * 로그아웃 처리
-     */
-    @GetMapping("/logout")
-    public String logout(HttpSession session) {
-        // 1. 세션 무효화 (저장된 member, admin 등 모든 속성 삭제)
-        session.invalidate();
-        
-        // 2. 로그아웃 후 메인 페이지(또는 로그인 페이지)로 리다이렉트
-        return "redirect:/main"; 
-    }
-	
-	
 	@PostMapping("/memberLogin")
 	public String login(LoginDTO lDTO, HttpServletRequest request, HttpSession session, Model model) {
 
-		String url="/login/memberLogin"; // 실패 
+		String url="login/memberLogin"; // 실패 
 		
 		lDTO.setMemberIp(request.getRemoteAddr());
 		LoginMemberDomain md=ls.searchOneMember(lDTO);
@@ -91,6 +64,40 @@ public class LoginController {
 		
 		return url;
 	}
+	
+	
+	
+	
+	
+	@GetMapping("/findId") 
+    public String findIdPage() {
+        return "login/findId";           // templates/findId.html 파일을 바라봄
+    }
+
+    @GetMapping("/findPw") 
+    public String findPwPage() {
+        return "login/findPw";          // templates/findPw.html 파일을 바라봄
+    }	
+
+    
+	@Value("${user.crypto.key}")
+	private String key;
+	@Value("${user.crypto.salt}")
+	private String salt;	    
+    
+    /**
+     * 로그아웃 처리
+     */
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        // 1. 세션 무효화 (저장된 member, admin 등 모든 속성 삭제)
+        session.invalidate();
+        
+        // 2. 로그아웃 후 메인 페이지(또는 로그인 페이지)로 리다이렉트
+        return "redirect:/main"; 
+    }
+	
+
 	
 	
 	@PostMapping("/findId")
@@ -279,5 +286,25 @@ public class LoginController {
         
         return "login/result"; // result.html 을 호출
     }
+    
+    /**
+     * SNS 로그인 성공 후 리다이렉트되는 경로
+     * Spring Security 설정에서 successHandler를 통해 이쪽으로 보낼 수 있음.
+     */
+    @GetMapping("/oauth2/code/{registrationId}")
+    public String oauthLoginSuccess(@PathVariable String registrationId, 
+                                    @AuthenticationPrincipal OAuth2User oAuth2User,
+                                    Model model) {
+        
+        // OAuth2User를 통해 로그인한 유저의 정보를 가져옵니다.
+        // registrationId(google, kakao, naver)에 따라 데이터 구조가 다르므로 처리가 필요합니다.
+        Map<String, Object> attributes = oAuth2User.getAttributes();
+        
+        // 
+        return "redirect:/"; 
+    }    
+    
+    
+    
 	
 }//class

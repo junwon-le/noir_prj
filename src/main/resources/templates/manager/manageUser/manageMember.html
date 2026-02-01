@@ -91,6 +91,105 @@
         .pagination .active .page-link { background: white; color: #1a253a; border-color: white; }
     </style>
 </head>
+<script th:inline="javascript">
+// 전체 선택/해제 로직
+$(document).on('change', '#checkAll', function() {
+    $("input[name='memberCheck']").prop('checked', this.checked);
+});
+
+$(function() {
+    const $keyword = $('#keyword');
+    const $searchType = $('#searchType');
+
+    // 검색 타입이 바뀔 때마다 입력창 초기화 및 플레이스홀더 변경
+    $searchType.on('change', function() {
+        $keyword.val("").focus();
+        if ($(this).val() === 'num') {
+            $keyword.attr("placeholder", "숫자만 입력 (예: 102)");
+        } else if ($(this).val() === 'tel') {
+            $keyword.attr("placeholder", "010-0000-0000");
+        } else {
+            $keyword.attr("placeholder", "아이디 검색...");
+        }
+    });
+
+    // 전화번호 검색일 경우 입력 시 자동으로 하이픈(-) 추가
+    $keyword.on('input', function() {
+        if ($searchType.val() === 'tel') {
+            let val = $(this).val().replace(/[^0-9]/g, '');
+            if (val.length <= 3) { $(this).val(val); }
+            else if (val.length <= 7) { $(this).val(val.substring(0, 3) + '-' + val.substring(3)); }
+            else { $(this).val(val.substring(0, 3) + '-' + val.substring(3, 7) + '-' + val.substring(7, 11)); }
+        }
+    });
+});
+
+// 전송 전 최종 체크 함수
+function validateSearch() {
+    const type = $('#searchType').val();
+    const keyword = $('#keyword').val().trim();
+
+    if (keyword === "") {
+        alert("검색어를 입력해주세요.");
+        return false;
+    }
+
+    // 1. 회원번호 검색 시 숫자인지 체크 (ORA-01722 방지)
+    if (type === 'num') {
+        if (!/^\d+$/.test(keyword)) {
+            alert("회원번호는 숫자만 입력 가능합니다.");
+            $('#keyword').focus();
+            return false;
+        }
+    }
+
+    // 2. 전화번호 검색 시 규격 체크 (3-4-4)
+    if (type === 'tel') {
+        if (!/^010-\d{4}-\d{4}$/.test(keyword)) {
+            alert("전화번호 형식이 올바르지 않습니다. (010-0000-0000)");
+            $('#keyword').focus();
+            return false;
+        }
+    }
+
+    return true; // 검사 통과 시 전송
+}
+
+function deleteChecked() {
+    const selectedIds = [];
+    
+    // 체크된 항목의 value(memberNum)를 배열에 담기
+    $("input[name='memberCheck']:checked").each(function() {
+        selectedIds.push($(this).val());
+    });
+
+    if (selectedIds.length === 0) {
+        alert("탈퇴 처리할 회원을 선택해주세요.");
+        return;
+    }
+
+    if (confirm("선택한 " + selectedIds.length + "명의 회원을 탈퇴 처리하시겠습니까?")) {
+        $.ajax({
+            url: "/admin/members/delete", // 컨트롤러의 @PostMapping 주소와 일치해야 함
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(selectedIds), // 배열을 JSON으로 변환
+            success: function(res) {
+                if (res === "OK") {
+                    alert("탈퇴 처리가 완료되었습니다.");
+                    location.reload(); // 성공 시 페이지 새로고침
+                } else {
+                    alert("처리 중 오류가 발생했습니다.");
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("에러 발생:", error);
+                alert("서버 통신 오류가 발생했습니다. (상태코드: " + xhr.status + ")");
+            }
+        });
+    }
+}
+</script>
 
 <body>
     <div th:replace="~{manager/fragments/sidebar :: sidebar}"></div>  
