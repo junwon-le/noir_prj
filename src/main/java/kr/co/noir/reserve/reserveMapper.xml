@@ -177,6 +177,24 @@ ORDER BY
 		from room_depending
 		where session_id= #{session_id}
 	</delete>
+	<!-- 비회원 테이블에 추가 -->
+	<insert id="insertNonMember" parameterType="roomReserveDTO">
+		<selectKey keyProperty="non_user_num" resultType="int" order="BEFORE">
+	        select non_member_seq.nextval from dual
+	    </selectKey>
+	    	insert into non_member (non_user_num, non_user_res_last_name, non_user_res_first_name, non_user_email, non_user_tel, non_user_pass, non_user_ip)
+			values (#{non_user_num}, #{user_first_name}, #{user_first_name},#{email},#{reserve_tel},#{non_user_pass},#{reserve_ip})
+	</insert>
+	<!-- 예약 테이블에 비회원 추가 -->
+  	<insert id="insertNonRoomReserve" parameterType="roomReserveDTO">
+  		<selectKey keyProperty="reserve_num" resultType="int" order="BEFORE">
+	        select reserve_seq.nextval from dual
+	    </selectKey>
+  		insert into reserve (reserve_num, non_user_num , end_user_last_name, end_user_first_name, reserve_adult_count, reserve_kid_count,
+ 		reserve_msg, reserve_start_date, reserve_end_date, reserve_time, reserve_ip, reserve_type)
+		values(#{reserve_num}, #{non_user_num},#{user_last_name},#{user_first_name},#{reserve_adult_count},#{reserve_kid_count},
+		#{reserve_msg},#{room_res_startDate},#{room_res_endDate},sysdate,#{reserve_ip},#{reserve_type})
+	</insert>
 	
 	
   </mapper>

@@ -134,46 +134,6 @@
 
     /* 6. 푸터 */
     footer { position: relative; width: 100%; z-index: 100; }
-    
-    
-    /* SNS 로그인 섹션 스타일 */
-	.sns-login-section {
-	    margin-top: 30px;
-	    padding-top: 20px;
-	    border-top: 1px solid rgba(196, 161, 111, 0.3); /* 연한 골드빛 구분선 */
-	    text-align: center;
-	}
-	
-	.sns-icons {
-	    display: flex;
-	    justify-content: center;
-	    gap: 20px; /* 아이콘 사이 간격 */
-	    margin-bottom: 12px;
-	}
-	
-	.sns-icons a img {
-	    width: 42px; /* 아이콘 크기 조절 */
-	    height: 42px;
-	    object-fit: contain;
-	    transition: all 0.3s ease;
-	    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
-	}
-	
-	.sns-icons a img:hover {
-	    transform: translateY(-5px); /* 살짝 떠오르는 효과 */
-	    filter: brightness(1.1) drop-shadow(0 6px 10px rgba(0,0,0,0.5));
-	}
-	
-	.sns-title {
-	    color: #D7c4a5;
-	    font-size: 13px;
-	    letter-spacing: 1px;
-	    font-weight: 500;
-	    opacity: 0.8;
-	}
-    /* SNS 로그인 섹션 스타일 */
-    
-    
 </style>
 </head>
 
@@ -212,20 +172,6 @@
 
                     <button type="submit" class="login-btn">로그인</button>
                 </form>
-					<div class="sns-login-section">
-					    <div class="sns-icons">
-					        <a th:href="@{/oauth2/authorization/kakao}">
-					            <img th:src="@{/common/images/homepage/kakao.png}" alt="카카오 로그인">
-					        </a>
-					        <a th:href="@{/oauth2/authorization/naver}" onclick="loginWithNaver();">
-					            <img th:src="@{/common/images/homepage/naver.png}" alt="네이버 로그인">
-					        </a>
-					        <a th:href="@{/oauth2/authorization/google}" onclick="loginWithGoogle();">
-					            <img th:src="@{/common/images/homepage/google.png}" alt="구글 로그인">
-					        </a>
-					    </div>
-					    <p class="sns-title">SNS 로그인</p>
-					</div>                    
             </div>
 
             <div class="login-box">

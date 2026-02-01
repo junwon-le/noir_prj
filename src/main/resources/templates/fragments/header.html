@@ -6,20 +6,34 @@
  <div id="header_wrap">
 		<nav class="top_nav" style="height:50px">
 			<ul>
-				    <li th:if="${session.memberId == null and session.adminId == null}">
-						<a href="/login/memberLogin">LOGIN</a>
+				<li th:if="${session.memberId == null and session.adminId == null}">
+				    <a th:href="@{/login/memberLogin}">LOGIN</a>
+				</li>
+				<li th:if="${session.memberId == null and session.adminId == null}">
+				    <a th:href="@{/join}">JOIN</a>
+				</li>
+				
+				<th:block th:if="${session.memberId != null}">
+				    <li>
+				        <span th:text="${session.memberName != null ? session.memberName + '님 환영합니다' : session.memberId + '님'}" 
+				              style="color: #C4A16F; margin-right: 15px; font-size: 13px;"></span>
+				        <a th:href="@{/login/logout}">LOGOUT</a>
 				    </li>
-				    <li th:if="${session.memberId != null or session.adminId != null}">
-				        <a href="/login/logout" >LOGOUT</a>
+				    <li>
+				        <a th:href="@{/mypage/}">MYPAGE</a>
 				    </li>
-				    
-				    <li th:if="${session.memberId == null and session.adminId == null}"> 
-				        <a href="/join" >JOIN</a>				    
-			    
+				</th:block>
+				
+				<th:block th:if="${session.adminId != null}">
+				    <li>
+				        <span th:text="${session.adminId + '(관리자)님 환영합니다'}" 
+				              style="color: #ff6b6b; margin-right: 15px; font-size: 13px;"></span>
+				        <a th:href="@{/login/logout}">LOGOUT</a>
 				    </li>
-				    <li th:if="${session.memberId != null or session.adminId != null}"> 
-				        <a href="/mypage/" >MYPAPE</a>				    
+				    <li>
+				        <a th:href="@{/manage/dashboard}">DASHBOARD</a>
 				    </li>
+				</th:block>
 				
 				<!-- <li>
 					LANGUAGE : <a href="#" class="langChange" data-lang="KOR">KOR</a> / <a href="#" class="langChange" data-lang="ENG">ENG</a> / <a href="#" class="langChange" data-lang="JPN">JPN</a> / <a href="#" class="langChange" data-lang="CHN">CHN</a>
