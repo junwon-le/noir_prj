@@ -53,4 +53,23 @@
             #{num}
         </foreach>
     </update>
+    <select id="findByProviderAndId" resultType="kr.co.noir.login.MemberDTO">
+        SELECT * FROM MEMBER 
+        WHERE MEMBER_PROVIDER = #{provider} 
+          AND MEMBER_PROVIDER_ID = #{providerId}
+          AND MEMBER_DEL_FLAG = 'N'
+    </select>
+    <insert id="insertSnsMember" parameterType="kr.co.noir.login.MemberDTO">
+        INSERT INTO MEMBER (
+            MEMBER_NUM, MEMBER_ID, MEMBER_PASS, 
+            MEMBER_LAST_NAME, MEMBER_FIRST_NAME, MEMBER_EMAIL, 
+            MEMBER_DEL_FLAG, MEMBER_INPUTDATE,
+            MEMBER_PROVIDER, MEMBER_PROVIDER_ID
+        ) VALUES (
+            MEMBER_SEQ.NEXTVAL, #{memberId}, 'SNS_USER', 
+            #{memberLastName}, #{memberFirstName}, #{memberEmail}, 
+            'N', SYSDATE, 
+            #{memberProvider}, #{memberProviderId}
+        )
+    </insert>    
 </mapper>

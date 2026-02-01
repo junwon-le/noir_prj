@@ -39,16 +39,19 @@ public class ReserveController {
 	
 	@PostMapping("/pending")
 	@ResponseBody
-	public ResponseEntity<String> reserve(@RequestBody List<RoomDependingDTO> PdList) {
+	public ResponseEntity<String> reserve(@RequestBody List<RoomDependingDTO> PdList , HttpSession session) {
 		//예약 객실을 보류테이블에 추가 
 		try {
+			String JSessionId = session.getId();
+			for(RoomDependingDTO pdDTO : PdList) {
+				pdDTO.setId(JSessionId);
+			}//end for
 	        boolean flag = rrs.addRoomDepending(PdList);
 	        if(flag) {
 	        	return ResponseEntity.ok("success"); 
-	        	
 	        }else {
 	        	return ResponseEntity.badRequest().body("fail");
-	        }	        	
+	        }//end else	        	
 	        // 2. 성공 응답 보내기 (HTTP 200)
 	        
 	    } catch (Exception e) {
@@ -111,7 +114,28 @@ public class ReserveController {
 		rrs.deleteDepending(id);
 		
 		return url;
-	}
+	}//reserveComplete
+	@PostMapping("/nonComplete")
+	public String nonReserveComplete(RoomReserveDTO rrDTO ,PayInfoDTO pDTO, HttpSession session, HttpServletRequest request, Model model) {
+		String url ="/reserve/complete";
+		//session id 가져오기
+		//String id=session.getAttribute("userId");
+		String id=session.getId();
+		String ip= request.getRemoteAddr();
+		//데이터 추가
+		rrDTO.setReserve_ip(ip);
+		rrDTO.setUser_id(id);
+		rrDTO.setReserve_type("room");
+		//예약 완료 시 테이블에 정보 추가
+		boolean flag = rrs.addNonRoomReserve(pDTO, rrDTO);
+		if(!flag) {
+			url="reserve/err";
+		}
+		//예약 완료 시 보류 테이블에서 삭제 
+		rrs.deleteDepending(id);
+		
+		return url;
+	}//nonReserveComplete
 	
 	@ResponseBody
 	@GetMapping("/RoomSearchProcess")

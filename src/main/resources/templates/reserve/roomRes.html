@@ -25,7 +25,7 @@
       pay_method: "card", // 필수 누락 확인
       merchant_uid: "issue_" + new Date().getTime(),
       customer_uid: "user_idx_1234"+ new Date().getTime(),  // 이 값이 빌링키가 됩니다 (DB에 저장할 값)
-      name: "스위트룸",
+      name: "room",
       amount: 0,                     // 실제 결제 안 함
     }, function (rsp) {
       if (rsp.success) {

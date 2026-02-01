@@ -84,7 +84,36 @@ public class RoomReserveDAO {
 	
 		
 		return cnt;
-	}
+	}//insertRoomReserve
+	
+	public int insertNonRoomReserve(PayInfoDTO pDTO, RoomReserveDTO rrDTO) throws PersistenceException {
+		int cnt =0;
+		int ok= rrDTO.getRoom_type().size()+4;
+		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
+		//비회원 테이블에 추가
+		cnt += ss.insert("kr.co.sist.reserve.insertNonMember",rrDTO);
+		//예약 테이블에 추가
+		cnt += ss.insert("kr.co.sist.reserve.insertNonRoomReserve",rrDTO);
+		//숙소 예약 테이블 추가
+		for(int room_num : rrDTO.getRoom_type()) {
+			rrDTO.setTemp_room_type(room_num);
+			cnt += ss.insert("kr.co.sist.reserve.insertParlor",rrDTO);
+		}
+		//결제 테이블 추가
+		pDTO.setReserve_num(rrDTO.getReserve_num());//예약번호
+		cnt += ss.insert("kr.co.sist.reserve.insertPay",pDTO);
+		//결제 정보 테이블 추가
+		cnt += ss.insert("kr.co.sist.reserve.insertPayInfo",pDTO);
+		if(cnt == ok) {	
+			ss.commit();
+			ss.close();	
+		}else {
+			ss.rollback();
+		}
+		
+		
+		return cnt;
+	}//insertNonRoomReserve
 	
 	
 	
