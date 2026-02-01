@@ -159,7 +159,6 @@ $(function(){
 		for (const key in selectedRoomCnt){
 			if(selectedRoomCnt[key]!=0){
 				pendingRoomDTO.push({
-					id:id,
 					room_res_start_date : start,
 					room_res_end_date:end,room_cnt:Number(selectedRoomCnt[key]),
 					room_type_num : Number(key)
@@ -181,19 +180,54 @@ $(function(){
 	        
 	        alert("이미 진행 중인 예약이 있습니다. 잠시 후 다시 시도 해주세요: " + errorMessage);
 	        
-	        // 연타 방지를 위해 비활성화했던 버튼이 있다면 다시 활성화
-	        $("#reserve").prop("disabled", false).text("예약하기");
-	    });
-	})
+	    });//ajax
+	})//reserve
 	
 	$("#nonReserve").click(function(){
+		$("#adultCnt").val(adultCnt);
+		$("#kidCnt").val(kidCnt);
 		if(adultCnt > roomMaxPerson){
 			alert("객실 수와 인원 수를 확인해주세요.");
 			return;
 		}
-		$("#reserveFrm").attr("action","/reserve/nonRoomReserve");
-		$("#reserveFrm").submit();
-	})
+		if($("#display-checkout").text() == "-" ){
+			alert("체크인/체크아웃 날짜를 확인해주세요.");
+			return;
+		}
+		if(kidCnt > roomCnt*2 ){
+			alert("어린이 인원을 확인해 주세요.( 어린이는 객실 당 2명까지 동반가능합니다. )");
+			return;
+		}
+		//예약하는 방 정보 넘기기
+		var start=$("#checkin").val();
+		var end=$("#checkout").val();
+		for (const key in selectedRoomCnt){
+			if(selectedRoomCnt[key]!=0){
+				pendingRoomDTO.push({
+					room_res_start_date : start,
+					room_res_end_date:end,room_cnt:Number(selectedRoomCnt[key]),
+					room_type_num : Number(key)
+					});
+			}
+		}
+		axios.post('/reserve/pending', pendingRoomDTO)
+	    .then(response => {
+	        // 성공 시 로직
+	        const frm = $("#reserveFrm");
+	        frm.attr("action","/reserve/nonRoomReserve");
+	        frm.submit();
+	    })
+	    .catch(error => {
+	        // 실패 시 로직
+	        
+	        // 서버에서 보낸 에러 메시지 추출 (ResponseEntity.body에 담긴 내용)
+	        const errorMessage = error.response ? error.response.data : "알 수 없는 오류가 발생했습니다.";
+	        
+	        alert("이미 진행 중인 예약이 있습니다. 잠시 후 다시 시도 해주세요: " + errorMessage);
+	        
+	    });//ajax
+	})//nonReserve
+		
 	
 	
 });//ready
@@ -428,8 +462,7 @@ $(function(){
 							<div class="flex gap-2">
 								<button type="button"
 									class="flex-1 bg-[#8b7355] hover:bg-[#7a654a] py-4 font-bold text-sm" id="reserve">예약하기</button>
-								<button type="button"  class="flex-1 bg-[#333] py-4 font-bold text-sm" id="nonReserve">비회원
-									예약 ></button>
+								<button type="button"  class="flex-1 bg-[#333] py-4 font-bold text-sm" id="nonReserve">비회원 예약 ></button>
 							</div>
 						</div>
 
