@@ -118,14 +118,19 @@
 		<groupId>com.github.iamport</groupId>
         <artifactId>iamport-rest-client-java</artifactId>
         <version>0.2.22</version>
-    	</dependency>		
+    	</dependency>
 		<!-- Source: https://mvnrepository.com/artifact/org.springframework.security/spring-security-crypto -->
 		<dependency>
 		    <groupId>org.springframework.security</groupId>
 		    <artifactId>spring-security-crypto</artifactId>
 		    <version>7.0.2</version>
 		    <scope>compile</scope>
-		</dependency> 
+		</dependency>
+<!--		<dependency>
+			<groupId>kr.co.sist</groupId>
+			<artifactId>spring_prj</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>-->
 		<!-- https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple -->
 		<dependency>
     	<groupId>com.googlecode.json-simple</groupId>

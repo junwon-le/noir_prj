@@ -107,6 +107,21 @@ public class RoomDAO {
 		return rpDomain;
 	}
 	
+	public RoomPriceDomain selectCheckRoomPrice(RoomPriceDTO rpDTO) throws PersistenceException{
+		
+		RoomPriceDomain rpDomain = null;
+		
+		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
+		rpDomain = ss.selectOne("kr.co.noir.room.selectCheckRoom",rpDTO);
+		if(ss!=null) {
+			ss.close();
+		}		
+		
+		return rpDomain;
+	}
+	
+	
+	
 	public int updateRoom(RoomDTO rDTO) {
 		int cnt = 0;
 		
@@ -132,6 +147,25 @@ public class RoomDAO {
 		int cnt = 0;
 		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
 		cnt = ss.update("kr.co.noir.room.roomPriceModify",rpDTO);
+		
+		if(cnt==1) {
+			ss.commit();			
+		}else {
+			ss.rollback();
+		}
+		
+		if(ss!=null) {
+			ss.close();			
+		}
+		
+		return cnt;
+	}
+	
+	public int insertRoomPrice(RoomPriceDTO rpDTO) {
+		int cnt = 0;
+		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
+		cnt = ss.update("kr.co.noir.room.roomPriceInsert",rpDTO);
+		
 		if(cnt==1) {
 			ss.commit();			
 		}else {

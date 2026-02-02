@@ -11,7 +11,9 @@ import lombok.ToString;
 @ToString
 public class InquiryDTO {
 	
-	private String inquiryTitle,inquiryMsg,inquiryReturn;
+	private String inquiryTitle,inquiryMsg,inquiryReturn,memberLastName,memberFirstName,
+	memberTel,memberEmail;
+	private int memberNum;
 	private Date inquiryDate;
 	
 }

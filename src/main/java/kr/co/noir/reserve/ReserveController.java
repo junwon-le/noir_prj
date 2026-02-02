@@ -6,14 +6,17 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import kr.co.noir.login.MemberDTO;
 
 @RequestMapping("/reserve")
 @Controller
@@ -21,24 +24,50 @@ public class ReserveController {
 	
 	@Autowired
 	private RoomReserveService rrs;
+
 	
 	@GetMapping("/roomReserve")
-	public String reserve(HttpSession session, Model model) {
-		//사용자 정보 가져와야함
+	public String reserve(HttpSession session,Model model) {
+		//사용자 정보 가져오기
 //		MemberDTO member = (MemberDTO)session.getAttribute("member");
 //		String id= member.getMemberId();
 		String id="user1";
 		model.addAttribute("member",rrs.searchMember(id));
 		
 		return "/reserve/roomRes";
+	}	
+	
+	@PostMapping("/pending")
+	@ResponseBody
+	public ResponseEntity<String> reserve(@RequestBody List<RoomDependingDTO> PdList , HttpSession session) {
+		//예약 객실을 보류테이블에 추가 
+		try {
+			String JSessionId = session.getId();
+			for(RoomDependingDTO pdDTO : PdList) {
+				pdDTO.setId(JSessionId);
+			}//end for
+	        boolean flag = rrs.addRoomDepending(PdList);
+	        if(flag) {
+	        	return ResponseEntity.ok("success"); 
+	        }else {
+	        	return ResponseEntity.badRequest().body("fail");
+	        }//end else	        	
+	        // 2. 성공 응답 보내기 (HTTP 200)
+	        
+	    } catch (Exception e) {
+	        // 3. 실패 응답 보내기 (HTTP 400 또는 500)
+	        // 이렇게 보내면 axios의 .catch() 블록이 실행됩니다.
+	    	return ResponseEntity.badRequest().body("이미 예약된 객실이 포함되어 있습니다.");
+	    }
 	}
+	
 	@GetMapping("/nonRoomReserve")
 	public String nonReserve() {
 		return "/reserve/nonRoomRes";
 	}
 	
 	@GetMapping("/roomResSearch")
-	public String roomResSearch(RoomSearchDTO rsDTO, Model model) {
+	public String roomResSearch() {
 		return "/reserve/roomResSearch";
 	}
 	
@@ -64,6 +93,50 @@ public class ReserveController {
 		return "/manager/reserve/nonDinningRes";
 	}
 	
+	@PostMapping("/complete")
+	public String reserveComplete(RoomReserveDTO rrDTO ,PayInfoDTO pDTO, HttpSession session, HttpServletRequest request, Model model) {
+		String url ="/reserve/complete";
+		//session id 가져오기
+		//String id=session.getAttribute("userId");
+		String id="user1";
+		String ip= request.getRemoteAddr();
+		//데이터 추가
+		rrDTO.setReserve_ip(ip);
+		rrDTO.setUser_id(id);
+		rrDTO.setReserve_type("room");
+		
+		//예약 완료 시 테이블에 정보 추가
+		boolean flag = rrs.addRoomReserve(pDTO,rrDTO);
+		if(!flag) {
+			url="reserve/err";
+		}
+		//예약 완료 시 보류 테이블에서 삭제 
+		rrs.deleteDepending(id);
+		
+		return url;
+	}//reserveComplete
+	@PostMapping("/nonComplete")
+	public String nonReserveComplete(RoomReserveDTO rrDTO ,PayInfoDTO pDTO, HttpSession session, HttpServletRequest request, Model model) {
+		String url ="/reserve/complete";
+		//session id 가져오기
+		//String id=session.getAttribute("userId");
+		String id=session.getId();
+		String ip= request.getRemoteAddr();
+		//데이터 추가
+		rrDTO.setReserve_ip(ip);
+		rrDTO.setUser_id(id);
+		rrDTO.setReserve_type("room");
+		//예약 완료 시 테이블에 정보 추가
+		boolean flag = rrs.addNonRoomReserve(pDTO, rrDTO);
+		if(!flag) {
+			url="reserve/err";
+		}
+		//예약 완료 시 보류 테이블에서 삭제 
+		rrs.deleteDepending(id);
+		
+		return url;
+	}//nonReserveComplete
+	
 	@ResponseBody
 	@GetMapping("/RoomSearchProcess")
 	public List<RoomSearchDomain> roomSearchProcess(RoomSearchDTO rsDTO) {
@@ -83,4 +156,5 @@ public class ReserveController {
 		}
 		return list;
 	}
+	
 }

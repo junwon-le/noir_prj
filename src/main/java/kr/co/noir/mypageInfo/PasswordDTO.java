@@ -9,5 +9,5 @@ import lombok.ToString;
 @ToString
 public class PasswordDTO {
 
-	String currentPassword,newPassword,ConfirmPassword; 
+	String memberId,currentPassword,newPassword,ConfirmPassword; 
 }//class

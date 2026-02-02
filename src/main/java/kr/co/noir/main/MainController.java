@@ -22,13 +22,24 @@ public class MainController {
 	
 	@GetMapping("/noticeList")
 	public String notice_list() {
-		return "/notice/noticeList";
+		return "notice/noticeList";
 	}
 
 	@GetMapping("/inquiryList")
 	public String inquiry_list() {
-		return "/qna/inquiryList";
+		return "inquiry/inquiryList";
 	}
+
+	@GetMapping("/writeInquiry")
+	public String write_inquiry() {
+		return "inquiry/writeInquiry";
+	}
+	
+	@GetMapping("/writeReview")
+	public String write_review() {
+		return "review/writeReview";
+	}
+	
 	
 	@GetMapping("/hotel/about")
 	public String aboutHotel() {
@@ -50,4 +61,10 @@ public class MainController {
 		return "/hotel/laundry";
 	}	
 	
+	@GetMapping("/hotel/location")
+	public String location() {
+		return "/hotel/location";
+	}	
+
+
 }

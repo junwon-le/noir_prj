@@ -17,29 +17,32 @@
   var IMP = window.IMP;
   IMP.init("imp03674114"); // 관리자 페이지 '식별코드'
 
+  var agreementFlag = true;
   function registerCard() {
+	
     IMP.request_pay({
-      pg: "tosspayments.iamporttest_4",            // 스크린샷에 있던 PG사
-      pay_method: "card",
+      pg: "tosspayments.iamporttest_4",// 스크린샷에 있던 PG사
+      pay_method: "card", // 필수 누락 확인
       merchant_uid: "issue_" + new Date().getTime(),
-      name: "호텔 예약 카드 등록",
+      customer_uid: "user_idx_1234"+ new Date().getTime(),  // 이 값이 빌링키가 됩니다 (DB에 저장할 값)
+      name: "room",
       amount: 0,                     // 실제 결제 안 함
-      customer_uid: "user_idx_1234"  // 이 값이 빌링키가 됩니다 (DB에 저장할 값)
     }, function (rsp) {
       if (rsp.success) {
-        // 서버로 customer_uid를 전달하여 DB에 저장 시킴
-        $.ajax({
-          url: "/api/payment/issue-billing",
-          method: "POST",
-          data: { customer_uid: rsp.customer_uid }
-        }).done(function() {
-          alert("카드가 정상적으로 등록되었습니다.");
-        });
-      } else {
-        alert("카드 등록 실패: " + rsp.error_msg);
+        	$("#billing_key").val(rsp.customer_uid);
+        	$("#merchant_uid").val(rsp.merchant_uid);
+        /* 	$("#card_number").val(rsp.card_number);
+        	$("#agency").val(rsp.card_name);
+        	$("#pg_provider").val(rsp.pg_provider);
+        	$("#merchant_uid").val(rsp.merchant_uid);
+        	alert($("#billing_key").val()) */
+      }else {
+          // 실패 시 왜 안 넘어오는지 이유를 알려줍니다.
+          alert("실패 사유: " + rsp.error_msg);
+          console.error("에러 상세:", rsp);
       }
-    });
-  }
+  });
+}
 </script>
 
 <script src="/common/js/comm/jquery.bxslider.js"></script>
@@ -72,7 +75,6 @@ $(document).on('click','.btn_pop_close',function(e){
 })
 
 $(function(){
-	
 	$("#request").on('input', function() {
   const length = $(this).val().length;
   // 1. 현재 글자 수 업데이트
@@ -83,7 +85,7 @@ $(function(){
   } else {
 	  $("#reqCnt").css('color','#fff');
   }
-});//request input
+	});//request input
 	$("#request").on('keyup', function() {
 	  const length = $(this).val().length;
 		if(length>=100){
@@ -91,11 +93,34 @@ $(function(){
 		$("#request").val($(this).val().substring(0,100));
 		$("#reqCnt").text('100');
 		}		
-});//request keup
+	});//request keup
+	
+	$("#checkAll").click(function(){
+		$(".agreement-item").prop("checked",$(this).is(":checked"));
+	})//checkAll
+	
+	
 
 })//ready
 
-
+function reserve(){
+	  $(".agreement-item").each(function(){
+			agreementFlag = true;
+			if(!$(this).is(":checked")){
+				alert("개인정보 수집에 동의 해주세요.");
+				agreementFlag = false;
+				return false;
+			}
+		})
+		
+		if(!agreementFlag){return;}
+		
+		if(!$("#cancleComfirm").is(":checked")){
+			alert("취소 규정을 확인해 주세요.")
+			return;
+		}
+	$("#reserveFrm").submit();
+}
 </script>
 <style>
 .subject
@@ -161,15 +186,15 @@ margin-top: 10px;
 <div id="container">
     <div class="max-w-5xl mx-auto flex flex-col md:flex-row gap-8">
         
+      <form action="/reserve/complete" method="POST" class="space-y-6" id="reserveFrm">
         <div class="flex-1" style="margin-right:100px;" th:object="${member}">
             <h2 class="text-xl font-bold ">고객정보 입력</h2>
             <img src="/common/images/res_img/hr.png" class="hr"/>
-            <form action="reservationProcess.jsp" method="POST" class="space-y-6">
                 <div>
                     <label class="block text-sm mb-1">투숙객명 <span class="text-red-500">*</span></label>
                     <div class="flex gap-4">
-                        <input type="text" name="lastName" placeholder="last name" class="w-1/2 bg-white text-black p-2 rounded bor" th:value="*{member_last_name}">
-                        <input type="text" name="firstName" placeholder="first name" class="w-1/2 bg-white text-black p-2 rounded bor" th:value="*{member_first_name}">
+                        <input type="text" name="user_last_name" placeholder="last name" class="w-1/2 bg-white text-black p-2 rounded bor" th:value="*{member_last_name}">
+                        <input type="text" name="user_first_name" placeholder="first name" class="w-1/2 bg-white text-black p-2 rounded bor" th:value="*{member_first_name}">
                     </div>
                 </div>
 
@@ -188,23 +213,26 @@ margin-top: 10px;
                         <select class="w-1/3 bg-white text-black p-2 rounded bor">
                             <option>+82(대한민국)</option>
                         </select>
-                        <input type="text" name="phone" placeholder="01023507803" class="w-2/3 bg-white text-black p-2 rounded bor" th:value="*{member_tel}" >
+                        <input type="text" name="reserve_tel" placeholder="01023507803" class="w-2/3 bg-white text-black p-2 rounded bor" th:value="*{member_tel}" >
                     </div>
                 </div>
                 <div>
                     <label class="block text-sm mb-1 ">요청 사항 </label>
                    <div class="w-full">
-   						<textarea id="request" class="bor w-full border p-2 text-black rounded bor" rows="1"></textarea>
+   						<textarea id="request" class="bor w-full border p-2 text-black rounded bor" name="reserve_msg" rows="1"></textarea>
 						<div class="text-right">
         					<span class="text-sm text-gray-500"><span id="reqCnt">0</span>/100</span>
     					</div>
 					</div>
                 </div>
 
-               <!--  <div class="pt-6 border-t border-zinc-700">
+                <div class="pt-6 border-t border-zinc-700">
                     <h2 class="text-xl font-bold ">신용카드 정보</h2>
                     <img src="/common/images/res_img/hr.png" class="hr"/>
+                    <button type="button" class="w-1/4 bg-[#1e293b] text-white py-3 rounded font-bold hover:bg-black transition" onclick="registerCard()">카드 등록</button>
                     
+                </div>
+               <!--     
                     <div class="space-y-4">
                         <div class="flex items-center">
                             <span class="w-24 text-sm ">카드종류 <span class="text-red-500"> *</span></span>
@@ -251,9 +279,9 @@ margin-top: 10px;
                     </label>
                     <hr class="border-zinc-600">
                     <div class="  items-center text-zinc-400">
-                        <label class="flex items-center gap-2"><input type="checkbox"> [필수] 만 14세 이상 이용 동의</label>
-                        <label class="flex items-center gap-2"><input type="checkbox"> [필수] 개인정보 수집 및 이용 동의 </label>
-                        <label class="flex items-center gap-2"><input type="checkbox"> [필수] 개인정보 제 3자 제공 동의</label>
+                        <label class="flex items-center gap-2"><input type="checkbox" class="agreement-item"> [필수] 만 14세 이상 이용 동의</label>
+                        <label class="flex items-center gap-2"><input type="checkbox" class="agreement-item"> [필수] 개인정보 수집 및 이용 동의 </label>
+                        <label class="flex items-center gap-2"><input type="checkbox" class="agreement-item"> [필수] 개인정보 제 3자 제공 동의</label>
                     </div>
                 </div>
                 <div class="pt-6 border-t border-zinc-700">
@@ -275,12 +303,23 @@ margin-top: 10px;
                    	</table>
                    	<div class="bg-zinc-800 p-4 rounded text-sm space-y-2" style="margin-top: 20px;">
                     <label class="flex items-center gap-2" >
-                        <input type="checkbox" id="checkAll"> 취소 규정을 확인하였습니다.
+                        <input type="checkbox" id="cancleComfirm"> 취소 규정을 확인하였습니다.
                     </label>
                     <hr class="border-zinc-600">
                 </div>
                 </div>
-        	 </form>
+                <!-- pg사 정보  -->
+                <input type="hidden" value="" id="billing_key" name="billing_key"/>
+                <input type="hidden" value="" id="merchant_uid" name="merchant_uid"/>
+<!--            <input type="hidden" value="" id="card_number" name="card_number"/>
+                <input type="hidden" value="" id="agency" name="agency"/>
+                <input type="hidden" value="" id="pg_provider" name="pg_provider"/> -->
+ <!--                <input type="hidden" value="" id="pay_price"/>
+                <input type="hidden" value="" id="user_id"/> -->
+                <input type="hidden" th:value="${param.adultCnt}" name="reserve_adult_count">
+                <input type="hidden" th:value="${param.kidCnt}" name="reserve_kid_count">
+                <input type="hidden" th:value="${param.checkin}" name="startDate">
+                <input type="hidden" th:value="${param.checkout}" name="endDate">
         </div>
 
         <div class="w-full md:w-80 h-fit text-black p-6 rounded shadow-lg" style="position: fixed; top:220px; right:100px; background-color: #eee8cc; z-index:999;" >
@@ -288,10 +327,14 @@ margin-top: 10px;
             <div class=" space-y-3 mb-6">
                 <div class="flex justify-between"><span>체크인</span><span th:text="${param.checkin}" class="font-semibold">체크인 날짜</span></div>
                 <div class="flex justify-between"><span>체크아웃</span><span  th:text="${param.checkout}" class="font-semibold">체크아웃 날짜</span></div>
-                <th:block th:unless="${param.roomName.empty}">
-                <div th:each="roomName,i : ${param.roomName}" class="flex justify-between">
+                <div class="flex justify-between"><span>성인</span><span  th:text="${param.adultCnt}" class="font-semibold">성인수</span></div>
+                <th:block th:unless="${param.room_type.empty}">
+                <div th:each="roomName,i : ${param.room_type}" class="flex justify-between">
                 <div>객실<span th:text="${i.count}"></span></div><span class="font-semibold text-right" th:text="${roomName}">룸 타입</span>
                 </div>
+                </th:block>
+                <th:block th:unless="${param.room_num.empty}">
+                <input type="hidden" th:each="roomNum,i : ${param.room_num}" th:value="${roomNum}" name="room_type" />
                 </th:block>
             </div>
             <div class="border-t pt-4">
@@ -299,9 +342,11 @@ margin-top: 10px;
                     <span class="font-bold">총 금액</span>
                     <div><span class="!text-black text-xl font-bold" th:text="${param.price}">총 금액</span><span class="!text-black text-xl font-bold">원</span></div>
                 </div>
-                <button class="w-full bg-[#1e293b] text-white py-3 rounded font-bold hover:bg-black transition" onclick="registerCard()">예약 하기</button>
+                
+                <button type="button" class="w-full bg-[#1e293b] text-white py-3 rounded font-bold hover:bg-black transition" onclick="reserve()">예약 하기</button>
             </div>
         </div>
+      	 </form>
     </div>
 
 </div>

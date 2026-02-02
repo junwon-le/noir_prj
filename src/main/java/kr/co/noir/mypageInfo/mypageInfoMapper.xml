@@ -5,7 +5,7 @@
 <mapper namespace="kr.co.noir.mypageInfo">
 
 
-
+ 
 
 	<select id="passwordCheck" parameterType="String" resultType="String" >
 		select member_pass
@@ -13,17 +13,51 @@
 		where member_id =#{memberid}
 	</select>
 	
+	
+	<resultMap type="mInfoDomain" id="mInfoDomain">
+	
+		<result column="member_pass" property="pass"/>
+		<result column="member_last_name" property="lastName"/>
+		<result column="member_first_name" property="firstName"/>
+		<result column="member_email" property="email"/>
+		<result column="member_tel" property="tel"/>
+		<result column="member_birth" property="birth"/>
+	
+	
+	</resultMap>
+	
 
-<!-- 	
-	<select id="memberInfo" parameterType="String" resultMap="" >
-		select member_pass
-		from member 
-		where member_id =#{memberid}
+ 	
+	<select id="memberInfo" parameterType="String" resultMap="mInfoDomain" >
+		select member_pass,member_last_name, member_first_name, member_email, member_tel, member_birth
+		from member
+		where member_id =#{memberId}
 	</select>
-	 -->
+	 
 	
+		<update id="updateMember" parameterType="memberDTO">
 
+		    update member
+		    set member_email = #{memberEmail},
+		        member_tel   = #{memberTel},
+		        member_birth = #{memberBirth}
+		    where member_id = #{memberId}
+
+		</update>
 	
+	 
+	<update id="updatePassword" parameterType="passwordCheckDTO">
+		update member
+		set member_pass=#{newPassword}
+		where member_id = #{memberid}
+	</update>
+	
+	
+	<update id="removeMember" parameterType="passwordCheckDTO">
+		update member
+		set member_id='',member_pass='',member_email='',member_tel='',member_ip='',member_first_name='',member_last_name='',member_birth='',member_del_flag='Y'
+		where member_id=#{memberid}
+	</update>
 </mapper>
 
 

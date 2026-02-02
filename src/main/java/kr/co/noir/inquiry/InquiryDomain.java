@@ -11,7 +11,7 @@ import lombok.ToString;
 @ToString
 public class InquiryDomain {
 	
-	private String inquiryTitle,inquiryMsg,inquiryReturn;
+	private String inquiryTitle,inquiryMsg,inquiryReturn,inquiryDelFlag,memberLastName,memberFirstName,memberTel,memberEmail;
 	private int memberNum,inquiryNum;
 	private Date inquiryDate;
 	

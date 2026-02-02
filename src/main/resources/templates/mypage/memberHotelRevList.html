@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>마이페이지</title>
+
+
+<link rel="stylesheet" type="text/css" href="/common/css/homepage/base.css">
+<link rel="stylesheet" type="text/css" href="/common/css/homepage/style.css?v=0312">
+<link rel="stylesheet" type="text/css" href="/common/css/homepage/sub.css?v=0312">
+<!-- jQeury CDN 시작 -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="/common/js/comm/jquery.bxslider.js"></script>
+<script src="/common/js/homepage/jquery.rwdImageMaps.min.js"></script>
+<script src="/common/js/homepage/jquery.accessibility.modal.js"></script>
+<script src="/common/js/comm/jquery.cookie.js"></script>
+<script src="/common/js/homepage/plugin.js"></script>
+<script src="/common/js/homepage/custom.js"></script>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<style type="text/css">
+      /* 기본 배경 및 레이아웃 */
+    html, body { background-color: #181818; color: #ffffff; font-family: 'Pretendard', sans-serif; }
+    .container { margin-top :220px; height:auto; }
+    .equal-height-row { display: flex; align-items: stretch; flex-wrap: wrap; }
+
+    /* 사이드바 스타일 */
+    .sidebar {
+        background-color: #000000;
+        padding: 25px;
+        border-radius: 10px;
+        border: 1px solid #2a2a2a;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    .mypage-title { border: 1px solid #c5a47e; padding: 20px; margin-bottom: 35px; text-align: center; }
+    .mypage-title h2 { font-size: 1.1rem; letter-spacing: 2px; margin: 0; }
+    .mypage-title p { font-size: 1.2rem; margin-top: 10px; font-weight: bold; }
+    
+    .menu-group { margin-bottom: 25px; }
+    .menu-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .header-content { display: flex; align-items: center; font-size: 0.95rem; font-weight: 500; line-height: 1; color:#fff; }
+    .icon-wrapper { width: 22px; height: 22px; margin-right: 8px; display: flex; align-items: center; justify-content: center; }
+    .icon-wrapper svg { stroke: #c5a47e; }
+    .menu-group>.menu-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; color: #888; text-decoration: none; font-size: 0.85rem; border-bottom: 1px solid #151515; }
+    .menu-item:hover, .menu-item.now_page { color: #c5a47e; text-decoration: none; }
+    .badge-outline { border: 1px solid #c5a47e; color: #c5a47e; padding: 1px 8px; font-size: 0.65rem; border-radius: 12px; }
+    .badge-outline.now_page_icon{ color: black; background-color: #c5a47e; font-weight: bold; }
+
+    /* 1. 메인 콘텐츠: 유연한 크기 조절 추가 */
+    .main-content {
+        background: black !important;
+        padding: 50px 40px;
+        border-radius: 10px;
+        border: 1px solid #2d2d2d;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+        color: #fff;
+        min-height: 695px;
+        width: 100%; /* 너비 100% 확보 */
+    }
+
+    .page-title {
+        font-size: 1.7rem;
+        font-weight: 600;
+        margin-bottom: 40px;
+        letter-spacing: -0.5px;
+        border-left: 5px solid #c5a47e;
+        padding-left: 15px;
+    }
+
+    /* 2. 검색창 영역: flex-wrap 추가하여 창 줄어들 때 대응 */
+    .search-container {
+        background: rgba(255, 255, 255, 0.04);
+        padding: 20px 30px;
+        border-radius: 15px;
+        margin-bottom: 40px;
+        display: flex;
+        flex-wrap: wrap; /* 자리가 부족하면 아래로 내려감 */
+        align-items: center;
+        justify-content: flex-start; /* 좌측 정렬 위주로 변경 */
+        gap: 15px;
+        border: 1px solid #333;
+    }
+
+    .date-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-shrink: 1; /* 너비가 줄어들 수 있게 함 */
+    }
+
+    .date-item {
+        background: #111;
+        border: 1px solid #444;
+        border-radius: 10px;
+        padding: 8px 15px;
+        display: flex;
+        align-items: center;
+    }
+
+    .noir-date-input {
+        background: transparent;
+        border: none;
+        color: #fff;
+        font-size: 0.95rem;
+        outline: none;
+        cursor: pointer;
+        width: 125px; /* 날짜창이 너무 작아지지 않게 고정 */
+    }
+
+    /* 캘린더 아이콘 색상 변경 */
+    .noir-date-input::-webkit-calendar-picker-indicator {
+        filter: invert(100%);
+        cursor: pointer;
+    }
+
+    .date-separator { color: #666; font-weight: bold; }
+
+    .period-btn-group {
+        display: flex;
+        background: #111;
+        padding: 4px;
+        border-radius: 10px;
+        border: 1px solid #333;
+        margin-left: 50px;
+    }
+
+    .btn-period {
+        background: transparent;
+        border: none;
+        padding: 8px 18px;
+        font-size: 0.85rem;
+        color: #888;
+        border-radius: 7px;
+        transition: 0.3s;
+        white-space: nowrap;
+    }
+
+    .btn-period:hover, .btn-period.active {
+        background: #c5a47e;
+        color: #000;
+        font-weight: 600;
+    }
+
+    /* 검색 버튼 */
+    .btn-search-noir {
+        background-color: #c5a47e;
+        color: black;
+        border: 1px solid #c5a47e;
+/*      padding: 10px 35px; */
+        padding: 10px ;
+        font-weight: 700;
+        border-radius: 10px;
+        transition: 0.3s;
+        cursor: pointer;
+        height: 45px;
+        width : 130px;
+        margin-left: auto; /* 큰 화면에서는 오른쪽 끝에 배치 */
+    }
+
+    .btn-search-noir:hover {
+        background-color: black;
+        color: #c5a47e;
+        border: 1px solid #c5a47e;
+    }
+
+    /* 4. 테이블 영역: 가로 스크롤 추가 */
+    .table-responsive-custom {
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 15px;
+        border: 1px solid #2d2d2d;
+        overflow-x: auto; /* 가로 스크롤 활성화 */
+    }
+
+    .reservation-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 700px; /* 테이블 최소 너비 설정하여 내용 겹침 방지 */
+    }
+
+    .reservation-table th {
+        background-color: #1a1a1a;
+        color: #c5a47e;
+        font-size: 0.85rem;
+        font-weight: 600;
+        padding: 18px;
+        border-bottom: 1px solid #2d2d2d;
+        text-align: center;
+    }
+
+    .reservation-table td {
+        padding: 18px;
+        text-align: center;
+        border-bottom: 1px solid #222;
+        color: #ccc;
+        font-size: 0.9rem;
+    }
+
+    /* 상태 뱃지 */
+    .status-badge {
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        border: 1px solid #444;
+        background: #1a1a1a;
+    }
+    .status-canceled { color: #ff6b6b; border-color: #5a2a2a; }  
+    
+    a { text-decoration: none; }
+
+    /* 화면이 아주 작아질 때(태블릿 이하) 검색창 정렬 */
+    @media (max-width: 1200px) {
+        .btn-search-noir {
+            margin-left: 0;
+            width: 100%;
+        }
+        .search-container {
+            justify-content: center;
+        }
+        .period-btn-group{
+           margin-left: 0px;
+        }
+      
+    }
+    
+    
+     .menu-group>.menu-item.now_page{
+        
+           color:#FFFFFF;
+        
+        }
+   .badge-outline.now_page_icon{
+           color: black;
+           background-color: #c5a47e;
+           font-weight: bold;
+        
+        }
+        
+   .footer-title{
+   		margin-top: 5px;
+   
+   }
+   
+   
+   
+    /* 페이지네이션 컨테이너 */
+.pagination-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 40px;
+    gap: 5px;
+}
+
+.pagination-wrapper .page-link {
+    background-color: transparent;
+    border: 1px solid #333;
+    color: #888;
+    padding: 8px 14px;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 숫자 및 화살표 호버 효과 */
+.pagination-wrapper .page-link:hover {
+    border-color: #c5a47e;
+    color: #c5a47e;
+    background-color: rgba(197, 164, 126, 0.1);
+}
+
+/* 현재 페이지 활성화 스타일 */
+.pagination-wrapper .page-item.active .page-link {
+    background-color: #c5a47e;
+    border-color: #c5a47e;
+    color: #000;
+    font-weight: bold;
+}
+
+/* 화살표 아이콘 스타일 */
+.pagination-wrapper .page-link svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+}
+
+/* 비활성화된 버튼 (첫 페이지에서 이전 버튼 등) */
+.pagination-wrapper .page-item.disabled .page-link {
+    opacity: 0.3;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.table-responsive-custom{
+	height: 352px;
+
+}
+.trClick{
+	cursor: pointer;
+	
+}
+
+</style>
+
+<script>
+$(function(){
+
+	
+	
+	
+	$("#btn").click(function(){
+		//시작날짜/끝날짜가 있는지 없는지 확인하는 것
+		var startDate =$("#startDate").val();
+		var endDate =$("#endDate").val();
+		if(startDate==''){
+			alert('시작날짜를 입력해주세요');
+			return ;
+		}//end if
+		if(endDate==''){
+			alert('끝날짜를 입력해주세요');
+			return ;
+		}//end if
+
+		searchPage(1);
+				
+	});//click
+	
+	   var d= new Date();
+	   var y =  d.getFullYear();
+	   var m = String(d.getMonth()+1).padStart(2,'0');
+	   var d = String(d.getDate()).padStart(2,'0');
+	   
+	   var today=y+"-"+m+"-"+d;
+	  
+	   $("#startDate").val(today);
+	   $("#endDate").val(today);
+	   
+	    $("#endDate").attr("min", today);
+	    
+	    $("#startDate").change(function(){
+	       
+	       var startDate= $("#startDate").val();
+	       $("#endDate").attr("min", startDate);
+	       
+	       if($("#endDate").val() < startDate){
+	               $("#endDate").val(startDate);
+	           }
+	       
+	    });//change
+	   
+	   $(".btn-period").click(function(){
+	      
+	      $(".btn-period").removeClass("active");
+	      $(this).addClass("active");
+	      var value=$(this).val();
+	      var monthCnt=parseInt(value);
+	      
+	      
+	      var date= new Date();
+	      date.setMonth(date.getMonth()+monthCnt);
+	      
+	        var year = date.getFullYear();
+	        var month = String(date.getMonth()+1).padStart(2,'0');
+	        var day = String(date.getDate()).padStart(2,'0');
+	      
+	      
+	        var result = year+"-"+month+"-"+day;
+	      
+	        // input 반영
+	        $("#endDate").val(result);
+	      
+	   });//click
+	   
+	   $("#endDate").change(function(){
+	       
+			 $(".btn-period").removeClass("active");
+		       
+		    });//change
+		   
+		   
+	   
+	   
+	});//ready
+	function movePage(num){
+		searchPage(num)
+		
+	}
+	
+	function searchPage(currentPage){
+		var startDate=$("#startDate").val();
+	 	var endDate= $("#endDate").val();
+		var currentPage=currentPage;
+		
+		var param={startDate:startDate,endDate:endDate,currentPage:currentPage};
+		$.ajax({
+			url:"/mypage/reserve/hotelSearch",
+			data:param,
+			type:"GET",
+			dataType:"JSON",
+			error:function(xhr){
+				alert("값이 없습니다");
+				console.log(xhr.status);
+				
+			},
+			success:function(jsonObj){
+				$(".reservation-table>tbody").empty();
+				if(jsonObj.data.length==0){
+					$(".reservation-table>tbody")
+					.append(`<tr> <td colspan='6'style="text-align:center">
+					검색된 예약 내용이 없습니다.</td></tr>`);
+	
+				}//end if
+				
+			
+				$.each(jsonObj.data, function(i,ele){
+					let statusClass = (ele.reserveFlag === 'N') ? '' : 'status-canceled';
+					let statusText  = (ele.reserveFlag === 'N') ? '예약완료' : '취소완료';
+					
+					
+					var createTr=`
+							
+					/* 	<tr onclick="location.href='/mypage/reserve/hotelRevDetail?reserveNum=${ele.reserveNum}'" class="trClick">
+							 */
+						<tr onclick="revDetail(${ele.reserveNum})" class="trClick">
+								<td>${ele.reserveNum}</td>
+								<td>${ele.reserveDate}</td>
+								<td>${ele.roomType}</td>
+								<td>${ele.checkIn} ~ ${ele.checkOut}</td>
+								<td>${ele.reservePerson}</td>
+								
+								
+								<td><span class= "status-badge ${statusClass}">${statusText}</span></td>
+
+								</tr>`
+							$(".reservation-table>tbody").append(createTr);
+				});//end each
+				$("#Page-navigation").html(jsonObj.pagiNation);
+			}
+			
+		});//ajax
+		
+	}
+function revDetail(revNum){
+	$("#hiddenRevNum").val(revNum);
+	
+	$("#hiddenFrm").submit();
+	
+}
+</script>
+
+</head>
+
+<body>
+<header>
+    <th:block th:replace="~{fragments/header :: header}"></th:block>
+</header>
+
+<div class="container">
+    <div class="row equal-height-row g-4">
+         <th:block th:replace="~{fragments/myPageSideBar :: myPageSideBar}"></th:block>
+		<div class="col-lg-9">
+            <div class="main-content">
+                <h3 class="page-title">객실 예약 확인</h3>
+
+                <form id="frm" class="search-container" action="/mypage/reserve/hotelSearch" method="get">
+                    <div class="date-group">
+                        <div class="date-item">
+                            <input type="date" id="startDate" name="startDate" class="noir-date-input" value="2026-01-07">
+                        </div>
+                        <span class="date-separator">~</span>
+                        <div class="date-item">
+                            <input type="date" id="endDate" name="endDate" class="noir-date-input" value="2026-01-11">
+                        </div>
+                    </div>
+
+                    <div class="period-btn-group">
+                        <input type="button" class="btn-period" value="1개월"/>
+                        <input type="button" class="btn-period" value="3개월"/>
+                        <input type="button" class="btn-period" value="6개월"/>
+                    </div>
+                    
+                    <input type="button" id="btn" value="검색" class="btn-search-noir"/>
+                </form>
+
+                <div class="table-responsive-custom">
+                    <table class="reservation-table">
+                        <thead>
+                            <tr>
+                                <th>예약 번호</th>
+                                <th>예약일</th>
+                                <th>객실 정보</th>
+                                <th>투숙 기간</th>
+                                <th>인원</th>
+                                <th>상태</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                     <!--        <tr>
+                                <td>1241325</td>
+                                <td>2025.03.03</td>
+                                <td>Superior King</td>
+                                <td>2026-01-07 ~ 2026-01-10</td>
+                                <td>1</td>
+                                <td><span class="status-badge">예약 완료</span></td>
+                            </tr> -->
+                            
+                        </tbody>
+                    </table>
+                </div>
+                   <nav aria-label="Page navigation" id="Page-navigation">
+  
+				   </nav> 
+            </div>
+        </div>
+		
+        
+    </div>
+</div>
+<form th:action="@{/mypage/reserve/hotelRevDetail}" method="post" id="hiddenFrm">
+	<input type="hidden" id="hiddenRevNum" name="reserveNum"/>
+	<input type="hidden" id="hiddenRevType" name="reserveType" value="room"/>
+</form>
+
+<footer>
+    <th:block th:replace="~{fragments/footer :: footer}"></th:block>
+</footer>
+   <div id="privacy-layer">
+        <div th:replace="~{fragments/privacy :: privacy}"></div>
+    </div>
+<script type="text/javascript" src="/common/js/comm/jquery.validate.js"></script>
+<script type="text/javascript" src="/common/js/comm/wings.core.js"></script>
+<script type="text/javascript" src="/common/js/comm/PAGING_HOMEPAGE.js"></script>
+<script type="text/javascript" src="/common/js/comm/kendo.web.min.js"></script>
+
+</body>
+</html>
