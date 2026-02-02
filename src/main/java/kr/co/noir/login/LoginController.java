@@ -30,6 +30,12 @@ public class LoginController {
 	@Autowired
 	private LoginService ls;
 
+	@GetMapping("/join")
+	public String join() {
+		return "login/join";
+	}
+	
+	
 	@GetMapping("/memberLogin")
 	public String memberLogin() {
 		return "login/memberLogin";
