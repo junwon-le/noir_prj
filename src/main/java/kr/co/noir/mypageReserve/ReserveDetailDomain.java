@@ -21,11 +21,12 @@ public class ReserveDetailDomain {
 	 * */
 	
 	
-	private int reserveNum,adultCount,childCount,cancelFee,
+	private int reserveNum,adultCount,childCount,
 	roomPrice,roomTax,roomPriceTotal;
 	private String reserveName,email,tel,reserveMsg,reserveFlag,
-	payAgency,cardData,reserveDate;
+	payAgency,cardData,reserveDate,cancelFee;
 	private String payInputDate;
+	private boolean checkInToday;
 	
 	public int getRoomPrice() {
 		roomPrice = (int)(roomPriceTotal / 1.1);
@@ -47,7 +48,9 @@ public class ReserveDetailDomain {
 	public int getChildCount() {
 		return childCount;
 	}
-	public int getCancelFee() {
+	public String getCancelFee() {
+		
+		
 		return cancelFee;
 	}
 	public String getReserveName() {
@@ -76,5 +79,8 @@ public class ReserveDetailDomain {
 	}
 	public String getReserveDate() {
 		return reserveDate;
+	}
+	public boolean isCheckInToday() {
+		return checkInToday;
 	}
 }

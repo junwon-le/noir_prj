@@ -520,8 +520,10 @@ $(function(){
                         <span class="small text-info" th:text="*{#numbers.formatInteger(roomTax,3,'COMMA')}">Included</span>
                     </div>
 			        <div class="d-flex justify-content-between mb-3">
-			        <span class="small text-danger">Current Cancellation Fee</span>
-			        <span class="small text-danger fw-bold">KRW 0 (Free)</span> 
+			        <span class="small text-danger">Cancellation </span>
+			        <th:block th:if="*{reserveFlag ne 'Y'}">
+			        <span class="small text-danger fw-bold" th:text="*{cancelFee}">KRW 0 (Free)</span> 
+			        </th:block>
 			        </div>
                     <div class="d-flex justify-content-between align-items-end pt-2 border-top border-secondary" style="--bs-border-opacity: .1;">
                         <span class="res-total-label">Total Amount</span>
@@ -542,7 +544,8 @@ $(function(){
             <h6 class="res-info-label" style="color: #c5a47e;">Hotel Policy & Cancellation</h6>
             <ul class="res-policy-list">
                 <li>체크인 시 본인 확인을 위해 신분증과 예약 번호 제시가 필요합니다.</li>
-                <li>예약 취소는 체크인 2일 전까지 수수료 없이 가능하며, 이후 취소 시 0%가 환불됩니다.</li>
+                <li>예약 취소는 체크인 2일 전까지 수수료 없이 가능하며, 이후 취소 시 50%가 환불됩니다.</li>
+                <li>당일 취소 환불이 불가합니다.</li>
                 <li>무단 노쇼(No-show) 발생 시 환불이 불가합니다.</li>
             </ul>
         </div>
@@ -553,7 +556,7 @@ $(function(){
                     <button class="btn btn-action me-2" onclick="window.print()">
                         <i class="bi bi-printer me-2"></i>출력
                     </button>
-                     <th:block th:if="*{reserveFlag eq 'N'}"> 
+                     <th:block th:if="*{reserveFlag ne 'Y' and !checkInToday}"> 
                     <button class="btn btn-noir-cancel" data-bs-toggle="modal" data-bs-target="#cancelModal">
                        예약취소
                     </button>
