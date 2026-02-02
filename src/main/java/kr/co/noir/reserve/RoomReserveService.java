@@ -139,17 +139,19 @@ public class RoomReserveService {
 		String startDate = rrDTO.getStartDate().replaceAll("\\(.*?\\)", "").trim();
 		String endDate = rrDTO.getEndDate().replaceAll("\\(.*?\\)", "").trim();
 		
+		//방 있는지 서버에서 검증
 		boolean flag = false;
 		if(!(flag = roomCheck(startDate,endDate,pDTO,rrDTO))){
 			return flag;
 		};
 		
-		
 		//예약 테이블 데이터 처리 - 서버에서 다시 db조회하여 실제 데이터를 가져옴
+		TextEncryptor te= Encryptors.text(key, salt);
 		rrDTO.setRoom_res_startDate(LocalDate.parse(startDate));
 		rrDTO.setRoom_res_endDate(LocalDate.parse(endDate));
-		String email = rrDTO.getEmailId()+"@"+rrDTO.getEmailDomain();
+		String email = te.encrypt(rrDTO.getEmailId()+"@"+rrDTO.getEmailDomain());
 		rrDTO.setEmail(email);
+		rrDTO.setReserve_tel(te.encrypt(rrDTO.getReserve_tel()));
 		//숙소 예약 테이블 데이터 처리
 		//결제 정보 데이터 처리
 		try {

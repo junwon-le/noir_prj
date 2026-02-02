@@ -112,9 +112,7 @@ public class ReserveController {
 			url="reserve/err";
 		}
 		//예약 완료 시 보류 테이블에서 삭제 
-		if(rrs.deleteDepending(id)==1) {
-			url="reserve/err";
-		};
+		rrs.deleteDepending(id);
 		
 		return url;
 	}//reserveComplete

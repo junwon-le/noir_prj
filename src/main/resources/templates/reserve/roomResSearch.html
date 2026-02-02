@@ -212,7 +212,7 @@ $(function(){
 					});
 			}
 		}
-		axios.get('/reserve/pending', pendingRoomDTO)
+		axios.post('/reserve/pending', pendingRoomDTO)
 	    .then(response => {
 	        // 성공 시 로직
 	        const frm = $("#reserveFrm");
