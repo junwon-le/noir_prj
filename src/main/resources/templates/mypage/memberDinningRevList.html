@@ -301,6 +301,26 @@
 
 <script>
 $(function(){
+	
+	
+	$("#btn").click(function(){
+		//시작날짜/끝날짜가 있는지 없는지 확인하는 것
+		var startDate =$("#startDate").val();
+		var endDate =$("#endDate").val();
+		if(startDate==''){
+			alert('시작날짜를 입력해주세요');
+			return ;
+		}//end if
+		if(endDate==''){
+			alert('끝날짜를 입력해주세요');
+			return ;
+		}//end if
+
+		searchPage(1);
+				
+	});//click
+	
+	
 	   var d= new Date();
 	   var y =  d.getFullYear();
 	   var m = String(d.getMonth()+1).padStart(2,'0');
@@ -354,9 +374,16 @@ $(function(){
 		    });//change
 		   
 		   
-	   
+		$("#btn").click(function(){
+			$("#frm").submit();
+			
+			
+		});//click
+		    
 	   
 	});//ready
+	
+	
 </script>
 
 </head>
@@ -372,8 +399,9 @@ $(function(){
 		<div class="col-lg-9">
             <div class="main-content">
                 <h3 class="page-title">다이닝 예약 확인</h3>
-
+	
                 <div class="search-container">
+                <form th:action="@{/dinningSearch}" method="get" id="frm">
                     <div class="date-group">
                         <div class="date-item">
                             <input type="date" id="startDate" class="noir-date-input" value="2026-01-07">
@@ -390,7 +418,9 @@ $(function(){
                         <input type="button" class="btn-period" value="6개월"/>
                     </div>
                     
-                    <button type="button" class="btn-search-noir">검색</button>
+                    <input type="button" class="btn-search-noir" value="검색" id="btn"/>
+                   </form>
+                   <!--  <button type="button" class="btn-search-noir">검색</button> -->
                 </div>
 
                 <div class="table-responsive-custom">

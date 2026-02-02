@@ -34,7 +34,7 @@ public class MypageReseveController {
 
 //		System.out.println(rsDTO.getMemberId());
 //		System.out.println(mrs.searchHotelRevList(rsDTO));
-		
+		rsDTO.setReserveType("room");
 		return mrs.searchHotelRevList(rsDTO);
 	}//searchRevHotel
 	
@@ -95,6 +95,21 @@ public class MypageReseveController {
 		
 		return "/mypage/memberDinningRevList";
 	}//dinningReserveList
+	
+	
+	
+
+	
+	@ResponseBody
+	@GetMapping("/dinningSearch")
+	public String searchRevDinning(ReserveSearchDTO rsDTO,HttpSession sesison,Model model) {
+		rsDTO.setMemberId((String)sesison.getAttribute("memberId"));
+		rsDTO.setReserveType("dinning");
+		
+		return mrs.searchDinningRevList(rsDTO);
+		
+		
+	}//searchRevDinning
 	
 	
 	@GetMapping("/memberDinningDetail")

@@ -3,7 +3,7 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.noir.mypageReserve">
-<!-- 임시  -->
+<!-- 임시  --> 
 	 <select id="selectTotalCnt" parameterType="reserveSearchDTO" resultType="int">
 		
 					select count(*)
@@ -122,11 +122,34 @@
 
 
 
-
- 
-	
-	 
-	
+	<select id="dinningRevList" parameterType="reserveSearchDTO" resultType="dinningRevDetailDomain">
+		select
+		    r.reserve_num as reserveNum,
+		    trunc(r.reserve_time) as reserveDate,
+		    di.dinning_name as dinningName,
+		    dr.dinning_visit_date as visitDate,
+		    (r.reserve_adult_count + r.reserve_kid_count) as reservePerson,
+		    r.reserve_status as reserveFlag,
+		    dr.dinning_res_detail_time as visitTime
+		FROM reserve r,
+		     dinning_res dr,
+		     dinning_info di,
+		     member m
+		WHERE r.reserve_num = dr.reserve_num
+		   and dr.dinning_menu_num = di.dinning_menu_num
+		   and m.member_num=r.member_num
+		
+			and r.reserve_type='dinning'
+			and r.member_num=(select member_num from member where member_id=#{memberId})
+			<if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+		  	AND r.reserve_start_date <![CDATA[<=]]> TO_DATE(#{endDate}, 'YYYY-MM-DD')
+		  	AND r.reserve_end_date   <![CDATA[>=]]> TO_DATE(#{startDate}, 'YYYY-MM-DD')
+			</if>
+			group by r.reserve_num)
+			and rnum BETWEEN #{startNum} AND #{endNum}
+		    ORDER BY r.reserve_status  DESC,dr.dinning_visit_date asc
+		
+	</select>
 
 	
 </mapper>

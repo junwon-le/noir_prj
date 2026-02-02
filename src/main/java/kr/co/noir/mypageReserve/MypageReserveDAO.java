@@ -81,6 +81,24 @@ public class MypageReserveDAO {
 		
 		
 		return cnt;
-	}
+	}//selectHotelRevDetail
 	
-}
+	
+//=================================다이닝 리스트 출력=======================
+	
+	public List<DinningRevSearchDomain> selectDinningRevList(ReserveSearchDTO rsDTO) throws PersistenceException{
+		List<DinningRevSearchDomain> list = null;
+		
+		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
+		list=ss.selectList("kr.co.noir.mypageReserve.dinningRevList");
+		
+		System.err.println(list);
+		
+		if(ss!=null) {ss.close();}//end if
+		
+		return list;
+
+	}//selectDinningRevList
+	
+	
+}//class

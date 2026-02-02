@@ -2,7 +2,7 @@ package kr.co.noir.mypageReserve;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
-
+import kr.co.noir.login.AdminController;
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -13,8 +13,11 @@ import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.util.JSONPObject;
+
 @Service
 public class MypageReserveService {
+
+    private final AdminController adminController;
 
 	@Autowired(required = false)
 	private MypageReserveDAO mrDAO;
@@ -25,6 +28,11 @@ public class MypageReserveService {
 
 	@Value("${user.crypto.salt}")
 	private String salt;
+
+
+    MypageReserveService(AdminController adminController) {
+        this.adminController = adminController;
+    }
 	
 	
 	/**
@@ -151,6 +159,68 @@ public class MypageReserveService {
 		return jsonObj.toJSONString();
 				
 	}//searchHotelRevList
+	
+	
+	public String searchDinningRevList(ReserveSearchDTO rsDTO) {
+		
+		List<DinningRevSearchDomain> list =null;
+		JSONObject jsonObj=new JSONObject();
+		jsonObj.put("flag", false);
+		
+		int totalCount = totalCnt(rsDTO);
+		int pageScale=pageScale();
+		int totalPage=totalPage(totalCount, pageScale);
+		int currentPage=rsDTO.getCurrentPage();
+		int startNum=startNum(currentPage, pageScale);
+		int endNum=endNum(startNum, pageScale);
+		rsDTO.setTotalPage(totalPage);
+		System.out.println("총 게시글 수: " + totalCount);
+		System.out.println("총 페이지 수: " + totalPage);
+		
+		rsDTO.setStartNum(startNum);
+		rsDTO.setEndNum(endNum);
+		rsDTO.setUrl("/mypage/memberHotelRevList");
+		
+		try {
+			list=mrDAO.selectDinningRevList(rsDTO);
+			jsonObj.put("flag", true);
+			JSONObject jsonTemp = null;
+			JSONArray jsonArr=new JSONArray();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			for(DinningRevSearchDomain drs : list) {
+				jsonTemp= new JSONObject();
+				jsonTemp.put("reserveNum", drs.getReserveNum());
+				jsonTemp.put("reservePerson", drs.getReservePerson());
+				jsonTemp.put("reserveDate", sdf.format(drs.getReserveDate()));
+				
+				jsonTemp.put("dinningType", drs.getDinningType());
+				jsonTemp.put("visitDate", sdf.format(drs.getVisitDate()));
+				jsonTemp.put("visitTime", sdf.format(drs.getVisitTime()));
+				jsonTemp.put("reserveFlag", drs.getReserveFlag());
+				
+				jsonArr.add(jsonTemp);
+			}
+			jsonObj.put("data", jsonArr);
+			jsonObj.put("pagiNation",pagination(rsDTO));
+			
+			
+		}catch (PersistenceException pe) {
+			pe.printStackTrace();
+		
+		}//end catch
+		
+		
+		
+		
+		return jsonObj.toJSONString();
+		
+	}//searchDinningRevList
+	
+	
+	
+	
+	
+	
 	
 	public List<HotelRevDetailDomain> searchOneHotelRevDetail(ReserveDetailDTO rdDTO) {
 		List<HotelRevDetailDomain> hrdDomain=null;
