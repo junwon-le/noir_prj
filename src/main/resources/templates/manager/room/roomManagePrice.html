@@ -124,9 +124,15 @@ text-align: center;
 font-size: 20px;
 }
 
-th{
-border:1px solid #333;
+.calendar-table th {
+    border: none;
+    background: #f8fafc;
+    font-weight: 600;
+    color: #334155;
+    padding: 18px 0;
+    font-size: 15px;
 }
+
 td{
 border:1px solid #333;
 color:black;
@@ -139,6 +145,83 @@ vertical-align: top;
 .price{
 border:0px solid #333;
 
+}
+
+.calendar-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    font-size: 13px;
+}
+
+.calendar-table th {
+    background: #f1f5f9;
+    color: #334155;
+    padding: 14px 0;
+    border-bottom: 1px solid #e2e8f0;
+    font-weight: 600;
+}
+
+.calendar-table td {
+    height: 110px;
+    vertical-align: top;
+    padding: 10px;
+    border: 1px solid #e2e8f0;
+    position: relative;
+    transition: background 0.2s ease;
+    background: #ffffff;
+}
+
+/* hover 효과 */
+.calendar-table td:hover {
+    background: #f8fafc;
+}
+
+/* 날짜 숫자 */
+.calendar-table td > span,
+.calendar-table td:first-child {
+    font-weight: 600;
+    color: #334155;
+}
+
+/* 주말 */
+.calendar-table td[style*="red"] {
+    background: #fff5f5;
+}
+
+.calendar-table td[style*="blue"] {
+    background: #f0f7ff;
+}
+
+/* 체크박스 */
+.calendar-table input[type="checkbox"] {
+    margin-top: 6px;
+    cursor: pointer;
+}
+
+/* 가격 input */
+.price {
+    width: 100%;
+    margin-top: 6px;
+    padding: 6px;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+    font-size: 12px;
+    background: #f8fafc;
+    text-align: right;
+}
+
+.price[readonly] {
+    background: #eef2ff;
+    color: #1e40af;
+    font-weight: 600;
+}
+
+
+#calandar table {
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
 }
 
 
@@ -293,7 +376,7 @@ function drawCalandar(e) {
 
         if (price !== null) {
             priceHtml =
-                "<input type='text' class='price' value='" + price.toLocaleString() + "'>" +
+                "<input type='text' readonly='readonly' class='price' value='" + price.toLocaleString() + "'>" +
                 "<input type='hidden' value='" + price + "'>";
         }
 
@@ -309,12 +392,14 @@ function drawCalandar(e) {
         }
 
         html += `
-            <td ${tdStyle}>
-                ${day}
-                <input type="checkbox" name="roomPriceDates" class="${checkboxClass}" value="${day}"><br>
-                ${priceHtml}
-            </td>
-        `;
+        	<td ${tdStyle}>
+        	    <div style="font-weight:600; margin-bottom:4px;">${day}</div>
+        	    <input type="checkbox" name="roomPriceDates"
+        	           class="${checkboxClass}" value="${day}">
+        	    ${priceHtml}
+        	</td>
+        	`;
+
 
         cellCount++;
 
@@ -397,7 +482,8 @@ function isNumberOnly(value) {
         </div>
         <div class="contatiner" style="height:1050px; color:#ffffff">
         <div>
-			<form action="/admin/roomManagePriceProcess" id="frm" method="post">					
+			<form action="/admin/roomManagePriceProcess" id="frm" method="post">
+			<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">					
                    <div class="breadcome-list" style="margin-left:35px; width:1655px; border-radius: 20px;">
 					<div style="background: #1a233b; padding: 30px; border-radius: 15px; color: #ffffff; font-family: 'Pretendard', sans-serif; min-width: 800px;">
     
@@ -422,7 +508,8 @@ function isNumberOnly(value) {
 ">
        <div id="calandar"
          style="grid-column: 1 / -1; display:flex; justify-content:center;">
-        	<table style="border:1px solid #333; width:1500px; ">
+        	<table class="calendar-table">
+
 
         	<thead>
         	<tr>

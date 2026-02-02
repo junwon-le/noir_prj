@@ -200,7 +200,7 @@
         <label style="display: block; color: #334155; font-size: 14px; font-weight: 700;" th:text="|${dinning.dinningName} 정보 관리|">정보 관리</label>
     </div>
 
-    <div contenteditable="true" class="custom-editor scrollable-content" 
+    <div contenteditable="false"  class="custom-editor scrollable-content" 
          style="max-height: 300px; overflow-y: auto; padding: 20px; color: #475569; font-size: 13px; line-height: 1.8; border: 1px solid #f1f5f9; border-radius: 8px; background-color: #f8fafc; outline: none; transition: all 0.2s ease;">
         
         
@@ -233,7 +233,6 @@
             <div style="margin-bottom: 20px;">
             <strong style="color: #1e293b; display: block; margin-bottom: 8px; font-size: 12px; border-left: 3px solid #4f46e5; padding-left: 8px;">[다이닝 소개]</strong>
             <div th:text="${dinning.dinningEx}" style="color: #64748b; white-space: pre-wrap;">
-                이곳에 내용을 입력하세요. 내용이 많아지면 자동으로 우측에 스크롤이 생성됩니다.
             </div>
         </div>
             
@@ -287,18 +286,18 @@
         <tbody>
             <tr style="border-bottom: 1px solid #eff2f7;">
                 <td style="padding: 6px; font-weight: 600; background: #fdfdfd; color: #333;" th:text="${dinningList[0].dinningMenuType}">조식</td>
-                <td style="padding: 4px;"><input type="text"  th:value="${dinningList[0].dinningMenuMain}" value="Content" style="width: 90%; height: 28px; padding: 2px 8px; border: 1px solid #eee; border-radius: 4px; text-align: center; color: #333; font-size: 13px;"></td>
-                <td style="padding: 4px;"><input type="text" th:value="${dinningList[0].dinningMenuSub}" style="width: 90%; height: 28px; padding: 2px 8px; border: 1px solid #eee; border-radius: 4px; text-align: center; color: #333; font-size: 13px;"></td>
+                <td style="padding: 4px;"><input type="text"  readonly="readonly"  th:value="${dinningList[0].dinningMenuMain}" value="Content" style="width: 90%; height: 28px; padding: 2px 8px; border: 1px solid #eee; border-radius: 4px; text-align: center; color: #333; font-size: 13px;"></td>
+                <td style="padding: 4px;"><input type="text" readonly="readonly"  th:value="${dinningList[0].dinningMenuSub}" style="width: 90%; height: 28px; padding: 2px 8px; border: 1px solid #eee; border-radius: 4px; text-align: center; color: #333; font-size: 13px;"></td>
             </tr>
             <tr style="border-bottom: 1px solid #eff2f7;">
                 <td style="padding: 6px; font-weight: 600; background: #fdfdfd; color: #333;" th:text="${dinningList[1].dinningMenuType}">중식</td>
-                <td style="padding: 4px;"><input type="text" th:value="${dinningList[1].dinningMenuMain}" value="Content" style="width: 90%; height: 28px; padding: 2px 8px; border: 1px solid #eee; border-radius: 4px; text-align: center; color: #333; font-size: 13px;"></td>
-                <td style="padding: 4px;"><input type="text" th:value="${dinningList[1].dinningMenuSub}" style="width: 90%; height: 28px; padding: 2px 8px; border: 1px solid #eee; border-radius: 4px; text-align: center; color: #333; font-size: 13px;"></td>
+                <td style="padding: 4px;"><input type="text" readonly="readonly"  th:value="${dinningList[1].dinningMenuMain}" value="Content" style="width: 90%; height: 28px; padding: 2px 8px; border: 1px solid #eee; border-radius: 4px; text-align: center; color: #333; font-size: 13px;"></td>
+                <td style="padding: 4px;"><input type="text"  readonly="readonly" th:value="${dinningList[1].dinningMenuSub}" style="width: 90%; height: 28px; padding: 2px 8px; border: 1px solid #eee; border-radius: 4px; text-align: center; color: #333; font-size: 13px;"></td>
             </tr>
             <tr style="border-bottom: none;">
                 <td style="padding: 6px; font-weight: 600; background: #fdfdfd; color: #333;" th:text="${dinningList[2].dinningMenuType}">석식</td>
-                <td style="padding: 4px;"><input type="text" th:value="${dinningList[2].dinningMenuMain}" value="Content" style="width: 90%; height: 28px; padding: 2px 8px; border: 1px solid #eee; border-radius: 4px; text-align: center; color: #333; font-size: 13px;"></td>
-                <td style="padding: 4px;"><input type="text" th:value="${dinningList[2].dinningMenuSub}" style="width: 90%; height: 28px; padding: 2px 8px; border: 1px solid #eee; border-radius: 4px; text-align: center; color: #333; font-size: 13px;"></td>
+                <td style="padding: 4px;"><input type="text" readonly="readonly"  th:value="${dinningList[2].dinningMenuMain}" value="Content" style="width: 90%; height: 28px; padding: 2px 8px; border: 1px solid #eee; border-radius: 4px; text-align: center; color: #333; font-size: 13px;"></td>
+                <td style="padding: 4px;"><input type="text" readonly="readonly"  th:value="${dinningList[2].dinningMenuSub}" style="width: 90%; height: 28px; padding: 2px 8px; border: 1px solid #eee; border-radius: 4px; text-align: center; color: #333; font-size: 13px;"></td>
             </tr>
         </tbody>
     </table>
