@@ -26,8 +26,11 @@ public class SecurityConfig {
             // 1. 세션 관리: 응답 커밋 전 세션 생성을 보장하여 타임리프 에러 방지
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.ALWAYS) 
-            ) // [수정] 누락되었던 괄호 추가
-            
+            ) // 
+            .csrf(csrf -> csrf
+                // [핵심] /reserve/ 하위의 POST 요청에 대해 CSRF 검사를 생략합니다.
+                .ignoringRequestMatchers("/reserve/**", "/loginProcess", "/dinning/**")
+            )
             // 2. 인가 설정: 허용할 경로를 구체적으로 지정
             .authorizeHttpRequests(auth -> auth
                 // [수정] "/**"는 모든 보안을 해제하므로 제거하고, 필요한 경로만 허용합니다.
