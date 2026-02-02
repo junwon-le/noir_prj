@@ -20,8 +20,8 @@ public class SecurityConfig {
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
             .authorizeHttpRequests(auth -> auth
-                // [중요] "/login"과 "/oauth2/**"를 반드시 추가해야 합니다.
-                .requestMatchers("/", "/login/**", "/oauth2/**", "/common/**", "/images/**", "/error").permitAll()
+                // "/login"과 "/oauth2/**"를 반드시 추가해야 합니다.
+                .requestMatchers("/", "/reserve/**", "/login/**", "/oauth2/**", "/common/**", "/images/**", "/error").permitAll()
                 
                 .anyRequest().authenticated()
             )
