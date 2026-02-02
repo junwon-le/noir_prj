@@ -152,8 +152,10 @@ $(function(){
 		location.href="/reserve/roomResSearch";
 	});
 	
+	var type = "[[${room.roomTypeNum}]]";
+	
 	$("#reviewBtn").click(function(){
-		location.href="/roomReviewList";
+		location.href="/roomReviewList?num="+type;
 	});
 	
 	
