@@ -66,10 +66,4 @@ public class MainController {
 		return "/hotel/location";
 	}	
 	
-	@GetMapping("/join")
-	public String join() {
-		return "/login/join";
-	}
-
-	
 }
