@@ -90,7 +90,7 @@ public class MypageReserveDAO {
 		List<DinningRevSearchDomain> list = null;
 		
 		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
-		list=ss.selectList("kr.co.noir.mypageReserve.dinningRevList");
+		list=ss.selectList("kr.co.noir.mypageReserve.dinningRevList",rsDTO);
 		
 		System.err.println(list);
 		
@@ -99,6 +99,23 @@ public class MypageReserveDAO {
 		return list;
 
 	}//selectDinningRevList
+	
+	
+	public List<DinningRevDetailDomain> selectDinningRevDetail(ReserveDetailDTO rdDTO) throws PersistenceException{
+		List<DinningRevDetailDomain> drdDomain=null;
+		
+		SqlSession ss= MyBatisHandler.getInstance().getMyBatisHandler(false);
+		
+		drdDomain=ss.selectList("kr.co.noir.mypageReserve.dinningRevDetail",rdDTO);
+		
+		if(ss !=null) {ss.close();}//end if
+		
+		System.out.println(drdDomain);
+		
+		return drdDomain;
+		
+		
+	}//selectHotelRevDetail
 	
 	
 }//class

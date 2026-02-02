@@ -297,6 +297,11 @@
     pointer-events: none;
 }
 
+.table-responsive-custom{
+	height: 352px;
+
+}
+
 </style>
 
 <script>
@@ -319,7 +324,7 @@ $(function(){
 		searchPage(1);
 				
 	});//click
-	
+
 	
 	   var d= new Date();
 	   var y =  d.getFullYear();
@@ -374,14 +379,59 @@ $(function(){
 		    });//change
 		   
 		   
-		$("#btn").click(function(){
-			$("#frm").submit();
-			
-			
-		});//click
-		    
-	   
+		
 	});//ready
+	
+function searchPage(currentPage){
+	  var startDate = $("#startDate").val();
+	  var endDate = $("#endDate").val();
+	    
+	  var param ={startDate : startDate,
+			   	 endDate : endDate,
+			   	currentPage : currentPage,
+			   	reserveType:"room"};
+	  $.ajax({
+		 url:"/mypage/reserve/dinningSearch",
+		 data : param,
+		 type:"GET",
+		 dataType:"JSON",
+		 error : function (xhr){
+			 alert("검색 싫패"+xhr.status);
+			 
+		 },
+		 success: function(jsonObj){
+			 $(".reservation-table>tbody").empty();
+			 if(jsonObj.data.length==0){
+					$(".reservation-table>tbody")
+					.append("<tr><td colspan='6' style='text-align:center'>검색된 예약 내용이 없습니다.</td></tr>");
+				    return;       	 
+			 
+			 }//end if
+		      $.each(jsonObj.data, function (i, ele) {
+		    	   let statusClass = (ele.reserveFlag === "N") ? "" : "status-canceled";
+	                let statusText = (ele.reserveFlag === "N") ? "예약완료" : "취소완료";
+	                var createTr = `
+	                    <tr onclick="revDetail(${ele.reserveNum})" class="trClick">
+	                        <td>${ele.reserveNum}</td>
+	                        <td>${ele.reserveDate}</td>
+	                        <td>${ele.dinningType} ( ${ele.visitTime} )</td>
+	                        <td>${ele.visitDate}</td>
+	                        <td>${ele.reservePerson}</td>
+	                        <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+	                    </tr>`;
+	                $(".reservation-table>tbody").append(createTr);
+	            });
+
+	            // 페이지네이션 업데이트
+	            $("#Page-navigation").html(jsonObj.pagiNation);
+	        }		
+		  
+	  });
+		
+		
+	}
+	
+
 	
 	
 </script>
@@ -400,8 +450,7 @@ $(function(){
             <div class="main-content">
                 <h3 class="page-title">다이닝 예약 확인</h3>
 	
-                <div class="search-container">
-                <form th:action="@{/dinningSearch}" method="get" id="frm">
+                <form th:action="@{/mypage/reserve/dinningSearch}" method="get" id="frm"class="search-container">
                     <div class="date-group">
                         <div class="date-item">
                             <input type="date" id="startDate" class="noir-date-input" value="2026-01-07">
@@ -421,7 +470,6 @@ $(function(){
                     <input type="button" class="btn-search-noir" value="검색" id="btn"/>
                    </form>
                    <!--  <button type="button" class="btn-search-noir">검색</button> -->
-                </div>
 
                 <div class="table-responsive-custom">
                     <table class="reservation-table">
@@ -429,75 +477,20 @@ $(function(){
                             <tr>
                                 <th>예약 번호</th>
                                 <th>예약일</th>
-                                <th>상품명</th>
+                                <th>에약 시간</th>
                                 <th>방문일</th>
                                 <th>인원</th>
                                 <th>예약 상태</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>1241325</td>
-                                <td>2025.03.03</td>
-                                <td>Superior King</td>
-                                <td>2026-01-07 ~ 2026-01-10</td>
-                                <td>1</td>
-                                <td><span class="status-badge">예약 완료</span></td>
-                            </tr>
-                            <tr>
-                                <td>2314312</td>
-                                <td>2025.02.03</td>
-                                <td>Deluxe Double</td>
-                                <td>2026-01-11 ~ 2026-01-15</td>
-                                <td>2</td>
-                                <td><span class="status-badge status-canceled">취소 완료</span></td>
-                            </tr>
-                               <tr>
-                                <td>2314312</td>
-                                <td>2025.02.03</td>
-                                <td>Deluxe Double</td>
-                                <td>2026-01-11 ~ 2026-01-15</td>
-                                <td>2</td>
-                                <td><span class="status-badge status-canceled">취소 완료</span></td>
-                            </tr>
-                               <tr>
-                                <td>2314312</td>
-                                <td>2025.02.03</td>
-                                <td>Deluxe Double</td>
-                                <td>2026-01-11 ~ 2026-01-15</td>
-                                <td>2</td>
-                                <td><span class="status-badge status-canceled">취소 완료</span></td>
-                            </tr>
-                               <tr>
-                                <td>2314312</td>
-                                <td>2025.02.03</td>
-                                <td>Deluxe Double</td>
-                                <td>2026-01-11 ~ 2026-01-15</td>
-                                <td>2</td>
-                                <td><span class="status-badge status-canceled">취소 완료</span></td>
-                            </tr>
+                            
                         </tbody>
                     </table>
                 </div>
                    <nav aria-label="Page navigation">
-    <ul class="pagination-wrapper">
-        <li class="page-item">
-            <a class="page-link" href="#" aria-label="Previous">
-                <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
-            </a>
-        </li>
-
-        <li class="page-item active"><a class="page-link" href="#">1</a></li>
-        <li class="page-item"><a class="page-link" href="#">2</a></li>
-        <li class="page-item"><a class="page-link" href="#">3</a></li>
-        <li class="page-item"><a class="page-link" href="#">4</a></li>
-        <li class="page-item"><a class="page-link" href="#">5</a></li>
-
-        <li class="page-item">
-            <a class="page-link" href="#" aria-label="Next">
-                <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
-            </a>
-        </li>
+    <ul class="pagination-wrapper" id="Page-navigation">
+        
     </ul>
 </nav>
             </div>

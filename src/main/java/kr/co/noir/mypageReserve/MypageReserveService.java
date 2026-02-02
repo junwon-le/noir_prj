@@ -195,7 +195,7 @@ public class MypageReserveService {
 				
 				jsonTemp.put("dinningType", drs.getDinningType());
 				jsonTemp.put("visitDate", sdf.format(drs.getVisitDate()));
-				jsonTemp.put("visitTime", sdf.format(drs.getVisitTime()));
+				jsonTemp.put("visitTime", drs.getVisitTime());
 				jsonTemp.put("reserveFlag", drs.getReserveFlag());
 				
 				jsonArr.add(jsonTemp);
@@ -204,6 +204,8 @@ public class MypageReserveService {
 			jsonObj.put("pagiNation",pagination(rsDTO));
 			
 			
+			
+			System.out.println(pagination(rsDTO));
 		}catch (PersistenceException pe) {
 			pe.printStackTrace();
 		
@@ -254,6 +256,28 @@ public class MypageReserveService {
 		System.out.println("service++"+cnt);
 		return cnt;
 	}//removeHotelReserve
+	
+	
+	
+	public List<DinningRevDetailDomain> searchOneDinningRevDetail(ReserveDetailDTO rdDTO) {
+		List<DinningRevDetailDomain> drdDomain=null;
+		TextEncryptor te = Encryptors.text(key,salt);
+		try {
+			
+			drdDomain =mrDAO.selectDinningRevDetail(rdDTO);
+			for(DinningRevDetailDomain hd:drdDomain) {
+				hd.setEmail(te.decrypt(hd.getEmail()));
+				hd.setTel(te.decrypt(hd.getTel()));
+			}//end for
+		}catch (PersistenceException pe) {
+			pe.printStackTrace();
+		}//end catch
+		
+		return drdDomain;
+		
+		
+		
+	}//searchOneDinningRevDetail
 	
 	
 

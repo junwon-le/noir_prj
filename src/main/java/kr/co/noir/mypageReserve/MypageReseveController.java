@@ -104,6 +104,7 @@ public class MypageReseveController {
 	@GetMapping("/dinningSearch")
 	public String searchRevDinning(ReserveSearchDTO rsDTO,HttpSession sesison,Model model) {
 		rsDTO.setMemberId((String)sesison.getAttribute("memberId"));
+		
 		rsDTO.setReserveType("dinning");
 		
 		return mrs.searchDinningRevList(rsDTO);
@@ -113,8 +114,12 @@ public class MypageReseveController {
 	
 	
 	@GetMapping("/memberDinningDetail")
-	public String memberDinningDetail(HttpSession session) {
+	public String memberDinningDetail(HttpSession session,ReserveDetailDTO rdDTO) {
+		rdDTO.setMemberId((String)session.getAttribute("memberId"));
 		
+		System.out.println((String)session.getAttribute("memberId"));
+		
+		System.out.println("000000000000"+mrs.searchOneDinningRevDetail(rdDTO));
 		return "/mypage/memberHotelDinningDetail";
 	}//memberDinningDetail
 	

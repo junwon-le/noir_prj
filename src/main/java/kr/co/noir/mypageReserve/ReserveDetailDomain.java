@@ -22,22 +22,22 @@ public class ReserveDetailDomain {
 	
 	
 	private int reserveNum,adultCount,childCount,
-	roomPrice,roomTax,roomPriceTotal;
+	price,tax,priceTotal;
 	private String reserveName,email,tel,reserveMsg,reserveFlag,
 	payAgency,cardData,reserveDate,cancelFee;
 	private String payInputDate;
 	private boolean checkInToday;
 	
 	public int getRoomPrice() {
-		roomPrice = (int)(roomPriceTotal / 1.1);
-	    return roomPrice;
+		price = (int)(priceTotal / 1.1);
+	    return price;
 	}
 	public int getRoomTax() {
-		roomTax = roomPriceTotal - (int)(roomPriceTotal / 1.1);
-	    return roomTax;
+		tax = priceTotal - (int)(priceTotal / 1.1);
+	    return tax;
 	}
 	public int getRoomPriceTotal() {
-		return roomPriceTotal;
+		return priceTotal;
 	}
 	public int getReserveNum() {
 		return reserveNum;

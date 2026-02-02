@@ -1,5 +1,7 @@
 package kr.co.noir.mypageReserve;
 
+import java.sql.Date;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -9,7 +11,7 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public class DinningRevSearchDomain extends ReserveSearchDomain {
 	
-	private String visitDate;
+	private Date visitDate;
 	private String dinningType;
 	private String visitTime;
 }
