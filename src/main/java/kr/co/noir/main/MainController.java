@@ -50,10 +50,4 @@ public class MainController {
 		return "/hotel/laundry";
 	}	
 	
-	@GetMapping("/join")
-	public String join() {
-		return "/login/join";
-	}
-
-	
 }
