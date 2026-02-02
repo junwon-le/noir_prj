@@ -21,7 +21,7 @@ public class SecurityConfig {
         return http
             .authorizeHttpRequests(auth -> auth
                 // "/login"과 "/oauth2/**"를 반드시 추가해야 합니다.
-                .requestMatchers("/", "/reserve/**", "/login/**", "/oauth2/**", "/common/**", "/images/**", "/error").permitAll()
+                .requestMatchers("/**", "/reserve/**", "/login/**", "/oauth2/**", "/common/**", "/images/**", "/error").permitAll()
                 
                 .anyRequest().authenticated()
             )
