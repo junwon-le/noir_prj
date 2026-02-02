@@ -1,7 +1,5 @@
 package kr.co.noir.mypageReserve;
 
-import java.sql.Date;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -11,7 +9,8 @@ import lombok.ToString;
 @ToString
 public class ReserveSearchDTO extends RangeDTO{
 
-	 String memberId; 
-	 String startDate,endDate;
-	
+	private String memberId; 
+	private	 String startDate,endDate;
+
+		
 }//class

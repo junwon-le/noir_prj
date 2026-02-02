@@ -404,6 +404,12 @@ font-family: 'Nanum Myeongjo', serif;
     }
 </style>
 <script type="text/javascript">
+function goBackToList() {
+    var backUrl = [[${from}]] || [[${param.from}]] || '/mypage/reserve/hotelList';
+    location.href = backUrl;
+}
+
+
 $(function(){
 	var cancelFlag=[[${cancelFlag==true}]];
 	
@@ -416,7 +422,7 @@ $(function(){
 });
 
 
-
+F
 
 </script>
 </head>
@@ -540,8 +546,9 @@ $(function(){
                     </button>
                     <!-- </th:block> -->
                 </div>
-                <button class="btn btn-link text-secondary text-decoration-none small backBtn" onclick="history.back()">뒤로가기</button>
-            </div>
+            <button type="button" class="btn btn-link text-secondary text-decoration-none small backBtn" onclick="goBackToList()">뒤로가기</button>   
+            <!--     <button class="btn btn-link text-secondary text-decoration-none small backBtn" th:onclick="|location.href='${param.from != null ? param.from[0] : '/mypage/reserve/hotelList'}'|">뒤로가기</button>
+             --></div>
         </div>
     </div>
     

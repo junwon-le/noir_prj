@@ -2,7 +2,6 @@ package kr.co.noir.mypageReserve;
 
 import java.sql.Date;
 import java.time.LocalDate;
-import java.time.ZoneId;
 
 import lombok.Getter;
 import lombok.Setter;

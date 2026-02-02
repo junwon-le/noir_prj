@@ -10,7 +10,7 @@
 					from  member m,reserve r
 					where r.member_num = m.member_num
 					and member_id=#{memberId}
-			      	AND r.reserve_type = 'room'
+			      	AND r.reserve_type = #{reserveType}
 			      	<if test="startDate != null">
 			       	   AND r.reserve_start_date <![CDATA[>=]]> #{startDate}
 			      	</if>

@@ -12,6 +12,6 @@ public class RangeDTO {
 	private int startNum,endNum;
 	private int currentPage=1;
 	private int totalPage=0;
-	String field,keyword,fieldStr,url;
-	
+	private String field,keyword,fieldStr,url;
+	private String reserveType;
 }//class
