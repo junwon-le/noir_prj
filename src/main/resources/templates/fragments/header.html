@@ -10,7 +10,7 @@
 				    <a th:href="@{/login/memberLogin}">LOGIN</a>
 				</li>
 				<li th:if="${session.memberId == null and session.adminId == null}">
-				    <a th:href="@{/join}">JOIN</a>
+				    <a th:href="@{/login/join}">JOIN</a>
 				</li>
 				
 				<th:block th:if="${session.memberId != null}">
