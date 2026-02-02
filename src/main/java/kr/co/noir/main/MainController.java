@@ -65,5 +65,6 @@ public class MainController {
 	public String location() {
 		return "/hotel/location";
 	}	
-	
+
+
 }
