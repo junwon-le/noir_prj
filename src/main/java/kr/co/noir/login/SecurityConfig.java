@@ -33,9 +33,10 @@ public class SecurityConfig {
             )
             // 2. 인가 설정: 허용할 경로를 구체적으로 지정
             .authorizeHttpRequests(auth -> auth
-                // [수정] "/**"는 모든 보안을 해제하므로 제거하고, 필요한 경로만 허용합니다.
+                // "/**"는 모든 보안을 해제하므로 제거하고, 필요한 경로만 허용합니다.
                 .requestMatchers("/**", "/login/**", "/reserve/**", "/login/**", "/oauth2/**", "/error").permitAll()
                 .requestMatchers("/common/**", "/images/**", "/css/**", "/js/**").permitAll()
+                .requestMatchers("/adminLogin", "/adminLogout").permitAll()
                 
                 // 그 외 모든 요청은 인증 필요
                 .anyRequest().authenticated()
@@ -56,6 +57,7 @@ public class SecurityConfig {
                 .invalidateHttpSession(true) 
                 .deleteCookies("JSESSIONID")
             );
+        
 
         return http.build();
     }
