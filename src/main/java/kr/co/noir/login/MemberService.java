@@ -42,20 +42,26 @@ public class MemberService {
         int totalCount = memberMapper.selectTotalCount(params);
         int totalPage = (int) Math.ceil((double) totalCount / pageSize);
 
-        // [복호화 시작]
+        // [복호화 및 이름 합치기 시작]
         if (list != null) {
-            // 암호화 시 사용한 것과 동일한 설정으로 TextEncryptor 생성
             TextEncryptor te = Encryptors.text(key, salt);
 
             for (MemberDTO member : list) {
-                // 이메일 처리
+                // 1. 이름 합치기 (성 + 이름)
+                // LastName이나 FirstName이 null일 경우를 대비해 방어 코드를 넣는 것이 좋습니다.
+                String lastName = (member.getMemberLastName() != null) ? member.getMemberLastName() : "";
+                String firstName = (member.getMemberFirstName() != null) ? member.getMemberFirstName() : "";
+                
+                // 합쳐진 이름을 FirstName에 덮어씌우거나, DTO에 memberFullName 필드가 있다면 거기 세팅하세요.
+                member.setMemberFirstName(lastName + firstName);
+                
+                // 2. 이메일 복호화 처리
                 member.setMemberEmail(processDecrypt(te, member.getMemberEmail()));
-                // 전화번호 처리
-                member.setMemberTel(processDecrypt(te, member.getMemberTel()));
+                
+                // 3. 전화번호 복호화 및 포맷팅 처리
                 member.setMemberTel(formatTel(processDecrypt(te, member.getMemberTel())));
-            }//end for
-            
-        }//end if
+            }
+        }
         
         Map<String, Object> result = new HashMap<>();
         result.put("memberList", list);
