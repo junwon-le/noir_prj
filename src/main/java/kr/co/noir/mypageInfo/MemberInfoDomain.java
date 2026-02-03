@@ -27,11 +27,16 @@ public class MemberInfoDomain {
 		return tel;
 	}
 	public String getEmailIdStr() {
-		emailIdStr=email.split("@")[0];
+		if(email != null && email.contains("@")) {
+			emailIdStr=email.split("@")[0];
+			
+		}//end if
 		return emailIdStr;
 	}
 	public String getEmailDomain() {
-		emailDomain=email.split("@")[1];
+		if(email != null && email.contains("@")){
+			emailDomain=email.split("@")[1];
+		}//end if
 		return emailDomain;
 	}
 	public Date getBirth() {

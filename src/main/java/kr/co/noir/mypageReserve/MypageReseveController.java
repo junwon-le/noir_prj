@@ -1,5 +1,7 @@
 package kr.co.noir.mypageReserve;
 
+import java.util.Enumeration;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,13 +12,35 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.servlet.http.HttpSession;
 
-
 @RequestMapping("/mypage/reserve")
 @Controller
 public class MypageReseveController {
 	
 	@Autowired
 	MypageReserveService mrs;
+	
+	
+	@GetMapping("/session/check")
+	@ResponseBody
+	public String checkSession(HttpSession session) {
+
+	    Enumeration<String> names = session.getAttributeNames();
+
+	    StringBuilder sb = new StringBuilder();
+	    while (names.hasMoreElements()) {
+	        String name = names.nextElement();
+	        Object value = session.getAttribute(name);
+
+	        sb.append(name)
+	          .append(" = ")
+	          .append(value)
+	          .append("\n");
+	    }
+	    return sb.toString();
+	}
+	
+	
+	
 //=========호텔 에약 리스트==================
 	@GetMapping("/memberHotelList")
 	public String hotelReserveList(HttpSession session) {
@@ -122,12 +146,12 @@ public class MypageReseveController {
 	}//memberDinningDetail
 	
 	
-	  @GetMapping("/cancelDinningReserve")
+	  @PostMapping("/cancelDinningReserve")
 	  public String cancelDinningReserve(HttpSession session,int reserveNum,Model model) {
 		  String uri="/mypage/memberHotelRevDetail";
 		  System.out.println("예약번호--------"+reserveNum);
 		  boolean flag = mrs.removeDinningReserve(reserveNum);
-		  if(flag) {
+		  if(flag!=true) {
 			 model.addAttribute("cancelFlag",true); 
 			  
 			  

@@ -14,16 +14,32 @@ import kr.co.noir.login.MemberDTO;
 @Controller
 public class MyPageInfoController {
 
-	
+
 	@Autowired
 	MypageModifySevice mms;
+	
+
 
 
 //============================회원정보 수정================================	
 	@GetMapping("/passwordCheck")
-	public String passwoadCheck(HttpSession session) {
-		return "/mypage/passwordCheck";
+	public String passwoadCheck(HttpSession session,Model model) {
+		  String memberProd= (String)session.getAttribute("memberProd");
+		  String userId = (String)session.getAttribute("memberId");
+		  String uri="/mypage/passwordCheck";
+		  if(!memberProd.equals("local")) {
+			  
+		    	MemberInfoDomain miDomain = mms.searchMemmberInfo(userId);
+		    	model.addAttribute("miDomain", miDomain);
+		    	uri = "/mypage/memberModify"; // 맞으면 이동할 페이지 변경
+		  }//end if
+		
+		
+		return uri;
 	}//passwoadCheck
+	
+	
+	
 	
 	
 	@PostMapping("/passwordCheckProcess")
@@ -44,7 +60,7 @@ public class MyPageInfoController {
 	    	uri = "/mypage/memberModify"; // 맞으면 이동할 페이지 변경
 	    } else {
 	        model.addAttribute("flag", true); // 틀리면 경고용 플래그 전달
-	    }
+	    }//end else 
 	    
 	    return uri;
 	}//passwordCheckProcess
@@ -55,6 +71,8 @@ public class MyPageInfoController {
 	@PostMapping("/memberModityProcess")
 	public String memberModityProcess(HttpSession session, MemberDTO mDTO,Model model) {
 		mDTO.setMemberId((String)session.getAttribute("memberId"));
+	  
+	    
 		String uri = "/mypage/memberModify";
 		if(mms.modifyMemberInfo(mDTO)) {
 			

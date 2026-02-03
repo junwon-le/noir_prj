@@ -67,8 +67,16 @@ public class MypageModifySevice {
 		TextEncryptor te = Encryptors.text(key, salt);
 		try {
 			miDomain=mmDAO.selectMemberInfo(id);
-			miDomain.setEmail(te.decrypt(miDomain.getEmail()));
-			miDomain.setTel(te.decrypt(miDomain.getTel()));
+			String email=miDomain.getEmail();
+			String tel =miDomain.getTel();
+			if(!"".equals(tel)&&tel!=null) {
+				
+				miDomain.setTel(te.decrypt(tel));
+			}//end if
+			if(!"".equals(email)&&email!=null) {
+				
+				miDomain.setEmail(te.decrypt(email));
+			}//end if
 			System.out.println("비밀번호----"+miDomain.getPass());
 			
 			System.out.println(miDomain.getEmailDomain()+"///"+miDomain.getEmailIdStr());

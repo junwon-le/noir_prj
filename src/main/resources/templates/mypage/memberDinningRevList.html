@@ -310,10 +310,10 @@
 
 <script>
 $(function(){
-	var paramStartDate="[[${param.pageStartDate}]]";
-	var pageEndDate="[[${param.pageEndDate}]]";
+	var paramStartDate="[[${param.startDate}]]";
+	var pageEndDate="[[${param.endDate}]]";
 	var currentpage="[[${param.currentpage}]]";
-	var monthBtnValue="[[${param.monthBtnValue}]]";
+	var monthBtnValue="[[${param.period}]]";
 	
 	
 	if(monthBtnValue!=''){
@@ -558,10 +558,10 @@ function revDetail(reserveNum){
    <!-- startDate , endDate , currentPage,monthBtnValue = 디테일에서 이전페이지로 넘어갈 때 사용할 값들 (param으로 사용할거라 DTO x)
         reserveNum = 디테일 보여줄 때 사용할 값 -->
     <form th:action="@{/mypage/reserve/memberDinningDetail}" method="get" id="hiddenFrm">
-    	<input type="hidden" id="pageStartDate" name="pageStartDate"/> 
-    	<input type="hidden" id="pageEndDate" name="pageEndDate"/>
+    	<input type="hidden" id="pageStartDate" name="startDate"/> 
+    	<input type="hidden" id="pageEndDate" name="endDate"/>
     	<input type="hidden" id="currentpage" name="currentpage" value="1"/>
-    	<input type="hidden" id="monthBtnValue" name="monthBtnValue" value=""/>
+    	<input type="hidden" id="monthBtnValue" name="period" value=""/>
     	<input type="hidden" id="reserveNum" name="reserveNum"/>
     
     </form>
