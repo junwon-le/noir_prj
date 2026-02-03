@@ -259,16 +259,28 @@ public class MypageReserveService {
 	
 	
 	
-	public List<DinningRevDetailDomain> searchOneDinningRevDetail(ReserveDetailDTO rdDTO) {
-		List<DinningRevDetailDomain> drdDomain=null;
+	public boolean removeDinningReserve(int RevNum) {
+		boolean flag =false;
+		try {
+			flag=mrDAO.updateDinningReserve(RevNum);
+			
+		}catch (PersistenceException pe) {
+			pe.printStackTrace();
+				
+		}//end catch
+		System.out.println("service++"+flag);
+		return flag;
+	}//removeDinningReserve
+	
+	
+	public DinningRevDetailDomain searchOneDinningRevDetail(ReserveDetailDTO rdDTO) {
+		DinningRevDetailDomain drdDomain=null;
 		TextEncryptor te = Encryptors.text(key,salt);
 		try {
 			
 			drdDomain =mrDAO.selectDinningRevDetail(rdDTO);
-			for(DinningRevDetailDomain hd:drdDomain) {
-				hd.setEmail(te.decrypt(hd.getEmail()));
-				hd.setTel(te.decrypt(hd.getTel()));
-			}//end for
+			drdDomain.setEmail(te.decrypt(drdDomain.getEmail()));
+			drdDomain.setTel(te.decrypt(drdDomain.getTel()));
 		}catch (PersistenceException pe) {
 			pe.printStackTrace();
 		}//end catch

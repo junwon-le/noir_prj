@@ -301,11 +301,32 @@
 	height: 352px;
 
 }
+.trClick{
+
+	cursor: pointer;
+}
 
 </style>
 
 <script>
 $(function(){
+	var paramStartDate="[[${param.pageStartDate}]]";
+	var pageEndDate="[[${param.pageEndDate}]]";
+	var currentpage="[[${param.currentpage}]]";
+	var monthBtnValue="[[${param.monthBtnValue}]]";
+	
+	
+	if(monthBtnValue!=''){
+		$(".btn-period").each(function(){
+			if($(this).val()==monthBtnValue){
+				$(this).addClass("active");
+			}else{
+				$(this).removeClass("active");
+			}
+		});	
+	}
+	
+
 	
 	
 	$("#btn").click(function(){
@@ -333,8 +354,15 @@ $(function(){
 	   
 	   var today=y+"-"+m+"-"+d;
 	   
-	   $("#startDate").val(today);
-	   $("#endDate").val(today);
+	   if(paramStartDate=='' && pageEndDate==''){
+		   
+			$("#startDate").val(today);
+			$("#endDate").val(today);
+	   }else{
+		   $("#startDate").val(paramStartDate);
+		   $("#endDate").val(pageEndDate);
+		   
+	   }
 	   
 	    $("#endDate").attr("min", today);
 	    
@@ -367,7 +395,6 @@ $(function(){
 	      
 	        var result = year+"-"+month+"-"+day;
 	      
-	        // input 반영
 	        $("#endDate").val(result);
 	      
 	   });//click
@@ -378,25 +405,33 @@ $(function(){
 		       
 		    });//change
 		   
+		    
+		if (currentpage && currentpage != 0) {
+		    searchPage(currentpage);
+		}//end if 
+		
 		   
 		
 	});//ready
 	
 function searchPage(currentPage){
+	 $("#currentPage").val(currentPage);
+	 
 	  var startDate = $("#startDate").val();
 	  var endDate = $("#endDate").val();
-	    
+	  
+
 	  var param ={startDate : startDate,
 			   	 endDate : endDate,
 			   	currentPage : currentPage,
-			   	reserveType:"room"};
+			   	reserveType:"dinning"};
 	  $.ajax({
 		 url:"/mypage/reserve/dinningSearch",
 		 data : param,
 		 type:"GET",
 		 dataType:"JSON",
 		 error : function (xhr){
-			 alert("검색 싫패"+xhr.status);
+			 alert("검색 실패"+xhr.status);
 			 
 		 },
 		 success: function(jsonObj){
@@ -426,10 +461,32 @@ function searchPage(currentPage){
 	            $("#Page-navigation").html(jsonObj.pagiNation);
 	        }		
 		  
-	  });
+	  });//ajax
 		
 		
+	}//searchPage
+	
+function revDetail(reserveNum){
+	 var startDate = $("#startDate").val();
+	  var endDate = $("#endDate").val();
+	  var currentpage= $("#currentpage").val();
+		$("#reserveNum").val(reserveNum);
+		$("#pageEndDate").val(endDate);
+		$("#pageStartDate").val(startDate);
+		$("#currentpage").val(currentpage);
+		
+		$(".btn-period").each(function(){
+			if($(this).hasClass("active")){
+				
+				$("#monthBtnValue").val($(this).val());
+				
+			}
+			
+		});
+		
+		$("#hiddenFrm").submit(); 
 	}
+		
 	
 
 	
@@ -489,23 +546,35 @@ function searchPage(currentPage){
                     </table>
                 </div>
                    <nav aria-label="Page navigation">
-    <ul class="pagination-wrapper" id="Page-navigation">
+    					<ul class="pagination-wrapper" id="Page-navigation">
         
-    </ul>
-</nav>
+    					</ul>
+					</nav>
             </div>
         </div>
 		
         
     </div>
+   <!-- startDate , endDate , currentPage,monthBtnValue = 디테일에서 이전페이지로 넘어갈 때 사용할 값들 (param으로 사용할거라 DTO x)
+        reserveNum = 디테일 보여줄 때 사용할 값 -->
+    <form th:action="@{/mypage/reserve/memberDinningDetail}" method="get" id="hiddenFrm">
+    	<input type="hidden" id="pageStartDate" name="pageStartDate"/> 
+    	<input type="hidden" id="pageEndDate" name="pageEndDate"/>
+    	<input type="hidden" id="currentpage" name="currentpage" value="1"/>
+    	<input type="hidden" id="monthBtnValue" name="monthBtnValue" value=""/>
+    	<input type="hidden" id="reserveNum" name="reserveNum"/>
+    
+    </form>
+    
+    
 </div>
 
-<footer>
-    <th:block th:replace="~{fragments/footer :: footer}"></th:block>
-</footer>
-   <div id="privacy-layer">
-        <div th:replace="~{fragments/privacy :: privacy}"></div>
-    </div>
+	<footer>
+	    <th:block th:replace="~{fragments/footer :: footer}"></th:block>
+	</footer>
+	<div id="privacy-layer">
+	        <div th:replace="~{fragments/privacy :: privacy}"></div>
+	 </div>
 <script type="text/javascript" src="/common/js/comm/jquery.validate.js"></script>
 <script type="text/javascript" src="/common/js/comm/wings.core.js"></script>
 <script type="text/javascript" src="/common/js/comm/PAGING_HOMEPAGE.js"></script>

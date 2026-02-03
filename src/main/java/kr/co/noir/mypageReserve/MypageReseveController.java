@@ -112,17 +112,34 @@ public class MypageReseveController {
 		
 	}//searchRevDinning
 	
-	
 	@GetMapping("/memberDinningDetail")
-	public String memberDinningDetail(HttpSession session,ReserveDetailDTO rdDTO) {
+	public String memberDinningDetail(HttpSession session,ReserveDetailDTO rdDTO,Model model) {
 		rdDTO.setMemberId((String)session.getAttribute("memberId"));
 		
-		System.out.println((String)session.getAttribute("memberId"));
-		
-		System.out.println("000000000000"+mrs.searchOneDinningRevDetail(rdDTO));
-		return "/mypage/memberHotelDinningDetail";
+		System.out.println(mrs.searchOneDinningRevDetail(rdDTO));
+		model.addAttribute("dinningRevDetail",  mrs.searchOneDinningRevDetail(rdDTO));
+		return "/mypage/memberDinningDetail";
 	}//memberDinningDetail
 	
+	
+	  @GetMapping("/cancelDinningReserve")
+	  public String cancelDinningReserve(HttpSession session,int reserveNum,Model model) {
+		  String uri="/mypage/memberHotelRevDetail";
+		  System.out.println("예약번호--------"+reserveNum);
+		  boolean flag = mrs.removeDinningReserve(reserveNum);
+		  if(flag) {
+			 model.addAttribute("cancelFlag",true); 
+			  
+			  
+		  }else {
+			  
+			  model.addAttribute("msg","예약취소가 완료되었습니다.");
+			  uri="/mypage/successPage";
+			  
+		  }//end else
+		  
+		  return uri;
+	  }//cancelDinningReserve
 	
 	
 	

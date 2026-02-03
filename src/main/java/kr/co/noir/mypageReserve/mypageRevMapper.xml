@@ -158,6 +158,7 @@
 	<select id="dinningRevDetail" parameterType="reserveDetailDTO" resultType="dinningRevDetailDomain">
 		 select 
 		 		r.reserve_num as reserveNum,
+		 		
 		 		r.END_USER_LAST_NAME||END_USER_FIRST_NAME as reserveName,
 		 		r.RESERVE_ADULT_COUNT as adultCount,
 		 		r.RESERVE_KID_COUNT as childCount,
@@ -169,19 +170,32 @@
 		 		dr.DINNING_VISIT_DATE as visitDate,
 		 		dr.DINNING_RES_TYPE as dinningType,
 		 		dr.DINNING_RES_DETAIL_TIME as visitTime,
-		 		p.pay_price as price,
+		 		p.pay_price as priceTotal,
 		 		pi.PAY_AGENCY as payAgency,
 		 		pi.CARD_NUM as cardData,
-		 		pi.INPUT_DATE as payInputDate
-    	 from member m, reserve r,DINNING_RES dr,pay p,pay_info pi
+		 		to_char(pi.input_date,'yyyy-MM-dd AM HH24:MI') as payInputDate,
+		 		di.dinning_name as dinningName
+    	 from member m, reserve r,DINNING_RES dr,pay p,pay_info pi,dinning_info di
      	where m.member_num=r.member_num
     	 	and r.reserve_num=dr.reserve_num
      		and r.reserve_num=p.reserve_num
      		and p.pay_num=pi.pay_num
+     		and dr.dinning_menu_num=di.dinning_menu_num
 			 and r.reserve_type='dinning'
 			 and r.member_num=(select member_num from member where member_id=#{memberId})
+			 and r.reserve_num=#{reserveNum}
 
 	</select>
+	
+	
+	 <update id="removeDinningReserve" parameterType="int" >
+		update reserve
+		set reserve_status='Y'
+		where reserve_num=#{reserveNum}
+	</update>
+	
+ 
+ 
 
 	
 </mapper>

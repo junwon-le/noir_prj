@@ -404,13 +404,14 @@ font-family: 'Nanum Myeongjo', serif;
     }
 </style>
 <script type="text/javascript">
-function goBackToList() {
-    var backUrl = [[${from}]] || [[${param.from}]] || '/mypage/reserve/hotelList';
-    location.href = backUrl;
-}
 
 
 $(function(){
+	
+	
+	
+	
+	
 	var cancelFlag=[[${cancelFlag==true}]];
 	
 	if(cancelFlag){
@@ -422,7 +423,9 @@ $(function(){
 });
 
 
-F
+function goBackToList(){
+	$("#hiddenFrm").submit();
+}
 
 </script>
 </head>
@@ -432,7 +435,7 @@ F
     <th:block th:replace="~{fragments/header :: header}"></th:block>
 </header>
 
-<div class="container">
+<div class="container" th:object="${dinningRevDetail}">
     <div class="row equal-height-row g-4">
         
         <th:block th:replace="~{fragments/myPageSideBar :: myPageSideBar}"></th:block>
@@ -444,41 +447,47 @@ F
         <div class="res-header">
             <div class="res-status-badge">DINING RESERVATION CONFIRMED</div>
             <h2 class="fw-bold text-white mb-2" style="font-family: 'Nanum Myeongjo', serif; letter-spacing: 2px;">THE NOIR RESTAURANT</h2>
-            <p class="res-id-number" style="font-family: 'Nanum Myeongjo', serif;">Ref. DIN-1042 <span class="text-secondary mx-2">|</span> 박현욱 님</p>
+            <p class="res-id-number" style="font-family: 'Nanum Myeongjo', serif;"><span th:text="|Ref. *{reserveNum} |">Ref. DIN-1042</span> <span class="text-secondary mx-2">|</span><span th:text="|*{reserveName} 님|"> 박현욱 님</span></p>
         </div>
 
         <div class="row">
     <div class="col-md-6">
         <div class="res-info-label"><i class="bi-egg-fried me-2"></i>Dining Type</div>
-        <div class="res-info-value text-uppercase">DINNER COURSE - NOIR SIGNATURE</div>
+        <div class="res-info-value text-uppercase" th:text="*{dinningName}">DINNER COURSE - NOIR SIGNATURE</div>
 
         <div class="res-info-label"><i class="bi bi-calendar-check me-2"></i>Reservation Schedule</div>
         <div class="res-info-value">
-            <span>2026-01-15</span>
+            <span th:text="*{visitDate}">2026-01-15</span>
             <span class="mx-2" style="opacity: 0.3;">|</span>
-            <span>19:30 PM</span>
-            <small class="text-secondary ms-1">(석식)</small>
+            <span th:text="*{visitTime}">19:30 PM</span>
+            <small class="text-secondary ms-1" th:text="| ( *{dinningType} ) | ">(석식)</small>
         </div>
 
         <div class="info-label-noir"><i class="bi bi-people me-2"></i>Number of Guests</div>
-        <div class="info-value-noir">성인 1 / 아동 2</div>
+        <div class="info-value-noir" th:text="|성인 *{adultCount} / 아동 *{childCount}|">성인 1 / 아동 2</div>
     </div>
 
     <div class="col-md-6 border-start border-secondary" style="--bs-border-opacity: .2;">
         <div class="res-info-label"><i class="bi bi-clock-history me-2"></i>Booked Date</div>
-        <div class="res-info-value">2026-01-01</div>
+        <div class="res-info-value" th:text="*{reserveDate}">2026-01-01</div>
         
         <div class="info-label-noir"><i class="bi bi-telephone me-2"></i>TEL</div>
-        <div class="info-value-noir">01012345678</div>
+        <div class="info-value-noir" th:text="*{tel}">01012345678</div>
         
          <div class="info-label-noir"><i class="bi bi-envelope me-2"></i>Contact</div>
-         <div class="info-value-noir">mellifluous53@gmail.com</div>
+         <div class="info-value-noir" th:text="*{email}">mellifluous53@gmail.com</div>
         
 
     </div>
         <div class="info-label-noir"><i class="bi bi-exclamation-circle me-2"></i>Allergies & Requests</div>
         <div class="info-value-noir text-secondary small">
-            No special requests.
+           <th:block th:if="*{reserveMsg eq null}">
+			    No special requests.
+			</th:block>
+			
+			<th:block th:unless="*{reserveMsg eq null}">
+			    <span th:text="*{reserveMsg}"></span>
+			</th:block>
         </div>
 </div>
 
@@ -488,37 +497,38 @@ F
                 <div class="d-flex align-items-center mb-2">
                     <i class="bi bi-credit-card-2-front fs-4 me-3 text-secondary"></i>
                     <div>
-                        <div class="small">MasterCard (Debit)</div>
-                        <div class="text-secondary small text-uppercase">**** **** **** 5678</div>
+                        <div class="small" th:text="*{payAgency}">MasterCard (Debit)</div>
+                        <div class="text-secondary small text-uppercase" th:text="*{cardData}">**** **** **** 5678</div>
                     </div>
                 </div>
-                <div class="small text-secondary mt-2">Paid on: 2025.12.20 14:30:22</div>
+                <div class="small text-secondary mt-2" th:text="|Paid on: *{payInputDate}|">Paid on: 2025.12.20 14:30:22</div>
             </div>
             
             <div class="col-md-7">
                 <div class="payment-summary-noir">
                     <div class="d-flex justify-content-between mb-2">
-                        <span class="small text-secondary">Course Price (Per person)</span>
-                        <span class="small text-white">KRW 1,200,000</span>
+                        <span class="small text-secondary">Course Price </span>
+                       <span class="small text-white" th:text="|KRW *{#numbers.formatInteger(roomPrice,3,'COMMA')}|">KRW 1,200,000</span>
                     </div>
                
                     <div class="d-flex justify-content-between mb-3">
                         <span class="small text-secondary">Tax & Service Charge (10%)</span>
-                        <span class="small text-info" >Included</span>
+                        <span class="small text-info" th:text="*{#numbers.formatInteger(roomTax,3,'COMMA')}">Included</span>
                     </div>
 			        <div class="d-flex justify-content-between mb-3">
 			        <span class="small text-danger">Current Cancellation Fee</span>
-			        <span class="small text-danger fw-bold">KRW 0 (Free)</span> 
+			        <span class="small text-danger fw-bold" >KRW 0 (Free)</span> 
 			        </div>
                     <div class="d-flex justify-content-between align-items-end pt-2 border-top border-secondary" style="--bs-border-opacity: .1;">
                         <span class="res-total-label">Total Amount</span>
                         <th:block th:if="*{reserveFlag eq 'Y'}"> 
 						    <span class="res-total-price" style="text-decoration: line-through;" th:text="|KRW *{#numbers.formatInteger(roomPriceTotal, 3, 'COMMA')}|">KRW -1,200,000</span>
 						</th:block>
-						
 						<th:block th:unless="*{reserveFlag eq 'Y'}">
 						    <span class="res-total-price" th:text="|KRW *{#numbers.formatInteger(roomPriceTotal, 3, 'COMMA')}|">KRW 1,200,000</span>
 						</th:block>
+						
+					
                    		
                     </div>
                 </div>
@@ -540,11 +550,11 @@ F
                     <button class="btn btn-action me-2" onclick="window.print()">
                         <i class="bi bi-printer me-2"></i>출력
                     </button>
-                  <!--   <th:block th:if="*{reserveFlag eq 'N'}"> -->
+                   <th:block th:if="*{reserveFlag ne 'Y' and !checkInToday}"> 
                     <button class="btn btn-noir-cancel" data-bs-toggle="modal" data-bs-target="#cancelModal">
                        예약취소
                     </button>
-                    <!-- </th:block> -->
+                     </th:block> 
                 </div>
             <button type="button" class="btn btn-link text-secondary text-decoration-none small backBtn" onclick="goBackToList()">뒤로가기</button>   
             <!--     <button class="btn btn-link text-secondary text-decoration-none small backBtn" th:onclick="|location.href='${param.from != null ? param.from[0] : '/mypage/reserve/hotelList'}'|">뒤로가기</button>
@@ -554,6 +564,14 @@ F
     
   	
 </div>
+	  <form th:action="@{/mypage/reserve/memberDinningList}" method="get" id="hiddenFrm">
+    	<input type="hidden" id="pageStartDate" name="pageStartDate" th:value="${param.pageStartDate}"/> 
+    	<input type="hidden" id="pageEndDate" name="pageEndDate"  th:value="${param.pageEndDate}"/>
+    	<input type="hidden" id="currentpage" name="currentpage" th:value="${param.currentpage}"/>
+    	<input type="hidden" id="monthBtnValue" name="monthBtnValue" 
+    	th:value="${param.monthBtnValue == null || param.monthBtnValue == ''} ? '' : ${param.monthBtnValue}"/>
+    
+    </form>
 
         </div>
     </div>
@@ -573,8 +591,8 @@ F
             </div>
             <div class="modal-footer border-0 justify-content-center">
                 <button type="button" class="btn btn-secondary btn-sm rounded-0 px-4" data-bs-dismiss="modal">아니오</button>
-                <form th:action="@{/mypage/reserve/cancelHotelReserve}" method="post" style="display:inline;">
-                     <input type="hidden" name="reserveNum" /> 
+                <form th:action="@{/mypage/reserve/cancelDinningReserve}" method="post" style="display:inline;">
+                     <input type="hidden" name="reserveNum" th:value="${dinningRevDetail.reserveNum}" /> 
                     <button type="submit" class="btn btn-danger btn-sm rounded-0 px-4">네, 취소합니다</button>
                 </form>
             </div>

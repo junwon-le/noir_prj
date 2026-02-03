@@ -2,7 +2,7 @@ package kr.co.noir.mypageReserve;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import kr.co.noir.login.LoginService;
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
@@ -11,6 +11,13 @@ import kr.co.noir.dao.MyBatisHandler;
 
 @Repository
 public class MypageReserveDAO {
+
+    private final LoginService loginService;
+
+
+    MypageReserveDAO(LoginService loginService) {
+        this.loginService = loginService;
+    }
 	
 	
 	
@@ -101,21 +108,42 @@ public class MypageReserveDAO {
 	}//selectDinningRevList
 	
 	
-	public List<DinningRevDetailDomain> selectDinningRevDetail(ReserveDetailDTO rdDTO) throws PersistenceException{
-		List<DinningRevDetailDomain> drdDomain=null;
+	public DinningRevDetailDomain selectDinningRevDetail(ReserveDetailDTO rdDTO) throws PersistenceException{
+		DinningRevDetailDomain drdDomain=null;
 		
 		SqlSession ss= MyBatisHandler.getInstance().getMyBatisHandler(false);
 		
-		drdDomain=ss.selectList("kr.co.noir.mypageReserve.dinningRevDetail",rdDTO);
+		drdDomain=ss.selectOne("kr.co.noir.mypageReserve.dinningRevDetail",rdDTO);
 		
 		if(ss !=null) {ss.close();}//end if
 		
-		System.out.println(drdDomain);
 		
 		return drdDomain;
 		
 		
 	}//selectHotelRevDetail
+	
+	
+	public boolean updateDinningReserve(int reserveNum)throws PersistenceException{
+		
+		boolean flag = false;
+		
+		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
+		
+		int revCnt=ss.update("kr.co.noir.mypageReserve.removeHotelReserve",reserveNum);
+		int payCnt=ss.update("kr.co.noir.mypageReserve.removeRevPay",reserveNum);
+		
+		if ((revCnt+payCnt)==2) { 
+            ss.commit();
+            System.out.println("DB 커밋 성공!");
+            flag=true;
+        } else {
+            ss.rollback();
+            System.out.println("조건 미달로 인한 롤백");
+        }//end else
+		
+		return flag;
+	}//updateDinningReserve
 	
 	
 }//class
