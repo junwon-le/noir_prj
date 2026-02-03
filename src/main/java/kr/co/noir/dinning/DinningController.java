@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import jakarta.servlet.http.HttpSession;
+
 @Controller
 public class DinningController {
 
@@ -51,7 +53,16 @@ public class DinningController {
 	}
 	
 	@GetMapping("/admin/dinningMgr")
-	public String dinningMgr(Model model) {
+	public String dinningMgr(Model model, HttpSession session) {
+		//session 체크 필요
+		String id = (String)session.getAttribute("adminId");
+		if(id==null || "".equals(id.trim())) {
+			
+			return "redirect:/adminLogin";
+		}
+		
+		
+		
 		List<DinningDomain> list=null;
 		list=ds.searchDetailDinning();
 		
@@ -67,7 +78,16 @@ public class DinningController {
 	
 	
 	@GetMapping("/admin/dinningMgrDetail")
-	public String dinningMgrDetail(Model model) {
+	public String dinningMgrDetail(Model model, HttpSession session) {
+		//session 체크 필요
+		String id = (String)session.getAttribute("adminId");
+		if(id==null || "".equals(id.trim())) {
+			
+			return "redirect:/adminLogin";
+		}
+		
+		
+		
 		List<DinningDomain> list=null;
 		list=ds.searchDetailDinning();
 		
@@ -90,7 +110,17 @@ public class DinningController {
 			@RequestParam(value="dinningImgFile3") MultipartFile mf3,
 			@RequestParam(value="dinningImgFile4") MultipartFile mf4,
 			@RequestParam(value="dinningImgFile5") MultipartFile mf5,	
-			DinningDTO dDTO, RedirectAttributes ra) throws IOException {
+			DinningDTO dDTO, RedirectAttributes ra, HttpSession session) throws IOException {
+		
+		//session 체크 필요
+		String id = (String)session.getAttribute("adminId");
+		if(id==null || "".equals(id.trim())) {
+			
+			return "redirect:/adminLogin";
+		}
+		
+		
+		
 		List<DinningDomain> list=null;
 		list=ds.searchDetailDinning();
 		
