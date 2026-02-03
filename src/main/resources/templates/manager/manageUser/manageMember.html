@@ -209,6 +209,7 @@ function deleteChecked() {
                         <select name="searchType" id="searchType" class="form-select">
                             <option value="num" th:selected="${searchType == 'num'}">회원번호</option>
                             <option value="id" th:selected="${searchType == 'id'}">아이디</option>
+                            <option value="name" th:selected="${searchType == 'name'}">이름</option>
                             <option value="tel" th:selected="${searchType == 'tel'}">전화번호</option>
                         </select>
                         <input type="text" name="keyword" id="keyword" class="form-input" placeholder="Search..." th:value="${keyword}">
@@ -236,7 +237,7 @@ function deleteChecked() {
                         <tr th:each="member : ${memberList}">
                             <td><input type="checkbox" name="memberCheck" th:value="${member.memberNum}"></td>
                             <td th:text="${#numbers.formatInteger(member.memberNum, 4)}">0001</td>
-                            <td th:text="${member.memberName}" style="color: white; font-weight: bold;">홍길동</td>
+                            <td th:text="${member.memberFirstName}" style="color: white; font-weight: bold;">홍길동</td>
                             <td th:text="${member.memberId}">user123</td>
                             <td th:text="${member.memberEmail}" style="text-align: left; padding-left: 10px;">user@example.com</td>
                             <td th:text="${member.memberTel != null ? member.memberTel : '-'}">010-1234-5678</td>

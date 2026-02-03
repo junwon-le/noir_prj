@@ -24,7 +24,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.servlet.http.HttpSession;
-import kr.co.noir.interceptor.UserInterceptor;
 
 @Controller
 public class RoomController {
@@ -80,6 +79,13 @@ public class RoomController {
 	public String roomMgr(Model model, HttpSession session, String date) {
 		
 		//session 체크 필요
+		String id = (String)session.getAttribute("adminId");
+		if(id==null || "".equals(id.trim())) {
+			
+			return "redirect:/adminLogin";
+		}
+		
+		
 		
 		List<RoomDomain> list = null;
 		list = rService.searchRoomList();
@@ -101,7 +107,7 @@ public class RoomController {
 		model.addAttribute("room",list);
 		model.addAttribute("todayPrice",rpDomain);
 		model.addAttribute("selectPrice",rpDomain2);
-		
+		model.addAttribute("sessionId",id);
 		
 		
 		return "/manager/room/roomManage";
@@ -111,7 +117,17 @@ public class RoomController {
 	
 	
 	@GetMapping("/admin/roomMgrModify")
-	public String roomMgrModify(String num, Model model) {
+	public String roomMgrModify(String num, Model model, HttpSession session) {
+		
+		//session 체크 필요
+		String id = (String)session.getAttribute("adminId");
+		if(id==null || "".equals(id.trim())) {
+			
+			return "redirect:/adminLogin";
+		}
+		
+		
+		
 		int number =  Integer.parseInt(num);
 		model.addAttribute("room",rService.searchDetailRoom(number));
 		
@@ -128,7 +144,14 @@ public class RoomController {
 			@RequestParam(value="roomImgFile3") MultipartFile mf3,
 			@RequestParam(value="roomImgFile4") MultipartFile mf4,
 			@RequestParam(value="roomImgFile5") MultipartFile mf5,	
-			RoomDTO rDTO, Model model, String num) throws IOException {
+			RoomDTO rDTO, Model model, String num, HttpSession session) throws IOException {
+		//session 체크 필요
+		String id = (String)session.getAttribute("adminId");
+		if(id==null || "".equals(id.trim())) {
+			
+			return "redirect:/adminLogin";
+		}
+		
 		
 		//System.out.println( mf1.getContentType() );
 		//System.out.println( mf1.getName() );
@@ -209,7 +232,15 @@ public class RoomController {
 	
 	
 	@GetMapping("/admin/roomManagePrice")
-	public String roomPrice() {
+	public String roomPrice(HttpSession session) {
+		
+		//session 체크 필요
+		String id = (String)session.getAttribute("adminId");
+		if(id==null || "".equals(id.trim())) {
+			
+			return "redirect:/adminLogin";
+		}
+		
 		
 		return "/manager/room/roomManagePrice";
 	}
@@ -237,7 +268,15 @@ public class RoomController {
 	}
 	
 	@PostMapping("/admin/roomManagePriceProcess")
-	public String roomManagePriceProcess(@RequestParam("roomPriceDates") List<Integer> roomPriceDate, RoomPriceDTO rDTO, RedirectAttributes ra) {
+	public String roomManagePriceProcess(@RequestParam("roomPriceDates") List<Integer> roomPriceDate, RoomPriceDTO rDTO, RedirectAttributes ra, HttpSession session) {
+		
+		//session 체크 필요
+		String id = (String)session.getAttribute("adminId");
+		if(id==null || "".equals(id.trim())) {
+			
+			return "redirect:/adminLogin";
+		}
+		
 		
 		int cnt=0;
 		String msg ="실패";
