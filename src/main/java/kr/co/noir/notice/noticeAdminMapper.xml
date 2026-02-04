@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.noir.notice">
+
+<!-- 전체 공지사항 개수 -->
+<select id="selectNoticeTotal"
+        parameterType="kr.co.noir.notice.BoardRangeDTO"
+        resultType="int">
+    select count(*)
+    from notice
+    <where>
+        notice_del_flag = 'N'
+
+        <!-- field=2~4: keyword가 카테고리 값(일반공지/멤버십/약관개정) -->
+        <if test="field != null and field != '' and field != '1'">
+            and ${category} = #{keyword}
+        </if>
+
+        <!-- field=1: keyword는 제목검색어 -->
+        <if test="(field == null or field == '' or field == '1') and keyword != null and keyword != ''">
+            and instr(notice_title, #{keyword}) != 0
+        </if>
+    </where>
+</select>
+
+<!-- 공지사항 목록 (페이징) -->
+<select id="selectNoticeList"
+        parameterType="kr.co.noir.notice.BoardRangeDTO"
+        resultType="kr.co.noir.notice.NoticeAdminDomain">
+    select
+        noticeNum,
+        noticeTitle,
+        noticeCategory,
+        noticeDate,
+        noticeMsg,
+        adminNum,
+        memberId
+    from (
+        select
+            notice_num as noticeNum,
+            notice_title as noticeTitle,
+            notice_category as noticeCategory,
+            notice_date as noticeDate,
+            notice_msg as noticeMsg,
+            admin_num as adminNum,
+            member_id as memberId,
+            row_number() over(order by notice_date desc) rnum
+        from notice
+        <where>
+            notice_del_flag = 'N'
+
+            <!-- field=2~4: keyword가 카테고리 값 -->
+            <if test="field != null and field != '' and field != '1'">
+                and ${category} = #{keyword}
+            </if>
+
+            <!-- field=1: keyword는 제목검색어 -->
+            <if test="(field == null or field == '' or field == '1') and keyword != null and keyword != ''">
+                and instr(notice_title, #{keyword}) != 0
+            </if>
+        </where>
+    )
+    where rnum between #{startNum} and #{endNum}
+</select>
+
+<!-- 공지사항 상세 (noticeNum 포함 추천) -->
+<select id="selectNoticeDetail" parameterType="int"
+        resultType="kr.co.noir.notice.NoticeAdminDomain">
+    select
+        notice_num as noticeNum,
+        notice_title as noticeTitle,
+        notice_category as noticeCategory,
+        notice_date as noticeDate,
+        notice_msg as noticeMsg,
+        admin_num as adminNum,
+        member_id as memberId
+    from notice
+    where notice_num = #{value}
+</select>
+	<!-- 공지사항 등록 -->
+	<insert id="insertNotice"
+		parameterType="kr.co.noir.notice.NoticeAdminDTO">
+		insert into notice (
+		notice_num,
+		notice_title,
+		notice_category,
+		notice_msg,
+		notice_date,
+		notice_del_flag
+		) values (
+		seq_notice.nextval,
+		#{noticeTitle},
+		#{noticeCategory},
+		#{noticeMsg},
+		sysdate,
+		'N'
+		)
+	</insert>
+
+	<!-- 공지사항 수정 -->
+	<update id="updateNotice"
+		parameterType="kr.co.noir.notice.NoticeAdminDTO">
+		update notice
+		set
+		notice_title = #{noticeTitle},
+		notice_category = #{noticeCategory},
+		notice_msg = #{noticeMsg}
+		where notice_num = #{noticeNum}
+	</update>
+
+
+<!-- 공지사항 삭제 (논리삭제) - 태그 update 추천 -->
+<update id="deleteNotice" parameterType="int">
+    update notice
+    set notice_del_flag = 'Y'
+    where notice_num = #{value}
+</update>
+
+
+</mapper>

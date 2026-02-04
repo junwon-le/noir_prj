@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="title" content="HOTEL 28">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>HOTEL 28</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.css" rel="stylesheet">
+<!-- jQeury CDN 시작 -->
+<link rel="stylesheet" type="text/css" href="/common/css/homepage/base.css">
+<link rel="stylesheet" type="text/css" href="/common/css/homepage/style.css?v=0312">
+<link rel="stylesheet" type="text/css" href="/common/css/homepage/sub.css?v=0312">
+<!-- jQeury CDN 시작 -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
+
+<script src="/common/js/comm/jquery.bxslider.js"></script>
+<script src="/common/js/homepage/jquery.rwdImageMaps.min.js"></script>
+<script src="/common/js/homepage/jquery.accessibility.modal.js"></script>
+<script src="/common/js/comm/jquery.cookie.js"></script>
+<script src="/common/js/homepage/plugin.js"></script>
+<script src="/common/js/homepage/custom.js"></script>
+</head>
+
+
+
+<style>
+
+/* ===============================
+	   Admin - Notice Search UI (Light)
+	   =============================== */
+
+
+	   
+.notice-search-bar {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin-bottom: 25px;
+}
+
+/* 카테고리 버튼 */
+.room-type-select {
+	margin-bottom: 10px;
+	min-width: 130px;
+	background: #ffffff;
+	color: #b1c1e2;
+	border: 1px solid #e3e8f3;
+	padding: 8px 12px;
+	border-radius: 8px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	
+}
+
+.room-type-select:hover {
+	background: #f6f8fc;
+}
+
+/* 검색 입력창 */
+.notice-search-input {
+	width: 240px;
+	background: #ffffff;
+	border: 1px solid #e3e8f3;
+	color: #b1c1e2;
+	padding: 8px 12px;
+	border-radius: 8px;
+}
+
+.notice-search-input::placeholder {
+	color: #b1c1e2;
+	opacity: 0.7;
+}
+
+/* 검색 버튼 */
+.notice-search-btn {
+	background: #b1c1e2;
+	color: #ffffff;
+	border: 1px solid #e3e8f3;
+	padding: 8px 18px;
+	font-weight: 600;
+	border-radius: 8px;
+	transition: all 0.2s ease;
+}
+
+.notice-search-btn:hover {
+	background: #f6f8fc;
+}
+
+.notice-detail-btns .notice-write-btn:hover {
+	opacity: 0.85;
+}
+
+.notice-detail-btns {
+	padding: 0 4px;
+}
+
+/* ===============================
+   Admin - Notice Table
+   =============================== */
+.notice-table-wrap {
+	background: #ffffff;
+	border: 1px solid #e3e8f3;
+	border-radius: 12px;
+	padding: 10px;
+}
+
+/* 테이블 기본 */
+.notice-table {
+	margin-bottom: 0;
+	color: #38599a;
+}
+
+/* 헤더 */
+.notice-table thead th {
+	background: #f6f8fc;
+	color: #38599a;
+	font-weight: 600;
+	text-align: center;
+	border-bottom: 1px solid #e3e8f3;
+}
+
+/* 바디 */
+.notice-table tbody td {
+	text-align: center;
+	vertical-align: middle;
+	border-top: 1px solid #e3e8f3;
+}
+
+/* 제목만 좌측 정렬 */
+.notice-table tbody td:nth-child(3) {
+	text-align: left;
+}
+
+/* hover 효과 */
+.notice-table tbody tr:hover {
+	background: #f9fbff;
+}
+
+/* 하단 버튼 영역 */
+.notice-table-footer {
+	text-align: right;
+	margin-top: 12px;
+}
+
+/* 답변쓰기 버튼 */
+.notice-write-btn {
+	background: #b1c1e2;
+	color: #ffffff;
+	border: 1px solid #e3e8f3;
+	padding: 8px 18px;
+	border-radius: 8px;
+	font-weight: 600;
+	transition: all 0.2s ease;
+}
+
+.notice-detail-btns {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-top: 15px;
+}
+
+/* 삭제 */
+.notice-detail-btns .btn-delete {
+	background: #c0392b;
+}
+
+/* 취소 */
+.notice-detail-btns .btn-cancel {
+	background: #7f8c8d;
+	margin-right: 10px;
+}
+
+#adminReply {
+    background: #ffffff !important;
+    color: #333333 !important;
+    border: 1px solid #e3e8f3;
+}
+
+</style>
+
+</head>
+
+<body>
+	<!--[if lt IE 8]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+	<jsp:include page="fragments/sidebar.jsp" />
+	<!-- Start Welcome area -->
+	<div class="all-content-wrapper">
+		<div class="header-advance-area">
+			<div class="breadcome-area">
+				<div class="container">
+					<div class="row">
+						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+							<div class="breadcome-list">
+								<div class="row">
+									<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+										<div class="breadcomb-wp"
+											style="color: #ffffff; font-size: 20px">후기 관리</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--         <div class="contatiner" style="height:700px; color:#ffffff">-->
+		<div class="container" style="color: white; min-height: 700px">
+
+
+			<!-- 타이틀 -->
+			<div style="margin-bottom: 20px;">
+				<h3 style="font-weight: 600;">후기 목록</h3>
+			</div>
+			
+				
+	        <!-- 객실 카테고리 -->
+	        <div class="dropdown search-filter">
+	            <button class="room-type-select dropdown-toggle"
+	                type="button" data-toggle="dropdown" id="field_text">
+	                객실 타입 선택
+	            </button>
+	            <input type="hidden" name="field" id="field_value" value="1">
+	
+	            <ul class="dropdown-menu">
+	                <li><a class="dropdown-item" data-value="1">객실타입</a></li>
+	                <li><a class="dropdown-item" data-value="2">STANDARD QUEEN</a></li>
+	                <li><a class="dropdown-item" data-value="3">SEMI-DELUXE DOUBLE</a></li>
+	                <li><a class="dropdown-item" data-value="4">DELUXE DOUBLE</a></li>
+	                <li><a class="dropdown-item" data-value="5">DELUXE TWIN</a></li>
+	                <li><a class="dropdown-item" data-value="6">FAMILY TWIN</a></li>
+	            </ul>
+	        </div>
+				
+			
+			<!-- 검색 영역 -->
+			<form id="searchFrm">
+				<!-- 후기 목록 테이블 -->
+				<div class="table-responsive notice-table-wrap">
+					<table class="table notice-table">
+						<thead>
+							<tr>
+								<th style="width: 80px;">번호</th>
+								<th>제목</th>
+								<th style="width: 120px;">작성자</th>
+								<th style="width: 120px;">등록일</th>
+								<th style="width: 120px;">별점</th>
+								<th style="width: 120px;">답변여부</th>
+							</tr>
+						</thead>
+						<tbody>
+
+							<!-- 게시글 없을 때 -->
+							<c:if test="${empty reviewList}">
+								<tr>
+									<td colspan="6" style="padding: 40px; color: #b1c1e2;">
+										작성된 후기가 없습니다.</td>
+								</tr>
+							</c:if>
+
+							<!-- 게시글 있을 때 -->
+							<c:forEach var="review" items="${reviewList}">
+								<!-- 🔴 [수정] 클릭 시 후기 선택 -->
+								<tr style="cursor: pointer;"
+									onclick="selectReview(
+                        '${review.reviewNo}',
+                        '${review.writer}',
+                        '${review.rating}',
+                        '${review.content}',
+                        '${review.replyFlag}'
+                    )">
+									<!-- ⭐⭐⭐ 이거 별 로 나옴-->
+									<td>${review.reviewNo}</td>
+									<td style="text-align: left;">${review.title}</td>
+									<td>${review.writer}</td>
+									<td>${review.regDate}</td>
+									<td>${review.rating}</td>
+									<td>${review.replyFlag}</td>
+
+								</tr>
+							</c:forEach>
+
+						</tbody>
+					</table>
+				</div>
+	
+	
+				<div id="reviewDetailBox" class="d-none">
+				
+				<!-- 후기 상세 테이블 -->
+				<h3 style="font-weight: 600; margin-top: 40px; margin-bottom: 10px;">후기
+					상세</h3>
+				<div class="notice-table-wrap" style="margin-top: 40px;">
+
+
+					<table class="table notice-table">
+						<tbody>
+							<tr>
+								<th style="width: 150px;">제목</th>
+								<td id="detailTitle">-</td>
+							</tr>
+							<tr>
+								<th style="width: 150px;">작성자</th>
+								<td id="detailWriter">-</td>
+							</tr>
+							<tr>
+								<th>평점</th>
+								<td id="detailRating">-</td>
+							</tr>
+							<tr>
+								<th>후기 내용</th>
+								<td id="detailContent" style="height: 100px;">-</td>
+							</tr>
+							<tr>
+								<th>관리자 답변</th>
+								<td><textarea id="adminReply" class="form-control"
+										style="height: 120px;" placeholder="관리자 답변을 입력하세요">
+</textarea></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<!-- 버튼 영역  -->
+				<div class="notice-detail-btns">
+
+					<!-- 삭제 -->
+					<button type="button" class="notice-write-btn btn-delete"
+						onclick="deleteReview()">삭제</button>
+
+					<!-- 취소 / 답변 -->
+					<div>
+						<button type="button" class="notice-write-btn btn-cancel"
+							onclick="cancelReply()">취소</button>
+						<button type="button" class="notice-write-btn"
+							onclick="submitReply()">답변</button>
+					</div>
+
+				</div>
+				
+				</div> <!-- reviewDetailBox 끝 -->
+				
+			</form>
+
+		</div>
+
+		<!-- 페이징 -->
+		<div id="pagination" style="text-align: center; margin-top: 30px;">
+			<c:out value="${pagination}" escapeXml="false" />
+		</div>
+
+
+	</div>
+
+	<jsp:include page="fragments/footer.jsp"></jsp:include>
+
+	<!-- jquery
+		============================================ -->
+	<script src="js/vendor/jquery-1.12.4.min.js"></script>
+	<!-- bootstrap JS
+		============================================ -->
+	<script src="js/bootstrap.min.js"></script>
+	<!-- wow JS
+		============================================ -->
+	<script src="js/wow.min.js"></script>
+	<!-- price-slider JS
+		============================================ -->
+	<script src="js/jquery-price-slider.js"></script>
+	<!-- meanmenu JS
+		============================================ -->
+	<script src="js/jquery.meanmenu.js"></script>
+	<!-- owl.carousel JS
+		============================================ -->
+	<script src="js/owl.carousel.min.js"></script>
+	<!-- sticky JS
+		============================================ -->
+	<script src="js/jquery.sticky.js"></script>
+	<!-- scrollUp JS
+		============================================ -->
+	<script src="js/jquery.scrollUp.min.js"></script>
+	<!-- mCustomScrollbar JS
+		============================================ -->
+	<script src="js/scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+	<script src="js/scrollbar/mCustomScrollbar-active.js"></script>
+	<!-- metisMenu JS
+		============================================ -->
+	<script src="js/metisMenu/metisMenu.min.js"></script>
+	<script src="js/metisMenu/metisMenu-active.js"></script>
+	<!-- sparkline JS
+		============================================ -->
+	<script src="js/sparkline/jquery.sparkline.min.js"></script>
+	<script src="js/sparkline/jquery.charts-sparkline.js"></script>
+	<!-- calendar JS
+		============================================ -->
+	<script src="js/calendar/moment.min.js"></script>
+	<script src="js/calendar/fullcalendar.min.js"></script>
+	<script src="js/calendar/fullcalendar-active.js"></script>
+	<!-- float JS
+		============================================ -->
+	<script src="js/flot/jquery.flot.js"></script>
+	<script src="js/flot/jquery.flot.resize.js"></script>
+	<script src="js/flot/curvedLines.js"></script>
+	<script src="js/flot/flot-active.js"></script>
+	<!-- plugins JS
+		============================================ -->
+	<script src="js/plugins.js"></script>
+	<!-- main JS
+		============================================ -->
+	<script src="js/main.js"></script>
+
+
+	<!-- 공지사항 페이지 전용 JS -->
+	<script>
+		$(function() {
+
+			$('.search-filter .dropdown-item').on('click', function(e) {
+				e.preventDefault();
+
+				$('#field_text').text($(this).text());
+				$('#field_value').val($(this).data('value'));
+			});
+
+			$('#writeBtn').on('click', function() {
+				$('#noticeFrm').submit();
+			});
+		});
+
+		function search() {
+			$('#searchFrm').submit();
+		}
+		
+		function selectReview() {
+		    $('#reviewDetailBox').removeClass('d-none');
+		}
+	</script>
+
+</body>
+
+</html>
