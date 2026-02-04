@@ -8,11 +8,17 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.client.RestTemplate;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
+	@Bean
+	public RestTemplate restTemplate() {
+		return new RestTemplate();
+	}
+	
     private final CustomOAuth2UserService customOAuth2UserService;
 
     // 생성자 주입 방식 권장
