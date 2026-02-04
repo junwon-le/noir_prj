@@ -111,6 +111,8 @@ public class ReserveController {
 		if(!flag) {
 			url="reserve/err";
 		}
+		model.addAttribute("reserve" , rrDTO);
+		model.addAttribute("pay" , pDTO);
 		//예약 완료 시 보류 테이블에서 삭제 
 		rrs.deleteDepending(id);
 		
@@ -132,6 +134,8 @@ public class ReserveController {
 		if(!flag) {
 			url="reserve/err";
 		}
+		model.addAttribute("reserve" , rrDTO);
+		model.addAttribute("pay" , pDTO);
 		//예약 완료 시 보류 테이블에서 삭제 
 		rrs.deleteDepending(id);
 		

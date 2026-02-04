@@ -222,31 +222,33 @@ width:100%;
     <p class="subtitle">Your booking confirmed. A detailed email sent to your inbox.</p>
 
     <div class="reservation-card">
-        <div class="res-no">RESERVATION NO. 2026.013-A001</div>
+        <div class="res-no">RESERVATION NO. <span th:text="${reserve.reserve_num}">2026.013-A001</span></div>
         
-        <div class="details">
+        <div class="details" th:object="${reserve}">
             <div class="info-text">
                 <div class="info-row">
-                    <span class="info-label">GUEST:</span> Kim Jiwoo
+                    <span class="info-label">GUEST:</span> <span th:text="|*{user_last_name} *{user_first_name}|">예약자명</span>
                 </div>
                 <div class="info-row" style="margin-left: 60px; color: #ccc;">
-                    Deluxe Twin / 1 Night
+                <th:block th:each="roomName : *{room_type}">
+                    <span th:text="${roomName}">객실 이름</span>
+                </th:block>
                 </div>
                 <div class="info-row">
-                    <span class="info-label">DATES:</span> 2026.01.07 - 1박
+                    <span class="info-label">DATES:</span> <span th:text="|*{startDate} ~ *{endDate}|">체크인 날짜 - 박 수</span>
                 </div>
             </div>
             
             <div class="price-area">
-                <span class="total-price">₩280,500 원</span>
+                <span class="total-price" th:text="|${#numbers.formatInteger(pay.pay_price, 3, 'COMMA')}원|">가격</span>
                 <span class="payment-status">Payment due upon check-in</span>
             </div>
         </div>
     </div>
 
     <div class="button-group">
-        <a href="#" class="btn btn-manage">View  Booking</a>
-        <a href="#" class="btn btn-main">Back to Main</a>
+        <a href="/reserve/roomResSearch" class="btn btn-manage">View  Booking</a>
+        <a href="/main" class="btn btn-main">Back to Main</a>
     </div>
 
     <p class="footer-note">Online reservations not include payment. Please present valid ID at check-in.</p>
