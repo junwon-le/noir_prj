@@ -73,4 +73,27 @@
             #{memberProvider}, #{memberProviderId}
         )
     </insert>    
+	<update id="upsertSnsToken" parameterType="kr.co.noir.login.SnsTokenDTO">
+	    MERGE INTO MEMBER_SNS_TOKEN t
+	    USING dual ON (t.MEMBER_NUM = #{memberNum} AND t.PROVIDER = #{provider})
+	    WHEN MATCHED THEN
+	        UPDATE SET 
+	            ACCESS_TOKEN = #{accessToken},
+	            REFRESH_TOKEN = #{refreshToken},
+	            TOKEN_EXPIRES_AT = #{tokenExpiresAt},
+	            UPDATE_DATE = SYSDATE
+	    WHEN NOT MATCHED THEN
+	        INSERT (MEMBER_NUM, PROVIDER, ACCESS_TOKEN, REFRESH_TOKEN, TOKEN_EXPIRES_AT, UPDATE_DATE)
+	        VALUES (#{memberNum}, #{provider}, #{accessToken}, #{refreshToken}, #{tokenExpiresAt}, SYSDATE)
+	</update>
+	<select id="selectSnsToken" resultType="kr.co.noir.login.SnsTokenDTO">
+	    SELECT MEMBER_NUM, PROVIDER, ACCESS_TOKEN, REFRESH_TOKEN, TOKEN_EXPIRES_AT
+	    FROM MEMBER_SNS_TOKEN
+	    WHERE MEMBER_NUM = #{memberNum} AND PROVIDER = #{provider}
+	</select>
+	
+	<delete id="deleteSnsToken">
+	    DELETE FROM MEMBER_SNS_TOKEN 
+	    WHERE MEMBER_NUM = #{memberNum} AND PROVIDER = #{provider}
+	</delete>	
 </mapper>

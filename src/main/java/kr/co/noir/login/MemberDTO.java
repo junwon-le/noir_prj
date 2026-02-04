@@ -40,4 +40,5 @@ public class MemberDTO {
         }
         return memberFirstName; // 성이 없는 경우 이름만 반환
     }
+    
 }

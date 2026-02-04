@@ -46,12 +46,19 @@ public interface MemberMapper {
     int updateMembersDelete(@Param("memberNums") List<Integer> memberNums);    
     
     // SNS 가입 처리 
-    // 1. 기존 가입 여부 확인 (Provider와 ProviderId의 조합으로 조회)
+    // 기존 가입 여부 확인 (Provider와 ProviderId의 조합으로 조회)
     MemberDTO findByProviderAndId(@Param("provider") String provider, 
                                   @Param("providerId") String providerId);
 
-    // 2. 신규 SNS 유저 등록
+    // 신규 SNS 유저 등록
     int insertSnsMember(MemberDTO member);    
     
+    // 향후 SNS 탈퇴 처리를 위한 토큰 등록
+    void upsertSnsToken(SnsTokenDTO tokenDTO);
+    
+    // 매개변수가 2개 이상일 때는 반드시 이름을 지정해줘야 XML에서 인식한다.
+    SnsTokenDTO selectSnsToken(@Param("memberNum") int memberNum, @Param("provider") String provider);
+
+    void deleteSnsToken(@Param("memberNum") int memberNum, @Param("provider") String provider);
     
 }
