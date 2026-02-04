@@ -213,37 +213,29 @@
 			<input type="hidden" id="flashMsg" th:value="${msg}">
 
 
-			<form id="searchFrm" th:action="@{/notice/searchAllNotice}"
-				method="get">
-				<div class="notice-search-bar">
+<form id="searchFrm" th:action="@{/notice/searchAllNotice}" method="get">
+  <div class="notice-search-bar">
 
-					<!-- 검색 필드 (카테고리 코드) -->
-					<select class="form-control" name="field" style="max-width: 180px;">
-						<option value="1"
-							th:selected="${param.field == null || param.field[0] == '1'}">전체</option>
-						<option value="2"
-							th:selected="${param.field != null && param.field[0] == '2'}">일반공지</option>
-						<option value="3"
-							th:selected="${param.field != null && param.field[0] == '3'}">멤버십</option>
-						<option value="4"
-							th:selected="${param.field != null && param.field[0] == '4'}">약관개정</option>
+    <!-- 카테고리/필드 -->
+    <select class="form-select" name="field" style="max-width: 180px;">
+      <option value="1" th:selected="${param.field == null || param.field[0] == '1'}">전체</option>
+      <option value="2" th:selected="${param.field != null && param.field[0] == '2'}">일반공지</option>
+      <option value="3" th:selected="${param.field != null && param.field[0] == '3'}">멤버십</option>
+      <option value="4" th:selected="${param.field != null && param.field[0] == '4'}">약관개정</option>
+    </select>
 
-					</select>
+    <!-- 검색어 -->
+    <input type="text" name="keyword" class="notice-search-input"
+           placeholder="검색어를 입력하세요"
+           th:value="${param.keyword != null ? param.keyword[0] : ''}" />
 
-					<!-- 검색어 -->
-					<input type="text" name="keyword" class="notice-search-input"
-						placeholder="검색어를 입력하세요"
-						th:value="${param.keyword != null ? param.keyword[0] : ''}" />
+    <!-- ✅ 검색할 때는 항상 1페이지부터 -->
+    <input type="hidden" name="currentPage" value="1" />
 
-					<!-- 현재 페이지 -->
-<input type="hidden" id="currentPage" name="currentPage"
-       th:value="${param.currentPage == null || #strings.isEmpty(param.currentPage[0]) ? '1' : param.currentPage[0]}" />
+    <button type="submit" class="notice-search-btn">조회</button>
+  </div>
+</form>
 
-
-
-					<button type="submit" class="notice-search-btn">조회</button>
-				</div>
-			</form>
 
 			<!-- 테이블 -->
 			<div class="table-responsive notice-table-wrap">
@@ -273,12 +265,18 @@
 							<td th:text="${notice.noticeCategory}">카테고리</td>
 							<td th:text="${notice.noticeNum}">1</td>
 							<td>
-								<!-- ✅ 상세보기 링크: currentPage 유지 --> <a class="notice-title-link"
-								th:href="@{/notice/searchDetailNotice(
-  								  noticeNum=${notice.noticeNum},
- 							   currentPage=${param.currentPage != null ? param.currentPage[0] : 1}
-								)}"
-								th:text="${notice.noticeTitle}"> 제목 </a>
+								<!-- ✅ 상세보기 링크: currentPage 유지 -->
+<a class="notice-title-link"
+   th:href="@{/notice/searchDetailNotice(
+      noticeNum=${notice.noticeNum},
+      currentPage=${param.currentPage != null ? param.currentPage[0] : 1},
+      field=${param.field != null ? param.field[0] : '1'},
+      keyword=${param.keyword != null ? param.keyword[0] : ''}
+   )}"
+   th:text="${notice.noticeTitle}">
+  제목
+</a>
+
 							</td>
 							<td th:text="${notice.adminNum}">0</td>
 							<td th:text="${#dates.format(notice.noticeDate,'yyyy.MM.dd')}">2026.02.03</td>

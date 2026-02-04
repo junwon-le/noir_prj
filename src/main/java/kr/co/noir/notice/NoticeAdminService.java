@@ -67,29 +67,40 @@ public class NoticeAdminService {
         }
         return list;
     }
-
+    
+    
+    //카테고리 
     public void setCategory(BoardRangeDTO rDTO) {
 
-        if (rDTO.getField() == null || rDTO.getField().equals("1")) {
-            rDTO.setCategory(null); // 전체
+        String field = rDTO.getField();
+        String keyword = rDTO.getKeyword();
+
+        // 1) keyword가 ""(빈값/공백)이면 null로 정리 (XML if 조건 안정화)
+        if (keyword != null && keyword.trim().isEmpty()) {
+            rDTO.setKeyword(null);
+        }
+
+        // 2) 카테고리 선택(field 2~4)이면 category 세팅 + keyword는 끈다
+        if ("2".equals(field)) {
+            rDTO.setCategory("일반");
+            rDTO.setKeyword(null);
+            return;
+        }
+        if ("3".equals(field)) {
+            rDTO.setCategory("멤버십");
+            rDTO.setKeyword(null);
+            return;
+        }
+        if ("4".equals(field)) {
+            rDTO.setCategory("약관개정");
+            rDTO.setKeyword(null);
             return;
         }
 
-        // 공지사항은 카테고리 컬럼 하나로 통일
-        rDTO.setCategory("NOTICE_CATEGORY");
-
-        switch (rDTO.getField()) {
-            case "2":
-                rDTO.setKeyword("일반공지");
-                break;
-            case "3":
-                rDTO.setKeyword("멤버십");
-                break;
-            case "4":
-                rDTO.setKeyword("약관개정");
-                break;
-        }
+        // 3) 그 외(field 1/null/기타)는 카테고리 조건 없음(전체/제목검색)
+        rDTO.setCategory(null);
     }
+
 
     
 	 //제목이 20자를 초과하면 19자까지 보여주고 뒤에 ..을 붙이는일

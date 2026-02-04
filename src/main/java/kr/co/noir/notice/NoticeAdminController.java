@@ -99,23 +99,23 @@ public class NoticeAdminController {
     }
     
     
-  //공지사항 수정
+ // 공지사항 수정
     @PostMapping("/modifyNoticeProcess")
     public String modifyNoticeProcess(NoticeAdminDTO naDTO,
                                       @RequestParam(defaultValue = "1") int currentPage,
-                                      Model model,
+                                      RedirectAttributes ra,
                                       HttpServletRequest request) {
 
         naDTO.setIp(request.getRemoteAddr());
 
-        int cnt = nas.modifyNotice(naDTO); // 보통 1/0 리턴
-        boolean flag = (cnt == 1);
+        int cnt = nas.modifyNotice(naDTO); // 1 or 0
 
-        model.addAttribute("flag", flag);
-        model.addAttribute("currentPage", currentPage);
+        ra.addFlashAttribute("msg",
+                cnt == 1 ? "수정되었습니다." : "수정에 실패했습니다.");
 
-        return "notice/modifyNoticeProcess"; // ✅ notice 폴더로
+        return "redirect:/notice/searchAllNotice?currentPage=" + currentPage;
     }
+
 
     
     

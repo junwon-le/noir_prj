@@ -16,7 +16,7 @@ import lombok.ToString;
 
 public class NoticeAdminDTO {
 	
-		private int noticeNum, memberId, adminNum; 
+		private int noticeNum, adminNum; 
 		private String noticeTitle,noticeMsg,noticeCategory, ip;
 		private Date noticeDate;
 

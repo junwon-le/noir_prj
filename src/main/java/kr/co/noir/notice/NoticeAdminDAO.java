@@ -17,7 +17,7 @@ public class NoticeAdminDAO {
 	public int selectNoticeTotal(BoardRangeDTO rDTO) throws SQLException{
 		int totalCnt = 0;
 		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
-		totalCnt = ss.selectOne("kr.co.noir.notice.selectNoticeTotal",rDTO);
+		totalCnt = ss.selectOne("kr.co.noir.noticeAdmin.selectNoticeTotal",rDTO);
 		
 		if(ss !=null) {ss.close();}
 		return totalCnt;
@@ -28,7 +28,7 @@ public class NoticeAdminDAO {
 	   public List<NoticeAdminDomain> selectNoticeList(BoardRangeDTO rDTO) throws SQLException{
 		      List<NoticeAdminDomain> list = null; 
 		      SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
-		      list = ss.selectList("kr.co.noir.notice.selectNoticeList",rDTO);
+		      list = ss.selectList("kr.co.noir.noticeAdmin.selectNoticeList",rDTO);
 		      if(ss !=null) {ss.close();}
 		      
 		      return list;
@@ -40,7 +40,7 @@ public class NoticeAdminDAO {
 		   NoticeAdminDomain nDomain = null;
 		   	
 			SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
-			nDomain = ss.selectOne("kr.co.noir.notice.selectNoticeDetail",noticeNum);
+			nDomain = ss.selectOne("kr.co.noir.noticeAdmin.selectNoticeDetail",noticeNum);
 			
 			if(ss !=null) {ss.close();}
 			return nDomain;
@@ -53,7 +53,7 @@ public class NoticeAdminDAO {
 			SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
 
 			// 2. 쿼리문 수행 후 결과 얻기
-			ss.insert("kr.co.noir.notice.insertNotice", naDTO);
+			ss.insert("kr.co.noir.noticeAdmin.insertNotice", naDTO);
 			// 3. 결과 작업
 			// 4.MyBatis Handler 닫기
 			if (ss != null) {
@@ -66,7 +66,7 @@ public class NoticeAdminDAO {
 		public int updateNotice(NoticeAdminDTO naDTO) throws SQLException {
 			int cnt = 0;
 			SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
-			cnt = ss.update("kr.co.noir.notice.updateNotice", naDTO);
+			cnt = ss.update("kr.co.noir.noticeAdmin.updateNotice", naDTO);
 			if (ss != null) {
 				ss.close();
 			}
@@ -77,7 +77,7 @@ public class NoticeAdminDAO {
 
 			int cnt = 0;
 			SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
-			cnt = ss.update("kr.co.noir.notice.deleteNotice", noticeNum);
+			cnt = ss.update("kr.co.noir.noticeAdmin.deleteNotice", noticeNum);
 			if (ss != null) {
 				ss.close();
 			}

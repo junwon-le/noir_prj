@@ -16,7 +16,7 @@ import lombok.ToString;
 
 public class NoticeAdminDomain {
 	
-		private int noticeNum, memberId, adminNum; 
+		private int noticeNum, adminNum; 
 		private String noticeTitle,noticeMsg,noticeCategory;
 		private Date noticeDate;
 	}
