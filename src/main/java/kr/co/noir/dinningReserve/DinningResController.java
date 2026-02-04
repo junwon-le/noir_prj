@@ -1,7 +1,6 @@
 package kr.co.noir.dinningReserve;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.servlet.http.HttpSession;
-import kr.co.noir.reserve.RoomDependingDTO;
 
 @RequestMapping("/dinningRes")
 @Controller
@@ -22,12 +20,12 @@ public class DinningResController {
 
 	
 	@Autowired
-	private dinningReserveService drs;
+	private DinningReserveService drs;
 
 	
 	@GetMapping("/dinningResSearch")
 	public String dinningResSearch(Model model) {
-		List<DinningSearchDomain> list = drs.SearchDinning();
+		List<DinningMenuDomain> list = drs.SearchDinning();
 		model.addAttribute("dinning", list);
 		return "/reserve/dinningResSearch";
 	}//dinningResSearch
@@ -38,9 +36,13 @@ public class DinningResController {
 	}//dinningReserve
 	
 	@ResponseBody
-	@GetMapping("/dinningTime/{type}")
-	public List<DinningTimeSearchDomain> dinningTimeSearch(@PathVariable String type) {
-		List<DinningTimeSearchDomain> list = drs.SearchDinningTime(type);
+	@GetMapping("/dinningTime/{dinningType}/{dinningDate}")
+	public List<DinningSearchDomain> dinningTimeSearch(@PathVariable String dinningType,@PathVariable String dinningDate) {
+		DinningSearchDTO ddDTO = new DinningSearchDTO();
+		ddDTO.setDinningDate(dinningDate);
+		ddDTO.setDinningType(dinningType);
+		System.out.println(ddDTO);
+		List<DinningSearchDomain> list = drs.SearchDinningTime(ddDTO);
 		return list;
 	}//dinningTimeSearch
 	
@@ -50,7 +52,8 @@ public class DinningResController {
 		try {
 			String JSessionId ="user1";
 			ddDTO.setSessionId(JSessionId);
-	        boolean flag = true;
+			System.out.println(ddDTO);
+	        boolean flag = drs.addDepending(ddDTO);
 	        if(flag) {
 	        	return ResponseEntity.ok("success"); 
 	        }else {
@@ -61,7 +64,7 @@ public class DinningResController {
 	    } catch (Exception e) {
 	        // 3. 실패 응답 보내기 (HTTP 400 또는 500)
 	        // 이렇게 보내면 axios의 .catch() 블록이 실행됩니다.
-	    	return ResponseEntity.badRequest().body("이미 예약된 객실이 포함되어 있습니다.");
+	    	return ResponseEntity.badRequest().body("이미 예약중인 내역이 있습니다.");
 	    }
 	}
 }

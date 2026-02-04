@@ -8,8 +8,10 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface DinningReserveMapper {
 
-	public List<DinningSearchDomain> selectDinning() ;
+	public List<DinningMenuDomain> selectDinning() ;
 	
-	public List<DinningTimeSearchDomain> selectDinningTime(String type) ;
+	public List<DinningSearchDomain> selectDinningSearch(DinningSearchDTO dsDTO) ;
+	
+	public int insertDepending(DinningDependingDTO dDTO);
 	
 }
