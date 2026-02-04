@@ -518,7 +518,7 @@ $(function(){
         <h3>회원정보수정 <span><sup>*</sup> 필수 입력 항목입니다</span></h3>
     </div>
 
-    <form id="frm" action="/mypage/info/memberModityProcess" method="post" th:object="${miDomain}">
+    <form id="frm" th:action="@{/mypage/info/memberModityProcess}" method="post" th:object="${miDomain}">
         <div class="form-group-custom" >
             <label class="label-custom" >이름<sup><i>*</i></sup></label>
             <div style="max-width: 300px; display: flex">

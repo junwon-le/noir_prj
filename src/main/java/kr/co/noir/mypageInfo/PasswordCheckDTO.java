@@ -10,6 +10,7 @@ import lombok.ToString;
 public class PasswordCheckDTO {
 
 	private String memberid;
+	private String memberProd;
 	private String currentPassword;
 	private String newPassword,ConfirmPassword; 
 }

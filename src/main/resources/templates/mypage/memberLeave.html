@@ -304,6 +304,17 @@ height:auto;
     	text-decoration: none;	
     
     }
+    
+    .btn-confirm.big{
+    
+    	width: 50%;
+    	height: 50px;
+    	font-size: 16px;
+    }
+    
+    .btn-confirm.big:hover {
+	color: block;
+	}
 
 
 </style>
@@ -363,6 +374,20 @@ $(document).ready(function($) {
     });//click
     
     
+    $("#platformBtn").click(function(){
+    	var agreeChecked = $("#agree").prop("checked");
+    	
+    	if(!agreeChecked){
+    		 showHotelAlert("회원탈퇴 유의사항을 확인하신 후<br>동의 체크박스를 클릭해 주세요.");
+    		 return false;
+    	}//end if
+    	
+    	   var confirmModal = new bootstrap.Modal(document.getElementById('hotelConfirmModal'));
+           confirmModal.show();
+    	
+    });//click 
+    
+    
     
     
 /* 
@@ -396,6 +421,7 @@ $(document).ready(function($) {
         $('form[action="deleteAccount.do"]')[0].submit();
     }); */
 });
+
 
 
 
@@ -458,14 +484,19 @@ $(document).ready(function($) {
                         </label>
                     </div>
 				
+	                    <th:block th:if="${session.memberProd =='local'}">
                     <div class="confirm-wrapper">
-                        <input type="password" id="password" name="currentPassword" class="pw-input" placeholder="PASSWORD" maxlength="20">
-                        <!-- <button type="submit" class="btn-confirm">CONFIRM</button> -->
-                        <input type="button" id="btn" class="btn-confirm" value="확인"/> 
-
-
+	                        <input type="password" id="password" name="currentPassword" class="pw-input" placeholder="PASSWORD" maxlength="20">
+	                        <!-- <button type="submit" class="btn-confirm">CONFIRM</button> -->
+	                        <input type="button" id="btn" class="btn-confirm" value="확인"/> 
                     </div>
+						</th:block>
+						<th:block th:unless="${session.memberProd == 'local'}">
+							<input type="button" value="회원탈퇴" class="btn-confirm big" id="platformBtn" />
+						</th:block>
                </form>
+            
+				 
 
             </div>
         </div>
@@ -482,6 +513,8 @@ $(document).ready(function($) {
             <div class="modal-footer hotel-modal-footer">
                 <button type="button" class="btn hotel-modal-btn" data-bs-dismiss="modal">확인</button>
             </div>
+            
+            
         </div>
     </div>
 </div>
@@ -505,6 +538,8 @@ $(document).ready(function($) {
                 <button type="button" id="btnFinalSubmit" class="btn hotel-modal-btn">탈퇴하기</button> -->
 <!--                 <from th:action="@{}"> -->
                 <input type="button" id="Confirmbtn" class="btn hotel-modal-btn" value="탈퇴하기"/>
+                
+                
 <!--           	</from>  --> 
             </div>
         </div>

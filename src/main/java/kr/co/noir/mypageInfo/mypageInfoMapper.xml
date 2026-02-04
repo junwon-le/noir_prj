@@ -55,8 +55,16 @@
 	
 	<update id="removeMember" parameterType="passwordCheckDTO">
 		update member
-		set member_id='',member_pass='',member_email='',member_tel='',member_ip='',member_first_name='',member_last_name='',member_birth='',member_del_flag='Y'
-		where member_id=#{memberid}
+		<choose>
+			<when test="memberProd == 'local'">
+				set member_id='',member_pass='',member_email='',member_tel='',member_ip='',member_first_name='',member_last_name='',member_birth='',member_del_flag='Y'
+			</when>
+			<otherwise>
+				set member_del_flag='Y'
+			</otherwise>
+		</choose>
+				where member_id=#{memberid}
+		
 	</update>
 </mapper>
 

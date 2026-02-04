@@ -74,6 +74,7 @@ public class MypageModifyDAO {
 		SqlSession ss= MyBatisHandler.getInstance().getMyBatisHandler(true);
 		cnt=ss.update("kr.co.noir.mypageInfo.removeMember",pcDTO);
 		
+		System.out.println("개수라능"+cnt);
 		if(ss!=null) {ss.close();}//end if
 		return cnt==1;
 		
