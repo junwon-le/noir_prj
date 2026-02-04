@@ -1,5 +1,4 @@
 package kr.co.noir.mypageInfo;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,16 +13,35 @@ import kr.co.noir.login.MemberDTO;
 @Controller
 public class MyPageInfoController {
 
-	
+
+
 	@Autowired
 	MypageModifySevice mms;
 
 
+  
+
+
+
 //============================회원정보 수정================================	
 	@GetMapping("/passwordCheck")
-	public String passwoadCheck(HttpSession session) {
-		return "/mypage/passwordCheck";
+	public String passwoadCheck(HttpSession session,Model model) {
+		  String memberProd= (String)session.getAttribute("memberProd");
+		  String userId = (String)session.getAttribute("memberId");
+		  String uri="/mypage/passwordCheck";
+		  if(!memberProd.equals("local")) {
+			  
+		    	MemberInfoDomain miDomain = mms.searchMemmberInfo(userId);
+		    	model.addAttribute("miDomain", miDomain);
+		    	uri = "/mypage/memberModify"; // 맞으면 이동할 페이지 변경
+		  }//end if
+		
+		
+		return uri;
 	}//passwoadCheck
+	
+	
+	
 	
 	
 	@PostMapping("/passwordCheckProcess")
@@ -44,7 +62,7 @@ public class MyPageInfoController {
 	    	uri = "/mypage/memberModify"; // 맞으면 이동할 페이지 변경
 	    } else {
 	        model.addAttribute("flag", true); // 틀리면 경고용 플래그 전달
-	    }
+	    }//end else 
 	    
 	    return uri;
 	}//passwordCheckProcess
@@ -55,6 +73,8 @@ public class MyPageInfoController {
 	@PostMapping("/memberModityProcess")
 	public String memberModityProcess(HttpSession session, MemberDTO mDTO,Model model) {
 		mDTO.setMemberId((String)session.getAttribute("memberId"));
+	  
+	    
 		String uri = "/mypage/memberModify";
 		if(mms.modifyMemberInfo(mDTO)) {
 			
@@ -108,31 +128,94 @@ public class MyPageInfoController {
 	}//memberLeave
 	
 	@PostMapping("/removeMember")
-	public String removeMember(PasswordCheckDTO pcDTO,HttpSession session,Model model) {
-		
-		
-		String userId = (String)session.getAttribute("memberId");
-
-	    // 2. 기본 결과 페이지는 다시 입력 폼으로 설정
-	    String uri = "/mypage/memberLeave";
-	    
+	public String removeMember(PasswordCheckDTO pcDTO, HttpSession session, Model model) {
+	    String userId = (String) session.getAttribute("memberId");
+	    String memberProd = (String) session.getAttribute("memberProd");
 	    pcDTO.setMemberid(userId);
-	    
-	    // 3. 비밀번호 검증 로직
-	    if (mms.searchPasswordCheck(pcDTO)) {
-	    	
-	    	boolean flag=mms.removeMember(pcDTO);
-	    	if(flag) {
-	    		session.invalidate();
-	    		model.addAttribute("msg","회원탈퇴가 정상적으로 완료되었습니다.");
-	    		return"/mypage/successPage";
-	    	}else {
-	    		model.addAttribute("flag", true); // 틀리면 경고용 플래그 전달
-	    	}//end else
-	    } else {
-	        model.addAttribute("flag", true); // 틀리면 경고용 플래그 전달
-	    }//end else
-	    
+	    pcDTO.setMemberProd(memberProd);
+
+
+	    String uri = "/mypage/memberLeave";
+	    boolean passCheckFlag = true; 
+
+	    // 1. 로컬 로그인만 비번 검증
+	    if ("local".equals(memberProd)) {
+	        passCheckFlag = mms.searchPasswordCheck(pcDTO);
+	    }//end if
+
+	    // 2. 삭제 로직 진입
+	    if (passCheckFlag) {
+	        boolean flag = mms.removeMember(pcDTO); 
+
+	        if (flag) {
+	            session.invalidate();
+	            model.addAttribute("msg", "회원탈퇴가 정상적으로 완료되었습니다.");
+	            return "/mypage/successPage";
+	        } //end if
+	    }//end if
+
+	    model.addAttribute("flag", true); 
 	    return uri;
 	}//removeMember
+	
+	
+	
+//	@PostMapping("/removeMember")
+//	public String removeMember(PasswordCheckDTO pcDTO,HttpSession session,Model model) {
+//		
+//		
+//		String userId = (String)session.getAttribute("memberId");
+//		String memberProd= (String)session.getAttribute("memberProd");
+//		pcDTO.setMemberid(userId);
+//		
+//		System.out.println("로그인 타입: " + memberProd); // [체크 1] kakao가 맞는지
+//		System.out.println("로그인 아이디: "+pcDTO.getMemberid());
+//	    // 2. 기본 결과 페이지는 다시 입력 폼으로 설정
+//	    String uri = "/mypage/memberLeave";
+//	    
+//	   
+////	    if(memberProd.equals("local")) {
+////			    // 3. 비밀번호 검증 로직
+////			    if (mms.searchPasswordCheck(pcDTO)) {
+////			    	
+////			    	boolean flag=mms.removeMember(pcDTO);
+////			    	if(flag) {
+////			    		session.invalidate();
+////			    		model.addAttribute("msg","회원탈퇴가 정상적으로 완료되었습니다.");
+////			    		return"/mypage/successPage";
+////			    	}else {
+////			    		model.addAttribute("flag", true); // 틀리면 경고용 플래그 전달
+////			    	}//end else
+////			    }   
+//////			    else {
+//////			        model.addAttribute("flag", true); // 틀리면 경고용 플래그 전달
+//////			    }//end else
+////	    }//end if 
+//	    
+//	    
+//	    boolean passCheckFlag=true;
+//	    boolean flag=true;
+//	    if("local".equals(memberProd)) {
+//	    	passCheckFlag=mms.searchPasswordCheck(pcDTO);
+//	    	 }//end if
+//	    System.out.println("비번 거림"+passCheckFlag);
+//	    if(passCheckFlag) {
+//	    	
+//	    	flag=mms.removeMember(pcDTO);
+//	    	System.out.println(flag);
+//	    	System.out.println("DB 삭제 결과: " + flag); // [체크 2] 여기서 false가 나면 안 넘어감
+//	    	if(flag) {
+//	    		session.invalidate();
+//	    		model.addAttribute("msg","회원탈퇴가 정상적으로 완료되었습니다.");
+//	    		return"/mypage/successPage";
+//	    	}
+//	    }
+//	    
+//	    	model.addAttribute("flag", flag); // 틀리면 경고용 플래그 전달
+//	    
+//	    //로컬이면 비밀번호 검증을 하고 이하 작업이 같고
+//	    //로컬이 아니면 이하 작업이 같다.
+//	    return uri;
+//	}//removeMember
+	
 }//class

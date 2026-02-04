@@ -26,6 +26,8 @@
      	 <typeAlias type="kr.co.noir.mypageReserve.ReserveSearchDTO" alias="reserveSearchDTO"/>   
      	 <typeAlias type="kr.co.noir.mypageReserve.ReserveDetailDTO" alias="reserveDetailDTO"/>   
      	 <typeAlias type="kr.co.noir.mypageReserve.HotelRevDetailDomain" alias="hotelRevDetailDomain"/>   
+     	 <typeAlias type="kr.co.noir.mypageReserve.DinningRevSearchDomain" alias="dinningRevSearchDomain"/>   
+     	 <typeAlias type="kr.co.noir.mypageReserve.DinningRevDetailDomain" alias="dinningRevDetailDomain"/>   
 	
 		<!-- 이준원 사용 -->
 		<typeAlias type="kr.co.noir.reserve.RoomSearchDomain" alias="roomSearchDomain"/><!-- 방 검색 -->		
@@ -59,6 +61,7 @@
 	<mapper resource="mapper/LoginMapper.xml"/> 
     <mapper resource="kr/co/noir/inquiry/inquiryMapper.xml"/>
     <mapper resource="kr/co/noir/notice/noticeMapper.xml"/>
+    <mapper resource="kr/co/noir/notice/noticeAdminMapper.xml"></mapper>
     <mapper resource="mapper/AdminMapper.xml"/>
   </mappers>
 </configuration>

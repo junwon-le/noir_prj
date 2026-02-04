@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -89,5 +93,21 @@ public class AdminController {
         return "FAIL";
     }
 
+
+    @GetMapping("/adminLogout")
+    public String adminLogout(HttpServletRequest request, HttpServletResponse response) {
+        // 1. 현재 로그인된 사용자의 인증 정보를 가져옴.
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        // 2. 인증 정보가 존재한다면 로그아웃 핸들러를 통해 로그아웃 처리함
+        if (auth != null) {
+            new SecurityContextLogoutHandler().logout(request, response, auth);
+        }
+
+        // 3. 로그아웃 후 관리자 로그인 페이지로 리다이렉트한다.
+        // 뒤에 ?logout 쿼리 파라미터를 붙여 로그인 페이지에서 "로그아웃 되었습니다" 메시지를 띄울 수 있음.
+        return "redirect:/adminLogin?logout";
+    }
+    
     
 }//AdminController

@@ -9,22 +9,35 @@ import lombok.ToString;
 @ToString
 public class ReserveDetailDomain {
 
-	private int reserveNum,adultCount,childCount,cancelFee,
-	roomPrice,roomTax,roomPriceTotal;
+	/*같은거
+	 * reserveNum,reserveName,reserveDate,reserveEmail,reserveTel,adultCnt,kidCnt
+	 * payAgency,cardNum,payInputDate,reserveStatus,reserveMsg
+	 */
+	
+	/*다른거
+	 * roomType,startDate,endDate,checkInTime,checkOutTime
+	 * 
+	 * 
+	 * */
+	
+	
+	private int reserveNum,adultCount,childCount,
+	price,tax,priceTotal;
 	private String reserveName,email,tel,reserveMsg,reserveFlag,
-	payAgency,cardData;
-	private Date payInputDate;
+	payAgency,cardData,reserveDate,cancelFee;
+	private String payInputDate;
+	private boolean checkInToday;
 	
 	public int getRoomPrice() {
-		roomPrice = (int)(roomPriceTotal / 1.1);
-	    return roomPrice;
+		price = (int)(priceTotal / 1.1);
+	    return price;
 	}
 	public int getRoomTax() {
-		roomTax = roomPriceTotal - (int)(roomPriceTotal / 1.1);
-	    return roomTax;
+		tax = priceTotal - (int)(priceTotal / 1.1);
+	    return tax;
 	}
 	public int getRoomPriceTotal() {
-		return roomPriceTotal;
+		return priceTotal;
 	}
 	public int getReserveNum() {
 		return reserveNum;
@@ -35,7 +48,9 @@ public class ReserveDetailDomain {
 	public int getChildCount() {
 		return childCount;
 	}
-	public int getCancelFee() {
+	public String getCancelFee() {
+		
+		
 		return cancelFee;
 	}
 	public String getReserveName() {
@@ -59,7 +74,13 @@ public class ReserveDetailDomain {
 	public String getCardData() {
 		return cardData;
 	}
-	public Date getPayInputDate() {
+	public String getPayInputDate() {
 		return payInputDate;
+	}
+	public String getReserveDate() {
+		return reserveDate;
+	}
+	public boolean isCheckInToday() {
+		return checkInToday;
 	}
 }

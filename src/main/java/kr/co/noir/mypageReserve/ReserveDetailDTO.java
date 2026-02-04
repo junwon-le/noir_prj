@@ -11,5 +11,9 @@ public class ReserveDetailDTO {
 	private String memberId;
 	private int reserveNum;
 	private String reserveType;
+	private String pageStartDate,pageEndDate;
+	private int currentpage;
+	private String monthBtnValue;
+	
 	
 }//class

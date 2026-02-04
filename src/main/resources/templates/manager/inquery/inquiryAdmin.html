@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="title" content="HOTEL 28">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>HOTEL 28</title>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.css" rel="stylesheet">
+<!-- jQeury CDN 시작 -->
+<link rel="stylesheet" type="text/css" href="/common/css/homepage/base.css">
+<link rel="stylesheet" type="text/css" href="/common/css/homepage/style.css?v=0312">
+<link rel="stylesheet" type="text/css" href="/common/css/homepage/sub.css?v=0312">
+<!-- jQeury CDN 시작 -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
+
+<script src="/common/js/comm/jquery.bxslider.js"></script>
+<script src="/common/js/homepage/jquery.rwdImageMaps.min.js"></script>
+<script src="/common/js/homepage/jquery.accessibility.modal.js"></script>
+<script src="/common/js/comm/jquery.cookie.js"></script>
+<script src="/common/js/homepage/plugin.js"></script>
+<script src="/common/js/homepage/custom.js"></script>
+</head>
+
+
+
+<style>
+
+/* ===============================
+   Inquiry List (Light Admin)
+   =============================== */
+.inquiry-row.active {
+	background: #eef3ff;
+}
+
+/* 카드 */
+.inquiry-card {
+	background: #ffffff;
+	border-radius: 14px;
+	border: 1px solid #e3e8f3;
+	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+	overflow: hidden;
+}
+
+/* 테이블 */
+.inquiry-table {
+	background: transparent;
+	color: #38599a;
+	margin-bottom: 0;
+}
+
+.inquiry-table thead {
+	background: #f6f8fc;
+}
+
+.inquiry-table thead th {
+	border-bottom: 1px solid #e3e8f3;
+	color: #38599a;
+	font-weight: 600;
+	padding: 14px;
+}
+
+/* 바디 */
+.inquiry-table tbody td {
+	border-top: 1px solid #e3e8f3;
+	padding: 14px;
+	vertical-align: middle;
+}
+
+/* 행 hover */
+.inquiry-row {
+	cursor: pointer;
+	transition: background 0.2s ease;
+}
+
+.inquiry-row:hover {
+	background: #f9fbff;
+}
+
+/* 제목 왼쪽 정렬 */
+.inquiry-table .text-left {
+	text-align: left;
+}
+
+/* 데이터 없을 때 */
+.empty-text {
+	padding: 40px 0;
+	color: #b1c1e2;
+	font-size: 14px;
+}
+
+/* 페이징 */
+.pagination-wrap {
+	text-align: center;
+	margin-top: 20px;
+}
+
+/* ===============================
+   Inquiry Detail (Light Admin)
+   =============================== */
+#inquiryDetailBox {
+	margin-top: 40px;
+}
+
+/* 상세 패널 */
+.inquiry-detail-panel {
+	background: #ffffff;
+	border: 1px solid #e3e8f3;
+	border-radius: 12px;
+	padding: 20px;
+}
+
+/* 상세 테이블 */
+.inquiry-detail-table {
+	color: #38599a;
+	font-size: 15px;
+}
+
+.inquiry-detail-table th {
+	width: 160px;
+	background: #f6f8fc;
+	color: #38599a;
+	font-weight: 600;
+	vertical-align: middle;
+	padding: 16px;
+}
+
+.inquiry-detail-table td {
+	padding: 16px;
+	background: #ffffff;
+}
+
+/* 문의 내용 */
+#detailContent {
+	min-height: 120px;
+	line-height: 1.6;
+}
+
+/* 답변 textarea */
+#detailAnswer {
+	min-height: 160px;
+	font-size: 14px;
+	border: 1px solid #e3e8f3;
+}
+
+/* 버튼 영역 */
+.inquiry-detail-actions {
+	margin-top: 20px;
+	text-align: right;
+}
+
+.inquiry-detail-actions button {
+	min-width: 100px;
+	margin-left: 8px;
+}
+
+/* 버튼 톤 통일 */
+#answerBtn {
+	background: linear-gradient(135deg, #3f5fa9, #2b4a87);
+	border: none;
+	color: #ffffff;
+	font-weight: 600;
+}
+
+#answerBtn:hover {
+	background: linear-gradient(135deg, #4b6fc0, #345aa0);
+}
+
+#deleteBtn {
+	background: #c94a4a;
+	border: none;
+	color: #ffffff;
+}
+
+#deleteBtn:hover {
+	background: #b13e3e;
+}
+
+#detailAnswer:enabled {
+	background: #ffffff;
+	border: 1px solid #3f5fa9;
+}
+/* 페이지네이션 위치 */
+.inquiry-pagination {
+	margin-top: 28px;
+	text-align: center;
+}
+
+/* 검색 버튼 (관리자 톤) */
+.btn-search {
+	background: #b1c1e2;
+	border: none;
+	color: #ffffff;
+	font-weight: 600;
+	height: 34px;
+	padding: 6px 16px;
+}
+
+.btn-search:hover {
+	background: linear-gradient(135deg, #4b6fc0, #345aa0);
+	color: #ffffff;
+}
+
+#searchFrm .form-control {
+	height: 34px;
+	font-size: 14px;
+}
+
+/* 검색 input 전용 */
+#searchFrm .form-control {
+	margin-bottom: 0;
+	min-width: 130px;
+	background: #ffffff;
+	color: #38599a;
+	border: 1px solid #e3e8f3;
+	padding: 8px 12px;
+	border-radius: 8px;
+}
+
+.form-control:hover {
+	background: #f6f8fc;
+}
+</style>
+
+</head>
+
+<body>
+	<!--[if lt IE 8]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+	<jsp:include page="fragments/sidebar.jsp" />
+	<!-- Start Welcome area -->
+	<div class="all-content-wrapper">
+		<div class="header-advance-area">
+			<div class="breadcome-area">
+				<div class="container">
+					<div class="row">
+						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+							<div class="breadcome-list">
+								<div class="row">
+									<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+										<div class="breadcomb-wp"
+											style="color: #ffffff; font-size: 20px">문의사항 관리</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--         <div class="contatiner" style="height:700px; color:#ffffff">-->
+		<div class="container" style="color: #ffffff; min-height: 700px">
+
+			<!-- 타이틀 -->
+			<div style="margin-bottom: 20px;">
+				<h3 style="font-weight: 600;">문의사항 목록</h3>
+			</div>
+
+			<!-- 검색 영역 -->
+			<div style="margin: 20px 0; text-align: left;">
+				<form id="searchFrm" action="inquiry_list.do" method="get"
+					class="form-inline">
+					<input type="hidden" name="page" value="1"> <input
+						type="text" name="keyword" value="${param.keyword}"
+						class="form-control" placeholder="제목 검색"
+						style="width: 220px; margin-right: 6px;">
+
+					<button type="submit" class="btn btn-search">검색</button>
+
+				</form>
+			</div>
+
+
+			<!-- 목록 테이블 -->
+			<div class="panel panel-default inquiry-card">
+				<div class="panel-body" style="padding: 0;">
+
+					<table class="table inquiry-table text-center">
+						<thead>
+							<tr>
+								<th style="width: 80px;">번호</th>
+								<th>제목</th>
+								<th style="width: 150px;">작성자</th>
+								<th style="width: 120px;">등록일</th>
+							</tr>
+						</thead>
+						<tbody>
+							<c:forEach var="inquiry" items="${inquiryList}">
+								<tr class="inquiry-row">
+									<td>${inquiry.no}</td>
+									<td class="text-left">${inquiry.title}</td>
+									<td>${inquiry.writer}</td>
+									<td>${inquiry.regDate}</td>
+								</tr>
+							</c:forEach>
+
+							<c:if test="${empty inquiryList}">
+								<tr>
+									<td colspan="4" class="empty-text">등록된 문의가 없습니다.</td>
+								</tr>
+							</c:if>
+						</tbody>
+					</table>
+
+
+				</div>
+			</div>
+
+			<div class="pagination-wrap">
+				<c:choose>
+					<c:when test="${empty pagination}">
+						<ul class="pagination">
+							<li class="active"><a href="#">1</a></li>
+						</ul>
+					</c:when>
+					<c:otherwise>
+						<c:out value="${pagination}" escapeXml="false" />
+					</c:otherwise>
+				</c:choose>
+			</div>
+
+			<div id="inquiryDetailBox" class="d-none">
+
+				<div class="panel inquiry-detail-panel">
+					<div class="panel-body">
+
+						<input type="hidden" id="detailNo">
+
+						<table class="table table-bordered inquiry-detail-table">
+							<tr>
+								<th>제목</th>
+								<td id="detailTitle" class="text-muted">문의를 선택해주세요.</td>
+							</tr>
+							<tr>
+								<th>이메일</th>
+								<td id="detailEmail">-</td>
+							</tr>
+							<tr>
+								<th>글쓴이</th>
+								<td id="detailWriter">-</td>
+							</tr>
+							<tr>
+								<th>문의 내용</th>
+								<td id="detailContent">-</td>
+							</tr>
+							<tr>
+								<th>답변</th>
+								<td><textarea id="detailAnswer" class="form-control"
+										placeholder="문의 선택 후 답변을 작성할 수 있습니다." disabled></textarea></td>
+							</tr>
+						</table>
+
+						<div class="inquiry-detail-actions">
+							<button class="btn btn-danger" id="deleteBtn" disabled>삭제</button>
+							<button class="btn btn-secondary" id="answerBtn" disabled>답변</button>
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+
+		</div>
+	</div>
+
+
+	<!-- ================== /본문 ================== -->
+
+
+
+	<jsp:include page="fragments/footer.jsp"></jsp:include>
+
+	<!-- jquery
+		============================================ -->
+	<script src="js/vendor/jquery-1.12.4.min.js"></script>
+	<!-- bootstrap JS
+		============================================ -->
+	<script src="js/bootstrap.min.js"></script>
+	<!-- wow JS
+		============================================ -->
+	<script src="js/wow.min.js"></script>
+	<!-- price-slider JS
+		============================================ -->
+	<script src="js/jquery-price-slider.js"></script>
+	<!-- meanmenu JS
+		============================================ -->
+	<script src="js/jquery.meanmenu.js"></script>
+	<!-- owl.carousel JS
+		============================================ -->
+	<script src="js/owl.carousel.min.js"></script>
+	<!-- sticky JS
+		============================================ -->
+	<script src="js/jquery.sticky.js"></script>
+	<!-- scrollUp JS
+		============================================ -->
+	<script src="js/jquery.scrollUp.min.js"></script>
+	<!-- mCustomScrollbar JS
+		============================================ -->
+	<script src="js/scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+	<script src="js/scrollbar/mCustomScrollbar-active.js"></script>
+	<!-- metisMenu JS
+		============================================ -->
+	<script src="js/metisMenu/metisMenu.min.js"></script>
+	<script src="js/metisMenu/metisMenu-active.js"></script>
+	<!-- sparkline JS
+		============================================ -->
+	<script src="js/sparkline/jquery.sparkline.min.js"></script>
+	<script src="js/sparkline/jquery.charts-sparkline.js"></script>
+	<!-- calendar JS
+		============================================ -->
+	<script src="js/calendar/moment.min.js"></script>
+	<script src="js/calendar/fullcalendar.min.js"></script>
+	<script src="js/calendar/fullcalendar-active.js"></script>
+	<!-- float JS
+		============================================ -->
+	<script src="js/flot/jquery.flot.js"></script>
+	<script src="js/flot/jquery.flot.resize.js"></script>
+	<script src="js/flot/curvedLines.js"></script>
+	<script src="js/flot/flot-active.js"></script>
+	<!-- plugins JS
+		============================================ -->
+	<script src="js/plugins.js"></script>
+	<!-- main JS
+		============================================ -->
+	<script src="js/main.js"></script>
+
+	<!-- 공지사항 페이지 전용 JS -->
+	<script>
+        $(function () {
+        	$('.inquiry-row').on('click', function () {
+        	    $('.inquiry-row').removeClass('active');
+        	    $(this).addClass('active');
+				
+        	    // 상세 패널 표시
+        	    $('#inquiryDetailBox').removeClass('d-none');
+        	    
+        	    // 이후 상세 데이터 로딩 처리
+        	});
+
+
+        }
+    </script>
+
+</body>
+
+</html>

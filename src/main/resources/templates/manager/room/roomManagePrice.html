@@ -278,13 +278,10 @@ $(function () {
     $("#allSel").change(function () {
         $(".holiday, .workday").prop("checked", false);
 
-        $(".holiday").prop("checked", function (i, ele) {
-            return !ele;
-        });
-
-        $(".workday").prop("checked", function (i, ele) {
-            return !ele;
-        });
+        if (this.checked) {
+            $(".holiday").prop("checked", true);
+            $(".workday").prop("checked", true);
+        }
     });
 
     $("#holSel").change(function () {
@@ -307,12 +304,10 @@ $(function () {
         history.back();
     });
 
-    /* ===============================
-       ✅ 달력 초기화 (중요)
-    =============================== */
+    //달력 초기화
     const roomTypeNum = $("#roomTypeNum").val();
 
-    // sessionStorage → 없으면 현재 월
+    // sessionStorage  없으면 현재 월
     const savedMonth = sessionStorage.getItem("roomPriceMonth");
     const initMonth = savedMonth ?? new Date().toISOString().slice(0, 7);
 

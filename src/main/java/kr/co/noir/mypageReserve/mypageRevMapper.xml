@@ -3,14 +3,14 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.noir.mypageReserve">
-<!-- 임시  -->
+<!-- 임시  --> 
 	 <select id="selectTotalCnt" parameterType="reserveSearchDTO" resultType="int">
 		
 					select count(*)
 					from  member m,reserve r
 					where r.member_num = m.member_num
 					and member_id=#{memberId}
-			      	AND r.reserve_type = 'room'
+			      	AND r.reserve_type = #{reserveType}
 			      	<if test="startDate != null">
 			       	   AND r.reserve_start_date <![CDATA[>=]]> #{startDate}
 			      	</if>
@@ -52,141 +52,150 @@
 </select>
 
 
-<!-- 
- <select id="hotelRevDetail" parameterType="reserveDetailDTO" resultType="hotelRevDetailDomain">
+<resultMap type="hotelRevDetailDomain" id="hrdDomain">
+	<result column="reserve_num" property="reserveNum"></result>
+	<result column="room_type" property="roomType"></result>
+	<result column="reserveName" property="reserveName"></result>
+	<result column="reserve_start_date" property="startDate"></result>
+	<result column="reserve_end_date" property="endDate"></result>
+	<result column="checkInTime" property="checkInTime"></result>
+	<result column="checkOutTime" property="checkOutTime"></result>
+	<result column="reserveDate" property="reserveDate"></result>
+	<result column="reserve_email" property="email"></result>
+	<result column="reserve_tel" property="tel"></result>
+	<result column="reserve_adult_count" property="adultCount"></result>
+	<result column="reserve_kid_count" property="childCount"></result>
+	<result column="pay_agency" property="payAgency"></result>
+	<result column="card_num" property="cardData"></result>
+	<result column="reserve_msg" property="reserveMsg"></result>
+	<result column="reserve_status" property="reserveFlag"></result>
+	<result column="pay_price" property="priceTotal"></result>
+	<result column="payInputDate" property="payInputDate"></result>
+</resultMap>
+
+ 
+ <select id="hotelRevDetail" parameterType="reserveDetailDTO" resultMap="hrdDomain">
    
-			   SELECT
-			    m.member_email AS email,
-			    m.member_tel AS tel,
-			    r.reserve_num AS reserveNum,
-			    r.end_user_last_name || r.end_user_first_name AS reserveName,
-			    r.reserve_adult_count AS adultCount,
-			    r.reserve_kid_count AS kidCount,
-			    r.reserve_msg AS reserveMsg,
-			    r.reserve_time AS reserveDate,
-			    r.reserve_status AS reserveFlag,
-			    ri.room_type AS roomType,
-			    p.pay_price AS roomPriceTotal,
-			    TO_CHAR(r.RESERVE_START_DATE, 'yyyy-MM-dd') AS checkIn,
-			    TO_CHAR(r.RESERVE_END_DATE, 'yyyy-MM-dd') AS checkOut
-			FROM member m, reserve r, room_res rr, room_info ri, pay p
-			WHERE m.member_num = r.member_num
-			  AND r.reserve_num = rr.reserve_num
-			  AND rr.room_type_num = ri.room_type_num
-			  AND rr.room_res_num = p.room_res_num
-			  AND m.member_id = #{memberId}
-			  AND r.reserve_num = #{reserveNum}
-			  AND r.reserve_type = #{reserveType}
+	select r.reserve_num,ri.room_type,r.END_USER_LAST_NAME||r.END_USER_FIRST_NAME as reserveName,
+	r.reserve_start_date,r.reserve_end_date
+	,to_char(to_date(ri.room_check_in,'HH24:MI') ,'HH24:MI AM','NLS_DATE_LANGUAGE=AMERICAN') as checkInTime
+	,to_char(to_date(ri.room_check_out,'HH24:MI') ,'HH24:MI AM','NLS_DATE_LANGUAGE=AMERICAN') as checkOutTime
+	,to_char(r.reserve_time,'yyyy-MM-dd')as reserveDate
+	,r.reserve_email
+	,r.reserve_tel
+	,r.reserve_adult_count
+	,r.reserve_kid_count
+	,pi.pay_agency
+	,pi.card_num
+	,to_char(pi.input_date,'yyyy-MM-dd AM HH24:MI') as payInputDate
+	,r.reserve_msg
+	,p.pay_price
+	,r.reserve_status
+	from  reserve r,room_res rr,room_info ri,pay p,pay_info pi
+	where r.reserve_num=rr.reserve_num
+		and rr.room_type_num=ri.room_type_num
+		and p.reserve_num=r.reserve_num
+		and p.pay_num=pi.pay_num
+		and r.member_num=(select member_num from member where member_id=#{memberId})
+		and r.RESERVE_TYPE='room'
+		and r.reserve_num=#{reserveNum}
 </select> 
 
-<update id="removeHotelReserve" parameterType="int" >
+ <update id="removeHotelReserve" parameterType="int" >
 	update reserve
 	set reserve_status='Y'
 	where reserve_num=#{reserveNum}
-
 </update>
 <update id="removeRevPay" parameterType="int">
 	update pay 
     set pay_refund_state = 'Y', 
                pay_refund_time = sysdate 
-    where room_res_num = (
-             select room_res_num 
-             FROM room_res 
-             WHERE reserve_num = #{reserveNum}
-         )
+    where reserve_num = #{reserveNum}
+        
 	
 
-</update>
- -->
+</update> 
+ 
 
 
 <!-- =====================================끝===================================== -->
 
 
-<!-- 이게 중욧 -->
-<!-- 	<select id="hotelRevList" parameterType="reserveSearchDTO" resultType="hotelRevSearchDomain">
-    SELECT 
-        reserveNum, reserveDate, roomType, checkIn, checkOut, reservePerson, reserveFlag
-    FROM (
-        SELECT 
-            ROW_NUMBER() OVER (ORDER BY r.reserve_num DESC) AS rnum,
-            r.reserve_num AS reserveNum,      
-            TRUNC(r.reserve_time) AS reserveDate, 
-            ri.room_type AS roomType,         
-            TRUNC(rr.room_res_start_date) AS checkIn,
-            TRUNC(rr.room_res_end_date) AS checkOut,
-            (r.reserve_adult_count + r.reserve_kid_count) AS reservePerson, 
-            r.reserve_status AS reserveFlag   
-        FROM member m
-        JOIN reserve r ON m.member_num = r.member_num
-        JOIN room_res rr ON r.reserve_num = rr.reserve_num
-        JOIN room_info ri ON rr.room_type_num = ri.room_type_num
-        WHERE m.member_id = #{memberId}
-          AND r.reserve_type = 'room'
-          ) 
-    WHERE rnum BETWEEN #{startNum} AND #{endNum}
-</select> -->
-
-
-
-<!-- <select id="hotelRevList" parameterType="reserveSearchDTO" resultType="hotelRevSearchDomain">
-    SELECT
-        r.reserve_num AS reserveNum,      
-        TRUNC(r.reserve_time) AS reserveDate, 
-        ri.room_type AS roomType,         
-        TRUNC(rr.room_res_start_date) AS checkIn,
-        TRUNC(rr.room_res_end_date) AS checkOut,
-        (r.reserve_adult_count + r.reserve_kid_count) AS reservePerson, 
-        r.reserve_status AS reserveFlag   
-        FROM member m
-			    JOIN reserve r ON m.member_num = r.member_num
-			    JOIN room_res rr ON r.reserve_num = rr.reserve_num
-			    JOIN room_info ri ON rr.room_type_num = ri.room_type_num
-			    WHERE m.member_id = #{memberId}
-			      AND r.reserve_type = 'room'
-			      <if test="startDate != null">
-			          AND rr.room_res_start_date &gt;= #{startDate}
-			      </if>
-			      <if test="endDate != null">
-			          AND rr.room_res_end_date &lt;= #{endDate}
-			      </if>
-			    ORDER BY r.reserve_num DESC
-</select> -->
-
-
-
-<!-- 			        m.member_id AS memberId, -->
-
-  	<!-- <select id="hotelRevList" parameterType="reserveSearchDTO" resultType="hotelRevSearchDomain">
-		select
-					r.reserve_num AS reserveNum,
-			        TRUNC(r.reserve_time) AS reserveDate,
-			        ri.room_type AS roomType,
-			        TRUNC(rr.room_res_start_date) AS checkIn,
-			        TRUNC(rr.room_res_end_date) AS checkOut,
-			        (r.reserve_adult_count + r.reserve_kid_count) AS reservePerson,
-			        r.reserve_status AS reserveFlag
-			    FROM member m
-			    JOIN reserve r ON m.member_num = r.member_num
-			    JOIN room_res rr ON r.reserve_num = rr.reserve_num
-			    JOIN room_info ri ON rr.room_type_num = ri.room_type_num
-			    WHERE m.member_id = #{memberId}
-			      AND r.reserve_type = 'room'
-			      <if test="startDate != null">
-			          AND rr.room_res_start_date &gt;= #{startDate}
-			      </if>
-			      <if test="endDate != null">
-			          AND rr.room_res_end_date &lt;= #{endDate}
-			      </if>
-			    ORDER BY r.reserve_num DESC
- 	
- 	</select> -->
- 	
-
  
+	<select id="dinningRevList" parameterType="reserveSearchDTO" resultType="dinningRevSearchDomain">
+		select reserveNum,reserveDate,dinningName,dinningType,visitDate,reservePerson,reserveFlag,visitTime
 	
-	 
+	  	from(select  
+	  			ROW_NUMBER() OVER (ORDER BY r.reserve_status DESC, dr.dinning_visit_date ASC) AS rnum,
+      			  r.reserve_num AS reserveNum,
+       			 TRUNC(r.reserve_time) AS reserveDate,
+       			 di.dinning_name AS dinningName,
+       			 dr.dinning_visit_date AS visitDate,
+      	 		 (r.reserve_adult_count + r.reserve_kid_count) AS reservePerson,
+       			 r.reserve_status AS reserveFlag,
+       			 dr.dinning_res_detail_time AS visitTime,
+       			 dr.DINNING_RES_TYPE AS dinningType
+   			 from reserve r,
+         		dinning_res dr,
+         		dinning_info di,
+        		 member m
+    		where r.reserve_num = dr.reserve_num
+      			and dr.dinning_menu_num = di.dinning_menu_num
+      			and m.member_num = r.member_num
+     			and r.reserve_type = 'dinning'
+      			and m.member_id = #{memberId}
+      			<if test="startDate != null and startDate != ''">
+     			 AND r.reserve_start_date <![CDATA[<=]]> TO_DATE(#{endDate}, 'YYYY-MM-DD')
+     			 AND r.reserve_end_date   <![CDATA[>=]]> TO_DATE(#{startDate}, 'YYYY-MM-DD')
+      			</if>
+				)
+				WHERE rnum between #{startNum} and #{endNum}
+		
+	</select>
 	
+	
+	
+	<select id="dinningRevDetail" parameterType="reserveDetailDTO" resultType="dinningRevDetailDomain">
+		 select 
+		 		r.reserve_num as reserveNum,
+		 		
+		 		r.END_USER_LAST_NAME||END_USER_FIRST_NAME as reserveName,
+		 		r.RESERVE_ADULT_COUNT as adultCount,
+		 		r.RESERVE_KID_COUNT as childCount,
+		 		r.RESERVE_TEL as tel,
+		 		r.RESERVE_EMAIL as email,
+		 		r.RESERVE_MSG as reserveMsg,
+		 		r.RESERVE_STATUS as reserveFlag,
+		 		to_char(r.reserve_time,'yyyy-MM-dd')as reserveDate,
+		 		dr.DINNING_VISIT_DATE as visitDate,
+		 		dr.DINNING_RES_TYPE as dinningType,
+		 		dr.DINNING_RES_DETAIL_TIME as visitTime,
+		 		p.pay_price as priceTotal,
+		 		pi.PAY_AGENCY as payAgency,
+		 		pi.CARD_NUM as cardData,
+		 		to_char(pi.input_date,'yyyy-MM-dd AM HH24:MI') as payInputDate,
+		 		di.dinning_name as dinningName
+    	 from member m, reserve r,DINNING_RES dr,pay p,pay_info pi,dinning_info di
+     	where m.member_num=r.member_num
+    	 	and r.reserve_num=dr.reserve_num
+     		and r.reserve_num=p.reserve_num
+     		and p.pay_num=pi.pay_num
+     		and dr.dinning_menu_num=di.dinning_menu_num
+			 and r.reserve_type='dinning'
+			 and r.member_num=(select member_num from member where member_id=#{memberId})
+			 and r.reserve_num=#{reserveNum}
+
+	</select>
+	
+	
+	 <update id="removeDinningReserve" parameterType="int" >
+		update reserve
+		set reserve_status='Y'
+		where reserve_num=#{reserveNum}
+	</update>
+	
+ 
+ 
 
 	
 </mapper>

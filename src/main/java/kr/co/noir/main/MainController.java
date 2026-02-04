@@ -66,5 +66,17 @@ public class MainController {
 		return "/hotel/location";
 	}	
 
+	@GetMapping("/join")
+	public String join() {
+		return "/login/join";
+	}
+	@GetMapping("/noticeAdmin")
+	public String notice() {
+		return "manager/notice/noticeAdmin";
+	}
+	@GetMapping("/noticeWriteAdmin")
+	public String noticeWriteAdmin() {
+		return "manager/notice/noticeWriteFrmAdmin";
+	}
 
 }

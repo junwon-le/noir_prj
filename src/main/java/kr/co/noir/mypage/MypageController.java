@@ -23,8 +23,25 @@ public class MypageController {
 	public String mypageView(HttpSession session, Model model) {
 		String uri="/mypage/main";
 		
+		
 		String memberId=(String)session.getAttribute("memberId");
-
+		String[] memberSplit=memberId.split("_");
+		String[] provider= {"kakao","google"};
+		
+		String memberProd="local";
+		for(int i=0;i<provider.length; i++) {
+			if(provider[i].equals(memberSplit[0])) {
+				memberProd=memberSplit[0];
+				
+			}//end if
+			
+		}//end for
+		
+		System.out.println("ddddddd"+memberProd);
+		session.setAttribute("memberProd", memberProd);
+			
+			
+		
 			
 			int hotelRevcnt =mps.searchHotelRevCnt(memberId);
 			int dinningRevcnt =mps.searchDinningRevCnt(memberId);

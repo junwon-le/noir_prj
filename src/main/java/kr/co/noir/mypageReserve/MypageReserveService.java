@@ -2,21 +2,37 @@ package kr.co.noir.mypageReserve;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
-
+import kr.co.noir.login.AdminController;
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.encrypt.Encryptors;
+import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.util.JSONPObject;
+
 @Service
 public class MypageReserveService {
+
+    private final AdminController adminController;
 
 	@Autowired(required = false)
 	private MypageReserveDAO mrDAO;
 	
 	
+	@Value("${user.crypto.key}")
+	private String key;
+
+	@Value("${user.crypto.salt}")
+	private String salt;
+
+
+    MypageReserveService(AdminController adminController) {
+        this.adminController = adminController;
+    }
 	
 	
 	/**
@@ -144,16 +160,88 @@ public class MypageReserveService {
 				
 	}//searchHotelRevList
 	
-	public HotelRevDetailDomain searchOneHotelRevDetail(ReserveDetailDTO rdDTO) {
-		HotelRevDetailDomain hrdDomain=null;
+	
+	public String searchDinningRevList(ReserveSearchDTO rsDTO) {
+		
+		List<DinningRevSearchDomain> list =null;
+		JSONObject jsonObj=new JSONObject();
+		jsonObj.put("flag", false);
+		
+		int totalCount = totalCnt(rsDTO);
+		int pageScale=pageScale();
+		int totalPage=totalPage(totalCount, pageScale);
+		int currentPage=rsDTO.getCurrentPage();
+		int startNum=startNum(currentPage, pageScale);
+		int endNum=endNum(startNum, pageScale);
+		rsDTO.setTotalPage(totalPage);
+		System.out.println("총 게시글 수: " + totalCount);
+		System.out.println("총 페이지 수: " + totalPage);
+		
+		rsDTO.setStartNum(startNum);
+		rsDTO.setEndNum(endNum);
+		rsDTO.setUrl("/mypage/memberHotelRevList");
+		
+		try {
+			list=mrDAO.selectDinningRevList(rsDTO);
+			jsonObj.put("flag", true);
+			JSONObject jsonTemp = null;
+			JSONArray jsonArr=new JSONArray();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			for(DinningRevSearchDomain drs : list) {
+				jsonTemp= new JSONObject();
+				jsonTemp.put("reserveNum", drs.getReserveNum());
+				jsonTemp.put("reservePerson", drs.getReservePerson());
+				jsonTemp.put("reserveDate", sdf.format(drs.getReserveDate()));
+				
+				jsonTemp.put("dinningType", drs.getDinningType());
+				jsonTemp.put("visitDate", sdf.format(drs.getVisitDate()));
+				jsonTemp.put("visitTime", drs.getVisitTime());
+				jsonTemp.put("reserveFlag", drs.getReserveFlag());
+				
+				jsonArr.add(jsonTemp);
+			}
+			jsonObj.put("data", jsonArr);
+			jsonObj.put("pagiNation",pagination(rsDTO));
+			
+			
+			
+			System.out.println(pagination(rsDTO));
+		}catch (PersistenceException pe) {
+			pe.printStackTrace();
+		
+		}//end catch
+		
+		
+		
+		
+		return jsonObj.toJSONString();
+		
+	}//searchDinningRevList
+	
+	
+	
+	
+	
+	
+	
+	public List<HotelRevDetailDomain> searchOneHotelRevDetail(ReserveDetailDTO rdDTO) {
+		List<HotelRevDetailDomain> hrdDomain=null;
+		TextEncryptor te = Encryptors.text(key,salt);
 		try {
 			
 			hrdDomain =mrDAO.selectHotelRevDetail(rdDTO);
+			for(HotelRevDetailDomain hd:hrdDomain) {
+				hd.setEmail(te.decrypt(hd.getEmail()));
+				hd.setTel(te.decrypt(hd.getTel()));
+			}//end for
 		}catch (PersistenceException pe) {
 			pe.printStackTrace();
 		}//end catch
 		
 		return hrdDomain;
+		
+		
+		
 	}//searchOneHotelRevDetail
 	
 	public int removeHotelReserve(int RevNum) {
@@ -168,6 +256,40 @@ public class MypageReserveService {
 		System.out.println("service++"+cnt);
 		return cnt;
 	}//removeHotelReserve
+	
+	
+	
+	public boolean removeDinningReserve(int RevNum) {
+		boolean flag =false;
+		try {
+			flag=mrDAO.updateDinningReserve(RevNum);
+			
+		}catch (PersistenceException pe) {
+			pe.printStackTrace();
+				
+		}//end catch
+		System.out.println("service++"+flag);
+		return flag;
+	}//removeDinningReserve
+	
+	
+	public DinningRevDetailDomain searchOneDinningRevDetail(ReserveDetailDTO rdDTO) {
+		DinningRevDetailDomain drdDomain=null;
+		TextEncryptor te = Encryptors.text(key,salt);
+		try {
+			
+			drdDomain =mrDAO.selectDinningRevDetail(rdDTO);
+			drdDomain.setEmail(te.decrypt(drdDomain.getEmail()));
+			drdDomain.setTel(te.decrypt(drdDomain.getTel()));
+		}catch (PersistenceException pe) {
+			pe.printStackTrace();
+		}//end catch
+		
+		return drdDomain;
+		
+		
+		
+	}//searchOneDinningRevDetail
 	
 	
 
