@@ -241,16 +241,19 @@
                 </div>
 
                 <form action="guestSearchProcess.jsp" th:action="@{/guestSearchProcess}" method="post">
+                <div class="input-group">
+                        <input type="text" name="guestReserveNum" placeholder="예약번호" maxlength="5" required>
+                    </div>
                     <div class="input-group">
                         <input type="text" name="guestEmail" placeholder="이메일" required>
                     </div>
                     <div class="input-group">
-                        <input type="password" name="guestPw" placeholder="비밀번호 (예약 번호)" required>
+                        <input type="password" name="guestPw" placeholder="비밀번호 (예약 비밀번호)"  required>
                     </div>
 
                     <div style="margin: 10px 0 15px 0; display: flex; align-items: center; justify-content: center;">
                         <p style="color: #888; font-size: 13px;">
-                            예약 시 입력한 정보를 입력해주세요.
+                              예약번호를 잃어버리셨으면 관리자에게 문의 주세요.
                         </p>
                     </div>
 
