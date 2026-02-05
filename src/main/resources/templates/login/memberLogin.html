@@ -19,6 +19,10 @@
 <script type="text/javascript" th:src="@{/common/js/homepage/jquery.simpleWeather.js}"></script>
 <script th:src="@{/common/js/homepage/custom.js}"></script>
 
+ <!-- 부트스트랩 -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+ 
 <style>
     /* 1. 기본 초기화 */
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Noto Sans KR', sans-serif; }
@@ -174,7 +178,91 @@
     /* SNS 로그인 섹션 스타일 */
     
     
+    
+     /* 신규 모달 전용 스타일 */
+        .hotel-modal-content {
+            background-color: #1a1a1a !important;
+            border: 1px solid #c5a47e !important;
+            border-radius: 0 !important;
+        }
+        .hotel-modal-header {
+            border-bottom: 1px solid #2a2a2a !important;
+        }
+        .hotel-modal-title {
+            color: #c5a47e !important;
+            font-size: 1rem !important;
+            letter-spacing: 2px;
+        }
+        .hotel-modal-body {
+            color: #ffffff !important;
+            text-align: center;
+            padding: 40px 20px !important;
+        }
+        .hotel-modal-footer {
+            border-top: 1px solid #2a2a2a !important;
+            justify-content: center !important;
+        }
+        .hotel-modal-btn {
+            background-color: #c5a47e !important;
+            color: #000 !important;
+            border-radius: 0 !important;
+            padding: 8px 40px !important;
+            font-weight: bold !important;
+        }
+        
+       a{
+       	text-decoration: none;
+       }
+       .login-container{
+       	margin-top: 120px;
+       }
+    /* 모달 스타일 끝 */
+    
 </style>
+<script type="text/javascript">
+$(function(){
+	$("#guestBtn").click(function(){
+		var reserveNum = $("#reserveNum").val();
+		var email = $("#email").val();
+		var password=$("#password").val();
+		
+		var reg=[ /^\d+$/,/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/];
+		
+		if(reserveNum==="" || !reg[0].test(reserveNum)){
+			showHotelAlert("예약번호는 숫자만 입력해주세요.");
+			return ;
+		}//end if
+		
+		if(email==="" || !reg[1].test(email)){
+			showHotelAlert("이메일 형식을 올바르게 입력해주세요.");
+			return ;
+		}//end if
+		
+		if(password==="" || !reg[0].test(password)){
+			showHotelAlert("비밀번호는 숫자만 입력해주세요.");
+			return ;
+		}//end if
+	
+		
+ 		$("#guestFrm").submit(); 
+		
+		
+	});//click 
+
+});//ready
+
+function showHotelAlert(msg) {
+    $('#hotelModalBody').html(msg);
+    var hotelModal = new bootstrap.Modal(document.getElementById('hotelNotifyModal'));
+    hotelModal.show();
+}
+
+
+
+
+</script>
+
+
 </head>
 
 <body th:style="'background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url(' + @{/images/hotel_bg.jpg} + ') no-repeat center center/cover;'">
@@ -189,7 +277,7 @@
             <div class="login-box">
                 <h2 class="login-title">LOGIN</h2>
                 
-                <form th:action="@{/login/memberLogin}" method="post">
+                <form th:action="@{/login/memberLogin}" method="post" >
                     
                     <div th:if="${param.error}" style="color: #ff6b6b; margin-bottom: 10px; font-size: 14px;">
                         아이디 또는 비밀번호를 확인해주세요.
@@ -231,24 +319,24 @@
             <div class="login-box">
                 <h2 class="login-title" style="margin-bottom: 10px;">비회원 예약 조회</h2>
                 
+                <form th:action="@{/nonMember/reserveCheck}" method="post" id="guestFrm">
                 <div class="guest-header">
                     <label class="radio-label">
-                        <input type="radio" name="searchType" value="dining"> 다이닝
+                        <input type="radio" name="reserveType" value="dining"> 다이닝
                     </label>
                     <label class="radio-label">
-                        <input type="radio" name="searchType" value="hotel" checked> 호텔
+                        <input type="radio" name="reserveType" value="room" checked> 호텔
                     </label>
                 </div>
 
-                <form action="guestSearchProcess.jsp" th:action="@{/guestSearchProcess}" method="post">
                 <div class="input-group">
-                        <input type="text" name="guestReserveNum" placeholder="예약번호" maxlength="5" required>
+                        <input type="text" name="reserveNum" id="reserveNum" placeholder="예약번호" maxlength="5" required>
                     </div>
                     <div class="input-group">
-                        <input type="text" name="guestEmail" placeholder="이메일" required>
+                        <input type="text" name="email" id="email" placeholder="이메일" required>
                     </div>
                     <div class="input-group">
-                        <input type="password" name="guestPw" placeholder="비밀번호 (예약 비밀번호)"  required>
+                        <input type="password" name="password" id="password" placeholder="비밀번호 (예약 비밀번호)"  required>
                     </div>
 
                     <div style="margin: 10px 0 15px 0; display: flex; align-items: center; justify-content: center;">
@@ -257,12 +345,32 @@
                         </p>
                     </div>
 
-                    <button type="submit" class="login-btn">조회</button>
+					<input type="button" value="조회" class="login-btn" id="guestBtn">
+                    <!-- <button type="submit" class="login-btn">조회</button> -->
                 </form>
             </div>
 
         </div> 
-    </div> 
+    </div>
+    
+    
+    <!-- 모달 스타일 -->
+    <div class="modal fade" id="hotelNotifyModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content hotel-modal-content">
+            <div class="modal-header hotel-modal-header">
+                <h5 class="modal-title hotel-modal-title">NOTICE</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body hotel-modal-body" id="hotelModalBody">
+                </div>
+            <div class="modal-footer hotel-modal-footer">
+                <button type="button" class="btn hotel-modal-btn" data-bs-dismiss="modal">확인</button>
+            </div>
+        </div>
+    </div>
+</div>
+ 
 
     <footer>
         <div th:replace="~{fragments/footer :: footer}"></div>

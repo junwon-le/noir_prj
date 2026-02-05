@@ -1,4 +1,4 @@
-package kr.co.noir.nonUserReserve;
+package kr.co.noir.nonMemberReserve;
 
 import org.apache.ibatis.type.Alias;
 
@@ -6,11 +6,11 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-@Alias("NonUserDTO")
+@Alias("nonMemberRevDTO")
 @Getter
 @Setter
 @ToString
-public class NonUserRevDTO {
+public class NonMemberRevDTO {
 
 	private String reserveType;
 	private String reserveNum;

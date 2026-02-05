@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.noir.nonMemberReserve.NonMemberRevMapper">
+
+
+	<select id="nonMemberRevCheck" parameterType="nonMemberRevDTO" resultType="String">
+		select non_user_pass
+		from(select
+ 			rownum rum, r.reserve_num,r.RESERVE_TYPE,nm.NON_USER_PASS ,r.RESERVE_EMAIL,r.RESERVE_STATUS
+			from RESERVE r, NON_MEMBER nm
+			where r.NON_USER_NUM = nm.NON_user_num
+			and r.RESERVE_TYPE=#{reserveType}
+			and r.reserve_email=#{email}
+			and r.RESERVE_START_DATE >=trunc(sysdate)
+			and r.RESERVE_STATUS='N')
+		where rum=1
+	</select>
+</mapper>
