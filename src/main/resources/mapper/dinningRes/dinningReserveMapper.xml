@@ -44,7 +44,7 @@ LEFT JOIN (
             (r.reserve_adult_count + r.reserve_kid_count) AS person_count
         FROM dinning_res dr
         JOIN reserve r ON dr.reserve_num = r.reserve_num
-        WHERE r.reserve_status = 'N'
+        WHERE r.reserve_status = 'Y'
           AND r.reserve_type = 'dinning'
 
         UNION ALL
@@ -61,11 +61,28 @@ LEFT JOIN (
     GROUP BY combined.dinning_menu_num, combined.reserve_date, combined.reserve_time
 ) res ON di.dinning_menu_num = res.dinning_menu_num
      AND ts.dinning_detail_time = res.reserve_time
-     AND res.reserve_date = TO_DATE(#{dinningDate}, 'YYYY-MM-DD') -- 조회하고 싶은 날짜
+     AND res.reserve_date = TO_DATE(#{dinningDate}, 'YYYY-MM-DD') -- 조회하고 싶은 날짜 	
 WHERE di.dinning_menu_num = 1 -- 특정 다이닝 번호
   AND ts.dinning_type = #{dinningType} -- (선택사항) 조식/중식/석식별로 필터링할 경우
 ORDER BY ts.dinning_detail_time ASC
 ]]>
 </select>
+
+<delete id="deleteDepending" parameterType="String">
+	delete
+	from dinning_depending
+	where session_id= #{session_id}
+</delete>
+
+<!-- 예약 테이블에 추가 -->
+  	<insert id="insertDinningReserve" parameterType="dinningReserveDTO">
+  		<selectKey keyProperty="reserve_num" resultType="int" order="BEFORE">
+	        select reserve_seq.nextval from dual
+	    </selectKey>
+  		insert into reserve (reserve_num, member_num, end_user_last_name, end_user_first_name, reserve_adult_count, reserve_kid_count,
+ 		reserve_msg, reserve_time, reserve_ip, reserve_type,reserve_tel,reserve_email)
+		values(#{reserve_num}, #{user_num},#{user_last_name},#{user_first_name},#{reserve_adult_count},#{reserve_kid_count},
+		#{reserve_msg},sysdate,#{reserve_ip},#{reserve_type},#{reserve_tel},#{email})
+	</insert>
 
 </mapper>

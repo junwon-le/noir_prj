@@ -150,7 +150,6 @@ $(function(){
 		}
 		//예약하는 방 정보 넘기기
 		//
-		var id ="user1" 
 		var start=$("#checkin").val();
 		var end=$("#checkout").val();
 		for (const key in selectedRoomCnt){
@@ -253,7 +252,7 @@ $(function(){
 			<span class='font-bold !text-black text-sm' >인원 : ${personCnt}명</span>
 			</div>
 			<div style="margin-left:auto;">
-			<button onclick="selectRoomRemove(${divNum},${price},${period},${roomNum})"
+			<button onclick="selectRoomRemove(${divNum},${price},${period},${roomNum},${personCnt})"
 				class="text-white px-4 py-1 text-xs rounded-sm bg-[#8b7355] hover:bg-[#7a654a]">삭제</button>
 			</div>
 			</div>`
@@ -267,8 +266,9 @@ $(function(){
 		$("#avePrice").text("1박 당 평균 : "+(totalPrice/period).toLocaleString()+"원");
 		
 	}
-	function selectRoomRemove(divNum,price,period,roomNum){
+	function selectRoomRemove(divNum,price,period,roomNum,personCnt){
 		$("#selectRoom>#"+divNum).remove();
+		roomMaxPerson-=personCnt
 		selectedRoomCnt[roomNum]-=1
 		roomCnt-=1;
 		totalPrice-=price;

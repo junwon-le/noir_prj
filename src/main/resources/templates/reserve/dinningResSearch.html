@@ -180,6 +180,9 @@ $(function(){
 			alert("예약 시간을 선택해 주세요.");
 			return;
 		}
+		$("#adultCnt").val(adultCnt)
+		$("#kidCnt").val(kidCnt)
+		$("#price").val(totalPrice)
 		var time=$("#time").text();
 		var dependingDinningDTO={
 				pendingPerson: adultCnt+kidCnt,
@@ -188,7 +191,7 @@ $(function(){
 		}
 	 	axios.post('/dinningRes/depending', dependingDinningDTO)
 	    .then(response => {
-	        // 성공 시 로직
+	        // 성공 시 로직\
 	        const frm = $("#reserveFrm");
 	        frm.attr("action", "/dinningRes/dinningReserve");
 	        frm.submit();
@@ -290,6 +293,7 @@ function calPrice(){
 												class="personBtn" />
 										</button>
 										<span class="text-lg font-bold" id="showAdultCnt">1</span>
+										<input type="hidden" name="adultCnt" id="adultCnt" />
 										<button  type="button" id="adultUp">
 											<img src="/common/images/res_img/upbtn.png" class="personBtn" />
 										</button>
@@ -304,6 +308,7 @@ function calPrice(){
 												class="personBtn" />
 										</button>
 										<span class="text-lg font-bold" id="showKidCnt">0</span>
+										<input type="hidden" name="kidCnt" id="kidCnt" />
 										<button  type="button" id="kidUp">
 											<img src="/common/images/res_img/upbtn.png" class="personBtn" />
 										</button>
@@ -322,7 +327,7 @@ function calPrice(){
 							<option value="중식">중식</option>
 							<option value="석식">석식</option>
 							</select >
-							<select style="color:#000; padding:5px;margin-bottom: 10px;" class="w-3/4 rounded-sm bg-gray-200 p-4" id="dinningTime">
+							<select name="dinningTime" style="color:#000; padding:5px;margin-bottom: 10px;" class="w-3/4 rounded-sm bg-gray-200 p-4" id="dinningTime">
 							<option value="N/A" disabled selected hidden>--시간 선택--</option>
 							</select >
 							</div>
@@ -333,6 +338,8 @@ function calPrice(){
 								class="bg-gray-200 p-3 flex justify-between items-center rounded-sm">
 								<span class="font-bold !text-black text-sm">총 금액</span> 
 								<span class="text-xl font-bold !text-black" id='totalPrice'>0 원</span>
+								<input type="hidden" name="price" id="price" />
+								
 							</div>
 							<div class="flex gap-2">
 								<button

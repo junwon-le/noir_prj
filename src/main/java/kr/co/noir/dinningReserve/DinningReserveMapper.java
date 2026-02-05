@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import kr.co.noir.reserve.PayInfoDTO;
+
 @Mapper
 public interface DinningReserveMapper {
 
@@ -13,5 +15,9 @@ public interface DinningReserveMapper {
 	public List<DinningSearchDomain> selectDinningSearch(DinningSearchDTO dsDTO) ;
 	
 	public int insertDepending(DinningDependingDTO dDTO);
+	
+	public int deleteDepending(String id);
+	
+	public int insertDinningReserve(DinningReserveDTO drDTO);
 	
 }
