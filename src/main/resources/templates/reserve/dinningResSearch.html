@@ -12,6 +12,11 @@
 	href="/common/css/homepage/style.css?v=0312">
 <link rel="stylesheet" type="text/css"
 	href="/common/css/homepage/sub.css?v=0312">
+<!--  -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+    axios.post('/reserve/pending', pendingRoomDTO) ...
+</script>
 <!-- jQeury CDN 시작 -->
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -103,7 +108,118 @@ span {
 }
 
 </style>
+<script>
+var morningAdultPrice = [[${dinning[0].dinningAdultPrice}]]
+var morningKidPrice = [[${dinning[0].dinningKidPrice}]]
+var lunchAdultPrice = [[${dinning[1].dinningAdultPrice}]]
+var lunchKidPrice = [[${dinning[1].dinningKidPrice}]]
+var dinnerAdultPrice = [[${dinning[2].dinningAdultPrice}]]
+var dinnerKidPrice = [[${dinning[2].dinningKidPrice}]]
+var totalPrice =0 ;
+$(function(){
+	// 성인 수 설정
+	var adultCnt=1;
+	$("#adultUp").click(function(){
+		adultCnt+=1;
+		$("#showAdultCnt").text(adultCnt);
+		calPrice();
+	})
+	$("#adultDown").click(function(){
+		if(adultCnt > 1){ // 0보다 클 때만 감소
+			adultCnt--;
+		$("#showAdultCnt").text(adultCnt);
+		calPrice();
+	    }
+	})
+// 어린이 수 설정
+	var kidCnt=0;
+	$("#kidUp").click(function(){
+		kidCnt+=1;
+		$("#showKidCnt").text(kidCnt);
+		calPrice();
+	})
+	$("#kidDown").click(function(){
+		if(kidCnt > 0){ // 0보다 클 때만 감소
+	        kidCnt--;
+	        $("#showKidCnt").text(kidCnt);
+	    	calPrice();
+	    }
+	})
+	
+	$("#dinningType").change(function(){
+		var dinningType = $(this).val();
+		
+		$.ajax({
+			url : "/dinningRes/dinningTime/"+dinningType,
+			type : "GET",
+			dataType:"JSON",
+			error: function(xhr){
+				alert(xhr.status);
+			},
+			success : function(jsonArr){
+				var selTime = $("#dinningTime")[0];
+				selTime.length=1;
+				$.each(jsonArr, function(i, dinningTime){
+					selTime.options[i+1] =new Option(dinningTime.dinningDetailTime,dinningTime.dinningDetailTime);
+				})//end each
+				calPrice();
+				
+			}
+		})//ajax
+	})//dinningType change
+	
+	$("#reserve").click(function(){
+		if(!$("#dinningType").val()){
+			alert("식사 예약 시간을 선택해 주세요.");
+			return;
+		}
+			alert($("#dinningTime").val());
+		//
+		var time=$("#time").text();
+		dependingDinningDTO={
+				pendingPerson: adultCnt+kidCnt,
+				reserveDate: $("#time").text(),
+				reserveTime: $("#dinningTime").val()
+		}
+	 	axios.post('/dinningRes/depending', dependingDinningDTO)
+	    .then(response => {
+	        // 성공 시 로직
+	        const frm = $("#reserveFrm");
+	        frm.attr("action", "/dinningRes/dinningReserve");
+	        frm.submit();
+	    })
+	    .catch(error => {
+	        // 실패 시 로직
+	        // 서버에서 보낸 에러 메시지 추출 (ResponseEntity.body에 담긴 내용)
+	    	const errorData = error.response ? error.response.data : "알 수 없는 오류";
+	        const errorMessage = typeof errorData === 'object' ? JSON.stringify(errorData) : errorData;
+	        
+	        alert("에러 내용: " + errorMessage);
+	        console.log(error.response.data);
+	        
+	    });//ajax 
+	    })//reserve
+	
+	
+	
+function calPrice(){
+	var dinningType = $("#dinningType").val();
+	if(dinningType=="조식"){
+		totalPrice = adultCnt*morningAdultPrice+kidCnt*morningKidPrice;
+		$("#totalPrice").text(totalPrice);
+	}
+	if(dinningType=="중식"){
+		totalPrice = adultCnt*lunchAdultPrice+kidCnt*lunchKidPrice;
+		$("#totalPrice").text(totalPrice);
+	}
+	if(dinningType=="석식"){
+		totalPrice = adultCnt*dinnerAdultPrice+kidCnt*dinnerKidPrice;
+		$("#totalPrice").text(totalPrice);
+	}
+}
+});//ready
 
+</script>
 
 <body>
 	<header>
@@ -114,26 +230,26 @@ span {
 			<div class="max-w-6xl mx-auto flex flex-col md:flex-row gap-8 py-10">
 				<div id="selectRoomDiv" style="width:750px;">
 				<div >
-				<img src="/common/images/homepage/bg04.jpg"/>
+				<img src="/common/images/homepage/다이닝5.jpg"/>
 				</div>
 				<div  class="flex-[2]">
-					<h2 class="text-xl font-bold  border-b border-gray-700 pb-2">조식</h2>
+					<h2 class="text-xl font-bold  border-b border-gray-700 pb-2" style="margin-top:12px">조식</h2>
 					<img src="/common/images/res_img/hr.png" />
-					<div class="space-y-6" style="margin-top:10px;">
+					<div class="space-y-6" style="margin-top:10px;" th:text="${dinning[0].dinningMenuMain}">
 					오늘의 조식 메뉴
 					</div>
 				</div>
 				<div  class="flex-[2]" style="margin-top:10px;">
 					<h2 class="text-xl font-bold  border-b border-gray-700 pb-2">중식</h2>
 					<img src="/common/images/res_img/hr.png" />
-					<div class="space-y-6" style="margin-top:10px;">
+					<div class="space-y-6" style="margin-top:10px;" th:text="|메인: ${dinning[1].dinningMenuMain} / (${dinning[1].dinningMenuSub})|">
 					오늘의 중식 메뉴
 					</div>
 				</div>
 				<div  class="flex-[2]" style="margin-top:10px;">
 					<h2 class="text-xl font-bold  border-b border-gray-700 pb-2">석식</h2>
 					<img src="/common/images/res_img/hr.png" />
-					<div class="space-y-6" style="margin-top:10px;">
+					<div class="space-y-6" style="margin-top:10px;" th:text="${dinning[2].dinningMenuMain}">
 					오늘의 석식 메뉴
 					</div>
 				</div>
@@ -143,12 +259,12 @@ span {
 						<!-- 달력 -->
 						<div >
 							<div class="calendar-wrapper border rounded-lg overflow-hidden w-full">
-								<div class="p-3 border-t flex justify-between items-center text-sm bg-gray-50">
-									<span>방문일</span> <span id="display-checkin" class="font-bold">
-									날짜를 선택하세요</span>
-								</div>
 								<div  style="height:400px; display: flex; justify-content: center; background-color: white; padding-top: 30px; padding-bottom: 30px">
 								<div id="inline-calendar"></div>
+								</div>
+								<div class="p-3 border-t flex justify-between items-center text-sm bg-gray-50">
+									<span>방문일</span> <span id="time" class="font-bold">
+									날짜를 선택하세요</span>
 								</div>
 							</div>
 						</div>
@@ -156,20 +272,18 @@ span {
 						<div class="bg-white text-black p-4 rounded-md shadow-md">
 							<div class="flex justify-between items-center mb-4">
 								<span class="font-bold">인원</span>
-								<button
-									class="text-white px-4 py-1 text-xs rounded-sm bg-[#8b7355] hover:bg-[#7a654a]">조회</button>
 							</div>
 							<div class="flex gap-2 text-[10px] " style="padding-left: 40px; padding-right: 40px;">
 								<div
 									class="flex-1 !border-2 border-solid !border-[#8b7355] p-2 p-2 text-center">
 									성인<br>
 									<div class="flex justify-between items-center ">
-										<button>
+										<button id="adultDown">
 											<img src="/common/images/res_img/downbtn.png"
 												class="personBtn" />
 										</button>
-										<span class="text-lg font-bold">1</span>
-										<button>
+										<span class="text-lg font-bold" id="showAdultCnt">1</span>
+										<button id="adultUp">
 											<img src="/common/images/res_img/upbtn.png" class="personBtn" />
 										</button>
 									</div>
@@ -178,12 +292,12 @@ span {
 									class="flex-1 !border-2 border-solid !border-[#8b7355] p-2 p-2 text-center">
 									아동<br>
 									<div class="flex justify-between items-center ">
-										<button>
+										<button id="kidDown">
 											<img src="/common/images/res_img/downbtn.png"
 												class="personBtn" />
 										</button>
-										<span class="text-lg font-bold">1</span>
-										<button>
+										<span class="text-lg font-bold" id="showKidCnt">0</span>
+										<button id="kidUp">
 											<img src="/common/images/res_img/upbtn.png" class="personBtn" />
 										</button>
 									</div>
@@ -195,15 +309,14 @@ span {
 							<div class="  items-center rounded-sm">
 							</div>
 							<div class="flex justify-between">
-							<select style="color:#000; padding:5px;" class="w-1/5 rounded-sm bg-gray-200 p-4">
-							<option value="중식">중식</option>
+							<select style="color:#000; padding:5px;" class="w-1/5 rounded-sm bg-gray-200 p-4" id="dinningType">
+							<option value="N/A" disabled selected hidden>-선택-</option>
 							<option value="조식">조식</option>
+							<option value="중식">중식</option>
 							<option value="석식">석식</option>
 							</select >
-							<select style="color:#000; padding:5px;" class="w-3/4 rounded-sm bg-gray-200 p-4">
-							<option value="N/A">타임1</option>
-							<option value="N/A">타임2</option>
-							<option value="N/A">타임3</option>
+							<select style="color:#000; padding:5px;" class="w-3/4 rounded-sm bg-gray-200 p-4" id="dinningTime">
+							<option value="N/A" disabled selected hidden>--시간 선택--</option>
 							</select >
 							</div>
 						</div>
@@ -212,22 +325,16 @@ span {
 							<div
 								class="bg-gray-200 p-3 flex justify-between items-center rounded-sm">
 								<span class="font-bold !text-black text-sm">총 금액</span> 
-								<span class="text-xl font-bold !text-black">0 원</span>
+								<span class="text-xl font-bold !text-black" id='totalPrice'>0 원</span>
 							</div>
 							<div class="flex gap-2">
 								<button
-									class="flex-1 bg-[#8b7355] hover:bg-[#7a654a] py-4 font-bold text-sm">예약하기</button>
+									class="flex-1 bg-[#8b7355] hover:bg-[#7a654a] py-4 font-bold text-sm" id="reserve">예약하기</button>
 								<button class="flex-1 bg-[#333] py-4 font-bold text-sm">비회원
 									예약 </button>
 							</div>
 						</div>
 
-						<div
-							class="bg-white/10 p-4 text-[11px] flex justify-between rounded-sm">
-							<span class="text-white">체크인 시간 15:00</span> <span
-								class="text-white">/</span> <span class="text-white">체크아웃
-								시간 12:00</span>
-						</div>
 					</div>
 				</div>
 			</div>
@@ -259,7 +366,7 @@ span {
 				    ],
 					onChange : function(selectedDates, dateStr, instance) {
 						if (selectedDates.length > 0) {
-							document.getElementById('display-checkin').innerText = instance
+							document.getElementById('time').innerText = instance
 									.formatDate(selectedDates[0], "Y-m-d (D)");
 						}
 					}

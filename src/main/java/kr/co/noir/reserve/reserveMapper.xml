@@ -149,9 +149,9 @@ ORDER BY
 	        select reserve_seq.nextval from dual
 	    </selectKey>
   		insert into reserve (reserve_num, member_num, end_user_last_name, end_user_first_name, reserve_adult_count, reserve_kid_count,
- 		reserve_msg, reserve_start_date, reserve_end_date, reserve_time, reserve_ip, reserve_type)
+ 		reserve_msg, reserve_start_date, reserve_end_date, reserve_time, reserve_ip, reserve_type,reserve_tel,reserve_email)
 		values(#{reserve_num}, #{user_num},#{user_last_name},#{user_first_name},#{reserve_adult_count},#{reserve_kid_count},
-		#{reserve_msg},#{room_res_startDate},#{room_res_endDate},sysdate,#{reserve_ip},#{reserve_type})
+		#{reserve_msg},#{room_res_startDate},#{room_res_endDate},sysdate,#{reserve_ip},#{reserve_type},#{reserve_tel},#{email})
 	</insert>
 	
 	<!-- 객실 예약 테이블에 추가 -->
@@ -164,7 +164,8 @@ ORDER BY
 		<selectKey keyProperty="pay_num" resultType="int" order="BEFORE">
 	        select pay_seq.nextval from dual
 	    </selectKey>
-		insert into pay (pay_num, reserve_num, pay_price) values( #{pay_num} , #{reserve_num},#{pay_price} )		
+		insert into pay (pay_num, reserve_num, pay_price) 
+		values( #{pay_num} , #{reserve_num},#{pay_price} )		
 	</insert>
 	<!-- 결제 정보 테이블에 추가 -->
 	<insert id="insertPayInfo" parameterType="payInfoDTO">
@@ -191,9 +192,9 @@ ORDER BY
 	        select reserve_seq.nextval from dual
 	    </selectKey>
   		insert into reserve (reserve_num, non_user_num , end_user_last_name, end_user_first_name, reserve_adult_count, reserve_kid_count,
- 		reserve_msg, reserve_start_date, reserve_end_date, reserve_time, reserve_ip, reserve_type)
+ 		reserve_msg, reserve_start_date, reserve_end_date, reserve_time, reserve_ip, reserve_type,reserve_tel,reserve_email)
 		values(#{reserve_num}, #{non_user_num},#{user_last_name},#{user_first_name},#{reserve_adult_count},#{reserve_kid_count},
-		#{reserve_msg},#{room_res_startDate},#{room_res_endDate},sysdate,#{reserve_ip},#{reserve_type})
+		#{reserve_msg},#{room_res_startDate},#{room_res_endDate},sysdate,#{reserve_ip},#{reserve_type},#{reserve_tel},#{email})
 	</insert>
 	
 	

@@ -86,6 +86,7 @@ $(function(){
 	  $("#reqCnt").css('color','#fff');
   }
 	});//request input
+	
 	$("#request").on('keyup', function() {
 	  const length = $(this).val().length;
 		if(length>=100){
@@ -104,6 +105,15 @@ $(function(){
 })//ready
 
 function reserve(){
+	const infos = $(".userInfo");
+		for( const info of infos){
+			if($(info).val().trim()==""){
+				alert("예약자 정보를 입력해 주세요.")
+				$(info).focus();			
+			return;
+			}
+		}
+	
 	  $(".agreement-item").each(function(){
 			agreementFlag = true;
 			if(!$(this).is(":checked")){
@@ -120,6 +130,22 @@ function reserve(){
 			return;
 		}
 	$("#reserveFrm").submit();
+}
+function formatPhone(target) {
+    // 숫자만 남기기
+    let val = target.value.replace(/\D/g, "");
+    let len = val.length;
+    let result = "";
+
+    // 010-0000-0000 형식 맞추기
+    if (len < 4) {
+        result = val;
+    } else if (len < 8) {
+        result = val.substring(0, 3) + "-" + val.substring(3);
+    } else {
+        result = val.substring(0, 3) + "-" + val.substring(3, 7) + "-" + val.substring(7);
+    }
+    target.value = result;
 }
 </script>
 <style>
@@ -193,27 +219,27 @@ margin-top: 10px;
                 <div>
                     <label class="block text-sm mb-1">투숙객명 <span class="text-red-500">*</span></label>
                     <div class="flex gap-4">
-                        <input type="text" name="user_last_name" placeholder="last name" class="w-1/2 bg-white text-black p-2 rounded bor" th:value="*{member_last_name}">
-                        <input type="text" name="user_first_name" placeholder="first name" class="w-1/2 bg-white text-black p-2 rounded bor" th:value="*{member_first_name}">
+                        <input type="text" name="user_last_name" placeholder="last name" class="w-1/2 bg-white text-black p-2 rounded bor userInfo" th:value="*{member_last_name}">
+                        <input type="text" name="user_first_name" placeholder="first name" class="w-1/2 bg-white text-black p-2 rounded bor userInfo" th:value="*{member_first_name}">
                     </div>
                 </div>
 
                 <div>
                     <label class="block text-sm mb-1">이메일 주소 <span class="text-red-500">*</span></label>
                     <div class="flex items-center gap-2">
-                        <input type="text" name="emailId" class="bg-white text-black p-2 rounded bor" style="width:300px;" th:value="*{member_email_id}">
+                        <input type="text" name="emailId" class="bg-white text-black p-2 rounded bor info" style="width:300px;" th:value="*{member_email_id}">
                         <span id="at">@</span>
-                        <input type="text" name="emailDomain" class=" bg-white text-black p-2 rounded bor" th:value="*{member_email_domain}">
+                        <input type="text" name="emailDomain" class=" bg-white text-black p-2 rounded bor info" th:value="*{member_email_domain}">
                     </div>
                 </div>
 
                 <div>
                     <label class="block text-sm mb-1">휴대폰 번호 <span class="text-red-500">*</span></label>
                     <div class="flex gap-2">
-                        <select class="w-1/3 bg-white text-black p-2 rounded bor">
+                        <!-- <select class="w-1/3 bg-white text-black p-2 rounded bor">
                             <option>+82(대한민국)</option>
-                        </select>
-                        <input type="text" name="reserve_tel" placeholder="01023507803" class="w-2/3 bg-white text-black p-2 rounded bor" th:value="*{member_tel}" >
+                        </select> -->
+                        <input type="text" name="reserve_tel" placeholder="010-0000-0000" maxlength="13" oninput="formatPhone(this)" class="w-2/3 bg-white text-black info p-2 rounded bor" th:value="*{member_tel}" >
                     </div>
                 </div>
                 <div>

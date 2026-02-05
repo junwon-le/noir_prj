@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.noir.dinningReserve.DinningReserveMapper">
+<select id="selectDinning" resultType="dinningSearchDomain" >
+  	select dm.dinning_menu_type, dinning_menu_main, dinning_menu_sub, dinning_adult_price, dinning_kid_price
+	from dinning_menu dm, dinning_price dp
+	where dm.dinning_menu_type=dp.dinning_menu_type
+</select>
+
+<select id="selectDinningTime" parameterType="String" resultType="dinningTimeSearchDomain" >
+ select dining_schedule_num,	dinning_type,	dinning_detail_time
+  from dinning_time_schedule
+  where dinning_type=#{type}
+  order by dinning_detail_time
+</select>
+
+</mapper>

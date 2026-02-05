@@ -160,7 +160,8 @@ $(function(){
 			if(selectedRoomCnt[key]!=0){
 				pendingRoomDTO.push({
 					room_res_start_date : start,
-					room_res_end_date:end,room_cnt:Number(selectedRoomCnt[key]),
+					room_res_end_date:end,
+					room_cnt:Number(selectedRoomCnt[key]),
 					room_type_num : Number(key)
 					});
 			}
@@ -174,11 +175,12 @@ $(function(){
 	    })
 	    .catch(error => {
 	        // 실패 시 로직
-	        
 	        // 서버에서 보낸 에러 메시지 추출 (ResponseEntity.body에 담긴 내용)
-	        const errorMessage = error.response ? error.response.data : "알 수 없는 오류가 발생했습니다.";
+	    	const errorData = error.response ? error.response.data : "알 수 없는 오류";
+	        const errorMessage = typeof errorData === 'object' ? JSON.stringify(errorData) : errorData;
 	        
-	        alert("이미 진행 중인 예약이 있습니다. 잠시 후 다시 시도 해주세요: " + errorMessage);
+	        alert("에러 내용: " + errorMessage);
+	        console.log(error.response.data);
 	        
 	    });//ajax
 	})//reserve

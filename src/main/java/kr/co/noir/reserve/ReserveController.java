@@ -42,7 +42,7 @@ public class ReserveController {
 	public ResponseEntity<String> reserve(@RequestBody List<RoomDependingDTO> PdList , HttpSession session) {
 		//예약 객실을 보류테이블에 추가 
 		try {
-			String JSessionId = session.getId();
+			String JSessionId ="user1";
 			for(RoomDependingDTO pdDTO : PdList) {
 				pdDTO.setId(JSessionId);
 			}//end for
@@ -99,6 +99,7 @@ public class ReserveController {
 		//session id 가져오기
 		//String id=session.getAttribute("userId");
 		String id="user1";
+		String JSessionId = session.getId();
 		String ip= request.getRemoteAddr();
 		//데이터 추가
 		rrDTO.setReserve_ip(ip);
@@ -110,6 +111,8 @@ public class ReserveController {
 		if(!flag) {
 			url="reserve/err";
 		}
+		model.addAttribute("reserve" , rrDTO);
+		model.addAttribute("pay" , pDTO);
 		//예약 완료 시 보류 테이블에서 삭제 
 		rrs.deleteDepending(id);
 		
@@ -131,6 +134,8 @@ public class ReserveController {
 		if(!flag) {
 			url="reserve/err";
 		}
+		model.addAttribute("reserve" , rrDTO);
+		model.addAttribute("pay" , pDTO);
 		//예약 완료 시 보류 테이블에서 삭제 
 		rrs.deleteDepending(id);
 		
