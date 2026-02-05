@@ -96,7 +96,7 @@ background-color: #FFF;
 
 .review-item {
   border-bottom: 1px solid #e9e9e9;
-  padding: 40px 0px;
+  padding: 40px 200px;
 }
 
 .review-top {
@@ -110,7 +110,7 @@ background-color: #FFF;
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  min-width: 240px;
+  min-width:240px;
 }
 
 .profile-circle {
@@ -264,7 +264,7 @@ background-color: #FFF;
 details[open] .chev { transform: rotate(180deg); }
 
 .answer-body {
-  padding: 0 18px 18px 74px; /* 아이콘만큼 들여쓰기 */
+  padding: 0 18px 18px 74px;
   font-size: 13px;
   color: #f3f3f3;
   line-height: 1.6;
@@ -274,13 +274,46 @@ details[open] .chev { transform: rotate(180deg); }
   padding: 20px 350px;
   font-size: 40px;
   font-weight: 700;
-  color: #000;
+  color: #C47E27;
+  width: 1200px;
 }
 
 #newreview{
   padding:12px 20px;
   font-size: 20px;
 
+}
+
+.pagination{
+  padding:60px 60px 40px 40px;
+  gap: 8px;
+}
+
+.pagination .page-link{
+  border: 1px solid #ddd;
+  background: #fff;
+  color: #333;
+  border-radius: 999px;
+  padding: 20px 25px;
+  font-size:20px;
+  font-weight: 600;
+}
+
+.pagination .page-link:hover{
+  border-color: #000;
+  color: #fff;
+}
+
+.pagination .page-item.active .page-link,
+.pagination .page-item.active span{
+  background: #000;
+  border-color: #000;
+  color: #fff;
+}
+.reviewScore{
+  color:#C47E27;
+  font-size: 20px;
+  font-weight: 700;
 }
 
 </style>
@@ -300,17 +333,17 @@ details[open] .chev { transform: rotate(180deg); }
 <div class="title-box">
 </div>
 <div class="maincontainer">
-<div class="ffffff">
-<div class="pagetitle">
-	ROOM REVIEW
-</div>
-<div class="newreviewbtn">
-	<div class="roomname">[객실명]</div>
-</div>
+<div class="ffffff" th:if="${!#lists.isEmpty(roomReviewList)}" th:with="firstReview=${roomReviewList[0]}">
+    <div class="pagetitle">
+        ROOM REVIEW
+    </div>
+    <div class="newreviewbtn">
+        <div class="roomname" th:text="${firstReview.roomType}">[객실명]</div>
+    </div>
 </div>
 <div class="review-page">
 
-  <div class="review-item">
+  <div class="review-item" th:each="r : ${roomReviewList}">
 
     <div class="review-top">
       <div class="review-left">
@@ -321,15 +354,15 @@ details[open] .chev { transform: rotate(180deg); }
         </div>
 
         <div class="review-left-text">
-          <div class="name">투숙자명</div>
+          <div class="name"><span th:text="${r.memberLastName}"></span>OO</div>
           <div class="meta">
             <div class="row">
               <span class="icon">📍</span>
-              <span>객실이름</span>
+              <span th:text="${r.roomType}">Deluxe Room</span>
             </div>
             <div class="row">
               <span class="icon">🗓️</span>
-              <span>투숙일</span>
+              <span th:text="${#dates.format(r.reserveStartDate,'yyyy.MM.dd')}">2026.01.22</span>
             </div>
           </div>
         </div>
@@ -337,51 +370,55 @@ details[open] .chev { transform: rotate(180deg); }
 
       <div class="review-mid">
         <div class="review-mid-head">
-          <div class="review-score">별점/5</div>
-          <div class="review-title">[제목]</div>
+          <div class="review-score"><span th:text="${r.reviewStar}" style="color: #C47E27; font-weight: 700; font-size: 50px;"></span>/5</div>
+          <div class="review-title"><span th:text="${r.reviewTitle}">너무 좋았어요!</span></div>
         </div>
 
         <div class="review-content">
-			리뷰내용
+			<span th:text="${r.reviewMsg}">친절한 서비스에 감동했습니다.</span>
         </div>
 
         <div class="review-images">
-          <img src="/common/images/sample/review_1.jpg" alt="리뷰 사진 1">
-          <img src="/common/images/sample/review_2.jpg" alt="리뷰 사진 2">
-        </div>
+    <th:block th:each="imgStr : ${r.reviewImgList}">
+        <th:block th:each="img : ${#strings.arraySplit(imgStr, ',')}">
+            <img th:src="@{/upload/review/} + ${img}" alt="리뷰 사진">
+        </th:block>
+    </th:block>
+</div>
       </div>
 
-      <div class="review-date">작성일</div>
+      <div class="review-date" th:text="${#dates.format(r.reviewDate,'yyyy.MM.dd')}">2026.01.22</div>
     </div>
 
-    <div class="review-answer">
-      <details>
-        <summary>
-          <div class="answer-left">
-            <div class="answer-icon-circle" aria-hidden="true">
-              <svg viewBox="0 0 24 24">
-                <path d="M12 12a4.5 4.5 0 1 0-4.5-4.5A4.5 4.5 0 0 0 12 12Zm0 2c-4.4 0-8 2.2-8 5v1h16v-1c0-2.8-3.6-5-8-5Z"/>
-              </svg>
-            </div>
-            <div class="answer-label">답변</div>
-          </div>
-
-          <!-- 화살표 -->
-          <svg class="chev" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
-            <path fill="#fff" d="M7 10l5 5 5-5H7z"/>
+    <div class="review-answer" th:if="${r.reviewReturn != null and !#strings.isEmpty(r.reviewReturn)}">
+  <details>
+    <summary>
+      <div class="answer-left">
+        <div class="answer-icon-circle" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 12a4.5 4.5 0 1 0-4.5-4.5A4.5 4.5 0 0 0 12 12Zm0 2c-4.4 0-8 2.2-8 5v1h16v-1c0-2.8-3.6-5-8-5Z"/>
           </svg>
-        </summary>
-
-        <div class="answer-body">
-          안녕하세요.. <br>
         </div>
-      </details>
+        <div class="answer-label">답변</div>
+      </div>
+      <svg class="chev" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+        <path fill="#fff" d="M7 10l5 5 5-5H7z"/>
+      </svg>
+    </summary>
+
+    <div class="answer-body">
+      <span th:text="${r.reviewReturn}">소중한 의견 감사합니다.</span>
+    </div>
+  </details>
     </div>
 
   </div>
 
 </div>
-
+<div id="pagenation" style="margin:0px auto">
+			<div class="pagenation" th:utext="${pagenation}"></div>		
+			</div>
+					<div class="ffffff"></div>
 </div>
 <footer>
         <div th:replace="~{fragments/footer :: footer}"></div>

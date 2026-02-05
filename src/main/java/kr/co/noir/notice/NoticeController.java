@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping("/notice")
 public class NoticeController {
 	
 	@Autowired //field 의존성 주입
@@ -30,7 +29,7 @@ public class NoticeController {
 		rDTO.setStartNum(startNum);
 		rDTO.setEndNum(endNum);
 		rDTO.setTotalPage(totalPage);
-		rDTO.setUrl("/notice/noticeList");
+		rDTO.setUrl("/noticeList");
 		//rDTO.setCurrentPage(currentPage); 1이 기본이라서 안넣어도됨
 		
 		List<NoticeDomain> noticeList = bs.searchBoardList(rDTO);//게시물의 내용

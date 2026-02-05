@@ -61,6 +61,8 @@
 	<mapper resource="mapper/LoginMapper.xml"/> 
     <mapper resource="kr/co/noir/inquiry/inquiryMapper.xml"/>
     <mapper resource="kr/co/noir/notice/noticeMapper.xml"/>
+    <mapper resource="kr/co/noir/review/WriteReviewMapper.xml"/>
+    <mapper resource="kr/co/noir/review/ReviewMapper.xml"/>
     <mapper resource="kr/co/noir/notice/noticeAdminMapper.xml"></mapper>
     <mapper resource="mapper/AdminMapper.xml"/>
   </mappers>
