@@ -1,10 +1,18 @@
 package kr.co.noir.nonMemberReserve;
 
+import java.util.List;
+
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.encrypt.Encryptors;
+import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.stereotype.Service;
+
+import kr.co.noir.mypageReserve.DinningRevDetailDomain;
+import kr.co.noir.mypageReserve.HotelRevDetailDomain;
+import kr.co.noir.mypageReserve.ReserveDetailDTO;
 
 @Service
 public class NonMemberRevService {
@@ -25,12 +33,9 @@ public class NonMemberRevService {
 		BCryptPasswordEncoder bpe = new BCryptPasswordEncoder();
 		try {
 			
-			
 			String password=nmrm.nonMemberRevCheck(rmrDTO);
 			String nowPassword= rmrDTO.getPassword();
-			
 			flag=bpe.matches(nowPassword, password);
-			System.out.println("비밀번호 결과 : "+flag);
 			
 		}catch (PersistenceException pe) {
 			pe.printStackTrace();
@@ -40,5 +45,43 @@ public class NonMemberRevService {
 		return flag;
 		
 	}//NonReserveCheck
+	
+	public List<HotelRevDetailDomain> searchOneHotelRevDetail(NonMemberRevDTO rmrDTO){
+		List<HotelRevDetailDomain> list=null;
+		TextEncryptor te = Encryptors.text(key, salt);
+		try {
+			
+			list=nmrm.selectOneHotelDetail(rmrDTO);
+			for(HotelRevDetailDomain hd: list) {
+				hd.setTel(te.decrypt(hd.getTel()));
+				
+			}//end for
+		}catch (PersistenceException pe) {
+			pe.printStackTrace();
+		}//end catch
+			
+		
+		return list;
+		
+	}//searchOneHotelRevDetail
+	
+	
+	public DinningRevDetailDomain searchOneDinningRevDetail(NonMemberRevDTO rmrDTO) {
+		DinningRevDetailDomain drdDomain=null;
+		TextEncryptor te = Encryptors.text(key,salt);
+		try {
+			
+			drdDomain =nmrm.selectOnedinningDetail(rmrDTO);
+			drdDomain.setTel(te.decrypt(drdDomain.getTel()));
+		}catch (PersistenceException pe) {
+			pe.printStackTrace();
+		}//end catch
+		
+		return drdDomain;
+		
+	
+	}//searchOneDinningRevDetail
+	
+	
 	
 }//class

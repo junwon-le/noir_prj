@@ -403,9 +403,12 @@ font-family: 'Nanum Myeongjo', serif;
     	margin-top: 5px;
     }
 </style>
-<script type="text/javascript">
+<script th:inline="javascript">
 $(function(){
-	var cancelFlag=[[${cancelFlag==true}]];
+	
+	
+	var cancelFlag = /*[[${cancelFlag == true}]]*/ false;
+/* 	var cancelFlag=[[${cancelFlag==true}]]; */
 	
 	if(cancelFlag){
 		alert("예약취소가 실패되었습니다. \n 잠시후 다시 시도해주세요");
