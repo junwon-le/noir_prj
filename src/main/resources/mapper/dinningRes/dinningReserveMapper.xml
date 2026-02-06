@@ -85,4 +85,30 @@ ORDER BY ts.dinning_detail_time ASC
 		#{reserve_msg},sysdate,#{reserve_ip},#{reserve_type},#{reserve_tel},#{email})
 	</insert>
 
+<!-- 다이닝 예약 테이블에 추가 -->
+	<insert id="insertDinningDetail" parameterType="dinningReserveDTO"> 
+	insert into dinning_res (dinning_res_num, dinning_menu_num, dinning_visit_date, dinning_res_type, dinning_res_detail_time, reserve_num)
+    values(dinning_res_num_seq.nextval, 1,#{visite_date},#{dinning_type},#{dinning_time},#{reserve_num})
+	</insert>
+<!-- 결제 테이블에 추가 -->
+	<insert id="insertDinningPay" parameterType="payInfoDTO">
+		<selectKey keyProperty="pay_num" resultType="int" order="BEFORE">
+	        select pay_seq.nextval from dual
+	    </selectKey>
+		insert into pay (pay_num, reserve_num, pay_price) 
+		values( #{pay_num} , #{reserve_num},#{pay_price} )		
+	</insert>
+	
+<!-- 결제 정보 테이블에 추가 -->
+	<insert id="insertDinningPayInfo" parameterType="payInfoDTO">
+		insert into pay_info (payinfo_num, pay_num, pay_agency, billing_key, card_num, pg_provider, input_date,merchant_uid)
+		values(pay_info_seq.nextval, #{pay_num},#{agency},#{billing_key},#{card_number},#{pg_provider},systimestamp,#{merchant_uid})		
+	</insert>
+	
+<!-- 예약 시간에 해당하는 다이닝 타입 가져오기 서버검증 -->
+	<select id="selectDinningtype" parameterType="String" resultType="String">
+		select dinning_type
+		from dinning_time_schedule
+		where dinning_detail_time =#{dinning_detail_time}
+	</select>
 </mapper>

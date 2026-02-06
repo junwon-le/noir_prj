@@ -13,6 +13,6 @@ import lombok.ToString;
 @ToString
 public class DinningMenuDomain {
 	
-	private String dinningMenuType,	dinningMenuMain,	dinningMenuSub, dinningAdultPrice, dinningKidPrice;	
-
+	private String dinningMenuType,	dinningMenuMain,	dinningMenuSub ;	
+	private int dinningAdultPrice, dinningKidPrice;
 }

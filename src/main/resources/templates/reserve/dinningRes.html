@@ -320,8 +320,9 @@ function reserve(){
                 <input type="hidden" value="" id="user_id"/> -->
                 <input type="hidden" th:value="${param.adultCnt}" name="reserve_adult_count">
                 <input type="hidden" th:value="${param.kidCnt}" name="reserve_kid_count">
-                <input type="hidden" th:value="${param.checkin}" name="startDate">
-                <input type="hidden" th:value="${param.checkout}" name="endDate">
+                <input type="hidden" th:value="${param.reserveDate}" name="str_visite_date">
+                <input type="hidden" th:value="${param.dinningTime}" name="dinning_time">
+                <input type="hidden" th:value="${param.dinningType}" name="dinning_type">
                 </div>
                 <div class="pt-6 border-t border-zinc-700 text-white" style="padding:0px;">
                 	<h2 class="text-xl font-bold ">취소 정책</h2>
@@ -351,7 +352,7 @@ function reserve(){
             <h3 class="text-blue-900 font-bold border-b pb-2 mb-4">예약정보</h3>
             <div class=" space-y-3 mb-6">
                 <div class="flex justify-between"><span>방문일</span><span class="font-semibold" th:text="${param.reserveDate}">2026-01-07 (화)</span></div>
-                <div class="flex justify-between"><span>조식</span><span class="font-semibold" th:text="${param.dinningTime}">08:00</span></div>
+                <div class="flex justify-between"><span th:text="${param.dinningType}">조식</span><span class="font-semibold" th:text="${param.dinningTime}">08:00</span></div>
                 <div class="flex justify-between"><span>인원</span><span class="font-semibold text-right" th:text="|성인 ${param.adultCnt}명 / 어린이 ${param.kidCnt}명|">성인/1 어린이/2</span></div>
             </div>
             <div class="border-t pt-4">

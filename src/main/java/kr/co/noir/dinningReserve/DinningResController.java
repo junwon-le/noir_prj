@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import kr.co.noir.reserve.MemberDomain;
-import kr.co.noir.reserve.PayInfoDTO;
 import kr.co.noir.reserve.RoomReserveService;
 
 @RequestMapping("/dinningRes")
@@ -49,7 +48,7 @@ public class DinningResController {
 	
 	@PostMapping("/complete")
 	public String reserveComplete(DinningReserveDTO drDTO ,PayInfoDTO pDTO, HttpSession session, HttpServletRequest request, Model model) {
-		String url ="/reserve/complete";
+		String url ="/reserve/dinningComplete";
 		//session id 가져오기
 		String id = String.valueOf(session.getAttribute("memberId")) ;
 		//String id=session.getAttribute("userId");

@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import kr.co.noir.reserve.PayInfoDTO;
 
 @Mapper
 public interface DinningReserveMapper {
@@ -19,5 +18,14 @@ public interface DinningReserveMapper {
 	public int deleteDepending(String id);
 	
 	public int insertDinningReserve(DinningReserveDTO drDTO);
+	
+	public int insertDinningDetail(DinningReserveDTO drDTO);
+	
+	public int insertDinningPay(PayInfoDTO pDTO);
+	
+	public int insertDinningPayInfo(PayInfoDTO pDTO);
+	
+	public String selectDinningtype(String dinning_time);
+	
 	
 }
