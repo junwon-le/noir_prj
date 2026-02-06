@@ -29,7 +29,7 @@ public class LoginController {
 
 	@Autowired
 	private LoginService ls;
-
+	
 	@GetMapping("/join")
 	public String join() {
 		return "login/join";
@@ -44,33 +44,43 @@ public class LoginController {
 	@PostMapping("/memberLogin")
 	public String login(LoginDTO lDTO, HttpServletRequest request, HttpSession session, Model model) {
 
-		String url="login/memberLogin"; // 실패 
-		
-		lDTO.setMemberIp(request.getRemoteAddr());
-		LoginMemberDomain md=ls.searchOneMember(lDTO);
-		
-		// 로그인 성공 S
-		if( "S".equals(lDTO.getResult()) ) {
-			
-			// 1. null 체크를 포함한 이름 가공
-		    String lastName = (md.getMemberLastName() != null) ? md.getMemberLastName().trim() : "";
-		    String firstName = (md.getMemberFirstName() != null) ? md.getMemberFirstName().trim() : "";
-		    String fullName = lastName + firstName;
+		String url = "login/memberLogin"; // 실패 시 기본 경로
+	    
+	    lDTO.setMemberIp(request.getRemoteAddr());
+	    LoginMemberDomain md = ls.searchOneMember(lDTO); // DB 조회 결과
+	    
+	    // 로그인 성공 ("S")
+	    if ("S".equals(lDTO.getResult())) {
+	        
+	        // 1. 이름 가공 (기존 로직 유지)
+	        String lastName = (md.getMemberLastName() != null) ? md.getMemberLastName().trim() : "";
+	        String firstName = (md.getMemberFirstName() != null) ? md.getMemberFirstName().trim() : "";
+	        String fullName = lastName + firstName;
 
-		    session.setAttribute("memberId", lDTO.getMemberId());
-		    session.setAttribute("memberName", fullName);
-			
-			url="redirect:/"; //성공하면 메인
-		}
-		
-		model.addAttribute("errFlag",lDTO.getResult()!= null); //null이나 F
-		model.addAttribute("errMsg",lDTO.getResult()==null?
-				"아이디가 존재하지 않습니다" :"비밀번호가 일치하지 않습니다"); //null이나 F
-		
-		
-		return url;
+	        // 2. [핵심] MemberDTO 객체 생성 및 데이터 매핑
+	        // 탈퇴 컨트롤러에서 MemberDTO로 형변환해서 사용하므로, 여기서 미리 만들어 넣어야 합니다.
+	        MemberDTO memberDTO = MemberDTO.builder()
+	                .memberId(lDTO.getMemberId())
+	                .memberFirstName(firstName)
+	                .memberLastName(lastName)
+	                .memberProvider("LOCAL") // 일반 로그인은 "LOCAL"로 명시
+	                .build();
+
+	        // 3. 세션 주입 (탈퇴 컨트롤러와 Key 이름을 정확히 맞춥니다)
+	        session.setAttribute("memberId", lDTO.getMemberId());
+	        session.setAttribute("memberName", fullName);
+	        session.setAttribute("memberProvider", "LOCAL");        
+
+	        url = "redirect:/"; // 성공 시 메인으로
+	    }
+	    
+	    // 실패 시 에러 처리
+	    model.addAttribute("errFlag", lDTO.getResult() != null);
+	    model.addAttribute("errMsg", lDTO.getResult() == null ? 
+	            "아이디가 존재하지 않습니다" : "비밀번호가 일치하지 않습니다");
+	    
+	    return url;
 	}
-	
 	
 	
 	
@@ -309,8 +319,6 @@ public class LoginController {
         // 
         return "redirect:/"; 
     }    
-    
-    
-    
+
 	
 }//class

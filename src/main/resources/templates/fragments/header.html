@@ -13,7 +13,7 @@
 				    <a th:href="@{/login/join}">JOIN</a>
 				</li>
 				
-				<th:block th:if="${session.memberId != null}">
+				<th:block th:if="${session.memberId != null and #strings.isEmpty(session.memberId) == false}">
 				    <li>
 				        <span th:text="${session.memberName != null ? session.memberName + '님 환영합니다' : session.memberId + '님'}" 
 				              style="color: #C4A16F; margin-right: 15px; font-size: 13px;"></span>

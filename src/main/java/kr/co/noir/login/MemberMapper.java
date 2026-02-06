@@ -43,7 +43,10 @@ public interface MemberMapper {
     int selectTotalCount(Map<String, Object> params);
     
     // 선택된 회원들 탈퇴 처리 (MEMBER_DEL_FLAG = 'Y')
-    int updateMembersDelete(@Param("memberNums") List<Integer> memberNums);    
+    int updateMembersWithdraw(@Param("memberIds") List<String> memberIds);    
+
+    // 선택된 회원을 탈퇴 처리 (MEMBER_DEL_FLAG = 'Y')
+    int updateMemberWithdraw(String memberId);    
     
     // SNS 가입 처리 
     // 기존 가입 여부 확인 (Provider와 ProviderId의 조합으로 조회)
@@ -54,11 +57,11 @@ public interface MemberMapper {
     int insertSnsMember(MemberDTO member);    
     
     // 향후 SNS 탈퇴 처리를 위한 토큰 등록
-    void upsertSnsToken(SnsTokenDTO tokenDTO);
+    void updateSnsToken(SnsTokenDTO tokenDTO);
     
     // 매개변수가 2개 이상일 때는 반드시 이름을 지정해줘야 XML에서 인식한다.
-    SnsTokenDTO selectSnsToken(@Param("memberNum") int memberNum, @Param("provider") String provider);
+    SnsTokenDTO selectSnsToken(@Param("memberId") String memberId, @Param("provider") String provider);
 
-    void deleteSnsToken(@Param("memberNum") int memberNum, @Param("provider") String provider);
+    void deleteSnsToken(@Param("memberId") String memberId, @Param("provider") String provider);
     
 }
