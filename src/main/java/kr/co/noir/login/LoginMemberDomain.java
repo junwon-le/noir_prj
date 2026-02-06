@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class LoginMemberDomain {
+	private String memberNum;    // MEMBER_Num
 	private String memberId;    // MEMBER_ID
 	private String memberPass;  // MEMBER_PASS
 	private String memberLastName;  // MEMBER_NAME

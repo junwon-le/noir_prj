@@ -9,6 +9,7 @@ import lombok.Data;
 @Builder
 public class SnsTokenDTO {
     private int memberNum;
+//    private String memberId;
     private String provider;
     private String accessToken;
     private String refreshToken;

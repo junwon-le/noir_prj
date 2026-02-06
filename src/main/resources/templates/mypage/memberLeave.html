@@ -23,7 +23,7 @@
 <style type="text/css">
 /* 기존 스타일 유지 */
 html{
-	background-color: #181818;
+   background-color: #181818;
 }
 
   body {
@@ -39,15 +39,15 @@ text-decoration: none;
 }
 
 .main-sub > ul > li > a {
-	text-decoration: none;
+   text-decoration: none;
 }
 
 .info > ul > li > a {
-	color:white;
-	text-decoration: none;
+   color:white;
+   text-decoration: none;
 }
 .info > ul > li {
-	list-style:none;
+   list-style:none;
 }
 
 .footer_bot{
@@ -163,21 +163,21 @@ height:auto;
     }
     
     .summary-card:hover{
-    	 border-color: #c5a47e;
+        border-color: #c5a47e;
     }
     
     .siteBorder{
-    	text-decoration: none;
+       text-decoration: none;
     }
     .menu-item.menuCilck{
-    	color: #c5a47e;
+       color: #c5a47e;
     }
     .footer-title{
-    	margin-top: 5px;
+       margin-top: 5px;
     }
 
         .withdrawal-container {
-    		background: black;
+          background: black;
             border: 1px solid #2a2a2a;
             padding: 60px 50px;
             border-radius: 10px;
@@ -247,12 +247,12 @@ height:auto;
         .btn-confirm:hover { background: #e2c29d; }
         
         .menu-group>.menu-item.now_page{
-        	color:#FFFFFF;
+           color:#FFFFFF;
         }
         .badge-outline.now_page_icon{
-        	color: black;
-        	background-color: #c5a47e;
-        	font-weight: bold;
+           color: black;
+           background-color: #c5a47e;
+           font-weight: bold;
         }
 
         /* 신규 모달 공통 스타일 */
@@ -297,13 +297,24 @@ height:auto;
         }
     .footer-title{
     
-    	margin-top: 5px;
+       margin-top: 5px;
     }
     
     a{
-    	text-decoration: none;	
+       text-decoration: none;   
     
     }
+    
+    .btn-confirm.big{
+    
+       width: 50%;
+       height: 50px;
+       font-size: 16px;
+    }
+    
+    .btn-confirm.big:hover {
+   color: block;
+   }
 
 
 </style>
@@ -312,16 +323,16 @@ height:auto;
 /* 스크립트 상단 배치 */
 var CONTEXT = '';
 $(document).ready(function($) {
-	
-	var flag=[[${flag==true}]];
-	if(flag){
-		showHotelAlert("비밀번호가 일치하기 않습니다.");
-		
-	}//end if
-	
+   
+   var flag = /*[[${flag == true}]]*/ false;
+   if(flag){
+      showHotelAlert("비밀번호가 일치하기 않습니다.");
+      
+   }//end if
+   
     // 기존 모달 로직
-    $('.open_modal').click(function(e) {    	
-        $("iframe").attr("src", $(this).attr('url')).show();        	
+    $('.open_modal').click(function(e) {       
+        $("iframe").attr("src", $(this).attr('url')).show();           
         e.preventDefault();
     });
 
@@ -340,27 +351,49 @@ $(document).ready(function($) {
     
     
     $("#btn").click(function(){
-    	var isChecked=$("#agree").prop("checked");
-    	var password=$("#password").val();
-    	if(!isChecked){
-    		 showHotelAlert("회원탈퇴 유의사항을 확인하신 후<br>동의 체크박스를 클릭해 주세요.");
-    		 return false;
-    	}
-    	if(password==''){
-    		showHotelAlert("본인 확인을 위해<br>비밀번호를 입력해 주세요.");
-			$("#password").focus();   		
-    	
-    		 return false;
-    	}
-    	   var confirmModal = new bootstrap.Modal(document.getElementById('hotelConfirmModal'));
+       var isChecked=$("#agree").prop("checked");
+       var password=$("#password").val();
+       if(!isChecked){
+           showHotelAlert("회원탈퇴 유의사항을 확인하신 후<br>동의 체크박스를 클릭해 주세요.");
+           return false;
+       }
+       if(password==''){
+          showHotelAlert("본인 확인을 위해<br>비밀번호를 입력해 주세요.");
+         $("#password").focus();         
+       
+           return false;
+       }
+       
+       // 일반회원도 같은 곳에서 처리 
+       $("#passwordFrm").attr("action", "/member/withdraw");
+       
+          var confirmModal = new bootstrap.Modal(document.getElementById('hotelConfirmModal'));
            confirmModal.show();
     });
     
     $("#Confirmbtn").click(function(){
-    	
-    	$("#passwordFrm").submit();
-    	
+       
+       $("#passwordFrm").submit();
+       
     });//click
+    
+    
+    $("#platformBtn").click(function(){
+       $("#passwordFrm").prop("action","/member/withdraw");
+       var agreeChecked = $("#agree").prop("checked");
+       
+       if(!agreeChecked){
+           showHotelAlert("회원탈퇴 유의사항을 확인하신 후<br>동의 체크박스를 클릭해 주세요.");
+           return false;
+       }//end if
+       
+          var confirmModal = new bootstrap.Modal(document.getElementById('hotelConfirmModal'));
+           confirmModal.show();
+       
+    });//click 
+    
+    
+    
     
 /* 
     // 회원탈퇴 폼 유효성 검사 및 최종 확인 모달 제어
@@ -393,7 +426,12 @@ $(document).ready(function($) {
         $('form[action="deleteAccount.do"]')[0].submit();
     }); */
 });
+
+
+
+
 </script>
+
 
 </head>
 
@@ -405,7 +443,7 @@ $(document).ready(function($) {
 <div class="container">
     <div class="row equal-height-row g-4">
           <th:block th:replace="~{fragments/myPageSideBar :: myPageSideBar}"></th:block>
-        	<div class="col-lg-9">
+           <div class="col-lg-9">
             <div class="withdrawal-container">
                 <div class="logo-section">
                     <h3>HOTEL NOIR</h3>
@@ -443,20 +481,29 @@ $(document).ready(function($) {
                     </div>
                 </div>
 
-               <form th:action="@{/mypage/info/removeMember}" method="post" id="passwordFrm">
+	           <form th:action="@{/mypage/info/removeMember}" method="post" id="passwordFrm">
+    <!--       <form th:action="@{/member/withdraw}" method="post" id="passwordFrm"> -->
                     <div class="agree-check">
                         <label>
                             <input type="checkbox" name="agree" id="agree"> 
                             위의 회원탈퇴 유의사항을 모두 확인하였으며, 이에 동의합니다.
                         </label>
                     </div>
-				
+            
+                       <th:block th:if="${session.memberProd =='local'}">
                     <div class="confirm-wrapper">
-                        <input type="password" id="password" name="currentPassword" class="pw-input" placeholder="PASSWORD" maxlength="20">
-                        <!-- <button type="submit" class="btn-confirm">CONFIRM</button> -->
-                        <input type="button" id="btn" class="btn-confirm" value="확인"/> 
+                           <input type="password" id="password" name="currentPassword" class="pw-input" placeholder="PASSWORD" maxlength="20">
+                           <!-- <button type="submit" class="btn-confirm">CONFIRM</button> -->
+                           <input type="button" id="btn" class="btn-confirm" value="확인"/> 
                     </div>
-               </form> 
+                  </th:block>
+                  <th:block th:unless="${session.memberProd == 'local'}">
+                     <input type="button" value="회원탈퇴" class="btn-confirm big" id="platformBtn" />
+                  </th:block>
+               </form>
+            
+             
+
             </div>
         </div>
         
@@ -472,6 +519,8 @@ $(document).ready(function($) {
             <div class="modal-footer hotel-modal-footer">
                 <button type="button" class="btn hotel-modal-btn" data-bs-dismiss="modal">확인</button>
             </div>
+            
+            
         </div>
     </div>
 </div>
@@ -495,7 +544,9 @@ $(document).ready(function($) {
                 <button type="button" id="btnFinalSubmit" class="btn hotel-modal-btn">탈퇴하기</button> -->
 <!--                 <from th:action="@{}"> -->
                 <input type="button" id="Confirmbtn" class="btn hotel-modal-btn" value="탈퇴하기"/>
-<!--           	</from>  --> 
+                
+                
+<!--              </from>  --> 
             </div>
         </div>
     </div>

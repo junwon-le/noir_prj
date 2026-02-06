@@ -17,7 +17,7 @@ public class MypageModifyDAO {
 		
 		String pass=ss.selectOne("kr.co.noir.mypageInfo.passwordCheck",pcDTO.getMemberid());
 		
-		System.out.println(pass);
+//		System.out.println(pass);
 		if(ss!=null) {ss.close();}//end if
 		return pass;
 	
@@ -43,11 +43,11 @@ public class MypageModifyDAO {
 		
 		SqlSession ss= MyBatisHandler.getInstance().getMyBatisHandler(true);
 		
-		System.out.println("------------"+mDTO);
+//		System.out.println("------------"+mDTO);
 		cnt=ss.update("kr.co.noir.mypageInfo.updateMember",mDTO);
 		if(ss!=null) {ss.close();}//end if
 		
-		System.out.println("dao----"+cnt);
+//		System.out.println("dao----"+cnt);
 		return cnt;
 	}///updateMemberModify
 	
@@ -61,7 +61,7 @@ public class MypageModifyDAO {
 		
 		
 		
-		System.out.println("변경내역----------"+cnt);
+//		System.out.println("변경내역----------"+cnt);
 		if(ss!=null) {ss.close();}//end if
 		
 		
