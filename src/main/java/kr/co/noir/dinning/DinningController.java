@@ -119,8 +119,6 @@ public class DinningController {
 			return "redirect:/adminLogin";
 		}
 		
-		
-		
 		List<DinningDomain> list=null;
 		list=ds.searchDetailDinning();
 		

@@ -235,18 +235,12 @@ border:0px solid #333;
 
 $(function () {
 
-    /* ===============================
-       체크박스 단일 선택
-    =============================== */
     $(".sel").change(function () {
         if ($(this).prop("checked")) {
             $(".sel").not(this).prop("checked", false);
         }
     });
 
-    /* ===============================
-       수정 버튼
-    =============================== */
     $("#modifyBtn").click(function () {
 
         const price = $("#roomPrice").val();
@@ -272,9 +266,6 @@ $(function () {
         $("#frm").submit();
     });
 
-    /* ===============================
-       선택 옵션들
-    =============================== */
     $("#allSel").change(function () {
         $(".holiday, .workday").prop("checked", false);
 
@@ -304,20 +295,15 @@ $(function () {
         history.back();
     });
 
-    //달력 초기화
     const roomTypeNum = $("#roomTypeNum").val();
 
-    // sessionStorage  없으면 현재 월
     const savedMonth = sessionStorage.getItem("roomPriceMonth");
     const initMonth = savedMonth ?? new Date().toISOString().slice(0, 7);
 
-    // input[type=month] 맞추기
     $("#roomPriceMonth").val(initMonth);
 
-    // 최초 달력 생성
     createCalandar(initMonth, roomTypeNum);
 
-    // 월 변경 시
     $("#roomPriceMonth").change(function () {
         const month = $(this).val();
         sessionStorage.setItem("roomPriceMonth", month);
@@ -348,18 +334,16 @@ function createCalandar(e,n){
 function drawCalandar(e) {
 
     const $tbody = $("#calandar tbody");
-    $tbody.empty(); // ⭐ 완전 초기화
+    $tbody.empty(); // 완전 초기화
 
     let html = "<tr>";
     let cellCount = 0; // 전체 셀 카운트 (7칸 기준)
 
-    // 1️⃣ 첫 요일 이전 빈칸
     for (let i = 0; i < e.firstDay; i++) {
         html += "<td></td>";
         cellCount++;
     }
 
-    // 2️⃣ 날짜 출력
     for (let day = 1; day <= e.lastDate; day++) {
 
         const price = getPriceByDay(e.priceList, day);
@@ -398,13 +382,11 @@ function drawCalandar(e) {
 
         cellCount++;
 
-        // 3️⃣ 7칸마다 줄바꿈
         if (cellCount % 7 === 0 && day !== e.lastDate) {
             html += "</tr><tr>";
         }
     }
 
-    // 4️⃣ 마지막 주 빈칸 채우기
     while (cellCount % 7 !== 0) {
         html += "<td></td>";
         cellCount++;
