@@ -43,7 +43,7 @@ $(function() {
         if ($detail.data("loaded")) return;
 
         $.ajax({
-            url: "/inquiry/inquiryDetail", // 문의 상세 정보를 가져올 URL
+            url: "/inquiryDetail", // 문의 상세 정보를 가져올 URL
             type: "GET",
             dataType: "json",
             data: { inquiryNum: inquiryNum },
@@ -476,9 +476,9 @@ background-color: #FFF;
 		<div class="maincontainer">
 				
 				<div class="minimenu">
-				<a th:href="@{/inquiry/writeInquiry}" id="qna">문의 하기</a><br>
-				<a th:href="@{/inquiry/inquiryList}" id="qnaList">문의 내역</a><br>
-				<a th:href="@{/notice/noticeList}" id="notice">공지 사항</a>
+				<a th:href="@{/writeInquiry}" id="qna">문의 하기</a><br>
+				<a th:href="@{/inquiryList}" id="qnaList">문의 내역</a><br>
+				<a th:href="@{/noticeList}" id="notice">공지 사항</a>
 				</div>
 				
 					
@@ -491,7 +491,7 @@ background-color: #FFF;
 				
 				
 					<div style="text-align: center;">
-					<form th:action="@{/inquiry/inquiryList}" id="boardSearchFrm" method="get">
+					<form th:action="@{/inquiryList}" id="boardSearchFrm" method="get">
 					<div class="searchInput">                
 					<input type="text"
              name="keyword"
@@ -541,7 +541,7 @@ background-color: #FFF;
             <span class="label">이름&nbsp;&nbsp;: </span><span class="inquiryname"></span><br>
             <div style="min-height: 250px; max-width: 1000px; margin: 0px auto;">
                 <span class="label">내용&nbsp;&nbsp;: </span>
-                <textarea class="summernote inquiry-msg" name="msg" th:utext="${i.inquiryMsg}"></textarea>
+                <textarea class="summernote inquiry-msg" name="msg" th:utext="${i.inquiryMsg}" readonly="readonly"></textarea>
             </div>
         </div>
         <div class="return-box" style="display:none;">

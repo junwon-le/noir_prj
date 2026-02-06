@@ -142,7 +142,6 @@ $(function () {
     selectedFiles = selectedFiles.concat(incoming.slice(0, space));
     syncInputFiles();
     render();
-    input.value = '';
   });
 
   render();
@@ -150,17 +149,30 @@ $(function () {
 </script>
 <script>
 	$(document).ready(function() {
-		$("#submitBtn").click(function(e) {
-			if ($("#title").val()=="") {
+		$("#submitbtn").click(function(e) {
+			if ($("#rating").val() == "0") {
+	            alert("별점을 선택해주세요.");
+	            $('html, body').animate({
+	                scrollTop: $("#starRating").offset().top - 400
+	            }, 10);
+	            return;
+	        }
+			if ($("#roomType").val() == "") {
+	            alert("리뷰 작성할 객실을 선택해주세요.");
+	            $("#roomType").focus();
+	            return;
+	        }
+			
+			if ($("#rtitle").val()=="") {
 				alert("제목을 입력해주세요.");
 				return
 			}
-			if ($("#msg").val()=="") {
-				alert("문의 내용을 입력해주세요.");
+			if ($("#rmsg").val()=="") {
+				alert("리뷰 내용을 입력해주세요.");
 				return
 			}
 			if (!$('#check').is(':checked')) {
-				alert("문의하시려면 약관에 동의해주세요.");
+				alert("필수 약관에 동의해주세요.");
 				return
 			}
 			$("#frm").submit();
@@ -198,7 +210,19 @@ $(function () {
 		});
 	});
 </script>
-
+<script th:inline="javascript">
+    $(document).ready(function() {
+        /*<![CDATA[*/
+        // 타임리프로부터 리스트를 받아옵니다 (없으면 빈 배열)
+        const list = /*[[${unreviewedList}]]*/ [];
+        
+        if (!list || list.length === 0) {
+            alert("리뷰를 작성할 수 있는 이용 내역이 없습니다.");
+            history.back();
+        }
+        /*]]>*/
+    });
+</script>
 
 <style>
 .wrapper{
@@ -563,6 +587,9 @@ background-color: #FFF;
 <div class="title-box">
 </div>
 		<div class="maincontainer">
+		<form id="frm" action="/review/write" method="post" enctype="multipart/form-data">
+		<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+		<input type="hidden" name="reviewStar" id="rating" value="0">
 				
 					
 				<div style="max-width: 1000px; margin: 0px auto; ">
@@ -586,25 +613,28 @@ background-color: #FFF;
 						</div>
 
 						
-						</div>
-						<div class="infoContainer">                
-						<h2 class="info-title">객실 선택</h2>
-						<select name="roomType" id="roomType">
-						  <option value="">객실을 선택해주세요</option>
-						  <option value="standard">스탠다드 룸</option>
-						  <option value="deluxe">디럭스 룸</option>
-						  <option value="suite">스위트 룸</option>
-						</select>
+		</div>
+		<div class="infoContainer">           
+		
+		
+		<h2 class="info-title">객실 선택</h2>
+		<select name="roomResNum" id="roomType">
+    <option value="">객실을 선택해주세요</option>
+    <option th:each="rev : ${unreviewedList}" 
+            th:value="${rev.roomResNum}" 
+            th:text="${rev.roomType}">
+    </option>
+</select>
 
 						<h2 class="info-title">후기 제목</h2>
-						<input type="text" name="rtitle" id="rtitle" placeholder="후기 제목을 입력해주세요.">
+						<input type="text" name="reviewTitle" id="rtitle" placeholder="후기 제목을 입력해주세요.">
 						<h2 class="info-title">후기 내용</h2>
-						<textarea name="rmsg" id="rmsg" placeholder="후기 내용을 입력해주세요."></textarea> 
+						<textarea name="reviewMsg" id="rmsg" placeholder="후기 내용을 입력해주세요."></textarea> 
 						<h2 class="info-title">사진 첨부</h2>
 
 						<div class="photo-upload-wrap">
 						  <label class="photo-upload-box" for="photoInput">
-						    <input type="file" id="photoInput" accept="image/*" multiple hidden>
+						    <input type="file" id="photoInput" name="photos" accept="image/*" multiple hidden>
 						    <span class="plus">+</span>
 						  </label>
 						
@@ -645,13 +675,13 @@ background-color: #FFF;
 				</div>
 					</div>
 				</div>
-				
+				</form>
 				</div>
 				<div style="text-align: center;">
 				<button type="button" class="btn btn-dark" name="submitbtn" id="submitbtn">후기 제출하기</button>
 					</div>
 			
-					s
+					
 <footer>
 <div th:replace="~{fragments/footer :: footer}"></div>
 </footer>
@@ -659,12 +689,10 @@ background-color: #FFF;
         <div th:replace="~{fragments/privacy :: privacy}"></div>
     </div>
 
-<!-- <script type="text/javascript" src="/Hotel28NewCMS_common/js/jquery.modalLayer.js"></script>
-<script type="text/javascript" src="/Hotel28NewCMS_common/js/common_dev.js"></script> -->
-<script type="text/javascript" src="${pageContext.request.contextPath}/common/js/comm/jquery.validate.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/common/js/comm/wings.core.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/common/js/comm/PAGING_HOMEPAGE.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/common/js/comm/kendo.web.min.js"></script>
+<script type="text/javascript" th:src="@{/common/js/comm/jquery.validate.js}"></script>
+<script type="text/javascript" th:src="@{/common/js/comm/wings.core.js}"></script>
+<script type="text/javascript" th:src="@{/common/js/comm/PAGING_HOMEPAGE.js}"></script>
+<script type="text/javascript" th:src="@{/common/js/comm/kendo.web.min.js}"></script>
 
 
 		</div>

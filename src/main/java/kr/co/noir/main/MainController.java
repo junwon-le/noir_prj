@@ -20,26 +20,6 @@ public class MainController {
 		return "manager/main/adminMain";
 	}
 	
-	@GetMapping("/noticeList")
-	public String notice_list() {
-		return "notice/noticeList";
-	}
-
-	@GetMapping("/inquiryList")
-	public String inquiry_list() {
-		return "inquiry/inquiryList";
-	}
-
-	@GetMapping("/writeInquiry")
-	public String write_inquiry() {
-		return "inquiry/writeInquiry";
-	}
-	
-	@GetMapping("/writeReview")
-	public String write_review() {
-		return "review/writeReview";
-	}
-	
 	
 	@GetMapping("/hotel/about")
 	public String aboutHotel() {
