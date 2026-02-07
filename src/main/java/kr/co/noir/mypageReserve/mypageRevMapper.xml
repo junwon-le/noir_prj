@@ -144,10 +144,10 @@
       			and m.member_num = r.member_num
      			and r.reserve_type = 'dinning'
       			and m.member_id = #{memberId}
-      			<if test="startDate != null and startDate != ''">
-     			 AND r.reserve_start_date <![CDATA[<=]]> TO_DATE(#{endDate}, 'YYYY-MM-DD')
-     			 AND r.reserve_end_date   <![CDATA[>=]]> TO_DATE(#{startDate}, 'YYYY-MM-DD')
-      			</if>
+      			<if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+ 					 AND dr.dinning_visit_date BETWEEN TO_DATE(#{startDate}, 'YYYY-MM-DD')
+                               AND TO_DATE(#{endDate}, 'YYYY-MM-DD')
+				</if>
 				)
 				WHERE rnum between #{startNum} and #{endNum}
 		

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.noir.adminDinningReserve.AdminDinningRevMapper">
+
+	
+	<select id="totalCount" parameterType="adminRangeDTO" resultType="int">
+	  	select count(*)	
+   		from reserve r,
+         		dinning_res dr,
+         		dinning_info di,
+        		member m,
+        		pay p
+    	where r.reserve_num = dr.reserve_num
+      			and dr.dinning_menu_num = di.dinning_menu_num
+      			and m.member_num = r.member_num
+      			and r.reserve_num=p.reserve_num
+     			and r.reserve_type = 'dinning'
+     			and r.member_num is not null
+     			and r.non_user_num is null
+     	<if test="keyword != null and keyword != ''">
+              <choose>
+                  <when test="field == 'userName'">
+                      AND (r.END_USER_LAST_NAME || r.END_USER_FIRST_NAME) LIKE '%' || #{keyword} || '%'
+                  </when>
+                  <when test="field == 'reserveNum'">
+                      AND r.reserve_num LIKE '%' || #{keyword} || '%'
+                  </when>
+                  <when test="field == 'memberId'">
+                      AND m.member_id LIKE '%' || #{keyword} || '%'
+                  </when>
+              </choose>
+          </if>
+     			
+				
+	</select>
+
+
+	<select id="selectAdminDinningRevList" parameterType="adminRangeDTO" resultType="adrdDomain">
+		select reserveNum,userName,memberId,dinningType,visitDate,reservePerson,totalPrice,reserveFlag,visitTime
+	
+	  	from(select
+	  			ROW_NUMBER() OVER (ORDER BY r.reserve_status ASC, CASE WHEN dr.dinning_visit_date  <![CDATA[<]]> TRUNC(SYSDATE) THEN 1 ELSE 0 END ASC,dr.dinning_visit_date ASC,dr.dinning_res_detail_time ASC) AS rnum,
+	  					m.member_id as memberId,
+	  					r.END_USER_LAST_NAME||r.END_USER_FIRST_NAME as userName,
+      			  r.reserve_num AS reserveNum,
+       			 TRUNC(r.reserve_time) AS reserveDate,
+       			 to_char(dr.dinning_visit_date,'yyyy-MM-dd') AS visitDate,
+      	 		 (r.reserve_adult_count + r.reserve_kid_count) AS reservePerson,
+       			 r.reserve_status AS reserveFlag,
+       			 dr.dinning_res_detail_time AS visitTime,
+       			 dr.DINNING_RES_TYPE AS dinningType,
+       			 p.pay_price as totalPrice
+   			 from reserve r,
+         		dinning_res dr,
+         		dinning_info di,
+        		member m,
+        		pay p
+    		where r.reserve_num = dr.reserve_num
+      			and dr.dinning_menu_num = di.dinning_menu_num
+      			and m.member_num = r.member_num
+      			and r.reserve_num=p.reserve_num
+     			and r.reserve_type = 'dinning'
+     			and r.member_num is not null
+     			and r.non_user_num is null
+     			<if test="keyword != null and keyword != ''">
+              <choose>
+                  <when test="field == 'userName'">
+                      and (r.END_USER_LAST_NAME || r.END_USER_FIRST_NAME) LIKE '%' || #{keyword} || '%'
+                  </when>
+                  <when test="field == 'reserveNum'">
+                      and r.reserve_num LIKE '%' || #{keyword} || '%'
+                  </when>
+                  <when test="field == 'memberId'">
+                      and m.member_id LIKE '%' || #{keyword} || '%'
+                  </when>
+              </choose>
+          </if>
+     			
+				)
+				
+			WHERE rnum between #{startNum} and #{endNum}
+		
+	</select>
+	 
+	    
+</mapper>

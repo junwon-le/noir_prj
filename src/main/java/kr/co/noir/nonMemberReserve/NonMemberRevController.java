@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @RequestMapping("/nonMember")
 @Controller
@@ -15,11 +16,11 @@ public class NonMemberRevController {
 	
 	
 	@PostMapping("/reserveCheck")
-	public String reserveCheck(NonMemberRevDTO nmrDTO,Model model) {
+	public String reserveCheck(NonMemberRevDTO nmrDTO,Model model,RedirectAttributes rattr) {
 	
 		boolean reserveFlag = true;
 		String reserveType=nmrDTO.getReserveType();
-		String uri = "/login/memberLogin";
+		String uri = "redirect:/login/memberLogin";
 		
 		
 		System.out.println("이메일"+nmrDTO.getEmail());
@@ -46,12 +47,12 @@ public class NonMemberRevController {
 				uri="/nonReserve/nonMemberDinningDetail";
 			}//end else
 				
-		}//end if 
+		}else {
+				rattr.addFlashAttribute("reserveFlag",!reserveFlag );
+			
+		}//end if		
+	
 		
-		/* System.out.println("비밀번호 결과 : " +); */
-		
-		
-		model.addAttribute("reserveFlag", !reserveFlag);
 		
 		
 		return 	uri;

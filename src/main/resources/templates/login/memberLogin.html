@@ -219,8 +219,19 @@
     /* 모달 스타일 끝 */
     
 </style>
-<script type="text/javascript">
+<script th:inline="javascript">
+
+var flag = /*[[${reserveFlag == true}]]*/ false;
 $(function(){
+	
+	
+	
+	
+	if(flag){
+		showHotelAlert("입력하는 정보의 예약내역은 존재하지 않습니다.");
+		history.replaceState({}, null, window.location.pathname);
+	}//end if
+	
 	$("#guestBtn").click(function(){
 		var reserveNum = $("#reserveNum").val();
 		var email = $("#email").val();

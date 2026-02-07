@@ -506,7 +506,10 @@ $(function(){
                     <i class="bi bi-credit-card-2-front fs-4 me-3 text-secondary"></i>
                     <div>
                         <div class="small" th:text="*{payAgency}">MasterCard (Debit)</div>
-                        <div class="text-secondary small text-uppercase" th:text="*{cardData}">**** **** **** 5678</div>
+                   <!--      <div class="text-secondary small text-uppercase" th:text="*{cardData}">**** **** **** 5678</div>--> 
+                       <div class="text-secondary small text-uppercase" th:text="*{#strings.substring(cardData,0,4)}+'-'+*{#strings.substring(cardData,4,8)} + '-'+*{#strings.substring(cardData,8,12)} + '-'+*{#strings.substring(cardData,12,16)}">**** **** **** 5678</div>
+                    
+                   
                     </div>
                 </div>
                 <div class="small text-secondary mt-2" th:text="| Paid on: *{payInputDate} |">Paid on: 2025.12.20 14:30:22</div>

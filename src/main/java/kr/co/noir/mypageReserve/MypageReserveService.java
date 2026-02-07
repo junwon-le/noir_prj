@@ -280,7 +280,7 @@ public class MypageReserveService {
 			
 			drdDomain =mrDAO.selectDinningRevDetail(rdDTO);
 //			drdDomain.setEmail(te.decrypt(drdDomain.getEmail()));
-			drdDomain.setTel(te.decrypt(drdDomain.getTel()));
+//			drdDomain.setTel(te.decrypt(drdDomain.getTel()));
 		}catch (PersistenceException pe) {
 			pe.printStackTrace();
 		}//end catch

@@ -121,12 +121,17 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <div class="breadcome-list">
+                           <div class="breadcome-list" style="margin-left:40px; width:95%; border-radius: 20px;">
                                 <div class="row">
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                         <div class="breadcomb-wp" style="color:#ffffff; font-size: 20px">
-                                            다이닝 예약관리
-                                        </div>
+											<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle;">
+  <path d="M7 2V10C7 12.7614 9.23858 15 12 15C14.7614 15 17 12.7614 17 10V2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M12 2V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <path d="M12 15V22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg><span>&nbsp; 다이닝 에약 관리(회원)</span>
+										</div>
                                     </div>
                                 </div>
                             </div>
@@ -136,29 +141,31 @@
             </div>
         </div>
 
-        <div class="container" style="min-height:670px; width:100%; color:#ffffff">
-            <div class="row" style="padding: 30px;">
+        <div class="container" style="min-height:630px; width:100%; color:#ffffff">
+            <div class="row" style="padding: 30px; margin-left: 5px;">
                 <div class="col-lg-12">
-                    <div class="d-flex" style="display: flex; gap: 10px; margin-bottom: 25px; align-items: center;">
-                        <select class="form-control select_style"> 
-                            <option value="">예약번호</option>
-                            <option value="">성명</option>
-                            <option value="">아이디</option>
+                    <form th:action="@{/admin/dinningMember/}" id="boardSearchFrm" method="get" class="d-flex" style="display: flex; gap: 10px; margin-bottom: 25px; align-items: center;">
+                        <select class="form-control select_style" name="field" id="field"> 
+                            <option value="userName" th:selected="${#strings.equals(param.field,'userName')}">예약번호</option>
+                            <option value="reserveNum" th:selected="${#strings.equals(param.field,'reserveNum')}">예약자명</option>
+                            <option value="memberId" th:selected="${#strings.equals(param.field,'memberId')}">아이디</option>
                         </select>
                         <div style="position: relative; flex-grow: 1; max-width: 350px;">
-                            <input type="text" class="form-control" placeholder="검색어를 입력하세요" style="background: white; border-radius: 8px; height: 42px; color:black; padding-right: 45px; border: 1px solid #e0e6ed;">
+                            <input type="text" name="keyword" id="keyword" th:value="${param.keyword}" class="form-control" placeholder="검색어를 입력하세요" style="background: white; border-radius: 8px; height: 42px; color:black; padding-right: 45px; border: 1px solid #e0e6ed;">
                             <button style="position: absolute; right: 6px; top: 6px; border: none; background: #8e99bc; color: #fff; border-radius: 6px; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">
                                 <i class="fa fa-search"></i>
                             </button>
+                             <input type="hidden" name="currentPage" id="currentPage" th:value="${param.currentPage eq null? 1 : param.currentPage }"/> 
+						
                         </div>
-                    </div>
+                    </form>
 
                     <div class="table-responsive" style="background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.08);">
                         <table class="table mb-0" style="width: 100%; border-collapse: collapse; ">
                             <thead style="background: #f9fbff; color: #5a6a85;">
                                 <tr>
                                     <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600; width: 90px;">예약번호</th>
-                                    <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600;">성명</th>
+                                    <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600;">예약자명</th>
                                     <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600;">ID</th>
                                     <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600;">방문일</th>
                                     <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600;">인원</th>
@@ -167,16 +174,26 @@
                                 </tr>
                             </thead>
                             <tbody style="color: #2a3547; vertical-align: middle; text-align: center;">
+                                
+                                <th:block th:each="dinningRevList:${DinningRevList}" th:object="${dinningRevList}">
                                 <tr class="table-row" onclick="if(event.target.tagName !== 'INPUT') alert('ㄹㅇㅋㅋ')">
-                                    <td style="padding: 20px; font-family: 'Roboto';">1</td>
-                                    <td style="font-weight: 500;">박OO</td>
-                                    <td style="color: #5d87ff;">jonajona</td>
-                                    <td style="font-family: 'Roboto'; color: #7c8fac;">2026-01-15</td>
-                                    <td>3</td>
-                                    <td style="font-family: 'Roboto'; font-weight: 600;">150,000</td>
-                                    <td><span class="badge-status status-refund">환불처리</span></td>
+                                    <td style="padding: 20px; font-family: 'Roboto';" th:text="*{reserveNum}">1</td>
+                                    <td style="font-weight: 500;" th:text="*{userName}">박OO</td>
+                                    <td style="color: #5d87ff;"th:text="*{memberId}">jonajona</td>
+                                    <td style="font-family: 'Roboto'; color: #7c8fac;" th:text="|*{visitDate} ( *{visitTime} / *{dinningType} )|">2026-01-15</td>
+                                    <td th:text="*{reservePerson}">3</td>
+                                    <td style="font-family: 'Roboto'; font-weight: 600;" th:text="*{#numbers.formatInteger(totalPrice,3,'COMMA')}">150,000</td>
+                                    
+                                    <th:block th:if="*{reserveFlag eq 'Y'}">
+                                    	<td><span class="badge-status status-refund">환불처리</span></td>
+                                	</th:block>
+                                	<th:block th:unless="*{reserveFlag eq 'Y'}">
+                                		<td><input type="button" value="예약취소" class="badge-status status-complete btn-cancel" data-toggle="modal" data-target="#statusModal"></td>
+                                	</th:block>
                                 </tr>
-                                <tr class="table-row" onclick="if(event.target.tagName !== 'INPUT') alert('ㄹㅇㅋㅋ')" style="cursor: pointer;">
+                                
+                                
+                             <!--    <tr class="table-row" onclick="if(event.target.tagName !== 'INPUT') alert('ㄹㅇㅋㅋ')" style="cursor: pointer;">
                                     <td style="padding: 20px; font-family: 'Roboto';">2</td>
                                     <td style="font-weight: 500;">이OO</td>
                                     <td style="color: #5d87ff;">jypprincess</td>
@@ -184,40 +201,23 @@
                                     <td>3</td>
                                     <td style="font-family: 'Roboto'; font-weight: 600;">1,200,000</td>
                                     <td><input type="button" value="예약취소" class="badge-status status-complete btn-cancel" data-toggle="modal" data-target="#statusModal"></td>
-                                </tr>
-                                <tr class="table-row">
-                                    <td style="padding: 20px; font-family: 'Roboto';">3</td>
-                                    <td style="font-weight: 500;">박OO</td>
-                                    <td style="color: #5d87ff;">hyunajeossi</td>
-                                    <td style="font-family: 'Roboto'; color: #7c8fac;">2026-01-15</td>
-                                     <td>3</td>
-                                    <td style="font-family: 'Roboto'; font-weight: 600;">1,200,000</td>
-                                    <td><input type="button" value="예약취소" class="badge-status status-complete btn-cancel" data-toggle="modal" data-target="#statusModal"></td>
-                                </tr>
-                                <tr class="table-row">
-                                    <td style="padding: 20px; font-family: 'Roboto';">4</td>
-                                    <td style="font-weight: 500;">박OO</td>
-                                    <td style="color: #5d87ff;">hyunajeossi</td>
-                                    <td style="font-family: 'Roboto'; color: #7c8fac;">2026-01-15</td>
-                                     <td>3</td>
-                                    <td style="font-family: 'Roboto'; font-weight: 600;">1,200,000</td>
-                                    <td><input type="button" value="예약취소" class="badge-status status-complete btn-cancel" data-toggle="modal" data-target="#statusModal"></td>
-                                </tr>
-                                <tr class="table-row">
-                                    <td style="padding: 20px; font-family: 'Roboto';">5</td>
-                                    <td style="font-weight: 500;">박OO</td>
-                                    <td style="color: #5d87ff;">hyunajeossi</td>
-                                    <td style="font-family: 'Roboto'; color: #7c8fac;">2026-01-15</td>
-                                     <td>3</td>
-                                    <td style="font-family: 'Roboto'; font-weight: 600;">1,200,000</td>
-                                    <td><input type="button" value="예약취소" class="badge-status status-complete btn-cancel" data-toggle="modal" data-target="#statusModal"></td>
-                                </tr>
+                                </tr> -->
+                               
+                              
+                               
+                               
+                           
+                              
+                             
+                            
                             </tbody>
                         </table>
                     </div>
 
                     <div style="margin-top: 35px; display: flex; justify-content: center; gap: 8px;">
-                        <button class="page-btn"><i class="fa fa-chevron-left" style="font-size: 12px;"></i></button>
+                       <div th:utext="${pagiNation}" style="display: flex; gap: 8px; align-items: center;"></div>
+                       
+                       <!-- <button class="page-btn"><i class="fa fa-chevron-left" style="font-size: 12px;"></i></button>
                         <button class="page-btn active">1</button>
                         <button class="page-btn">2</button>
                         <button class="page-btn">3</button>
@@ -225,9 +225,9 @@
                         <button class="page-btn" style="background: transparent; color: #fff;">...</button>
                         <button class="page-btn">10</button>
                         <button class="page-btn">11</button>
-                        <button class="page-btn"><i class="fa fa-chevron-right" style="font-size: 12px;"></i></button>
+                        <button class="page-btn" ><i class="fa fa-chevron-right" style="font-size: 12px;"></i></button>  -->
                     </div>
-                </div>
+                </div> 
             </div>
         </div>
         
