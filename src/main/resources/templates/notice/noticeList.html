@@ -438,9 +438,9 @@ border: 1px solid #ddd;
 		<div class="maincontainer">
 				
 				<div class="minimenu">
-				<a th:href="@{/inquiry/writeInquiry}" id="qna">문의 하기</a><br>
-				<a th:href="@{/inquiry/inquiryList}" id="qnaList">문의 내역</a><br>
-				<a th:href="@{/notice/noticeList}" id="notice">공지 사항</a>
+				<a th:href="@{/writeInquiry}" id="qna">문의 하기</a><br>
+				<a th:href="@{/inquiryList}" id="qnaList">문의 내역</a><br>
+				<a th:href="@{/noticeList}" id="notice">공지 사항</a>
 				</div>
 				
 					
@@ -453,7 +453,7 @@ border: 1px solid #ddd;
 				
 				
 					<div style="text-align: center;">
-  <form th:action="@{/notice/noticeList}" id="boardSearchFrm" method="get">
+  <form th:action="@{/noticeList}" id="boardSearchFrm" method="get">
     <div class="searchInput">
 
       <select class="form-select"
@@ -534,12 +534,12 @@ border: 1px solid #ddd;
 
     <div class="agreement-detail">
       <div class="detail-box">
-        <span class="label"><div class="notice-msg"></div></span><br>
+        <span class="label" th:text="${n.noticeMsg}"><div class="notice-msg"></div></span><br>
         
       </div>
 
       <div class="return-box" style="display:none;">
-        <p><b>Re.</b><br><span class="notice-reply"></span></p>
+        <p><b>Re.</b><br><span class="notice-reply" ></span></p>
       </div>
     </div>
   </th:block>

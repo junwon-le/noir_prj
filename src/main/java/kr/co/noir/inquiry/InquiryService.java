@@ -4,15 +4,27 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.encrypt.Encryptors;
+import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.stereotype.Service;
 
 import kr.co.noir.notice.BoardRangeDTO;
+import kr.co.noir.review.ReviewMapper;
 
 @Service
 public class InquiryService {
 
 	@Autowired
 	private InquiryDAO iDAO;
+	
+	@Value("${user.crypto.key}")
+    private String key;
+    @Value("${user.crypto.salt}")
+    private String salt;
+	
+    @Autowired
+	private ReviewMapper rm;
 	
 	/**
 	 * 총 게시물의 수
@@ -220,15 +232,43 @@ public class InquiryService {
 	        e.printStackTrace();
 	    }
 	}
-	
+
 	public InquiryDomain getMemberInfo(int memberNum) {
-	    InquiryDomain iDomain = null;
-	    try {
-	        iDomain = iDAO.selectMemberInfo(memberNum);
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
-	    return iDomain;
+        InquiryDomain iDomain = null;
+        try {
+            iDomain = iDAO.selectMemberInfo(memberNum);
+
+            if (iDomain != null) {
+                // LoginService와 동일한 복호화 도구 생성
+                TextEncryptor te = Encryptors.text(key, salt);
+
+                // 이메일 복호화
+                if (iDomain.getMemberEmail() != null) {
+                    try {
+                        iDomain.setMemberEmail(te.decrypt(iDomain.getMemberEmail()));
+                    } catch (Exception e) {
+                        // 복호화 실패 시 원본 유지 혹은 에러 로그
+                    }
+                }
+
+                // 전화번호(전번) 복호화 
+                // DB 컬럼명이 memberPhone인지 memberTel인지 확인 필요!
+                if (iDomain.getMemberTel() != null) {
+                    try {
+                        iDomain.setMemberTel(te.decrypt(iDomain.getMemberTel()));
+                    } catch (Exception e) {
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return iDomain;
+    }
+	
+	public int getMemberNumById(String memberId) {
+	    return rm.selectMemberNum(memberId);
 	}
+
 	
 }//class

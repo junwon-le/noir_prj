@@ -60,6 +60,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         httpSession.setAttribute("memberName", fullName);           // 이름 표시용
         httpSession.setAttribute("memberNum", member.getMemberNum()); // PK 값
         httpSession.setAttribute("loginUser", member);              // 객체 전체        
+        httpSession.setAttribute("memberProvider", member.getMemberProvider()); // 
+        httpSession.setAttribute("memberProviderId", member.getMemberProviderId()); // 
+        
+//        System.out.println("SNS login : "+ fullName);
         
         // 4. 토큰 암호화 및 DB 저장 (Upsert)
         TextEncryptor te = Encryptors.text(key, salt);
@@ -79,7 +83,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .build();
 
         // 실제 DB 저장 실행!
-        memberMapper.upsertSnsToken(tokenDTO);
+        memberMapper.updateSnsToken(tokenDTO);
         
         return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")),

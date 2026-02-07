@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.noir.review.ReviewMapper">
+
+    <resultMap id="ReviewMap" type="kr.co.noir.review.ReviewDomain">
+        <id property="reviewNum" column="reviewNum" />
+        <result property="memberNum" column="memberNum" />
+        <result property="reviewTitle" column="reviewTitle" />
+        <result property="reviewMsg" column="reviewMsg" />
+        <result property="reviewStar" column="reviewStar" />
+        <result property="reviewDate" column="reviewDate" />
+        <result property="roomType" column="roomType" />
+        <result property="memberLastName" column="memberLastName" />
+        <result property="reserveStartDate" column="reserveStartDate" />
+        <result property="reviewReturn" column="reviewReturn" />
+        <collection property="reviewImgList" javaType="java.util.List" ofType="string">
+        <result column="reviewImg1" />
+    </collection>
+    </resultMap>
+
+    <select id="selectReviewByMember" parameterType="kr.co.noir.notice.BoardRangeDTO" resultMap="ReviewMap">
+    select *
+    from (
+        select 
+            r.member_num as memberNum,
+            r.review_num as reviewNum,
+            r.review_title as reviewTitle,
+            r.review_msg as reviewMsg,
+            r.review_star as reviewStar,
+            r.review_date as reviewDate,
+            r.review_return as reviewReturn,
+            i.room_type as roomType,
+            m.member_last_name as memberLastName,
+            img.review_img1 as reviewImg1,
+            rv.reserve_start_date as reserveStartDate,
+            DENSE_RANK() OVER(ORDER BY r.review_date DESC) as rnum
+        from review r
+        inner join member m on r.member_num = m.member_num
+        inner join room_res res on r.room_res_num = res.room_res_num
+        inner join reserve rv on res.reserve_num = rv.reserve_num
+        inner join room_info i on res.room_type_num = i.room_type_num
+        left outer join review_img img on r.review_num = img.review_num
+        <where>
+            r.review_del_flag = 'N'
+            and r.member_num = #{memberNum}
+        </where>
+    ) 
+    where rnum between #{startNum} and #{endNum}
+    </select>
+
+    <select id="selectBoardTotalCnt" parameterType="kr.co.noir.notice.BoardRangeDTO" resultType="int">
+        select count(*) 
+        from review
+        where review_del_flag = 'N'
+          and member_num = #{memberNum}
+    </select>
+
+    <select id="selectBoardDetail" parameterType="int" resultMap="ReviewMap">
+    select 
+        r.member_num as memberNum,
+        r.review_num as reviewNum,
+        r.review_title as reviewTitle,
+        r.review_msg as reviewMsg,
+        r.review_star as reviewStar,
+        r.review_date as reviewDate,
+        img.review_img1 as reviewImg1
+    from review r
+    left outer join review_img img on r.review_num = img.review_num
+    where r.review_num = #{value}
+    </select>
+<select id="selectReviewByRoom" parameterType="kr.co.noir.notice.BoardRangeDTO" resultMap="ReviewMap">
+    select *
+    from (
+        select 
+            r.review_num as reviewNum,
+            r.review_title as reviewTitle,
+            r.review_msg as reviewMsg,
+            r.review_star as reviewStar,
+            r.review_date as reviewDate,
+            m.member_last_name as memberLastName,
+            img.review_img1 as reviewImg1,
+            rv.reserve_start_date as reserveStartDate,
+            r.review_return as reviewReturn,
+            i.room_type as roomType,
+            DENSE_RANK() OVER(ORDER BY r.review_date DESC) as rnum
+        from review r
+        inner join member m on r.member_num = m.member_num
+        inner join room_res res on r.room_res_num = res.room_res_num
+        inner join reserve rv on res.reserve_num = rv.reserve_num
+        inner join room_info i on res.room_type_num = i.room_type_num
+        left outer join review_img img on r.review_num = img.review_num
+        <where>
+            r.review_del_flag = 'N'
+            /* 핵심: 특정 객실 타입 번호로 필터링 */
+            and res.room_type_num = #{roomTypeNum}
+        </where>
+    ) 
+    where rnum between #{startNum} and #{endNum}
+</select>
+
+<select id="selectRoomReviewCnt" parameterType="int" resultType="int">
+    select count(*) 
+    from review r
+    join room_res res on r.room_res_num = res.room_res_num
+    where r.review_del_flag = 'N'
+      and res.room_type_num = #{roomTypeNum}
+</select>
+<select id="selectMemberNum" parameterType="String" resultType="int">
+    SELECT member_num
+    FROM   member
+    WHERE  member_id = #{memberId}
+</select>
+
+</mapper>

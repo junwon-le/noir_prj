@@ -86,8 +86,8 @@ public class AdminController {
 
     @PostMapping("/admin/members/delete")
     @ResponseBody
-    public String deleteMembers(@RequestBody List<Integer> memberNums) {
-        if (memberService.removeMembers(memberNums)) {
+    public String deleteMembers(@RequestBody List<String> memberIds) {
+        if (memberService.removeMembers(memberIds)) {
             return "OK";
         }
         return "FAIL";

@@ -29,9 +29,10 @@ public class ReserveController {
 	@GetMapping("/roomReserve")
 	public String reserve(HttpSession session,Model model) {
 		//사용자 정보 가져오기
-//		MemberDTO member = (MemberDTO)session.getAttribute("member");
-//		String id= member.getMemberId();
-		String id="user1";
+		//MemberDTO member = (MemberDTO)session.getAttribute("member");
+		//String id= member.getMemberId();
+		String id = String.valueOf(session.getAttribute("memberId")) ;
+//		String id="user1";
 		model.addAttribute("member",rrs.searchMember(id));
 		
 		return "/reserve/roomRes";
@@ -42,9 +43,12 @@ public class ReserveController {
 	public ResponseEntity<String> reserve(@RequestBody List<RoomDependingDTO> PdList , HttpSession session) {
 		//예약 객실을 보류테이블에 추가 
 		try {
-			String JSessionId ="user1";
+			String id = session.getId();
+			if(session.getAttribute("memberId")!=null) {
+			id=String.valueOf(session.getAttribute("memberId")) ;
+			}//end if
 			for(RoomDependingDTO pdDTO : PdList) {
-				pdDTO.setId(JSessionId);
+				pdDTO.setId(id);
 			}//end for
 	        boolean flag = rrs.addRoomDepending(PdList);
 	        if(flag) {
@@ -97,9 +101,9 @@ public class ReserveController {
 	public String reserveComplete(RoomReserveDTO rrDTO ,PayInfoDTO pDTO, HttpSession session, HttpServletRequest request, Model model) {
 		String url ="/reserve/complete";
 		//session id 가져오기
+		String id = String.valueOf(session.getAttribute("memberId")) ;
 		//String id=session.getAttribute("userId");
-		String id="user1";
-		String JSessionId = session.getId();
+		//String id="user1";
 		String ip= request.getRemoteAddr();
 		//데이터 추가
 		rrDTO.setReserve_ip(ip);

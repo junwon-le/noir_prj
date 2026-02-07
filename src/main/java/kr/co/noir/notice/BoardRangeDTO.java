@@ -20,7 +20,7 @@ public class BoardRangeDTO {
 	private int currentPage=1;//이동할 url, 현재 페이지
 	private int totalPage=0; //총 페이지
 	private int memberNum;
-
+	private int roomTypeNum;
 
 	
 

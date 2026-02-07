@@ -55,7 +55,7 @@ public class MypageService {
 		
 		try {
 			cnt=md.selectDinningRevCnt(id);
-			System.out.println("-----service"+cnt);
+//			System.out.println("-----service"+cnt);
 		}catch (PersistenceException pe) {
 			pe.printStackTrace();
 		}//end catch

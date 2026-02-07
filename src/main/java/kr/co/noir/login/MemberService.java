@@ -85,10 +85,16 @@ public class MemberService {
     }//getMemberPage
     
     
-
-    public boolean removeMembers(List<Integer> memberNums) {
-        return memberMapper.updateMembersDelete(memberNums) > 0;
+    //여러명 Y로 바꾸기
+    public boolean removeMembers(List<String> memberIds) {
+        return memberMapper.updateMembersWithdraw(memberIds) > 0;
     }//removeMembers
+
+    // 1명 Delflag Y 로 바꾸기
+    public boolean withdrawMember(String memberId) {
+        return memberMapper.updateMemberWithdraw(memberId) == 1 ;
+    }//removeMembers
+        
     
     
     /**
@@ -135,9 +141,9 @@ public class MemberService {
      * 최종 회원 탈퇴 로직
      */
     @Transactional
-    public boolean processWithdrawal(int memberNum, String provider) {
+    public boolean processWithdrawal(String memberId, String provider) {
         // 1. DB에서 암호화된 토큰 정보 조회
-        SnsTokenDTO snsToken = memberMapper.selectSnsToken(memberNum, provider.toUpperCase());
+        SnsTokenDTO snsToken = memberMapper.selectSnsToken(memberId, provider.toUpperCase());
         
         if (snsToken == null) return false;
 
@@ -168,9 +174,9 @@ public class MemberService {
         // 4. API 호출 성공 시(또는 실패와 무관하게 탈퇴 처리 시) DB 정리
         if (apiResult) {
             // 회원 상태 변경 (DEL_FLAG = 'Y')
-            memberMapper.updateMembersDelete(List.of(memberNum));
+            memberMapper.updateMemberWithdraw(memberId);
             // 연동 토큰 정보 삭제
-            memberMapper.deleteSnsToken(memberNum, provider.toUpperCase());
+            memberMapper.deleteSnsToken(memberId, provider.toUpperCase());
             return true;
         }
 
