@@ -5,6 +5,9 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import kr.co.noir.reserve.PayInfoDTO;
+
+
 
 @Mapper
 public interface DinningReserveMapper {

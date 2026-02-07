@@ -1,6 +1,7 @@
 	package kr.co.noir.dinningReserve;
 
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import kr.co.noir.reserve.MemberDomain;
+import kr.co.noir.reserve.PayInfoDTO;
 import kr.co.noir.reserve.RoomReserveService;
 
 @RequestMapping("/dinningRes")

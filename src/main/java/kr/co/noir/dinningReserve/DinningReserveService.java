@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.siot.IamportRestClient.IamportClient;
 
 import kr.co.noir.reserve.MemberDomain;
+import kr.co.noir.reserve.PayInfoDTO;
 import kr.co.noir.reserve.RoomReserveService;
 
 @Service
