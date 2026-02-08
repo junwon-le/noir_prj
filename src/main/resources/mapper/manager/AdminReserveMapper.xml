@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.noir.manager.reserve.AdminReserveMapper">
+	<select id="selectResTotalCnt">
+		select
+ 		   count(*) cnt
+		from
+ 		  non_member n
+		join
+   		 reserve r on n.non_user_num = r.non_user_num
+		join
+    		room_res rr on r.reserve_num = rr.reserve_num
+		left join
+		    pay p on r.reserve_num = p.reserve_num
+		where
+    		r.reserve_type = 'room' -- 객실 예약만 필터링
+		order by
+    		r.reserve_time desc    -- 최근 예약순
+	</select>
+	<select id="selectNonRoomList" parameterType="adminResRangeDTO">
+	select non_user_num,
+ 		   res_name, -- 예약자 성함
+		   reserve_num,
+		   reserve_time,
+ 		   reserve_email,
+ 		   room_type_num,           -- 예약한 객실 종류
+  		 pay_price,            -- 결제 금액
+  		 reserve_status        -- 예약 상태 (y: 환불/취소, n: 정상)
+	from
+		 (select
+			 row_number() over ( order by r.reserve_time desc ) as rnum,
+ 		   n.non_user_num,
+ 		   n.non_user_res_last_name || n.non_user_res_first_name as res_name, -- 예약자 성함
+		   r.reserve_num,
+ 		   r.reserve_email,
+ 		   r.reserve_time,
+ 		   rr.room_type_num,           -- 예약한 객실 종류
+  		 p.pay_price,            -- 결제 금액
+  		 r.reserve_status        -- 예약 상태 (y: 환불/취소, n: 정상)
+		from
+ 		  non_member n
+		join
+   		 reserve r on n.non_user_num = r.non_user_num
+		join
+    		room_res rr on r.reserve_num = rr.reserve_num
+		left join
+		    pay p on r.reserve_num = p.reserve_num
+		where
+    		r.reserve_type = 'room' -- 객실 예약만 필터링
+		)
+		
+		where rnum between #{startNum} and #{endNum}
+		<if test="field neq null ">
+		and ${field}=#{keyword}
+		</if>
+	</select>
+	
+	<select id="selectnonRoomDetail" parameterType="Integer" resultSets="nonRoomDetailDomain">
+	select
+    n.non_user_num,
+ 	 n.non_user_email,
+    n.non_user_res_last_name || n.non_user_res_first_name as res_name, -- 예약자 성함
+    n.non_user_tel,
+    r.reserve_num,
+    ri.room_type,
+	ri.room_detail,
+	ri.room_area,
+	ri.room_bad_type,           -- 예약한 객실 종류
+    r.reserve_start_date,   -- 체크인
+    r.reserve_end_date,     -- 체크아웃
+    r.reserve_adult_count adult_num,  -- 성인 수
+    r.reserve_kid_count kid_num,    -- 어린이 수
+    r.reserve_msg,
+    p.pay_price res_price            -- 결제 금액
+    from
+    non_member n
+join
+    reserve r on n.non_user_num = r.non_user_num
+join
+    room_res rr on r.reserve_num = rr.reserve_num
+join
+    room_info ri on rr.room_type_num = ri.room_type_num
+left join
+    pay p on r.reserve_num = p.reserve_num
+where
+    r.reserve_num = #{reserve_num}
+	</select>
+</mapper>
