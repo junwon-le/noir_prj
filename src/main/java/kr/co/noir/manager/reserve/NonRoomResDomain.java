@@ -1,5 +1,7 @@
 package kr.co.noir.manager.reserve;
 
+import java.sql.Date;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -8,8 +10,9 @@ import lombok.ToString;
 @Getter
 @ToString
 public class NonRoomResDomain {
-	private int reserveNum, payPrice, roomTypeNum;
-	private String reserveEmail, resName, reserveStatus, reserveTime;
+	private int reserveNum, payPrice, roomTypeNum ,reserveAdultCount,reserveKidCount;
+	private String reserveEmail, resName, reserveStatus, reserveTime; 
+	private Date dinningVisitDate;
 }
 
 

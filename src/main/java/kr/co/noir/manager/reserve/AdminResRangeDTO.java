@@ -13,5 +13,5 @@ import lombok.ToString;
 @Getter
 public class AdminResRangeDTO {
 	private int startNum, endNum, currentPage=1, totalPage=0;
-	private String field, keyword="", url="/admin/nonRoomReserve", type;
+	private String field, keyword="", url="/admin/nonRoomReserve",urlD="/admin/nonDinningReserve", type;
 }

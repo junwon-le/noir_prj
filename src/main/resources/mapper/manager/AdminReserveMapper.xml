@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.noir.manager.reserve.AdminReserveMapper">
-	<select id="selectResTotalCnt">
+	<select id="selectResTotalCnt" resultType="Integer">
 		select
  		   count(*) cnt
 		from
@@ -55,6 +55,54 @@
 		</if>
 	</select>
 	
+	
+	
+	
+	<select id="selectDinningTotalCnt">
+SELECT
+count(*) cnt
+FROM RESERVE r
+JOIN DINNING_RES dr ON r.RESERVE_NUM = dr.RESERVE_NUM
+JOIN NON_MEMBER m   ON r.NON_USER_NUM = m.NON_USER_NUM  -- 이 부분이 수정되었습니다!
+LEFT JOIN PAY p     ON r.RESERVE_NUM = p.RESERVE_NUM    -- 결제 내역이 없을 수도 있다면 LEFT JOIN 권장
+WHERE r.RESERVE_TYPE = 'dinning'
+	</select>
+	
+	
+	<select id="selectNonDinningList" parameterType="adminResRangeDTO">
+	select
+
+	reserve_num,
+	reserve_adult_count,
+	reserve_kid_count,
+    dinning_visit_date,
+    reserve_status,
+   	res_name,
+   	NON_USER_EMAIL as reserve_email,
+    pay_price
+from
+
+(select
+    row_number() over (order by r.reserve_time desc) as rnum,
+    r.reserve_num,
+    r.reserve_adult_count,
+    r.reserve_kid_count,
+    dr.dinning_visit_date,
+    r.reserve_status,
+    m.non_user_res_first_name || m.non_user_res_last_name as res_name,
+    m.NON_USER_EMAIL,
+    p.pay_price
+from reserve r
+join dinning_res dr on r.reserve_num = dr.reserve_num
+join non_member m   on r.non_user_num = m.non_user_num  -- 이 부분이 수정되었습니다!
+left join pay p     on r.reserve_num = p.reserve_num    -- 결제 내역이 없을 수도 있다면 left join 권장
+where r.reserve_type = 'dinning')
+where rnum between #{startNum} and #{endNum}
+		<if test="field neq null ">
+		and ${field}=#{keyword}
+		</if>
+	</select>
+	
 	<select id="selectnonRoomDetail" parameterType="Integer" resultSets="nonRoomDetailDomain">
 	select
     n.non_user_num,
@@ -85,4 +133,38 @@ left join
 where
     r.reserve_num = #{reserve_num}
 	</select>
+	<select id="selectnonDinningDetail" parameterType="Integer" resultSets="nonDinningDetailDomain">
+	SELECT
+    ROW_NUMBER() OVER (ORDER BY r.reserve_time DESC) AS rnum,
+    r.RESERVE_NUM,
+    r.RESERVE_ADULT_COUNT as adult_num,
+    r.RESERVE_KID_COUNT as kid_num,
+    r.RESERVE_MSG,
+    dr.DINNING_RES_DETAIL_TIME,
+    dr.DINNING_RES_TYPE,
+    dr.DINNING_VISIT_DATE,
+    r.RESERVE_STATUS,
+    m.NON_USER_RES_LAST_NAME || m.NON_USER_RES_FIRST_NAME as res_name,
+    m.NON_USER_EMAIL,
+    m.NON_USER_TEL,
+    p.PAY_PRICE as res_price
+
+FROM RESERVE r
+JOIN DINNING_RES dr ON r.RESERVE_NUM = dr.RESERVE_NUM
+JOIN NON_MEMBER m   ON r.NON_USER_NUM = m.NON_USER_NUM  -- 이 부분이 수정되었습니다!
+LEFT JOIN PAY p     ON r.RESERVE_NUM = p.RESERVE_NUM    -- 결제 내역이 없을 수도 있다면 LEFT JOIN 권장
+WHERE r.RESERVE_TYPE = 'dinning' and r.reserve_num= #{reserve_num}
+	</select>
+	
+	<update id="updateDinningRes" parameterType="Integer">
+	update reserve
+	set reserve_status='Y'
+	where reserve_num = #{reserve_num}
+	</update>
+	
+	<update id="updateDinningPay" parameterType="Integer">
+	UPDATE pay
+	set PAY_REFUND_STATE='Y'
+	where RESERVE_NUM = #{reserve_num}
+	</update>
 </mapper>

@@ -38,7 +38,7 @@ public class AdminReserveController {
 	
 	@GetMapping("/nonDinningReserve")
 	public String nonDinningReserve(AdminResRangeDTO arrDTO, Model model) {
-		int totalCnt = ars.totalCnt(arrDTO);
+		int totalCnt = ars.DinningTotalCnt(arrDTO);
 		int pageScale = ars.pageScale();
 		int currentPage = arrDTO.getCurrentPage();
 		int startNum = ars.startNum(pageScale, currentPage);
@@ -47,8 +47,8 @@ public class AdminReserveController {
 		arrDTO.setEndNum(endNum);
 		arrDTO.setStartNum(startNum);
 		arrDTO.setCurrentPage(currentPage);
-		List<NonRoomResDomain> list = ars.searchNonRoomList(arrDTO);
-		String pagination = ars.pagination(arrDTO, "center");
+		List<NonRoomResDomain> list = ars.searchNonDinngingList(arrDTO);
+		String pagination = ars.paginationDinning(arrDTO, "center");
 		
 		model.addAttribute("list",list);
 		model.addAttribute("pagination",pagination);
@@ -63,4 +63,19 @@ public class AdminReserveController {
 		model.addAttribute("room",roomDetail);
 		return "/manager/reserve/nonRoomResDetail";
 	}//nonRoomResDetail
+	
+	@GetMapping("/nonDinningResDetail")
+	public String nonDinningResDetail(int resNum, Model model) {
+		NonDinningDetailDomain dinningDetail = ars.searchnonDinningDetail(resNum);
+		
+		model.addAttribute("dinning",dinningDetail);
+		return "/manager/reserve/nonDinningResDetail";
+	}//nonDinningResDetail
+	
+	@GetMapping("/nonDinningRefund")
+	public String nonDinningRefund(int resNum, Model model) {
+		ars.modifyDinningRes(resNum);
+		
+		return "redirect:/admin/nonDinningReserve";
+	}//nonDinningResDetail
 }

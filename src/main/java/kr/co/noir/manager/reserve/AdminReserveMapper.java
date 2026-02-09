@@ -12,4 +12,14 @@ public interface AdminReserveMapper {
 	public List<NonRoomResDomain> selectNonRoomList(AdminResRangeDTO arrDTO);
 	
 	public NonRoomDetailDomain selectnonRoomDetail(int resNum);
+	
+	
+	public int selectDinningTotalCnt(AdminResRangeDTO arrDTO);
+
+	public List<NonRoomResDomain> selectNonDinningList(AdminResRangeDTO arrDTO);
+
+	public NonDinningDetailDomain selectnonDinningDetail(int resNum);
+	
+	public int updateDinningRes(int resNum);
+	public int updateDinningPay(int resNum);
 }

@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AdminReserveService {
@@ -21,6 +22,17 @@ public class AdminReserveService {
 			e.printStackTrace();
 		}
 
+		return totalCnt;
+	}
+	
+	public int DinningTotalCnt(AdminResRangeDTO arrDTO) {
+		int totalCnt = 0;
+		try {
+			totalCnt = arm.selectDinningTotalCnt(arrDTO);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		return totalCnt;
 	}
 
@@ -78,6 +90,26 @@ public class AdminReserveService {
 		}//end if
 		try {
 			list = arm.selectNonRoomList(arrDTO);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}//searchNonRoomList
+	
+	public List<NonRoomResDomain> searchNonDinngingList(AdminResRangeDTO arrDTO){
+		List<NonRoomResDomain> list = null;
+		if(arrDTO.getField() != null) {
+			
+			String field = switch(arrDTO.getField()) {
+			case "예약번호" ->"reserve_num";
+			case "성명" -> "res_name";
+			case "아이디" -> "reserve_email";
+			default -> null;
+			};//end switch
+			arrDTO.setField(field);
+		}//end if
+		try {
+			list = arm.selectNonDinningList(arrDTO);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -173,6 +205,96 @@ public class AdminReserveService {
 	      return pagination.toString();
 	   }//pagination
 	
+	/**
+	 * 페이지 네이션 << 1 2 3 4 5 >>
+	 * @param rDTO
+	 * @return
+	 */
+	public String paginationDinning( AdminResRangeDTO arrDTO, String justify ) {
+	      StringBuilder pagination=new StringBuilder();
+	      //1. 한 화면에 보여줄 pagination의 수.
+	      int pageNumber=5;
+	      //2. 화면에 보여줄 시작페이지 번호. 1,2,3 => 1로 시작 , 4,5,6=> 4, 7,8,9=>7
+	      int startPage= ((arrDTO.getCurrentPage()-1)/pageNumber)*pageNumber+1;
+	      //3. 화면에 보여줄 마지막 페이지 번호 1,2,3 =>3
+	      int endPage= (((startPage-1)+pageNumber)/pageNumber)*pageNumber;
+	      //4. 총페이지수가 연산된 마지막 페이지수보다 작다면 총페이지 수가 마지막 페이지수로 설정
+	      //456 인경우 > 4로 설정
+	      if( arrDTO.getTotalPage() <= endPage) {
+	         endPage=arrDTO.getTotalPage();
+	      }//end if
+	      //5.첫페이지가 인덱스 화면 (1페이지) 가 아닌 경우
+	      int movePage=0;
+	      StringBuilder prevMark=new StringBuilder();
+	      prevMark.append("<a href='#void' class='arrow'>&lt;</a>");
+	      //prevMark.append("<li class='page-item'><a class='page-link' href='#'>Previous</a></li>");
+	      if(arrDTO.getCurrentPage() > pageNumber) {// 시작페이지 번호가 3보다 크면 
+	         movePage=startPage-1;// 4,5,6->3 ->1 , 7 ,8 ,9 -> 6 -> 4
+	         prevMark.delete(0, prevMark.length());// 이전에 링크가 없는 [<<] 삭제
+	         prevMark.append("<a href='").append(arrDTO.getUrlD())
+	         .append("?currentPage=").append(movePage);
+	         //검색 키워드가 있다면 검색 키워드를 붙인다.
+	         if( arrDTO.getKeyword() != null && !arrDTO.getKeyword().isEmpty() ) {
+	            prevMark.append("&field=").append(arrDTO.getField())
+	            .append("&keyword=").append(arrDTO.getKeyword());
+	         }//end if
+	         prevMark.append("'>&lt;</a>");
+	      }//end if
+	      
+	      //6.시작페이지 번호부터 끝 번호까지 화면에 출력
+	      StringBuilder pageLink=new StringBuilder();
+	      movePage=startPage;
+	      
+	      while( movePage <= endPage ) {
+	         if( movePage == arrDTO.getCurrentPage()) { //현재 페이지 : 링크 x
+	            pageLink.append("<a href='#void' class='page-num active'>") 
+	            .append(movePage).append("</a>");
+	         }else {//현재페이지가 아닌 다른 페이지 : 링크 O
+	            pageLink.append("<a href='")
+	            .append(arrDTO.getUrlD()).append("?currentPage=").append(movePage);
+	            //검색 키워드가 있다면 검색 키워드를 붙인다.
+	            if( arrDTO.getKeyword() != null && !arrDTO.getKeyword().isEmpty() ) {
+	               pageLink.append("&field=").append(arrDTO.getField())
+	               .append("&keyword=").append(arrDTO.getKeyword());
+	            }//end if
+	            pageLink.append("' class='page-num'>").append(movePage).append("</a>");
+	            
+	         }//else
+	         
+	         movePage++;
+	      }//end while
+	      
+	      //7. 뒤에 페이지가 더 있는 경우
+	      StringBuilder nextMark=new StringBuilder(" <a href='#void' class='arrow'>&gt;</a> ");
+	      if( arrDTO.getTotalPage() > endPage) { // 뒤에 페이지가 더 있음.
+	         movePage= endPage+1;
+	         nextMark.delete(0, nextMark.length());
+	         nextMark.append("<a href='")
+	         .append(arrDTO.getUrlD()).append("?currentPage=").append(movePage);
+	         if( arrDTO.getKeyword() != null && !arrDTO.getKeyword().isEmpty() ) {
+	            nextMark.append("&field=").append(arrDTO.getField())
+	            .append("&keyword=").append(arrDTO.getKeyword());
+	         }//end if
+	         
+	         nextMark.append("'#void' class='arrow'>&gt;</a> ");
+	         
+	      }//end if
+	      
+	      if(!("center".equals(justify) || "left".equals(justify))) {
+	         justify="left";
+	      }
+	      pagination.append("<nav aria-label='...'>")
+	      .append("  <ul class='pagination d-flex justify-content-")
+	      .append(justify)
+	      .append("'>");
+	      pagination.append(prevMark).append(pageLink).append(nextMark);
+	      pagination.append("</ul>")
+	      .append("  </nav>");
+	      
+	      return pagination.toString();
+	   }//pagination
+	
+	
 		//객실 예약 상세
 		public NonRoomDetailDomain searchNonRoomDetail(int resNum) {
 			NonRoomDetailDomain roomDetail = arm.selectnonRoomDetail(resNum);
@@ -183,6 +305,20 @@ public class AdminReserveService {
 			long period = ChronoUnit.DAYS.between(start, end);
 			roomDetail.setPeriod(period);
 			return roomDetail;
+		}//searchNonRoomDetail
+		
+		//객실 예약 상세
+		public NonDinningDetailDomain searchnonDinningDetail(int resNum) {
+			NonDinningDetailDomain dinningDetail = arm.selectnonDinningDetail(resNum);
+			dinningDetail.setDinningVisitDate(dinningDetail.getDinningVisitDate().substring(0,10));
+			return dinningDetail;
+		}//searchNonRoomDetail
+		
+		//객실 예약 상세
+		@Transactional
+		public void modifyDinningRes(int resNum) {
+			 arm.updateDinningRes(resNum) ;
+			 arm.updateDinningPay(resNum);
 		}//searchNonRoomDetail
 	
 }//class

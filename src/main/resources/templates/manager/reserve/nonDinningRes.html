@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<!-- jQeury CDN 시작 -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <style>
         body {
             background-color: #1a1c2e; /* 다크 네이비 배경 */
@@ -203,6 +205,27 @@ height: 50px;
     <!-- modernizr JS
 		============================================ -->
     <script src="js/vendor/modernizr-2.8.3.min.js"></script>
+    <script>
+$(function() {
+    // #table 안에 있는 tbody를 감시하다가, 그 안의 tr이 클릭되면 실행합니다.
+    $("#table").on("click", "tbody tr", function(e) {
+    	var resNum = $(this).find(".resNum").text();
+    	if ($(e.target).closest("button").length > 0) {
+    		refund(resNum);
+            return; 
+        }
+        location.href="/admin/nonDinningResDetail?resNum="+resNum
+        // 클릭한 행의 데이터를 가져오는 팁
+    });
+    
+    
+});//ready
+    function refund(resNum){
+		if(confirm("정말 환불을 진행하시겠습니까?")){
+    	location.href="/admin/nonDinningRefund?resNum="+resNum
+		}
+    }
+</script>
 </head>
 
 <body>
@@ -233,39 +256,41 @@ height: 50px;
         </div>
         <div class="container" style="height:700px; color:#ffffff">
         
+          <form id="searchFrm" action="/admin/nonRoomReserve">
           <div class="search-container">
         <select class="dropdown">
-            <option value="예약번호" selected>예약번호</option>
-            <option value="성명" >성명</option>
-            <option value="아이디" >E-mail</option>
+            <option value="전체" selected>전체</option>
+            <option value="예약번호" th:selected="${#strings.equals(param.field, '예약번호')}">예약번호</option>
+            <option value="성명" th:selected="${#strings.equals(param.field, '성명')}" >성명</option>
+            <option value="아이디" th:selected="${#strings.equals(param.field, '아이디')}" >아이디</option>
         </select>
         <div class="search-wrapper">
             <input type="text" class="search-input" placeholder="제목 검색">
-            <button class="search-btn">🔍</button>
+            <button class="search-btn" id="search">🔍</button>
         </div>
     </div>
-
+	</form>
     <div class="table-wrapper">
-        <table>
+        <table id="table">
             <thead>
                 <tr>
                     <th>예약 번호</th>
                     <th>성명</th>
                     <th>E-mail</th>
-                    <th>상품명</th>
+                    <th>인원</th>
                     <th>금액</th>
-                    <th>결제시간</th>
+                    <th>방문일</th>
                     <th>상태</th>
                 </tr>
             </thead>
             <tbody>
             <tr th:each="reserve, i : ${list}" th:object="${reserve}">
-                    <td th:text="*{reserveNum}">1</td>
-                    <td th:text="*{resName}">박이소</td>
+                    <td th:text="*{reserveNum}" class="resNum ">1</td>
+                    <td th:text="*{resName}" >박이소</td>
                     <td th:text="*{reserveEmail}">ADMIN0001</td>
-                    <td th:text="*{roomTypeNum}">1</td>
+                    <td th:text="|성인 *{reserveAdultCount} / 아동 *{reserveKidCount}|">1</td>
                     <td th:text="*{payPrice}">150,000</td>
-                    <td th:text="*{reserveTime}">25.05.23:00:00</td>
+                    <td th:text="|*{dinningVisitDate}|">25.05.23:00:00</td>
                     <td th:if="*{reserveStatus eq 'N'}">
                     <button class="refund-btn">환불</button>
                     </td>

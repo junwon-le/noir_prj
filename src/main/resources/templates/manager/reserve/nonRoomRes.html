@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+	<!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <!-- jQeury CDN 시작 -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -249,8 +249,8 @@ $(function() {
         <select class="dropdown" name="field">
             <option value="전체" selected>전체</option>
             <option value="예약번호" th:selected="${#strings.equals(param.field, '예약번호')}">예약번호</option>
-            <option value="성명" th:selected="${#strings.equals(param.field, '예약번호')}" >성명</option>
-            <option value="아이디" th:selected="${#strings.equals(param.field, '예약번호')}" >아이디</option>
+            <option value="성명" th:selected="${#strings.equals(param.field, '성명')}" >성명</option>
+            <option value="아이디" th:selected="${#strings.equals(param.field, '아이디')}" >아이디</option>
         </select>
         <div class="search-wrapper">
             <input type="text" class="search-input" placeholder="제목 검색" name="keyword">
