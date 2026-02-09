@@ -2,11 +2,13 @@ package kr.co.noir.adminDinningReserve;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
 
 @RequestMapping("/admin/dinningMember")
 @Controller
@@ -44,9 +46,30 @@ public class AdminDinningRevController {
 		model.addAttribute("DinningRevList", list);
 		model.addAttribute("pagiNation", pagiNation);
 		 
-		return "/manager/dinning_rev/dinningRevList";
+		return "/manager/dinningReserve/dinningRevList";
 		
 	}//AdminDinningRevView
+	
+	@GetMapping("/dinningDetail")
+	public String dinningMemberDetail (int reserveNum,Model model) {
+	
+		model.addAttribute("memberDininngDetail", adrs.serachOneDinningDetail(reserveNum));
+		return "/manager/dinningReserve/dinningRevDetail";
+	}//dinningMemberDetail
+	
+	@GetMapping("/Hoteldetail")
+	public String hotelMemberDetail () {
+		
+		
+		return "/manager/hotelReserve/hotelRev_detail";
+	}
+	
+	@GetMapping("/HotelRev")
+	public String hotelMeDetail () {
+		
+		
+		return "/manager/hotelReserve/hotelRev";
+	}
 	
 	
 }

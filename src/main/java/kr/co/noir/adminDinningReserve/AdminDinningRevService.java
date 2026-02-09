@@ -6,6 +6,8 @@ import org.apache.ibatis.exceptions.PersistenceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import kr.co.noir.mypageReserve.DinningRevDetailDomain;
+
 @Service
 public class AdminDinningRevService {
 
@@ -38,7 +40,7 @@ public class AdminDinningRevService {
 	 */
 	public int pageScale() {
 		
-		return 10;
+		return 8;
 		
 	}//pageScale
 	
@@ -96,6 +98,24 @@ public class AdminDinningRevService {
 		return list;
 		
 	}//SearchDinningRevList
+	
+	
+	public DinningRevDetailDomain serachOneDinningDetail(int reserveNum) {
+		DinningRevDetailDomain drdDomain=null;
+		
+		
+		try {
+			
+			drdDomain=adrm.selectOneAdminDinningDetail(reserveNum);
+			
+			
+		}catch (PersistenceException pe) {
+			pe.printStackTrace();
+		}//end catch 		
+		
+		return drdDomain;
+		
+	}//serachOneDinningDetail
 	
 	
 	public String pagenation(AdminRangeDTO arDTO) {

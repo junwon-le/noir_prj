@@ -81,6 +81,44 @@
 			WHERE rnum between #{startNum} and #{endNum}
 		
 	</select>
+	
+	
+	
+	<select id="selectOneAdminDinningDetail" parameterType="int" resultType="dinningRevDetailDomain">
+			
+	  	select	r.END_USER_LAST_NAME||r.END_USER_FIRST_NAME as reserveName,
+      			  r.reserve_num AS reserveNum,
+       			 TRUNC(r.reserve_time) AS reserveDate,
+       			 to_char(dr.dinning_visit_date,'yyyy-MM-dd') AS visitDate,
+       			 r.reserve_status AS reserveFlag,
+       			 dr.dinning_res_detail_time AS visitTime,
+       			 dr.DINNING_RES_TYPE AS dinningType,
+       			 p.pay_price as priceTotal,
+       			 r.RESERVE_ADULT_COUNT as adultCount,
+       			 r.reserve_kid_count as childCount,
+       			 r.RESERVE_EMAIL as email,
+       			 r.reserve_tel as tel,
+       			 r.reserve_msg as reserveMsg,
+       			 pi.INPUT_DATE as payInputDate
+   			 from reserve r,
+         		dinning_res dr,
+         		dinning_info di,
+        		member m,
+        		pay p,
+        		pay_info pi
+    		where r.reserve_num = dr.reserve_num
+      			and dr.dinning_menu_num = di.dinning_menu_num
+      			and m.member_num = r.member_num
+      			and r.reserve_num=p.reserve_num
+      			and p.pay_num=pi.pay_num
+     			and r.reserve_type = 'dinning'
+     			and r.member_num is not null
+     			and r.non_user_num is null
+					and r.reserve_num=38
+	
+	
+	</select>
+	
 	 
 	    
 </mapper>
