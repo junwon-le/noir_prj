@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<!-- jQeury CDN 시작 -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <style>
         body {
             background-color: #1a1c2e; /* 다크 네이비 배경 */
@@ -145,6 +147,16 @@ tr{
 height: 50px;
 }
     </style>
+<script>
+$(function() {
+    // #table 안에 있는 tbody를 감시하다가, 그 안의 tr이 클릭되면 실행합니다.
+    $("#table").on("click", "tbody tr", function() {
+        location.href="/admin/nonRoomResDetail?resNum="+$(this).find(".resNum").text()
+        // 클릭한 행의 데이터를 가져오는 팁
+    });
+    
+});//ready
+</script>
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -232,21 +244,23 @@ height: 50px;
             </div>
         </div>
         <div class="container" style="height:700px; color:#ffffff">
-        
+        <form id="searchFrm" action="/admin/nonRoomReserve">
           <div class="search-container">
-        <select class="dropdown">
-            <option value="예약번호" selected>예약번호</option>
-            <option value="성명" >성명</option>
-            <option value="아이디" >아이디</option>
+        <select class="dropdown" name="field">
+            <option value="전체" selected>전체</option>
+            <option value="예약번호" th:selected="${#strings.equals(param.field, '예약번호')}">예약번호</option>
+            <option value="성명" th:selected="${#strings.equals(param.field, '예약번호')}" >성명</option>
+            <option value="아이디" th:selected="${#strings.equals(param.field, '예약번호')}" >아이디</option>
         </select>
         <div class="search-wrapper">
-            <input type="text" class="search-input" placeholder="제목 검색">
-            <button class="search-btn">🔍</button>
+            <input type="text" class="search-input" placeholder="제목 검색" name="keyword">
+            <button class="search-btn" id="search">🔍</button>
         </div>
     </div>
+        </form>
 
-    <div class="table-wrapper">
-        <table>
+    <div class="table-wrapper" >
+        <table id="table">
             <thead>
                 <tr>
                     <th>예약 번호</th>
@@ -258,111 +272,28 @@ height: 50px;
                     <th>상태</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>박이소</td>
-                    <td>ADMIN0001</td>
-                    <td>1</td>
-                    <td>150,000</td>
-                    <td>25.05.23:00:00</td>
-                    <td><button class="refund-btn">환불</button></td>
+            <tbody >
+                <tr th:each="reserve, i : ${list}" th:object="${reserve}">
+                    <td th:text="*{reserveNum}" class="resNum">1</td>
+                    <td th:text="*{resName}">박이소</td>
+                    <td th:text="*{reserveEmail}">ADMIN0001</td>
+                    <td th:text="*{roomTypeNum}">1</td>
+                    <td th:text="*{payPrice}">150,000</td>
+                    <td th:text="*{reserveTime}">25.05.23:00:00</td>
+                    <td th:if="*{reserveStatus eq 'N'}">
+                    <button class="refund-btn">환불</button>
+                    </td>
+                    <td th:if="*{reserveStatus eq 'Y'}">
+                    <button disabled="disabled" class="refund-btn" style="background-color: #e97433;">환불완료</button>
+                    </td>
                 </tr>
-                <tr>
-                    <td>2</td>
-                    <td>이</td>
-                    <td>ADMIN0002</td>
-                    <td>2</td>
-                    <td>1,200,000</td>
-                    <td>25.05.23</td>
-                    <td><button class="refund-btn">환불</button></td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>박</td>
-                    <td>ADMIN0003</td>
-                    <td>3</td>
-                    <td></td>
-                    <td>25.05.23</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>4</td>
-                    <td>박</td>
-                    <td>ADMIN0004</td>
-                    <td>2</td>
-                    <td></td>
-                    <td>25.05.23</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>5</td>
-                    <td>조</td>
-                    <td>ADMIN0005</td>
-                    <td>2</td>
-                    <td></td>
-                    <td>25.05.23</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>6</td>
-                    <td>조</td>
-                    <td>ADMIN0005</td>
-                    <td>2</td>
-                    <td></td>
-                    <td>25.05.23</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>7</td>
-                    <td>조</td>
-                    <td>ADMIN0005</td>
-                    <td>2</td>
-                    <td></td>
-                    <td>25.05.23</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>8</td>
-                    <td>조</td>
-                    <td>ADMIN0005</td>
-                    <td>2</td>
-                    <td></td>
-                    <td>25.05.23</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>9</td>
-                    <td>조</td>
-                    <td>ADMIN0005</td>
-                    <td>2</td>
-                    <td></td>
-                    <td>25.05.23</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>10</td>
-                    <td>조</td>
-                    <td>ADMIN0005</td>
-                    <td>2</td>
-                    <td></td>
-                    <td>25.05.23</td>
-                    <td></td>
-                </tr>
-            </tbody>
+              </tbody>
         </table>
     </div>
 
     <div class="pagination">
-        <a href="#" class="arrow">&lt;</a>
-        <a href="#" class="page-num active">1</a>
-        <a href="#" class="page-num">2</a>
-        <a href="#" class="page-num">3</a>
-        <a href="#" class="page-num">4</a>
-        <span style="color:white">...</span>
-        <a href="#" class="page-num">10</a>
-        <a href="#" class="page-num">11</a>
-        <a href="#" class="arrow">&gt;</a>
+    	<th:block th:utext="${pagination}">
+    	</th:block>
     </div>
         </div>        
        

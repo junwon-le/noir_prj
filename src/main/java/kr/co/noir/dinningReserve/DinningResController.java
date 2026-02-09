@@ -46,6 +46,12 @@ public class DinningResController {
 		return "/reserve/dinningRes";
 	}//dinningReserve
 	
+	@GetMapping("/nonDinningReserve")
+	public String nonDinningReserve() {
+		
+		return "/reserve/nonDinningRes";
+	}//dinningReserve
+	
 	@PostMapping("/complete")
 	public String reserveComplete(DinningReserveDTO drDTO ,PayInfoDTO pDTO, HttpSession session, HttpServletRequest request, Model model) {
 		String url ="/reserve/dinningComplete";
@@ -61,6 +67,29 @@ public class DinningResController {
 		
 		//예약 완료 시 테이블에 정보 추가
 		boolean flag = drs.addDinningReserve(drDTO,pDTO);
+		if(!flag) {
+			url="reserve/err";
+		}
+		model.addAttribute("reserve" , drDTO);
+		model.addAttribute("pay" , pDTO);
+		//예약 완료 시 보류 테이블에서 삭제 
+		drs.removeDepending(id);
+		
+		return url;
+	}//reserveComplete
+	@PostMapping("/nonComplete")
+	public String reserveNonComplete(DinningReserveDTO drDTO ,PayInfoDTO pDTO, HttpSession session, HttpServletRequest request, Model model) {
+		String url ="/main";
+		//session id 가져오기
+		String id = session.getId() ;
+		String ip= request.getRemoteAddr();
+		//데이터 추가
+		drDTO.setReserve_ip(ip);
+		drDTO.setUser_id(id);
+		drDTO.setReserve_type("dinning");
+		
+		//예약 완료 시 테이블에 정보 추가
+		boolean flag = drs.addNonDinningReserve(drDTO,pDTO);
 		if(!flag) {
 			url="reserve/err";
 		}

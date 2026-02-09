@@ -259,110 +259,27 @@ height: 50px;
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>박이소</td>
-                    <td>ADMIN0001</td>
-                    <td>1</td>
-                    <td>150,000</td>
-                    <td>25.05.23:00:00</td>
-                    <td><button class="refund-btn">환불</button></td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>이</td>
-                    <td>ADMIN0002</td>
-                    <td>2</td>
-                    <td>1,200,000</td>
-                    <td>25.05.23</td>
-                    <td><button class="refund-btn">환불</button></td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>박</td>
-                    <td>ADMIN0003</td>
-                    <td>3</td>
-                    <td></td>
-                    <td>25.05.23</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>4</td>
-                    <td>박</td>
-                    <td>ADMIN0004</td>
-                    <td>2</td>
-                    <td></td>
-                    <td>25.05.23</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>5</td>
-                    <td>조</td>
-                    <td>ADMIN0005</td>
-                    <td>2</td>
-                    <td></td>
-                    <td>25.05.23</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>6</td>
-                    <td>조</td>
-                    <td>ADMIN0005</td>
-                    <td>2</td>
-                    <td></td>
-                    <td>25.05.23</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>7</td>
-                    <td>조</td>
-                    <td>ADMIN0005</td>
-                    <td>2</td>
-                    <td></td>
-                    <td>25.05.23</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>8</td>
-                    <td>조</td>
-                    <td>ADMIN0005</td>
-                    <td>2</td>
-                    <td></td>
-                    <td>25.05.23</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>9</td>
-                    <td>조</td>
-                    <td>ADMIN0005</td>
-                    <td>2</td>
-                    <td></td>
-                    <td>25.05.23</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>10</td>
-                    <td>조</td>
-                    <td>ADMIN0005</td>
-                    <td>2</td>
-                    <td></td>
-                    <td>25.05.23</td>
-                    <td></td>
+            <tr th:each="reserve, i : ${list}" th:object="${reserve}">
+                    <td th:text="*{reserveNum}">1</td>
+                    <td th:text="*{resName}">박이소</td>
+                    <td th:text="*{reserveEmail}">ADMIN0001</td>
+                    <td th:text="*{roomTypeNum}">1</td>
+                    <td th:text="*{payPrice}">150,000</td>
+                    <td th:text="*{reserveTime}">25.05.23:00:00</td>
+                    <td th:if="*{reserveStatus eq 'N'}">
+                    <button class="refund-btn">환불</button>
+                    </td>
+                    <td th:if="*{reserveStatus eq 'Y'}">
+                    <button disabled="disabled" class="refund-btn" style="background-color: #e97433;">환불완료</button>
+                    </td>
                 </tr>
             </tbody>
         </table>
     </div>
 
     <div class="pagination">
-        <a href="#" class="arrow">&lt;</a>
-        <a href="#" class="page-num active">1</a>
-        <a href="#" class="page-num">2</a>
-        <a href="#" class="page-num">3</a>
-        <a href="#" class="page-num">4</a>
-        <span style="color:white">...</span>
-        <a href="#" class="page-num">10</a>
-        <a href="#" class="page-num">11</a>
-        <a href="#" class="arrow">&gt;</a>
+    	<th:block th:utext="${pagination}">
+    	</th:block>
     </div>
         </div>        
        

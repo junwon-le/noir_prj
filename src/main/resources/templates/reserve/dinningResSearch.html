@@ -207,6 +207,42 @@ $(function(){
 	        
 	    });//ajax 
 	    })//reserve
+	$("#nonReserve").click(function(){
+		if(!$("#reserveDate").val()){
+			alert("예약 날짜를 선택해 주세요.");
+			return;
+		}
+		if(!$("#dinningType").val()){
+			alert("예약 시간을 선택해 주세요.");
+			return;
+		}
+		$("#adultCnt").val(adultCnt)
+		$("#kidCnt").val(kidCnt)
+		$("#price").val(totalPrice)
+		var time=$("#time").text();
+		var dependingDinningDTO={
+				pendingPerson: adultCnt+kidCnt,
+				reserveDate: $("#reserveDate").val(),
+				reserveTime: $("#dinningTime").val()
+		}
+	 	axios.post('/dinningRes/depending', dependingDinningDTO)
+	    .then(response => {
+	        // 성공 시 로직\
+	        const frm = $("#reserveFrm");
+	        frm.attr("action", "/dinningRes/nonDinningReserve");
+	        frm.submit();
+	    })
+	    .catch(error => {
+	        // 실패 시 로직
+	        // 서버에서 보낸 에러 메시지 추출 (ResponseEntity.body에 담긴 내용)
+	    	const errorData = error.response ? error.response.data : "알 수 없는 오류";
+	        const errorMessage = typeof errorData === 'object' ? JSON.stringify(errorData) : errorData;
+	        
+	        alert("에러 내용: " + errorMessage);
+	        console.log(error.response.data);
+	        
+	    });//ajax 
+	    })//reserve
 	
 	
 	
@@ -342,10 +378,16 @@ function calPrice(){
 								
 							</div>
 							<div class="flex gap-2">
+							<th:block th:if="${session.memberId ne null}">
 								<button type="button"
 									class="flex-1 bg-[#8b7355] hover:bg-[#7a654a] py-4 font-bold text-sm" id="reserve">예약하기</button>
-								<button type="button" class="flex-1 bg-[#333] py-4 font-bold text-sm">비회원
+							</th:block>
+							<th:block th:if="${session.memberId eq null}">
+							<button type="button"
+									class="flex-1 bg-[#8b7355] hover:bg-[#7a654a] py-4 font-bold text-sm" id="reserve">예약하기</button>
+								<button type="button" class="flex-1 bg-[#333] py-4 font-bold text-sm" id="nonReserve">비회원
 									예약 </button>
+							</th:block>
 							</div>
 						</div>
 						</form>
