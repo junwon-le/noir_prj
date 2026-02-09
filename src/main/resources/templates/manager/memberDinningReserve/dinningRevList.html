@@ -113,32 +113,37 @@
     </style>
     
     
-  <script>
+  <script type="text/javascript">
 /*   $(function(){
+		  
 	  
 	  
 	  
 	  
 	  
-	  
-  });//ready */
+  });//ready 
+   */
   
+  function setRevNum(reserveNum){
+	  $("#detailRevNum").val(reserveNum);
+  }  
+  
+  
+  function cancel(){
+			$("#hiddenFrm").prop("action","/admin/dinningMember/cancel");
+			$("#hiddenFrm").submit();
+  }//cancel
  function dinningDetail(reserveNum){
 	 if(event.target.tagName !== 'INPUT'){
-		 
-		 alert(reserveNum);
+		 $("#hiddenFrm").prop("action","/admin/dinningMember/dinningDetail")
 		 $("#detailRevNum").val(reserveNum);
 		 $("#hiddenFrm").submit();
-		 
-		
-		 
-		 
-	 }else{
-		 alert("여긴안됨")
-		 
+
 	 }
 	  
   } 
+  
+
   
   </script>
   
@@ -221,7 +226,7 @@
                                     	<td><span class="badge-status status-refund">환불처리</span></td>
                                 	</th:block>
                                 	<th:block th:unless="*{reserveFlag eq 'Y'}">
-                                		<td><input type="button" value="예약취소" class="badge-status status-complete btn-cancel" data-toggle="modal" data-target="#statusModal"></td>
+                                		<td><input type="button" value="예약취소" class="badge-status status-complete btn-cancel" data-toggle="modal" data-target="#statusModal" th:onclick="setRevNum([[*{reserveNum}]])"></td>
                                 	</th:block>
                                 </tr>
                                </th:block> 
@@ -273,20 +278,35 @@
                         <h4 style="margin-bottom: 20px; font-weight: 600;">예약을 취소할까요?</h4>
                         <div style="display: flex; gap: 10px; justify-content: center;">
                             <input type="button" value="아니오" class="btn" data-dismiss="modal" style="background: #344463; color: #fff; width: 100px;">
-                            <input type="button" value="취소하기" class="btn" style="background: #f19b9b; color: #fff; width: 100px; font-weight: bold;">
+                            <input type="button" id="revCancelBtn" value="취소하기"  th:onclick="cancel()" class="btn" style="background: #f19b9b; color: #fff; width: 100px; font-weight: bold;">
                         </div>
                     </div>
                 </div>
             </div>
         </div> 
+    <!--     
+        <div class="modal fade" id="flagModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 350px;">
+                <div class="modal-content" style="background: #1b2a47; color: #fff; border-radius: 12px; border: 1px solid #344463;">
+                    <div class="modal-body" style="padding: 30px; text-align: center;">
+                        <h4 style="margin-bottom: 20px; font-weight: 600;">예약을 정상적으로 취소하였습니다.</h4>
+                        <div style="display: flex; gap: 10px; justify-content: center;">
+                            <input type="button" value="아니오" class="btn" data-dismiss="modal" style="background: #344463; color: #fff; width: 100px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>  -->
         
            <form th:action="@{/admin/dinningMember/dinningDetail}" method="get" id="hiddenFrm">
 	        	<input type="hidden" name="currentPage" th:value="${param.currentPage==''?1 :param.currentPage}"/>
 	        	<input type="hidden" name="field"   th:value="${param.field==''?reserveNum : param.field}"/>
 	        	<input type="hidden" name="keyword"  th:value="${param.keyword}"/>
-	     <   	<input type="hidden" name="reserveNum"  id="detailRevNum" />
+	        	<input type="hidden" name="reserveNum"  id="detailRevNum" />
          
         	</form>
+        	
+      
         
         
 

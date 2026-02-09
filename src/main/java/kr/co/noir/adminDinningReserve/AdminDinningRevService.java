@@ -4,16 +4,30 @@ import java.util.List;
 
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.encrypt.Encryptors;
+import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
+import kr.co.noir.login.LoginService;
 import kr.co.noir.mypageReserve.DinningRevDetailDomain;
 
 @Service
 public class AdminDinningRevService {
 
+    private final LoginService loginService;
+
 	@Autowired(required = false)
 	private AdminDinningRevMapper adrm;
-	
+	@Value("${user.crypto.key}")
+	private String key;
+
+	@Value("${user.crypto.salt}")
+	private String salt;
+
+    AdminDinningRevService(LoginService loginService) {
+        this.loginService = loginService;
+    }
 	
 	/**
 	 * 검색된 총 게시물의 수 
@@ -102,12 +116,13 @@ public class AdminDinningRevService {
 	
 	public DinningRevDetailDomain serachOneDinningDetail(int reserveNum) {
 		DinningRevDetailDomain drdDomain=null;
-		
+		TextEncryptor te = Encryptors.text(key, salt);
 		
 		try {
 			
 			drdDomain=adrm.selectOneAdminDinningDetail(reserveNum);
-			
+			System.out.println("아아아아아아아앙"+drdDomain);
+			drdDomain.setTel(te.decrypt(drdDomain.getTel()));
 			
 		}catch (PersistenceException pe) {
 			pe.printStackTrace();
@@ -116,6 +131,25 @@ public class AdminDinningRevService {
 		return drdDomain;
 		
 	}//serachOneDinningDetail
+	
+	@Transactional
+	public boolean modifyDinningRev(int reseveNum) {
+		boolean flag=false;
+		try {
+			int revCnt=adrm.removeDinningReserve(reseveNum);
+			int payCnt=adrm.removeRevPay(reseveNum);
+			
+			flag=(revCnt+payCnt)==2;
+			
+			
+		}catch (PersistenceException pe) {
+
+			pe.printStackTrace();
+		}//end catch
+		
+		return flag;
+		
+	}//modifyDinningRev
 	
 	
 	public String pagenation(AdminRangeDTO arDTO) {

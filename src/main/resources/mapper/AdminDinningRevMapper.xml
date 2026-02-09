@@ -88,8 +88,9 @@
 			
 	  	select	r.END_USER_LAST_NAME||r.END_USER_FIRST_NAME as reserveName,
       			  r.reserve_num AS reserveNum,
-       			 TRUNC(r.reserve_time) AS reserveDate,
+       			 to_char(r.reserve_time,'yyyy-MM-dd') AS reserveDate,
        			 to_char(dr.dinning_visit_date,'yyyy-MM-dd') AS visitDate,
+       			 di.dinning_name as dinningName,
        			 r.reserve_status AS reserveFlag,
        			 dr.dinning_res_detail_time AS visitTime,
        			 dr.DINNING_RES_TYPE AS dinningType,
@@ -99,7 +100,9 @@
        			 r.RESERVE_EMAIL as email,
        			 r.reserve_tel as tel,
        			 r.reserve_msg as reserveMsg,
-       			 pi.INPUT_DATE as payInputDate
+       			 pi.INPUT_DATE as payInfoInputDate,
+       			 pi.pay_agency as payAgency,
+       			 pi.card_num as cardData
    			 from reserve r,
          		dinning_res dr,
          		dinning_info di,
@@ -114,10 +117,25 @@
      			and r.reserve_type = 'dinning'
      			and r.member_num is not null
      			and r.non_user_num is null
-					and r.reserve_num=38
+				and r.reserve_num=#{reserveNum}
 	
 	
 	</select>
+	
+	<update id="removeDinningReserve" parameterType="int" >
+		update reserve
+		set reserve_status='Y'
+		where reserve_num=#{reserveNum}
+	</update>
+	
+	<update id="removeRevPay" parameterType="int">
+		update pay 
+	    set pay_refund_state = 'Y', 
+	               pay_refund_time = sysdate 
+	    where reserve_num = #{reserveNum}
+        
+	</update> 
+ 
 	
 	 
 	    

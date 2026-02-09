@@ -8,6 +8,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import retrofit2.http.GET;
 
 
 @RequestMapping("/admin/dinningMember")
@@ -18,7 +21,7 @@ public class AdminDinningRevController {
 	@Autowired
 	private AdminDinningRevService adrs;
 	
-	
+
 	@GetMapping("/")
 	public String AdminDinningRevView(Model model,AdminRangeDTO arDTO) {
 		
@@ -46,16 +49,35 @@ public class AdminDinningRevController {
 		model.addAttribute("DinningRevList", list);
 		model.addAttribute("pagiNation", pagiNation);
 		 
-		return "/manager/dinningReserve/dinningRevList";
+		return "/manager/memberDinningReserve/dinningRevList";
 		
 	}//AdminDinningRevView
 	
 	@GetMapping("/dinningDetail")
 	public String dinningMemberDetail (int reserveNum,Model model) {
 	
-		model.addAttribute("memberDininngDetail", adrs.serachOneDinningDetail(reserveNum));
-		return "/manager/dinningReserve/dinningRevDetail";
+		model.addAttribute("adminMemberDininngDetail", adrs.serachOneDinningDetail(reserveNum));
+		return "/manager/memberDinningReserve/dinningRevDetail";
 	}//dinningMemberDetail
+	
+	
+	@GetMapping("/cancel")
+	public String dinningReseveCancel(int reserveNum,Model model,RedirectAttributes rattr) {
+		
+		boolean flag= adrs.modifyDinningRev(reserveNum);
+		
+		System.out.println("결과는 "+flag);
+		String msg="예약 취소를 실패하였습니다.";
+		if(flag) {
+			msg="예약취소가 완료되었습니다.";
+		}//end if
+		rattr.addFlashAttribute("flag", flag);
+		model.addAttribute("msg",msg);
+		return "redirect:/admin/dinningMember/";
+		
+	}//dinningReseveCancel
+	
+	
 	
 	@GetMapping("/Hoteldetail")
 	public String hotelMemberDetail () {

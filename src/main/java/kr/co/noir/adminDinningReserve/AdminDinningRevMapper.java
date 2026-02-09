@@ -1,5 +1,6 @@
 package kr.co.noir.adminDinningReserve;
 
+import java.security.BasicPermission;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -23,6 +24,12 @@ public interface AdminDinningRevMapper {
 
 	//<select id="selectOneAdminDinningDetail" parameterType="int" resultType="dinningRevDetailDomain">
 	public DinningRevDetailDomain selectOneAdminDinningDetail(int reserveNum) throws PersistenceException;
+	
+	
+	public int removeDinningReserve(int reserveNum) throws PersistenceException;
+	
+	public int removeRevPay(int reserveNum) throws PersistenceException;
+	
 	
 	
 }//class
