@@ -9,11 +9,16 @@ import org.springframework.stereotype.Service;
 
 import kr.co.noir.login.MemberDTO;
 
+
+
 @Service
 public class MypageService {
 
 	@Autowired
 	MypageDAO md;
+	
+	@Autowired
+    private MypageMapper mypageMapper;
 	
 	public String searchMemberName(String id) {
 		
@@ -92,6 +97,16 @@ public class MypageService {
 		return flag;
 		
 		
+	}
+	
+	// 1. 회원의 암호화된 비밀번호 조회
+	public String searchMemberPassword(String memberId) {
+	    return mypageMapper.selectPasswordById(memberId);
+	}
+
+	// 2. 회원 탈퇴 처리 (DEL_FLAG 업데이트 등)
+	public void withdrawMember(String memberId) {
+	    mypageMapper.updateMemberDelFlag(memberId);
 	}
 	
 }//class

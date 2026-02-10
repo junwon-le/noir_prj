@@ -19,7 +19,7 @@ public class MypageDAO {
 		
 		
 		SqlSession ss =MyBatisHandler.getInstance().getMyBatisHandler(false);
-		cnt=ss.selectOne("kr.co.noir.mypage.hotelRevCnt",id);
+		cnt=ss.selectOne("kr.co.noir.mypage.MypageMapper.hotelRevCnt",id);
 		
 		System.out.println("dao---"+cnt);
 	  	if(ss!=null) {ss.close();}//end if
@@ -35,7 +35,7 @@ public class MypageDAO {
 		
 		String name ="";
 		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
-		name=ss.selectOne("kr.co.noir.mypage.memberName",id);
+		name=ss.selectOne("kr.co.noir.mypage.MypageMapper.memberName",id);
 		
 		if(ss!=null) {ss.close();}//end if
 		return name;
@@ -47,7 +47,7 @@ public class MypageDAO {
 	public int  selectDinningRevCnt(String id) throws PersistenceException  {
 		int cnt = 0;
 		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
-		cnt=ss.selectOne("kr.co.noir.mypage.dinningRevCnt",id);
+		cnt=ss.selectOne("kr.co.noir.mypage.MypageMapper.dinningRevCnt",id);
 		
 		System.out.println("------DAO"+cnt);
 		
@@ -61,7 +61,7 @@ public class MypageDAO {
 		List<EventDomain> list = new ArrayList<EventDomain>();
 		
 		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
-		list=ss.selectList("kr.co.noir.mypage.eventList");
+		list=ss.selectList("kr.co.noir.mypage.MypageMapper.eventList");
 		
 		System.out.println(list);
 		if(ss!=null) {ss.close();}//end if
