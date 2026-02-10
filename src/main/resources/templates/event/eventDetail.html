@@ -251,11 +251,12 @@ hr{
 <div class="banner">
 	<img src="../common/images/homepage/img_1.jpg" class="eventbanner">
 	<div class="banner-text">
-	<div class="event-title">
-	제목 [부제목]
+	<div class="event-title" >
+	<span th:text="${eventDetail.eventTitle}"></span>&nbsp;[<span th:text="${eventDetail.eventSubTitle}"></span>]
 	</div>
+	
 	<div class="event-desc">
-	내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용
+	<span th:text="${eventDetail.eventMsg}">내용</span>
 	</div>
 	</div>
 	
@@ -263,7 +264,7 @@ hr{
 	<div class="event-date-title">
 	이벤트기간
 	<div class="event-date">
-	기간기간기간
+	<span th:text="${eventDetail.eventStartDate}">제목</span>&nbsp;~&nbsp;<span th:text="${eventDetail.eventEndDate}">제목</span>
 	</div>
 	</div>
 	
@@ -272,8 +273,8 @@ hr{
 	<div class="event-thum-img">
 	<img src="../common/images/homepage/img_1.jpg" class="thumimg">
 	 <div class="event-text">
-    <span class="event-title-title">제목 [부제목]</span>
-    <span class="event-title-desc">
+    <div class="event-title-title"><span th:text="${eventDetail.eventTitle}"></span>&nbsp;[<span th:text="${eventDetail.eventSubTitle}"></span>]</div>
+    <span class="event-title-desc" th:text="${eventDetail.eventMsg}">
       내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용
     </span>
   </div>
@@ -293,12 +294,12 @@ hr{
 		<hr class="line">
 		<div class="inquiry">
 		이벤트 문의
-			<a href="#" class="inquirylink">문의하기</a>
+			<a th:href="@{/writeInquiry}" class="inquirylink">문의하기</a>
 		</div>
 	</div>
 	
 	<div class="backlist">
-	  <button type="button" class="btn btn-outline-dark" id="listbtn">목록</button>
+	  <button type="button" class="btn btn-outline-dark" id="listbtn" th:onclick="|location.href='@{/eventList}'|">목록</button>
 	</div>
 	
 </div>
