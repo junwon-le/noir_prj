@@ -58,7 +58,7 @@ public class AdminReserveController {
 	}//nonDinningReserve
 	@GetMapping("/nonRoomResDetail")
 	public String nonRoomResDetail(int resNum, Model model) {
-		NonRoomDetailDomain roomDetail = ars.searchNonRoomDetail(resNum);
+		List<NonRoomDetailDomain> roomDetail = ars.searchNonRoomDetail(resNum);
 		
 		model.addAttribute("room",roomDetail);
 		return "/manager/reserve/nonRoomResDetail";

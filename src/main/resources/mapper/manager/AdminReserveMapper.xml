@@ -17,15 +17,17 @@
 		order by
     		r.reserve_time desc    -- 최근 예약순
 	</select>
-	<select id="selectNonRoomList" parameterType="adminResRangeDTO">
+	<select id="selectNonRoomList" parameterType="adminResRangeDTO" resultType="nonRoomResDomain">
 	select non_user_num,
  		   res_name, -- 예약자 성함
 		   reserve_num,
 		   reserve_time,
  		   reserve_email,
- 		   room_type_num,           -- 예약한 객실 종류
-  		 pay_price,            -- 결제 금액
-  		 reserve_status        -- 예약 상태 (y: 환불/취소, n: 정상)
+  		 	pay_price,            -- 결제 금액
+  		 	reserve_status,
+  		 	reserve_start_date,
+ 		 	reserve_end_date
+ 		           -- 예약 상태 (y: 환불/취소, n: 정상)
 	from
 		 (select
 			 row_number() over ( order by r.reserve_time desc ) as rnum,
@@ -34,25 +36,25 @@
 		   r.reserve_num,
  		   r.reserve_email,
  		   r.reserve_time,
- 		   rr.room_type_num,           -- 예약한 객실 종류
+ 		   r.reserve_start_date,
+ 		   r.reserve_end_date,
   		 p.pay_price,            -- 결제 금액
   		 r.reserve_status        -- 예약 상태 (y: 환불/취소, n: 정상)
 		from
  		  non_member n
 		join
    		 reserve r on n.non_user_num = r.non_user_num
-		join
-    		room_res rr on r.reserve_num = rr.reserve_num
 		left join
 		    pay p on r.reserve_num = p.reserve_num
 		where
     		r.reserve_type = 'room' -- 객실 예약만 필터링
+    	<if test="field neq null ">
+			and ${field}=#{keyword}
+		</if>
 		)
 		
 		where rnum between #{startNum} and #{endNum}
-		<if test="field neq null ">
-		and ${field}=#{keyword}
-		</if>
+		
 	</select>
 	
 	
@@ -113,12 +115,18 @@ where rnum between #{startNum} and #{endNum}
     ri.room_type,
 	ri.room_detail,
 	ri.room_area,
-	ri.room_bad_type,           -- 예약한 객실 종류
+	ri.room_bad_type, 
+	ri.room_check_in,
+	ri.room_check_out,
+	ri.room_img1,          -- 예약한 객실 종류
     r.reserve_start_date,   -- 체크인
     r.reserve_end_date,     -- 체크아웃
     r.reserve_adult_count adult_num,  -- 성인 수
     r.reserve_kid_count kid_num,    -- 어린이 수
     r.reserve_msg,
+    r.reserve_time,
+    pi.card_num,
+    pi.pay_agency,
     p.pay_price res_price            -- 결제 금액
     from
     non_member n
@@ -128,32 +136,37 @@ join
     room_res rr on r.reserve_num = rr.reserve_num
 join
     room_info ri on rr.room_type_num = ri.room_type_num
-left join
+join
     pay p on r.reserve_num = p.reserve_num
+left join
+    pay_info pi on pi.PAY_NUM = p.PAY_NUM
 where
     r.reserve_num = #{reserve_num}
 	</select>
 	<select id="selectnonDinningDetail" parameterType="Integer" resultSets="nonDinningDetailDomain">
-	SELECT
-    ROW_NUMBER() OVER (ORDER BY r.reserve_time DESC) AS rnum,
-    r.RESERVE_NUM,
-    r.RESERVE_ADULT_COUNT as adult_num,
-    r.RESERVE_KID_COUNT as kid_num,
-    r.RESERVE_MSG,
-    dr.DINNING_RES_DETAIL_TIME,
-    dr.DINNING_RES_TYPE,
-    dr.DINNING_VISIT_DATE,
-    r.RESERVE_STATUS,
-    m.NON_USER_RES_LAST_NAME || m.NON_USER_RES_FIRST_NAME as res_name,
-    m.NON_USER_EMAIL,
-    m.NON_USER_TEL,
-    p.PAY_PRICE as res_price
+	select
+    r.reserve_num,
+    r.reserve_adult_count as adult_num,
+    r.reserve_kid_count as kid_num,
+    r.reserve_msg,
+    r.reserve_time,
+    dr.dinning_res_detail_time,
+    dr.dinning_res_type,
+    dr.dinning_visit_date,
+    r.reserve_status,
+    m.non_user_res_last_name || m.non_user_res_first_name as res_name,
+    m.non_user_email,
+    m.non_user_tel,
+    p.pay_price as res_price,
+    pi.card_num,
+    pi.pay_agency
 
-FROM RESERVE r
-JOIN DINNING_RES dr ON r.RESERVE_NUM = dr.RESERVE_NUM
-JOIN NON_MEMBER m   ON r.NON_USER_NUM = m.NON_USER_NUM  -- 이 부분이 수정되었습니다!
-LEFT JOIN PAY p     ON r.RESERVE_NUM = p.RESERVE_NUM    -- 결제 내역이 없을 수도 있다면 LEFT JOIN 권장
-WHERE r.RESERVE_TYPE = 'dinning' and r.reserve_num= #{reserve_num}
+from reserve r
+join dinning_res dr on r.reserve_num = dr.reserve_num
+join non_member m   on r.non_user_num = m.non_user_num  -- 이 부분이 수정되었습니다!
+join pay p     on r.reserve_num = p.reserve_num    -- 결제 내역이 없을 수도 있다면 left join 권장
+left join pay_info pi on p.pay_num = pi.pay_num
+where r.reserve_type = 'dinning' and r.reserve_num= #{reserve_num}
 	</select>
 	
 	<update id="updateDinningRes" parameterType="Integer">

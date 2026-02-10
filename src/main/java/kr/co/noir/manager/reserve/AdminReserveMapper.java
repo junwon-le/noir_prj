@@ -11,7 +11,7 @@ public interface AdminReserveMapper {
 	
 	public List<NonRoomResDomain> selectNonRoomList(AdminResRangeDTO arrDTO);
 	
-	public NonRoomDetailDomain selectnonRoomDetail(int resNum);
+	public List<NonRoomDetailDomain> selectnonRoomDetail(int resNum);
 	
 	
 	public int selectDinningTotalCnt(AdminResRangeDTO arrDTO);

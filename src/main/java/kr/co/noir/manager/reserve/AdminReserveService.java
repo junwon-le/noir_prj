@@ -5,12 +5,23 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.encrypt.Encryptors;
+import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import kr.co.noir.room.RoomDomain;
 
 @Service
 public class AdminReserveService {
 
+	@Value("${user.crypto.key}")
+	private String key;
+	
+	@Value("${user.crypto.salt}")
+	private String salt;
+	
 	@Autowired(required = false)
 	private AdminReserveMapper arm;
 
@@ -81,9 +92,9 @@ public class AdminReserveService {
 		if(arrDTO.getField() != null) {
 			
 			String field = switch(arrDTO.getField()) {
-			case "예약번호" ->"reserve_num";
+			case "예약번호" ->"r.reserve_num";
 			case "성명" -> "res_name";
-			case "아이디" -> "reserve_email";
+			case "아이디" -> "r.reserve_email";
 			default -> null;
 			};//end switch
 			arrDTO.setField(field);
@@ -296,21 +307,27 @@ public class AdminReserveService {
 	
 	
 		//객실 예약 상세
-		public NonRoomDetailDomain searchNonRoomDetail(int resNum) {
-			NonRoomDetailDomain roomDetail = arm.selectnonRoomDetail(resNum);
+		public List<NonRoomDetailDomain> searchNonRoomDetail(int resNum) {
+			List<NonRoomDetailDomain> roomDetailList = arm.selectnonRoomDetail(resNum);
+			for(NonRoomDetailDomain roomDetail :roomDetailList) {
 			roomDetail.setReserveStartDate(roomDetail.getReserveStartDate().substring(0,10));
 			roomDetail.setReserveEndDate(roomDetail.getReserveEndDate().substring(0,10));
 			LocalDate start =LocalDate.parse(roomDetail.getReserveStartDate()); 
 			LocalDate end =LocalDate.parse(roomDetail.getReserveEndDate());
 			long period = ChronoUnit.DAYS.between(start, end);
+			TextEncryptor te = Encryptors.text(key,salt);
+			roomDetail.setNonUserTel(te.decrypt(roomDetail.getNonUserTel()));
 			roomDetail.setPeriod(period);
-			return roomDetail;
+			}
+			return roomDetailList;
 		}//searchNonRoomDetail
 		
 		//객실 예약 상세
 		public NonDinningDetailDomain searchnonDinningDetail(int resNum) {
 			NonDinningDetailDomain dinningDetail = arm.selectnonDinningDetail(resNum);
-			dinningDetail.setDinningVisitDate(dinningDetail.getDinningVisitDate().substring(0,10));
+			//dinningDetail.setDinningVisitDate(dinningDetail.getDinninVisitDate().substring(0,10));
+			TextEncryptor te = Encryptors.text(key,salt);
+			dinningDetail.setNonUserTel(te.decrypt(dinningDetail.getNonUserTel()));
 			return dinningDetail;
 		}//searchNonRoomDetail
 		

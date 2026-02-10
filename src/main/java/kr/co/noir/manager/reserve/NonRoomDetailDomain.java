@@ -1,5 +1,7 @@
 package kr.co.noir.manager.reserve;
 
+import java.sql.Date;
+
 import org.apache.ibatis.type.Alias;
 
 import lombok.Getter;
@@ -17,5 +19,12 @@ public class NonRoomDetailDomain extends NonAdminDetailDomain {
 		roomArea,
 		roomBadType,    
 	    reserveStartDate,
-	    reserveEndDate; 
+	    reserveEndDate,
+	    roomCheckOut,
+	    roomCheckIn  ,
+	    roomImg1,
+	    cardNum,
+	    payAgency;
+	    private Date reserveTime;
+	private int reserveNum;
 }

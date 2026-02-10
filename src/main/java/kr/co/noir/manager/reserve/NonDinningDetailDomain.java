@@ -1,5 +1,7 @@
 package kr.co.noir.manager.reserve;
 
+import java.sql.Date;
+
 import org.apache.ibatis.type.Alias;
 
 import lombok.Getter;
@@ -16,5 +18,10 @@ public class NonDinningDetailDomain extends NonAdminDetailDomain {
 	private String 
 		dinningResDetailTime,
 		dinningResType,    
-		dinningVisitDate;
+		
+		reserveNum,
+		reserveTime,
+		cardNum
+		,payAgency;
+	private Date dinningVisitDate;
 }
