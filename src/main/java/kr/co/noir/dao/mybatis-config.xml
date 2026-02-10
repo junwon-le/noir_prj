@@ -17,7 +17,7 @@
 		<typeAlias type="kr.co.noir.dinning.DinningDTO" alias="dinningDTO"/>		
 		
 		<!-- 박현욱 사용 -->		
-		<typeAlias type="kr.co.noir.mypage.EventDomain" alias="eventDomain"/>		
+		<typeAlias type="kr.co.noir.event.EventDomain" alias="eventDomain"/>		
 		<typeAlias type="kr.co.noir.mypageInfo.PasswordDTO" alias="passwordDTO"/>		
 		<typeAlias type="kr.co.noir.mypageInfo.PasswordCheckDTO" alias="passwordCheckDTO"/>		
 		<typeAlias type="kr.co.noir.mypageInfo.MemberInfoDomain" alias="mInfoDomain"/>		

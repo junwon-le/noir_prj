@@ -8,6 +8,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
 import kr.co.noir.dao.MyBatisHandler;
+import kr.co.noir.event.EventDomain;
 
 @Repository
 public class MypageDAO {
