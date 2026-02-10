@@ -12,10 +12,6 @@ public class AminHotelRevController {
 	@GetMapping("/HotelRev")
 	public String adminHotelMemberList (int reserveNum,Model model) {
 		
-		
-		
-		
-		
 		return "/manager/memberReserve/hotelRev";
 	}//hotelMemberDetail
 	
