@@ -10,19 +10,19 @@
         member_first_name as memberFirstname, 
         member_ip as memberIp
     FROM member
-    WHERE member_id = #{memberId}
+    WHERE member_id = #{memberId} and member_del_flag='N'
 </select>
 <select id="login" resultType="kr.co.noir.login.MemberDTO">
     SELECT member_id, member_last_name, member_first_name, member_pass
     FROM member
     WHERE member_id = #{memberId}
-      AND member_pass = #{memberPass}
+      AND member_pass = #{memberPass} and member_del_flag='N'
 </select>
 <select id="findIdByInfo" resultType="String">
     SELECT member_id
     FROM member
     WHERE TRIM(member_last_name) = #{memberLastName} AND TRIM(member_first_name) = #{memberFirstName}
-      AND member_email = #{memberEmail}
+      AND member_email = #{memberEmail} and member_del_flag='N'
 </select>
 <select id="checkUserForReset" parameterType="map" resultType="kr.co.noir.login.MemberDTO">
    select member_id, member_email

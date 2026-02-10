@@ -38,7 +38,7 @@ public class LoginService {
                 // 2. 아이디가 존재하지 않는 경우
                 md = new LoginMemberDomain();
                 md.setResultMsg("아이디가 존재하지 않습니다.");
-                lDTO.setResult("F");
+                lDTO.setResult("N");
             } else {
                 // 3. 아이디가 존재하는 경우 비밀번호 검증
                 String inputPw = lDTO.getMemberPass(); // 사용자가 입력한 비번
@@ -145,7 +145,8 @@ public class LoginService {
         
         // 2. 가입 시 기본값 설정 (이미지의 MEMBER_DEL_FLAG)
         memberDTO.setMemberDelFlag("N");
-        
+
+
 		// 3. Password 암호화 일방향 해시 : 비번, Bcrypt
 		BCryptPasswordEncoder bpe=new BCryptPasswordEncoder(10);
 		memberDTO.setMemberPass(bpe.encode(memberDTO.getMemberPass()));

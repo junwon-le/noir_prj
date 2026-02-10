@@ -42,6 +42,7 @@ public class LoginController {
 	}
     
 	@PostMapping("/memberLogin")
+	@ResponseBody //문자열 응답을 할 것임..^^
 	public String login(LoginDTO lDTO, HttpServletRequest request, HttpSession session, Model model) {
 
 		String url = "login/memberLogin"; // 실패 시 기본 경로
@@ -51,7 +52,13 @@ public class LoginController {
 	    
 	    // 로그인 성공 ("S")
 	    if ("S".equals(lDTO.getResult())) {
+
+	    		// 기존 세션(사용자 혹은 이전 관리자)을 무효화
+	        session.invalidate(); 
 	        
+	        // 새로운 세션을 생성합니다 (true를 주면 새 세션을 만듦)
+	        HttpSession nSession = request.getSession(true);	    	
+	    	
 	        // 1. 이름 가공 (기존 로직 유지)
 	        String lastName = (md.getMemberLastName() != null) ? md.getMemberLastName().trim() : "";
 	        String firstName = (md.getMemberFirstName() != null) ? md.getMemberFirstName().trim() : "";
@@ -67,19 +74,25 @@ public class LoginController {
 	                .build();
 
 	        // 3. 세션 주입 (탈퇴 컨트롤러와 Key 이름을 정확히 맞춥니다)
-	        session.setAttribute("memberId", lDTO.getMemberId());
-	        session.setAttribute("memberName", fullName);
-	        session.setAttribute("memberProvider", "LOCAL");        
+	        nSession.setAttribute("memberId", lDTO.getMemberId());
+	        nSession.setAttribute("memberName", fullName);
+	        nSession.setAttribute("memberProvider", "LOCAL");        
 
-	        url = "redirect:/"; // 성공 시 메인으로
+//	        url = "redirect:/"; // 성공 시 메인으로
+	        
+	        return "OK";
+	        
 	    }
 	    
-	    // 실패 시 에러 처리
-	    model.addAttribute("errFlag", lDTO.getResult() != null);
-	    model.addAttribute("errMsg", lDTO.getResult() == null ? 
-	            "아이디가 존재하지 않습니다" : "비밀번호가 일치하지 않습니다");
+//	    // 실패 시 에러 처리
+//	    model.addAttribute("errFlag", lDTO.getResult() != null);
+//	    model.addAttribute("errMsg", lDTO.getResult() == null ? 
+//	            "아이디가 존재하지 않습니다" : "비밀번호가 일치하지 않습니다");
 	    
-	    return url;
+//	    return url;
+	    
+	    return (lDTO.getResult()=="N") ? "NO_ID" : "WRONG_PW";
+	    
 	}
 	
 	
@@ -272,7 +285,8 @@ public class LoginController {
             // 에러 처리: 다시 가입 폼으로 리턴
             return "redirect:/join?error=tel";
         }    	
-    	
+
+        
         // 1. 비밀번호 암호화 (BCrypt 적용)
         // 2. 성(lastName)과 이름(firstName)을 합쳐서 저장하거나 각각 저장하는 로직
         
