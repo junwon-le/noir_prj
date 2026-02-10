@@ -198,72 +198,31 @@ background-color: #FFF;
   color: #000;
 }
 
-/* pagination 전체 정렬 */
 .pagination{
-  gap: 6px;
+  padding:60px 60px 40px 40px;
+  gap: 8px;
 }
 
-/* 기본 버튼 */
 .pagination .page-link{
-  min-width: 42px;
-  height: 42px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 50%;
-  border: 1px solid #e0e0e0;
-
+  border: 1px solid #ddd;
   background: #fff;
-  color: #111;
-  font-size: 14px;
-  font-weight: 500;
-
-  transition: all 0.25s ease;
+  color: #333;
+  border-radius: 999px;
+  padding: 20px 25px;
+  font-size:20px;
+  font-weight: 600;
 }
 
-/* hover */
 .pagination .page-link:hover{
-  background: #000;
-  color: #fff;
   border-color: #000;
-}
-
-/* 활성 페이지 */
-.pagination .page-item.active .page-link{
-  background: #000;
   color: #fff;
+}
+
+.pagination .page-item.active .page-link,
+.pagination .page-item.active span{
+  background: #000;
   border-color: #000;
-  font-weight: 700;
-  transform: scale(1.08);
-}
-
-/* 비활성 */
-.pagination .page-item.disabled .page-link{
-  background: #f7f7f7;
-  color: #bbb;
-  border-color: #e5e5e5;
-  pointer-events: none;
-}
-
-/* << >> 버튼 살짝 작게 */
-.pagination .page-item:first-child .page-link,
-.pagination .page-item:last-child .page-link{
-  border-radius: 12px;
-  min-width: 48px;
-}
-
-
-.pagination:empty::before{
-  content: "«  1  2  3  »";
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  font-size: 14px;
-  font-weight: 500;
-  color: #111;
-  padding:30px 30px;
+  color: #fff;
 }
 
 </style>
@@ -292,98 +251,32 @@ background-color: #FFF;
 
   <!-- 카드 1 -->
 
-  <div class="event-card">
+  <div class="event-card"  th:each="e : ${EventList}">
     <div class="event-card__thumb">
       <img src="../common/images/homepage/logoo2.png" alt="이벤트 이미지">
     </div>
     <div class="event-card__body">
       <div class="event-card__title">
-        제목 [부제목]
+        <span th:text="${e.eventTitle}">제목</span> [<span th:text="${e.eventSubTitle}">제목</span>]
       </div>
       <div class="event-card__desc">
-        내용
+        <span th:text="${e.eventMsg}">내용</span>
       </div>
       <div class="event-card__bottom">
       <div class="event-card__date">
-        날짜예용
+        <span th:text="${e.eventStartDate}">제목</span>&nbsp;~&nbsp;<span th:text="${e.eventEndDate}">제목</span>
       </div>
-      <button type="button" class="detailbtn">자세히 보기</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 카드 2 -->
-  <div class="event-card">
-    <div class="event-card__thumb">
-      <img src="../common/images/homepage/logoo2.png" alt="이벤트 이미지">
-    </div>
-    <div class="event-card__body">
-      <div class="event-card__title">
-        제목 [부제목]
-      </div>
-      <div class="event-card__desc">
-        내용
-      </div>
-      <div class="event-card__bottom">
-      <div class="event-card__date">
-        날짜예용
-      </div>
-      <button type="button" class="detailbtn">자세히 보기</button>
+      <button type="button" class="detailbtn" th:onclick="|location.href='@{/eventDetail(eventNum=${e.eventNum})}'|">자세히 보기</button>
       </div>
     </div>
-    
-  </div>
-  <div class="event-card">
-    <div class="event-card__thumb">
-      <img src="../common/images/homepage/logoo2.png" alt="이벤트 이미지">
-    </div>
-    <div class="event-card__body">
-      <div class="event-card__title">
-        제목 [부제목]
-      </div>
-      <div class="event-card__desc">
-        내용
-      </div>
-      <div class="event-card__bottom">
-      <div class="event-card__date">
-        날짜예용
-      </div>
-      <button type="button" class="detailbtn">자세히 보기</button>
-      </div>
-    </div>
-    
   </div>
 
 
 </div>
-<nav aria-label="Page navigation" style="margin:40px 0;">
-  <nav aria-label="Page navigation" style="margin:40px 0;">
-  <ul class="pagination justify-content-center">
-    <li class="page-item disabled">
-      <a class="page-link" href="#">&lt;&lt;</a>
-    </li>
-
-    <li class="page-item active">
-      <a class="page-link" href="#">1</a>
-    </li>
-
-    <li class="page-item">
-      <a class="page-link" href="#">2</a>
-    </li>
-
-    <li class="page-item">
-      <a class="page-link" href="#">3</a>
-    </li>
-
-    <li class="page-item">
-      <a class="page-link" href="#">&gt;&gt;</a>
-    </li>
-  </ul>
-</nav>
-
-</nav>
-
-
+<div id="pagenation" style="margin:0px auto">
+			<div class="pagenation" th:utext="${pagenation}"></div>		
+			</div>
+					<div class="ffffff"></div>
 </div>		
 <footer>
         <div th:replace="~{fragments/footer :: footer}"></div>

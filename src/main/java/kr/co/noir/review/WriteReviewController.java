@@ -51,6 +51,6 @@ public class WriteReviewController {
             return "redirect:/error"; 
         }
         
-        return "redirect:/review/myReviewList";
+        return "redirect:/myReviewList";
     }
 }

@@ -37,7 +37,7 @@ $(function() {
       alert("제목을 입력해주세요.");
       return;
     }
-
+    
     if ($('#summernote').summernote('isEmpty')) {
         alert("문의 내용을 입력해주세요.");
         return;
@@ -366,7 +366,7 @@ background-color: #FFF;
 					<div class="input-container">                
 						
 						<h2 class="section-title">문의 하기</h2>
-						<input type="text" name="inquiryTitle" id="title" placeholder="제목">
+						<input type="text" name="inquiryTitle" id="title" placeholder="제목" maxlength="30">
 				</div>
 				<div style="min-height: 250px; max-width: 1000px; margin: 0px auto;">
 					<textarea id="summernote" name="inquiryMsg" class="summernote"></textarea>
