@@ -13,7 +13,7 @@ import lombok.ToString;
 public class DinningRevDetailDomain extends ReserveDetailDomain {
 
 	private String dinningName,dinningType,visitTime;
-	private Date visitDate;
+	private Date visitDate,payInfoInputDate;
 	
 	 public String getCancelFee() { 
 		 if(getReserveFlag().equals("N")) { 

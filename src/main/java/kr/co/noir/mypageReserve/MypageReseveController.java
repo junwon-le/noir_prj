@@ -128,9 +128,12 @@ public class MypageReseveController {
 	@GetMapping("/dinningSearch")
 	public String searchRevDinning(ReserveSearchDTO rsDTO,HttpSession sesison,Model model) {
 		rsDTO.setMemberId((String)sesison.getAttribute("memberId"));
-		
+	
 		rsDTO.setReserveType("dinning");
-		
+	
+		System.out.println(rsDTO.getEndDate());
+		System.out.println(rsDTO.getStartDate());
+		System.out.println(rsDTO.getMemberId());
 		return mrs.searchDinningRevList(rsDTO);
 		
 		

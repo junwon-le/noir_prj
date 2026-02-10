@@ -587,7 +587,7 @@ background-color: #FFF;
 <div class="title-box">
 </div>
 		<div class="maincontainer">
-		<form id="frm" action="/review/write" method="post" enctype="multipart/form-data">
+		<form id="frm" th:action="@{/writeReview}" method="post" enctype="multipart/form-data">
 		<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 		<input type="hidden" name="reviewStar" id="rating" value="0">
 				
@@ -627,9 +627,9 @@ background-color: #FFF;
 </select>
 
 						<h2 class="info-title">후기 제목</h2>
-						<input type="text" name="reviewTitle" id="rtitle" placeholder="후기 제목을 입력해주세요.">
+						<input type="text" name="reviewTitle" id="rtitle" placeholder="후기 제목을 입력해주세요." maxlength="30">
 						<h2 class="info-title">후기 내용</h2>
-						<textarea name="reviewMsg" id="rmsg" placeholder="후기 내용을 입력해주세요."></textarea> 
+						<textarea name="reviewMsg" id="rmsg" placeholder="후기 내용을 입력해주세요." maxlength="100"></textarea> 
 						<h2 class="info-title">사진 첨부</h2>
 
 						<div class="photo-upload-wrap">

@@ -403,16 +403,16 @@ font-family: 'Nanum Myeongjo', serif;
     	margin-top: 5px;
     }
 </style>
-<script type="text/javascript">
+<script th:inline="javascript">
 
 
 $(function(){
 	
 	
 	
+	var cancelFlag = /*[[${cancelFlag == true}]]*/ false;
 	
-	
-	var cancelFlag=[[${cancelFlag==true}]];
+/* 	var cancelFlag=[[${cancelFlag==true}]]; */
 	
 	if(cancelFlag){
 		alert("예약취소가 실패되었습니다. \n 잠시후 다시 시도해주세요");
@@ -498,8 +498,8 @@ function goBackToList(){
                     <i class="bi bi-credit-card-2-front fs-4 me-3 text-secondary"></i>
                     <div>
                         <div class="small" th:text="*{payAgency}">MasterCard (Debit)</div>
-                        <div class="text-secondary small text-uppercase" th:text="*{cardData}">**** **** **** 5678</div>
-                    </div>
+                        <div class="text-secondary small text-uppercase" th:text="*{#strings.substring(cardData,0,4)}+'-'+*{#strings.substring(cardData,4,8)} +'-'+*{#strings.substring(cardData,8,12)} +'-'+*{#strings.substring(cardData,12,16)}">**** **** **** 5678</div>
+                    </div>															
                 </div>
                 <div class="small text-secondary mt-2" th:text="|Paid on: *{payInputDate}|">Paid on: 2025.12.20 14:30:22</div>
             </div>
@@ -565,11 +565,11 @@ function goBackToList(){
   	
 </div>
 	  <form th:action="@{/mypage/reserve/memberDinningList}" method="get" id="hiddenFrm">
-    	<input type="hidden" id="pageStartDate" name="pageStartDate" th:value="${param.pageStartDate}"/> 
-    	<input type="hidden" id="pageEndDate" name="pageEndDate"  th:value="${param.pageEndDate}"/>
+    	<input type="hidden" id="pageStartDate" name="startDate" th:value="${param.startDate}"/> 
+    	<input type="hidden" id="pageEndDate" name="endDate"  th:value="${param.endDate}"/>
     	<input type="hidden" id="currentpage" name="currentpage" th:value="${param.currentpage}"/>
-    	<input type="hidden" id="monthBtnValue" name="monthBtnValue" 
-    	th:value="${param.monthBtnValue == null || param.monthBtnValue == ''} ? '' : ${param.monthBtnValue}"/>
+    	<input type="hidden" id="monthBtnValue" name="period" 
+    	th:value="${param.period == null || param.period == ''} ? '' : ${param.period}"/>
     
     </form>
 

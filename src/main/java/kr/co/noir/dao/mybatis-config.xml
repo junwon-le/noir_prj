@@ -17,7 +17,7 @@
 		<typeAlias type="kr.co.noir.dinning.DinningDTO" alias="dinningDTO"/>		
 		
 		<!-- 박현욱 사용 -->		
-		<typeAlias type="kr.co.noir.mypage.EventDomain" alias="eventDomain"/>		
+		<typeAlias type="kr.co.noir.event.EventDomain" alias="eventDomain"/>		
 		<typeAlias type="kr.co.noir.mypageInfo.PasswordDTO" alias="passwordDTO"/>		
 		<typeAlias type="kr.co.noir.mypageInfo.PasswordCheckDTO" alias="passwordCheckDTO"/>		
 		<typeAlias type="kr.co.noir.mypageInfo.MemberInfoDomain" alias="mInfoDomain"/>		
@@ -61,6 +61,7 @@
 	<mapper resource="mapper/LoginMapper.xml"/> 
     <mapper resource="kr/co/noir/inquiry/inquiryMapper.xml"/>
     <mapper resource="kr/co/noir/notice/noticeMapper.xml"/>
+    <mapper resource="kr/co/noir/event/eventMapper.xml"/>
     <mapper resource="kr/co/noir/review/WriteReviewMapper.xml"/>
     <mapper resource="kr/co/noir/review/ReviewMapper.xml"/>
     <mapper resource="kr/co/noir/notice/noticeAdminMapper.xml"></mapper>

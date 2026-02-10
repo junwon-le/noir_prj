@@ -13,7 +13,10 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @Service
@@ -52,14 +55,32 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         // DB에서 회원 정보를 가져오거나 가입시킴
         MemberDTO member = saveOrUpdate(attributes); 
         
+        // 기존 세션 무효화 및 새 세션 발급
+        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        HttpServletRequest request = attr.getRequest();
+        
+        // 기존 세션이 있다면 완전히 파기
+        HttpSession oldSession = request.getSession(false);
+        if (oldSession != null) {
+            oldSession.invalidate();
+        }
+        
+        // 새 세션 생성 (사용자 신분으로 새로 발급)
+        HttpSession nSession = request.getSession(true);        
+        
+        
         // UI 출력용 성과 이름을 합쳐서 저장, 세션에 이름 및 회원 정보 저장 
         String fullName = (member.getMemberLastName() != null ? member.getMemberLastName() : "") 
                         + (member.getMemberFirstName() != null ? member.getMemberFirstName() : "");
         
-        httpSession.setAttribute("memberId", member.getMemberId());   // 헤더의 th:if 조건을 충족
-        httpSession.setAttribute("memberName", fullName);           // 이름 표시용
-        httpSession.setAttribute("memberNum", member.getMemberNum()); // PK 값
-        httpSession.setAttribute("loginUser", member);              // 객체 전체        
+        nSession.setAttribute("memberId", member.getMemberId());   // 헤더의 th:if 조건을 충족
+        nSession.setAttribute("memberName", fullName);           // 이름 표시용
+        nSession.setAttribute("memberNum", member.getMemberNum()); // PK 값
+        nSession.setAttribute("loginUser", member);              // 객체 전체        
+        nSession.setAttribute("memberProvider", member.getMemberProvider()); // 
+        nSession.setAttribute("memberProviderId", member.getMemberProviderId()); // 
+        
+//        System.out.println("SNS login : "+ fullName);
         
         // 4. 토큰 암호화 및 DB 저장 (Upsert)
         TextEncryptor te = Encryptors.text(key, salt);
@@ -79,7 +100,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .build();
 
         // 실제 DB 저장 실행!
-        memberMapper.upsertSnsToken(tokenDTO);
+        memberMapper.updateSnsToken(tokenDTO);
         
         return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")),

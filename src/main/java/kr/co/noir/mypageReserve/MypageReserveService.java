@@ -231,7 +231,7 @@ public class MypageReserveService {
 			
 			hrdDomain =mrDAO.selectHotelRevDetail(rdDTO);
 			for(HotelRevDetailDomain hd:hrdDomain) {
-				hd.setEmail(te.decrypt(hd.getEmail()));
+//				hd.setEmail(te.decrypt(hd.getEmail()));
 				hd.setTel(te.decrypt(hd.getTel()));
 			}//end for
 		}catch (PersistenceException pe) {
@@ -279,8 +279,8 @@ public class MypageReserveService {
 		try {
 			
 			drdDomain =mrDAO.selectDinningRevDetail(rdDTO);
-			drdDomain.setEmail(te.decrypt(drdDomain.getEmail()));
-			drdDomain.setTel(te.decrypt(drdDomain.getTel()));
+//			drdDomain.setEmail(te.decrypt(drdDomain.getEmail()));
+//			drdDomain.setTel(te.decrypt(drdDomain.getTel()));
 		}catch (PersistenceException pe) {
 			pe.printStackTrace();
 		}//end catch

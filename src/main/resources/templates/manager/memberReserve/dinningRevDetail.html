@@ -157,7 +157,7 @@
                 </div>
             </div>
         </div>
-        <div class="container" style="min-height:670px; width:100%; color:#ffffff">
+        <div class="container" style="min-height:670px; width:100%; color:#ffffff" th:object="${adminMemberDininngDetail}">
     <div class="container-fluid" style="min-height:750px; padding: 30px;">
     <div class="reservation-main-card">
         
@@ -166,17 +166,29 @@
         <div class="detail-grid-container">
             
             <div class="info-column-left">
+            
+            <span class="detail-label">예약 관리 정보</span>
+        <div style="display: flex; justify-content: space-between;">
+            <div class="info-item">
+                <p class="title">예약 번호</p>
+                <p class="content" style="color: #5d87ff;" th:text="|No. *{reserveNum}|">REV-20250722-0042</p>
+            </div>
+            <div class="info-item" style="text-align: right;">
+                <p class="title">예약 접수일</p>
+                <p class="content" th:text="*{reserveDate}">2025. 05. 15 14:30</p>
+            </div>
+        </div>
                 <span class="detail-label">예약 상품 정보</span>
                 <div class="info-item" style="margin-bottom: 30px;">
                     <p class="title">상품명 (다이닝)</p>
-                    <h3 style="margin: 5px 0; font-weight: 700; color: #1b2a47;">THE NINTH GATE</h3>
+                    <h3 style="margin: 5px 0; font-weight: 700; color: #1b2a47;" th:text="*{dinningName}">THE NINTH GATE</h3>
                 </div>
 
                 <span class="detail-label">방문 일정</span>
                 <div class="stay-period-bar">
                     <div style="flex: 1;">
                         <small>VISIT DATE</small>
-                        <h4 style="margin: 5px 0; font-weight: 700;">2026. 01. 08 (목)</h4>
+                        <h4 style="margin: 5px 0; font-weight: 700;" th:text="*{#dates.format(visitDate, 'yyyy-MM-dd (E)')}">2026. 01. 08 (목)</h4>
                     </div>
                     <div style="width: 2px; height: 40px; background: #dce4f5;"></div>
                     <div style="flex: 1;">
@@ -189,54 +201,73 @@
                     <span class="detail-label">고객 요청사항</span>
                     <div class="memo-box">
                         <i class="fa fa-info-circle" style="color: #8994bc; margin-right: 8px;"></i>
-                        "새우 알레르기가 있어요. 유의해주세요."
+                        <span th:text="*{reserveMsg}"> "새우 알레르기가 있어요. 유의해주세요."</span>
                     </div>
                 </div>
             </div>
 
             <div class="info-column-right">
-                <span class="detail-label">예약자 정보</span>
-                <div class="info-item">
-                    <p class="title">예약자명</p>
-                    <p class="content">박OO</p>
-                </div>
-                <div class="info-item">
-                    <p class="title">총 예약 인원</p>
-                    <p class="content">성인 1명</p>
-                </div>
-                <div class="info-item">
-                    <p class="title">이메일</p>
-                    <p class="content">sist@naver.com</p>
-                </div>
-                <div class="info-item">
-                    <p class="title">연락처</p>
-                    <p class="content">010-4325-2345</p>
-                </div>
+        
 
-                <span class="detail-label" style="margin-top: 45px;">결제 내역</span>
-                <div style="background: #f8faff; padding: 25px; border-radius: 10px; color: #1b2a47; border: 1px solid #eef0f5;">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px; opacity: 0.8;">
-                        <span style="font-weight: 500;">상품 금액</span>
-                        <span style="font-weight: 500;">120,000원</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 15px; opacity: 0.8;">
-                        <span style="font-weight: 500;">봉사료 (VAT 포함)</span>
-                        <span style="font-weight: 500;">12,000원</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #dce4f5; padding-top: 15px; margin-top: 15px;">
-                        <span style="font-size: 15px; font-weight: 600;">총 결제금액</span>
-                        <span style="font-size: 24px; font-weight: 800; color: #1b2a47;">132,000 KRW</span>
-                    </div>
-                </div>
+        <span class="detail-label" style="margin-top: 20px;">예약자 및 투숙객 정보</span>
+        <div class="info-item">
+            <p class="title">예약자명 / 대표 투숙객</p>
+            <p class="content" th:text="*{reserveName}">박OO (Park OO)</p>
+        </div>
+            <div class="info-item">
+                <p class="title">예약 인원</p>
+                <p class="content" th:text="|성인 *{adultCount}명 / 아동 *{childCount}명|">성인 2명 / 아동 0명</p>
             </div>
+            <div class="info-item">
+                <p class="title">휴대폰 번호</p>
+                <p class="content" th:text="*{tel}">010-4325-2345</p>
+            </div>
+        <div class="info-item">
+            <p class="title">이메일 연락처</p>
+            <p class="content"th:text="*{email}">sist@naver.com</p>
+        </div>
+
+        <span class="detail-label" style="margin-top: 45px;">결제 상세 정보</span>
+        <div style="background: #f8faff; padding: 25px; border-radius: 10px; color: #1b2a47; border: 1px solid #eef0f5;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 10px; opacity: 0.8;">
+                <span style="font-weight: 500;">결제 일시</span>
+                <span style="font-weight: 600;" th:text="*{#dates.format(payInfoInputDate,'yyyy.MM.dd HH:mm')}">2025. 05. 15 14:32</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 10px; opacity: 0.8;">
+                <span style="font-weight: 500;">결제 수단 (카드번호)</span>
+                <span style="font-weight: 600;" th:text="|*{payAgency}(*{#strings.substring(cardData,0,4)}-*{#strings.substring(cardData,4,8)}-*{#strings.substring(cardData,8,12)}-*{#strings.substring(cardData,12,16)})|">신한카드 (4518-****-****-1234)</span>
+            </div>
+            <hr style="border-top: 1px dashed #dce4f5; margin: 15px 0;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 10px; opacity: 0.8;">
+                <span style="font-weight: 500;">객실 요금</span>
+                <span style="font-weight: 500;" th:text="|*{#numbers.formatInteger(roomPrice,3,'COMMA')}원|">1,100,000원</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 15px; opacity: 0.8;">
+                <span style="font-weight: 500;">세금 및 봉사료</span>
+                <span style="font-weight: 500;" th:text="|*{#numbers.formatInteger(roomTax,3,'COMMA')}원|">100,000원</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #dce4f5; padding-top: 15px; margin-top: 15px;">
+                <span style="font-size: 15px; font-weight: 600;">총 결제금액</span>
+                
+        	<th:block th:if="*{reserveFlag =='N'}">
+                <span style="font-size: 24px; font-weight: 800; color: #1b2a47;" th:text="|*{#numbers.formatInteger(roomPriceTotal,3,'COMMA')} KRW|">1,200,000 KRW</span>
+            </th:block>
+        	<th:block th:unless="*{reserveFlag =='N'}">
+                <span style="font-size: 24px; font-weight: 800; color: #aaa;text-decoration:line-through;" th:text="|*{#numbers.formatInteger(roomPriceTotal,3,'COMMA')} KRW|">1,200,000 KRW</span>
+            </th:block>
+            
+            </div>
+        </div>
+    </div>
         </div>
     </div>
 
     <div style="text-align: center; margin-top: 40px;">
-        <button type="button" class="btn" onclick="location.href='list.jsp'"
-                style="background: #8994bc; color: #fff; width: 180px; height: 45px; border-radius: 8px; font-weight: 600; border: none; box-shadow: 0 4px 10px rgba(137, 148, 188, 0.3);">
-            리스트
-        </button>
+			 <button type="button" class="btn" 
+			       th:onclick="location.href='/admin/dinningMember/?currentPage=' + [[${param.currentPage!=null?param.currentPage[0] : 1}]] + '&field=' + [[${param.field!=null?param.field[0]:''}]] + '&keyword=' + [[${param.keyword!=null?param.keyword[0]:''}]] + '&reserveType=dinning'"
+			        style="background: #8994bc; color: #fff; width: 180px; height: 45px; border-radius: 8px; font-weight: 600; border: none; box-shadow: 0 4px 10px rgba(137, 148, 188, 0.3);">
+			    리스트
+			</button>
     </div>
 </div>
 </div>
@@ -245,9 +276,8 @@
         
     </div>
        
-      <div th:replace="~{manager/fragments/privacy :: privacy}"></div>
+<!--       <div th:replace="~{manager/fragments/privacy :: privacy}"></div> -->
         
-    </div>
     <!-- jquery
 		============================================ -->
     <script src="/admin_common/js/vendor/jquery-1.12.4.min.js"></script>

@@ -7,6 +7,7 @@ import org.apache.ibatis.exceptions.PersistenceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import kr.co.noir.event.EventDomain;
 import kr.co.noir.login.MemberDTO;
 
 @Service
@@ -55,7 +56,7 @@ public class MypageService {
 		
 		try {
 			cnt=md.selectDinningRevCnt(id);
-			System.out.println("-----service"+cnt);
+//			System.out.println("-----service"+cnt);
 		}catch (PersistenceException pe) {
 			pe.printStackTrace();
 		}//end catch

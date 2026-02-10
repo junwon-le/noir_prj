@@ -26,10 +26,10 @@
     <link rel="stylesheet" href="/admin_common/css/calendar/fullcalendar.min.css">
     <link rel="stylesheet" href="/admin_common/css/calendar/fullcalendar.print.min.css">
     <link rel="stylesheet" href="/admin_common/style.css">
-    <link rel="stylesheet" href="/admin_common/css/responsive.css">
-    <script src="/admin_common/js/vendor/modernizr-2.8.3.min.js"></script>
+    <link rel="stylesheet" href="css/responsive.css">
+    <script src="js/vendor/modernizr-2.8.3.min.js"></script>
     
-     <style>
+    <style>
         /* 테이블 헤더(th) 및 데이터(td) 가운데 정렬 */
         .table thead th, .table tbody td {
             text-align: center !important;
@@ -114,7 +114,7 @@
 </head>
 
 <body>
-    <div th:replace="~{manager/fragments/sidebar :: sidebar}"></div>
+     <div th:replace="~{manager/fragments/sidebar :: sidebar}"></div>
     <div class="all-content-wrapper">
         <div class="header-advance-area">
             <div class="breadcome-area">
@@ -125,7 +125,7 @@
                                 <div class="row">
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                         <div class="breadcomb-wp" style="color:#ffffff; font-size: 20px">
-                                            다이닝 예약관리
+                                            객실 예약관리
                                         </div>
                                     </div>
                                 </div>
@@ -160,8 +160,8 @@
                                     <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600; width: 90px;">예약번호</th>
                                     <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600;">성명</th>
                                     <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600;">ID</th>
-                                    <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600;">방문일</th>
-                                    <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600;">인원</th>
+                                    <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600;">예약룸</th>
+                                    <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600;">예약일</th>
                                     <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600;">금액</th>
                                     <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600; width: 140px;">예약상태</th>
                                 </tr>
@@ -171,8 +171,8 @@
                                     <td style="padding: 20px; font-family: 'Roboto';">1</td>
                                     <td style="font-weight: 500;">박OO</td>
                                     <td style="color: #5d87ff;">jonajona</td>
-                                    <td style="font-family: 'Roboto'; color: #7c8fac;">2026-01-15</td>
-                                    <td>3</td>
+                                    <td>SUITE ROOM</td>
+                                    <td style="font-family: 'Roboto'; color: #7c8fac;">2026-01-15 ~ 2026-01-20</td>
                                     <td style="font-family: 'Roboto'; font-weight: 600;">150,000</td>
                                     <td><span class="badge-status status-refund">환불처리</span></td>
                                 </tr>
@@ -180,8 +180,8 @@
                                     <td style="padding: 20px; font-family: 'Roboto';">2</td>
                                     <td style="font-weight: 500;">이OO</td>
                                     <td style="color: #5d87ff;">jypprincess</td>
-                                    <td style="font-family: 'Roboto'; color: #7c8fac;">2026-01-15</td>
-                                    <td>3</td>
+                                    <td>DELUXE ROOM</td>
+                                    <td style="font-family: 'Roboto'; color: #7c8fac;">2026-01-15 ~ 2026-01-20</td>
                                     <td style="font-family: 'Roboto'; font-weight: 600;">1,200,000</td>
                                     <td><input type="button" value="예약취소" class="badge-status status-complete btn-cancel" data-toggle="modal" data-target="#statusModal"></td>
                                 </tr>
@@ -189,8 +189,8 @@
                                     <td style="padding: 20px; font-family: 'Roboto';">3</td>
                                     <td style="font-weight: 500;">박OO</td>
                                     <td style="color: #5d87ff;">hyunajeossi</td>
-                                    <td style="font-family: 'Roboto'; color: #7c8fac;">2026-01-15</td>
-                                     <td>3</td>
+                                    <td>SUITE ROOM</td>
+                                    <td style="font-family: 'Roboto'; color: #7c8fac;">2026-01-15 ~ 2026-01-20</td>
                                     <td style="font-family: 'Roboto'; font-weight: 600;">1,200,000</td>
                                     <td><input type="button" value="예약취소" class="badge-status status-complete btn-cancel" data-toggle="modal" data-target="#statusModal"></td>
                                 </tr>
@@ -198,8 +198,8 @@
                                     <td style="padding: 20px; font-family: 'Roboto';">4</td>
                                     <td style="font-weight: 500;">박OO</td>
                                     <td style="color: #5d87ff;">hyunajeossi</td>
-                                    <td style="font-family: 'Roboto'; color: #7c8fac;">2026-01-15</td>
-                                     <td>3</td>
+                                    <td>SUITE ROOM</td>
+                                    <td style="font-family: 'Roboto'; color: #7c8fac;">2026-01-15 ~ 2026-01-20</td>
                                     <td style="font-family: 'Roboto'; font-weight: 600;">1,200,000</td>
                                     <td><input type="button" value="예약취소" class="badge-status status-complete btn-cancel" data-toggle="modal" data-target="#statusModal"></td>
                                 </tr>
@@ -207,8 +207,8 @@
                                     <td style="padding: 20px; font-family: 'Roboto';">5</td>
                                     <td style="font-weight: 500;">박OO</td>
                                     <td style="color: #5d87ff;">hyunajeossi</td>
-                                    <td style="font-family: 'Roboto'; color: #7c8fac;">2026-01-15</td>
-                                     <td>3</td>
+                                    <td>SUITE ROOM</td>
+                                    <td style="font-family: 'Roboto'; color: #7c8fac;">2026-01-15 ~ 2026-01-20</td>
                                     <td style="font-family: 'Roboto'; font-weight: 600;">1,200,000</td>
                                     <td><input type="button" value="예약취소" class="badge-status status-complete btn-cancel" data-toggle="modal" data-target="#statusModal"></td>
                                 </tr>

@@ -312,9 +312,10 @@
 $(function(){
 	var paramStartDate="[[${param.startDate}]]";
 	var pageEndDate="[[${param.endDate}]]";
-	var currentpage="[[${param.currentpage}]]";
+	var currentpage=[[${param.currentpage != null ? param.currentpage[0] : 1}]];
 	var monthBtnValue="[[${param.period}]]";
 	
+
 	
 	if(monthBtnValue!=''){
 		$(".btn-period").each(function(){

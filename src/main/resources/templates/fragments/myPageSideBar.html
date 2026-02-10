@@ -5,7 +5,7 @@
             <div class="sidebar">
                 <div class="mypage-title">
                     <h2><a href="/mypage/">MYPAGE</a></h2>
-                    <p th:text="|${session.name}님|">님</p>
+                    <p th:text="|${session.memberName}님|">님</p>
                 </div>
 
                 <div class="menu-group">
@@ -48,7 +48,8 @@
                     <th:block th:if="${session.memberProd} eq 'local'">
                     <a href="/mypage/info/passwordChangeFrm" class="menu-item">비밀번호 변경 <span class="badge-outline">Password</span></a>
                     </th:block>
-                    <a href="/mypage/info/memberLeave" class="menu-item">회원탈퇴 <span class="badge-outline">Leave</span></a>
+                    <a th:href="@{/mypage/info/memberLeave}" class="menu-item">회원탈퇴 <span class="badge-outline">Leave</span></a>
+                	
                 </div>
             </div>
         </div>

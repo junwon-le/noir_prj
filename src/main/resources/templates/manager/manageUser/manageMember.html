@@ -5,6 +5,8 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>NOIR호텔 관리자 페이지 - 회원 관리</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+	<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900" rel="stylesheet">
     <link rel="stylesheet" href="/admin_common/css/bootstrap.min.css">
@@ -92,6 +94,10 @@
     </style>
 </head>
 <script th:inline="javascript">
+
+const token = $("meta[name='_csrf']").attr("content");
+const header = $("meta[name='_csrf_header']").attr("content");
+
 // 전체 선택/해제 로직
 $(document).on('change', '#checkAll', function() {
     $("input[name='memberCheck']").prop('checked', this.checked);
@@ -156,24 +162,28 @@ function validateSearch() {
 }
 
 function deleteChecked() {
-    const selectedIds = [];
+    const selectedMemberIds = [];
     
-    // 체크된 항목의 value(memberNum)를 배열에 담기
+    // 체크된 항목의 value(memberId)를 배열에 담기
     $("input[name='memberCheck']:checked").each(function() {
-        selectedIds.push($(this).val());
+    	selectedMemberIds.push($(this).val());
     });
 
-    if (selectedIds.length === 0) {
+    if (selectedMemberIds.length === 0) {
         alert("탈퇴 처리할 회원을 선택해주세요.");
         return;
     }
 
-    if (confirm("선택한 " + selectedIds.length + "명의 회원을 탈퇴 처리하시겠습니까?")) {
+    if (confirm("선택한 " + selectedMemberIds.length + "명의 회원을 탈퇴 처리하시겠습니까?")) {
         $.ajax({
             url: "/admin/members/delete", // 컨트롤러의 @PostMapping 주소와 일치해야 함
             type: "POST",
             contentType: "application/json",
-            data: JSON.stringify(selectedIds), // 배열을 JSON으로 변환
+         	// 시큐리티 인증 토큰을 헤더에 담아 보냄
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader(header, token);
+            },
+            data: JSON.stringify(selectedMemberIds), // 배열을 JSON으로 변환
             success: function(res) {
                 if (res === "OK") {
                     alert("탈퇴 처리가 완료되었습니다.");
@@ -235,16 +245,26 @@ function deleteChecked() {
                             <td colspan="8" style="padding: 50px;">검색된 회원이 없습니다.</td>
                         </tr>
                         <tr th:each="member : ${memberList}">
-                            <td><input type="checkbox" name="memberCheck" th:value="${member.memberNum}"></td>
+                            <td><input type="checkbox" name="memberCheck" th:value="${member.memberId}"></td>
                             <td th:text="${#numbers.formatInteger(member.memberNum, 4)}">0001</td>
                             <td th:text="${member.memberFirstName}" style="color: white; font-weight: bold;">홍길동</td>
                             <td th:text="${member.memberId}">user123</td>
                             <td th:text="${member.memberEmail}" style="text-align: left; padding-left: 10px;">user@example.com</td>
                             <td th:text="${member.memberTel != null ? member.memberTel : '-'}">010-1234-5678</td>
                             <td th:text="${member.memberInputDate != null ? #strings.substring(member.memberInputDate, 0, 10) : '-'}">2026-01-29</td>
-                            <td>
-                                <span th:text="${member.memberDelFlag}" th:style="${member.memberDelFlag == 'N' ? 'color:#2ecc71' : 'color:#e74c3c'}">N</span>
-                            </td>
+<td>
+    <span th:if="${member.memberDelFlag == 'N'}" 
+          class="badge" 
+          style="background-color: #2ecc71; color: #ffffff; padding: 5px 10px; border-radius: 4px; font-weight: bold;">
+          정상
+    </span>
+
+    <span th:if="${member.memberDelFlag == 'Y'}" 
+          class="badge" 
+          style="background-color: #e74c3c; color: #ffffff; padding: 5px 10px; border-radius: 4px; font-weight: bold;">
+          탈퇴
+    </span>
+</td>
                         </tr>
                     </tbody>
                 </table>
