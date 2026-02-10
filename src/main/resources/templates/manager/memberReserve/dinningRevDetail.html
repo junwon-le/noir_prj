@@ -264,7 +264,7 @@
 
     <div style="text-align: center; margin-top: 40px;">
 			 <button type="button" class="btn" 
-			       th:onclick="location.href='/admin/dinningMember/?currentPage=' + [[${param.currentPage}]] + '&field=' + [[${param.field}]] + '&keyword=' + [[${param.keyword}]] + '&reserveType=dinning'"
+			       th:onclick="location.href='/admin/dinningMember/?currentPage=' + [[${param.currentPage!=null?param.currentPage[0] : 1}]] + '&field=' + [[${param.field!=null?param.field[0]:''}]] + '&keyword=' + [[${param.keyword!=null?param.keyword[0]:''}]] + '&reserveType=dinning'"
 			        style="background: #8994bc; color: #fff; width: 180px; height: 45px; border-radius: 8px; font-weight: 600; border: none; box-shadow: 0 4px 10px rgba(137, 148, 188, 0.3);">
 			    리스트
 			</button>
