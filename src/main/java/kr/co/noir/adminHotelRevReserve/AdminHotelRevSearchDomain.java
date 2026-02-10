@@ -16,7 +16,4 @@ public class AdminHotelRevSearchDomain {
 	private int reserveNum,totalPrice;
 	private String reserveName,memberId,reserveTime,startDate,endDate,inputDate,reserveFlag;
 	
-	
-	
-	
 }//class
