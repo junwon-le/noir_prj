@@ -47,6 +47,9 @@ public interface MemberMapper {
 
     // 선택된 회원을 탈퇴 처리 (MEMBER_DEL_FLAG = 'Y')
     int updateMemberWithdraw(String memberId);    
+
+    // 선택된 회원을 재가입 처리 (MEMBER_DEL_FLAG = 'N')
+    int updateMemberRejoin(String memberId);    
     
     // SNS 가입 처리 
     // 기존 가입 여부 확인 (Provider와 ProviderId의 조합으로 조회)

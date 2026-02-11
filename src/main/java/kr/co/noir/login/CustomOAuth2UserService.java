@@ -42,6 +42,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String registrationId = userRequest.getClientRegistration().getRegistrationId(); // google, kakao 등
         String provider = registrationId.toUpperCase(); 
         String accessToken = userRequest.getAccessToken().getTokenValue();
+
+        String providerId=registrationId;
+        
         
         // userRequest에서 RefreshToken은 직접 가져올 수 없으므로 우선 null 처리
         String refreshToken = null; 
@@ -59,8 +62,29 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .orElse(null);
         
         if (member != null && "Y".equals(member.getMemberDelFlag() )) {
-            // 탈퇴한 회원일 경우 예외 발생 -> 이 예외는 FailureHandler로 전달됨
-            throw new OAuth2AuthenticationException(new OAuth2Error("withdrawn_member"), "탈퇴한 회원입니다.");
+
+        		// 1. 세션에서 "재가입 모드"인지 확인
+            Boolean isRejoinMode = (Boolean) httpSession.getAttribute("IS_REJOIN_MODE");
+            MemberDTO memberReionDTO = memberMapper.findByProviderAndId(provider, registrationId);    
+
+            if (isRejoinMode != null && isRejoinMode) {
+                // [재가입 처리]
+                // A. 탈퇴 플래그를 'N'으로 복구 (DB 업데이트)
+            		memberMapper.updateMemberRejoin(registrationId);
+            		// MERGE SQL 실행! (복구됨)
+                memberMapper.insertSnsMember(memberReionDTO);            		
+                
+                // B. 세션 표식 제거 (일회용이므로)
+                httpSession.removeAttribute("IS_REJOIN_MODE");
+                
+                // C. 로그인 계속 진행 (성공!)
+//                return new PrincipalDetails(member, oAuth2User.getAttributes());
+                
+            } else {
+                // [일반 로그인 시도] -> 예외 발생시켜서 모달 띄우기
+                throw new OAuth2AuthenticationException(new OAuth2Error("withdrawn_member"), "탈퇴한 회원입니다.");
+            }
+
         }
 
         
@@ -103,8 +127,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         );
 
         // SnsTokenDTO 객체 생성 및 실제 Mapper 호출
+        // member가 null일 수 있으므로 memberDTO에서 번호를 가져옴
         SnsTokenDTO tokenDTO = SnsTokenDTO.builder()
-                .memberNum(member.getMemberNum())
+                .memberNum(memberDTO.getMemberNum()) 
                 .provider(provider)
                 .accessToken(te.encrypt(accessToken))
                 .refreshToken(refreshToken != null ? te.encrypt(refreshToken) : null)

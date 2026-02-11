@@ -42,13 +42,24 @@ public class LoginController {
 	}
     
 	@PostMapping("/memberLogin")
-	@ResponseBody //문자열 응답을 할 것임..^^
-	public String login(LoginDTO lDTO, HttpServletRequest request, HttpSession session, Model model) {
+	@ResponseBody
+	public String login(@RequestParam(value = "error", required = false) String error,
+                        @RequestParam(value = "message", required = false) String message,
+                        LoginDTO lDTO, HttpServletRequest request, HttpSession session, Model model) {
 
 		String url = "login/memberLogin"; // 실패 시 기본 경로
+		lDTO.setMemberIp(request.getRemoteAddr());
+		LoginMemberDomain md = ls.searchOneMember(lDTO); // DB 조회 결과
+		
+		// 1. 에러가 있을 때
+		if ("withdrawn".equals(error)) {
+	        model.addAttribute("showRejoinModal", true); // 모달 표시 플래그
+	        model.addAttribute("rejoinMessage", message);
+
+	        return "login/memberLogin";
+	    }
 	    
-	    lDTO.setMemberIp(request.getRemoteAddr());
-	    LoginMemberDomain md = ls.searchOneMember(lDTO); // DB 조회 결과
+	    
 	    
 	    // 로그인 성공 ("S")
 	    if ("S".equals(lDTO.getResult())) {
@@ -300,6 +311,17 @@ public class LoginController {
             return "FAIL";
         }
         
+    }
+    
+    @GetMapping("/rejoinProcess")
+    public String rejoinProcess(@RequestParam("provider") String provider, 
+                                HttpSession session) {
+        
+        // 1. 세션에 "재가입 모드"라는 표시를 남김
+        session.setAttribute("IS_REJOIN_MODE", true);
+        
+        // 2. 그리고 나서 원래 가려던 SNS 로그인 페이지로 토스!
+        return "redirect:/oauth2/authorization/" + provider;
     }
     
     @GetMapping("/result")

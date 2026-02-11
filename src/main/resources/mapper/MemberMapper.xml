@@ -50,6 +50,11 @@
         SET MEMBER_DEL_FLAG = 'Y' 
         WHERE MEMBER_ID = #{memberId} 
     </update>
+    <update id="updateMemberRejoin">
+        UPDATE MEMBER 
+        SET MEMBER_DEL_FLAG = 'N' 
+        WHERE MEMBER_ID = #{memberId} 
+    </update>
     <update id="updateMembersWithdraw">
         UPDATE MEMBER 
         SET MEMBER_DEL_FLAG = 'Y' 
