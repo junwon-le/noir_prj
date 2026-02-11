@@ -54,9 +54,9 @@
   <mappers>
     <mapper resource="kr/co/noir/room/roomMapper.xml"/> 
     <mapper resource="kr/co/noir/reserve/reserveMapper.xml"/>
-    <mapper resource="mapper/mypageInfoMapper.xml"></mapper>
+    <mapper resource="kr/co/noir/mypageInfo/mypageInfoMapper.xml"></mapper>
     <mapper resource="kr/co/noir/dinning/dinningMapper.xml"/>
-    <mapper resource="mapper/MypageMapper.xml"/> <!-- select 연습 -->
+    <mapper resource="kr/co/noir/mypage/MypageMapper.xml"/> <!-- select 연습 -->
     <mapper resource="kr/co/noir/mypageReserve/mypageRevMapper.xml"></mapper>
 	<mapper resource="mapper/LoginMapper.xml"/> 
     <mapper resource="kr/co/noir/inquiry/inquiryMapper.xml"/>
