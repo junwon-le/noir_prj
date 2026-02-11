@@ -91,7 +91,7 @@ from
     r.reserve_kid_count,
     dr.dinning_visit_date,
     r.reserve_status,
-    m.non_user_res_first_name || m.non_user_res_last_name as res_name,
+    m.non_user_res_last_name || m.non_user_res_first_name  as res_name,
     m.NON_USER_EMAIL,
     p.pay_price
 from reserve r

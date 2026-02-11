@@ -408,6 +408,9 @@ function calPrice(){
 	<script type="text/javascript" src="/common/js/comm/PAGING_HOMEPAGE.js"></script>
 	<script type="text/javascript" src="/common/js/comm/kendo.web.min.js"></script>
 	<script>
+	const date = new Date();
+	const endDate = new Date();
+	endDate.setMonth(date.getMonth()+1);
 		flatpickr( "#inline-calendar",
 				{
 					inline : true, // 페이지에 달력을 바로 보여줌
@@ -418,7 +421,7 @@ function calPrice(){
 				    enable: [
 				        {
 				            from: "2026-01-01",
-				            to: "2026-03-01"
+				            to: endDate
 				        }
 				    ],
 					onChange : function(selectedDates, dateStr, instance) {

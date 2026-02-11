@@ -22,11 +22,13 @@
 	
     IMP.request_pay({
       pg: "tosspayments.iamporttest_4",// 스크린샷에 있던 PG사
-      pay_method: "card", // 필수 누락 확인
+      pay_method: "tosspay", // 필수 누락 확인
       merchant_uid: "issue_" + new Date().getTime(),
       customer_uid: "user_idx_1234"+ new Date().getTime(),  // 이 값이 빌링키가 됩니다 (DB에 저장할 값)
       name: "room",
-      amount: 0,                     // 실제 결제 안 함
+      amount: 0,  
+    
+     
     }, function (rsp) {
       if (rsp.success) {
         	$("#billing_key").val(rsp.customer_uid);
@@ -353,7 +355,7 @@ margin-top: 10px;
             <div class=" space-y-3 mb-6">
                 <div class="flex justify-between"><span>체크인</span><span th:text="${param.checkin}" class="font-semibold">체크인 날짜</span></div>
                 <div class="flex justify-between"><span>체크아웃</span><span  th:text="${param.checkout}" class="font-semibold">체크아웃 날짜</span></div>
-                <div class="flex justify-between"><span>성인</span><span  th:text="${param.adultCnt}" class="font-semibold">성인수</span></div>
+                <div class="flex justify-between"><span>인원</span><span  th:text="|성인 ${param.adultCnt}/ 아동 ${param.kidCnt}|" class="font-semibold">성인수</span></div>
                 <th:block th:unless="${param.room_type.empty}">
                 <div th:each="roomName,i : ${param.room_type}" class="flex justify-between">
                 <div>객실<span th:text="${i.count}"></span></div><span class="font-semibold text-right" th:text="${roomName}">룸 타입</span>

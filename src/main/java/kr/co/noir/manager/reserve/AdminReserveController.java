@@ -75,21 +75,23 @@ public class AdminReserveController {
 	
 	@GetMapping("/nonDinningRefund")
 	public String nonDinningRefund(int resNum, AdminResRangeDTO arrDTO , Model model, RedirectAttributes rab) {
-		ars.modifyRes(resNum);
+		boolean flag = ars.modifyRes(resNum);
 		System.out.println(arrDTO);
 		rab.addAttribute("currentPage", arrDTO.getCurrentPage());
 		rab.addAttribute("keyword", arrDTO.getKeyword());
 		rab.addAttribute("field", arrDTO.getField());
+		rab.addFlashAttribute("flag", flag);
 		
 		return "redirect:/admin/nonDinningReserve";
 	}//nonDinningResDetail
 	@GetMapping("/nonRoomRefund")
 	public String nonRoomRefund(int resNum, AdminResRangeDTO arrDTO , Model model, RedirectAttributes rab) {
-		ars.modifyRes(resNum);
+		boolean flag = ars.modifyRes(resNum);
 		System.out.println(arrDTO);
 		rab.addAttribute("currentPage", arrDTO.getCurrentPage());
 		rab.addAttribute("keyword", arrDTO.getKeyword());
 		rab.addAttribute("field", arrDTO.getField());
+		rab.addFlashAttribute("flag", flag);
 		
 		return "redirect:/admin/nonRoomReserve";
 	}//nonDinningResDetail

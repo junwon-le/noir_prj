@@ -4,6 +4,9 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.encrypt.Encryptors;
+import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +19,13 @@ import kr.co.noir.reserve.RoomReserveService;
 @Service
 public class DinningReserveService {
 
+	
+	@Value("${user.crypto.key}")
+	private String key;
+	
+	@Value("${user.crypto.salt}")
+	private String salt;
+	
 	@Autowired(required = false)
 	private DinningReserveMapper drm;
 	
@@ -54,7 +64,10 @@ public class DinningReserveService {
 		//예약 테이블 데이터 처리 - 서버에서 다시 db조회하여 실제 데이터를 가져옴
 		MemberDomain memberDomain=rrs.searchMember(drDTO.getUser_id());
 		drDTO.setUser_num(memberDomain.getMember_num());
-		drDTO.setEmail(drDTO.getEmailId()+"@"+drDTO.getEmailDomain());
+		
+		TextEncryptor te = Encryptors.text(key,salt);
+		drDTO.setEmail(te.encrypt(drDTO.getEmailId()+"@"+drDTO.getEmailDomain()));
+		drDTO.setReserve_tel(te.encrypt(drDTO.getReserve_tel()));
 		drDTO.setVisite_date(LocalDate.parse(drDTO.getStr_visite_date()));
 		
 		//결제 정보 서버에서 가져오기
@@ -100,7 +113,11 @@ public class DinningReserveService {
 	@Transactional
 	public boolean addNonDinningReserve(DinningReserveDTO drDTO ,PayInfoDTO pDTO) {
 		//예약 테이블 데이터 처리 - 서버에서 다시 db조회하여 실제 데이터를 가져옴
-		drDTO.setEmail(drDTO.getEmailId()+"@"+drDTO.getEmailDomain());
+		TextEncryptor te = Encryptors.text(key,salt);
+
+		drDTO.setEmail(te.encrypt(drDTO.getEmailId()+"@"+drDTO.getEmailDomain()));
+		drDTO.setReserve_tel(te.encrypt(drDTO.getReserve_tel()));
+
 		drDTO.setVisite_date(LocalDate.parse(drDTO.getStr_visite_date()));
 		
 		//결제 정보 서버에서 가져오기

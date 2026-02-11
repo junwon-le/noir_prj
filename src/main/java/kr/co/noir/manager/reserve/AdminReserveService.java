@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+import org.apache.ibatis.exceptions.PersistenceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.encrypt.Encryptors;
@@ -11,7 +12,6 @@ import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import kr.co.noir.room.RoomDomain;
 
 @Service
 public class AdminReserveService {
@@ -308,7 +308,12 @@ public class AdminReserveService {
 	
 		//객실 예약 상세
 		public List<NonRoomDetailDomain> searchNonRoomDetail(int resNum) {
-			List<NonRoomDetailDomain> roomDetailList = arm.selectnonRoomDetail(resNum);
+			List<NonRoomDetailDomain> roomDetailList = null;
+			try {
+				roomDetailList = arm.selectnonRoomDetail(resNum);
+			}catch(PersistenceException pe) {
+				pe.printStackTrace();
+			}
 			for(NonRoomDetailDomain roomDetail :roomDetailList) {
 			roomDetail.setReserveStartDate(roomDetail.getReserveStartDate().substring(0,10));
 			roomDetail.setReserveEndDate(roomDetail.getReserveEndDate().substring(0,10));
@@ -333,9 +338,16 @@ public class AdminReserveService {
 		
 		//예약 취소
 		@Transactional
-		public void modifyRes(int resNum) {
-			 arm.updateRes(resNum) ;
-			 arm.updatePay(resNum);
+		public boolean modifyRes(int resNum) {
+			boolean flag = false;
+			try{
+				int cnt = arm.updateRes(resNum);
+				int cnt2 = arm.updatePay(resNum);
+				flag = (cnt+cnt2 ==2);
+			}catch(PersistenceException pe) {
+				pe.printStackTrace();
+			}
+			 return flag ;
 		}//searchNonRoomDetail
 		
 	
