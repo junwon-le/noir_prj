@@ -42,11 +42,16 @@ public class AdminController {
         
         // 3. 로그인 결과 처리
         if ("S".equals(aDTO.getResult())) {
-            // [성공] 관리자 전용 세션 키 사용 권장
-            session.setAttribute("adminId", aDTO.getAdminId());
+            // 관리자 로그인 성공하면 기존 세션을 무효화 함
+        		session.invalidate(); 
+            
+            // 새로운 세션을 생성합니다 (true를 주면 새 세션을 만듦)
+            HttpSession newSession = request.getSession(true);
+            // 새로운 세션 생성
+            newSession.setAttribute("adminId", aDTO.getAdminId());            
             // 성공 시 관리자 메인(대시보드)으로 리다이렉트 -- 나중에 작업
-//            return "redirect:/admin/dashboard"; 
-            return "redirect:/admin/dashBoard"; // 이건 임시
+ 
+            return "redirect:/admin/dashBoard"; 
         }
         
         // [실패] 서비스에서 담아온 메시지를 그대로 화면에 전달
@@ -60,7 +65,7 @@ public class AdminController {
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate(); // 세션 무효화
-        return "redirect:/adminLogin";
+        return "redirect:/login/adminLogin";
     }
     
 
@@ -106,7 +111,7 @@ public class AdminController {
 
         // 3. 로그아웃 후 관리자 로그인 페이지로 리다이렉트한다.
         // 뒤에 ?logout 쿼리 파라미터를 붙여 로그인 페이지에서 "로그아웃 되었습니다" 메시지를 띄울 수 있음.
-        return "redirect:/adminLogin?logout";
+        return "redirect:/login/adminLogin?logout";
     }
     
     
