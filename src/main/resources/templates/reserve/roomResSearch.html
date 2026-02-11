@@ -459,9 +459,16 @@ $(function(){
     </div>
 </div>
 							<div class="flex gap-2">
+								<th:block th:if="${session.memberId ne null}">
 								<button type="button"
 									class="flex-1 bg-[#8b7355] hover:bg-[#7a654a] py-4 font-bold text-sm" id="reserve">예약하기</button>
-								<button type="button"  class="flex-1 bg-[#333] py-4 font-bold text-sm" id="nonReserve">비회원 예약 ></button>
+							</th:block>
+							<th:block th:if="${session.memberId eq null}">
+							<button type="button"
+									class="flex-1 bg-[#8b7355] hover:bg-[#7a654a] py-4 font-bold text-sm" id="reserve">예약하기</button>
+								<button type="button" class="flex-1 bg-[#333] py-4 font-bold text-sm" id="nonReserve">비회원
+									예약 </button>
+							</th:block>
 							</div>
 						</div>
 

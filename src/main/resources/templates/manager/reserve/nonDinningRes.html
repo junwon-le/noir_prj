@@ -1,111 +1,36 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
-    <style>
-        body {
-            background-color: #1a1c2e; /* 다크 네이비 배경 */
-            color: #333;
-            font-family: 'Malgun Gothic', sans-serif;
-            display: flex;
-            justify-content: center;
-            padding: 50px;
-        }
-
-        .container {
-            width: 900px;
-        }
-
-        /* 상단 검색영역 */
-        .search-container {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .dropdown, .search-input {
-            padding: 8px 12px;
-            border-radius: 4px;
-            border: none;
-            outline: none;
-        }
-
-        .dropdown {
-            background-color: white;
-            color : #000;
-            width: 120px;
-        }
-
-        .search-wrapper {
-            background-color: white;
-            display: flex;
-            align-items: center;
-            border-radius: 4px;
-            padding-right: 5px;
-        }
-
-        .search-input {
-            width: 150px;
-            color: #ccc;
-        }
-
-        .search-btn {
-            background-color: #5c7cfa;
-            color: white;
-            border: none;
-            padding: 5px 8px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        /* 테이블 영역 */
-        .table-wrapper {
-            background-color: white;
-            border-radius: 8px;
-            overflow: hidden;
-            border: 2px solid #e0e6ed;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: center;
-        }
-
-        th {
-            background-color: #f8faff;
-            color: #5c7cfa;
-            padding: 15px;
-            border-bottom: 1px solid #e0e6ed;
-            border-right: 1px solid #e0e6ed;
-            font-size: 14px;
-            /* 중앙 정렬을 위한 핵심 코드 */
-    text-align: center !important; 
-    vertical-align: middle !important;
-        }
-
-        td {
-            padding: 20px 15px;
-            border-bottom: 1px solid #f0f0f0;
-            border-right: 1px solid #f0f0f0;
-            font-size: 14px;
-            color: #444;
-        }
-
-        th:last-child, td:last-child {
-            border-right: none;
-        }
-
-        /* 환불 버튼 */
-        .refund-btn {
-            background-color: #8faadc;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-    /* 페이지네이션 영역 수정 */
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>NOIR호텔 관리자 페이지</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900" rel="stylesheet">
+    
+    <link rel="stylesheet" href="/admin_common/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/admin_common/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/admin_common/css/nalika-icon.css">
+    <link rel="stylesheet" href="/admin_common/css/owl.carousel.css">
+    <link rel="stylesheet" href="/admin_common/css/owl.theme.css">
+    <link rel="stylesheet" href="/admin_common/css/owl.transitions.css">
+    <link rel="stylesheet" href="/admin_common/css/animate.css">
+    <link rel="stylesheet" href="/admin_common/css/normalize.css">
+    <link rel="stylesheet" href="/admin_common/css/meanmenu.min.css">
+    <link rel="stylesheet" href="/admin_common/css/main.css">
+    <link rel="stylesheet" href="/admin_common/css/morrisjs/morris.css">
+    <link rel="stylesheet" href="/admin_common/css/scrollbar/jquery.mCustomScrollbar.min.css">
+    <link rel="stylesheet" href="/admin_common/css/metisMenu/metisMenu.min.css">
+    <link rel="stylesheet" href="/admin_common/css/metisMenu/metisMenu-vertical.css">
+    <link rel="stylesheet" href="/admin_common/css/calendar/fullcalendar.min.css">
+    <link rel="stylesheet" href="/admin_common/css/calendar/fullcalendar.print.min.css">
+    <link rel="stylesheet" href="/admin_common/style.css">
+    <link rel="stylesheet" href="/admin_common/css/responsive.css">
+    <script src="/admin_common/js/vendor/modernizr-2.8.3.min.js"></script>
+    
+     <style>
+         /* 페이지네이션 영역 수정 */
 .pagination {
  display: flex !important;       /* 다른 라이브러리 간섭 방지 */
     flex-direction: row !important; /* 가로 방향 유지 */
@@ -141,87 +66,144 @@
             background-color: #8faadc;
             color: white;
 }
-tr{
-height: 50px;
+        /* 테이블 헤더(th) 및 데이터(td) 가운데 정렬 */
+        .table thead th, .table tbody td {
+            text-align: center !important;
+            vertical-align: middle !important;
+            border: none !important;
+        }
+
+        /* 테이블 행 스타일 */
+        .table-row {
+            background-color: #ffffff;
+            transition: background-color 0.2s;
+            border-bottom: 1px solid #f0f2f5 !important;
+        }
+        .table-row:hover {
+            background-color: #f8faff !important;
+        }
+
+        /* 뱃지 및 버튼 스타일 */
+        .badge-status {
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #fff;
+            display: inline-block;
+            border: none; /* input 버튼용 테두리 제거 */
+            cursor: default;
+        }
+        
+        /* 예약취소 버튼 스타일 (클릭 가능) */
+        .btn-cancel {
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .btn-cancel:hover {
+            opacity: 0.8;
+        }
+
+        .status-refund { background-color: #f19b9b; }
+        .status-complete { background-color: #8994bc; }
+
+        .page-btn {
+            border: none; background: #344463; color: #fff;
+            width: 38px; height: 38px; border-radius: 8px;
+            transition: 0.3s; cursor: pointer;
+        }
+        .page-btn.active { background: #8994bc; }
+        
+        .form-control.select_style{
+            color:black; 
+            text-align: center; 
+            text-align-last: center; 
+            width: 140px; 
+            background: #fff; 
+            border-radius: 8px; 
+            height: 42px; 
+            border: 1px solid #e0e6ed; 
+            font-weight: 500;
+            padding: 0;
+        }
+        
+        /* 모달을 화면 정중앙으로 배치 */
+.modal {
+    text-align: center;
+    padding: 0 !important;
+}
+
+.modal:before {
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    margin-right: -4px;
+}
+
+.modal-dialog {
+    display: inline-block;
+    text-align: left;
+    vertical-align: middle;
 }
     </style>
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>NOIR호텔 관리자 페이지</title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Google Fonts
-		============================================ -->
-    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900" rel="stylesheet">
-    <!-- Bootstrap CSS
-		============================================ -->
-    <link rel="stylesheet" href="/admin_common/css/bootstrap.min.css">
-    <!-- Bootstrap CSS
-		============================================ -->
-    <link rel="stylesheet" href="/admin_common/css/font-awesome.min.css">
-	<!-- nalika Icon CSS
-		============================================ -->
-    <link rel="stylesheet" href="/admin_common/css/nalika-icon.css">
-    <!-- owl.carousel CSS
-		============================================ -->
-    <link rel="stylesheet" href="/admin_common/css/owl.carousel.css">
-    <link rel="stylesheet" href="/admin_common/css/owl.theme.css">
-    <link rel="stylesheet" href="/admin_common/css/owl.transitions.css">
-    <!-- animate CSS
-		============================================ -->
-    <link rel="stylesheet" href="/admin_common/css/animate.css">
-    <!-- normalize CSS
-		============================================ -->
-    <link rel="stylesheet" href="/admin_common/css/normalize.css">
-    <!-- meanmenu icon CSS
-		============================================ -->
-    <link rel="stylesheet" href="/admin_common/css/meanmenu.min.css">
-    <!-- main CSS
-		============================================ -->
-    <link rel="stylesheet" href="/admin_common/css/main.css">
-    <!-- morrisjs CSS
-		============================================ -->
-    <link rel="stylesheet" href="/admin_common/css/morrisjs/morris.css">
-    <!-- mCustomScrollbar CSS
-		============================================ -->
-    <link rel="stylesheet" href="/admin_common/css/scrollbar/jquery.mCustomScrollbar.min.css">
-    <!-- metisMenu CSS
-		============================================ -->
-    <link rel="stylesheet" href="/admin_common/css/metisMenu/metisMenu.min.css">
-    <link rel="stylesheet" href="/admin_common/css/metisMenu/metisMenu-vertical.css">
-    <!-- calendar CSS
-		============================================ -->
-    <link rel="stylesheet" href="/admin_common/css/calendar/fullcalendar.min.css">
-    <link rel="stylesheet" href="/admin_common/css/calendar/fullcalendar.print.min.css">
-    <!-- style CSS
-		============================================ -->
-    <link rel="stylesheet" href="/admin_common/style.css">
-    <!-- responsive CSS
-		============================================ -->
-    <link rel="stylesheet" href="css/responsive.css">
-    <!-- modernizr JS
-		============================================ -->
-    <script src="js/vendor/modernizr-2.8.3.min.js"></script>
+    
+    
+  <script type="text/javascript">
+/*   $(function(){
+		  
+	  
+	  
+	  
+	  
+	  
+  });//ready 
+   */
+  
+  function setRevNum(reserveNum){
+	  $("#detailRevNum").val(reserveNum);
+  }  
+  
+  
+  function cancel(){
+			$("#hiddenFrm").prop("action","/admin/nonDinningRefund");
+			$("#hiddenFrm").submit();
+  }//cancel
+ function dinningDetail(reserveNum){
+	 if(event.target.tagName !== 'INPUT'){
+		 $("#hiddenFrm").prop("action","/admin/nonDinningResDetail")
+		 $("#detailRevNum").val(reserveNum);
+		 $("#hiddenFrm").submit();
+
+	 }
+	  
+  } 
+  
+
+  
+  </script>
+  
+  
 </head>
 
 <body>
-    <!--[if lt IE 8]>
-            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-        <![endif]-->
-
-<div th:replace="~{/manager/fragments/sidebar :: sidebar}"></div>    <!-- Start Welcome area -->
+    <div th:replace="~{manager/fragments/sidebar :: sidebar}"></div>
     <div class="all-content-wrapper">
         <div class="header-advance-area">
             <div class="breadcome-area">
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <div class="breadcome-list">
+                           <div class="breadcome-list" style="margin-left:40px; width:95%; border-radius: 20px;">
                                 <div class="row">
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                         <div class="breadcomb-wp" style="color:#ffffff; font-size: 20px">
-											다이닝 예약관리(비회원)
+											<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle;">
+  <path d="M7 2V10C7 12.7614 9.23858 15 12 15C14.7614 15 17 12.7614 17 10V2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M12 2V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <path d="M12 15V22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg><span>&nbsp; 다이닝 에약 관리(회원)</span>
 										</div>
                                     </div>
                                 </div>
@@ -231,143 +213,168 @@ height: 50px;
                 </div>
             </div>
         </div>
-        <div class="container" style="height:700px; color:#ffffff">
-        
-          <div class="search-container">
-        <select class="dropdown">
-            <option value="예약번호" selected>예약번호</option>
-            <option value="성명" >성명</option>
-            <option value="아이디" >E-mail</option>
-        </select>
-        <div class="search-wrapper">
-            <input type="text" class="search-input" placeholder="제목 검색">
-            <button class="search-btn">🔍</button>
+
+        <div class="container" style="min-height:630px; width:100%; color:#ffffff">
+            <div class="row" style="padding: 30px; margin-left: 5px;">
+                <div class="col-lg-12">
+                    <form th:action="@{/admin/nonDinningReserve}" id="boardSearchFrm" method="get" class="d-flex" style="display: flex; gap: 10px; margin-bottom: 25px; align-items: center;">
+                        <select class="form-control select_style" name="field" id="field"> 
+                           <option value="전체" selected>전체</option> 
+                            <option value="예약번호" th:selected="${#strings.equals(param.field, '예약번호')}">예약번호</option>
+            <option value="성명" th:selected="${#strings.equals(param.field, '성명')}" >성명</option>
+            <option value="아이디" th:selected="${#strings.equals(param.field, '아이디')}" >아이디</option>
+                        </select>
+                        <div style="position: relative; flex-grow: 1; max-width: 350px;">
+                            <button style="position: absolute; right: 6px; top: 6px; border: none; background: #8e99bc; color: #fff; border-radius: 6px; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            <input type="text" name="keyword" id="keyword" th:value="${param.keyword}" class="form-control" placeholder="검색어를 입력하세요" style="background: white; border-radius: 8px; height: 42px; color:black; padding-right: 45px; border: 1px solid #e0e6ed;">
+                             <input type="hidden" name="currentPage" id="currentPage" th:value="${param.currentPage eq null? 1 : param.currentPage }"/> 
+						
+                        </div>
+                    </form>
+
+                    <div class="table-responsive" style="background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.08);">
+                        <table class="table mb-0" style="width: 100%; border-collapse: collapse; ">
+                            <thead style="background: #f9fbff; color: #5a6a85;">
+                                <tr>
+                                    <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600; width: 90px;">예약번호</th>
+                                    <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600;">예약자명</th>
+                                    <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600;">ID</th>
+                                    <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600;">방문일</th>
+                                    <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600;">인원</th>
+                                    <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600;">금액</th>
+                                    <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600; width: 140px;">예약상태</th>
+                                </tr>
+                            </thead>
+                            <tbody style="color: #2a3547; vertical-align: middle; text-align: center;">
+                                
+                                <th:block th:each="dinningRevList:${list}" th:object="${dinningRevList}">
+                              <!--   <tr class="table-row" onclick="if(event.target.tagName !== 'INPUT') location.href='/admin/dinningMember/detail'"> -->
+                                <tr class="table-row" th:onclick="dinningDetail([[*{reserveNum}]])">
+                                    <td style="padding: 20px; font-family: 'Roboto';" th:text="*{reserveNum}">1</td>
+                                    <td style="font-weight: 500;" th:text="*{resName}">박OO</td>
+                                    <td style="color: #5d87ff;"th:text="*{reserveEmail}">jonajona</td>
+                                    <td style="font-family: 'Roboto'; color: #7c8fac;" th:text="|*{dinningVisitDate} |">2026-01-15</td>
+                                    <td th:text="*{reserveAdultCount}">3</td>
+                                    <td style="font-family: 'Roboto'; font-weight: 600;" th:text="*{#numbers.formatInteger(payPrice,3,'COMMA')}">150,000</td>
+                                    
+                                    <th:block th:if="*{reserveStatus eq 'Y'}">
+                                    	<td><span class="badge-status status-refund">환불처리</span></td>
+                                	</th:block>
+                                	<th:block th:unless="*{reserveStatus eq 'Y'}">
+                                		<td><input type="button" value="예약취소" class="badge-status status-complete btn-cancel" data-toggle="modal" data-target="#statusModal" th:onclick="setRevNum([[*{reserveNum}]])"></td>
+                                	</th:block>
+                                </tr>
+                               </th:block> 
+                                
+                             <!--    <tr class="table-row" onclick="if(event.target.tagName !== 'INPUT') alert('ㄹㅇㅋㅋ')" style="cursor: pointer;">
+                                    <td style="padding: 20px; font-family: 'Roboto';">2</td>
+                                    <td style="font-weight: 500;">이OO</td>
+                                    <td style="color: #5d87ff;">jypprincess</td>
+                                    <td style="font-family: 'Roboto'; color: #7c8fac;">2026-01-15</td>
+                                    <td>3</td>
+                                    <td style="font-family: 'Roboto'; font-weight: 600;">1,200,000</td>
+                                    <td><input type="button" value="예약취소" class="badge-status status-complete btn-cancel" data-toggle="modal" data-target="#statusModal"></td>
+                                </tr> -->
+                               
+                              
+                               
+                               
+                           
+                              
+                             
+                            
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div style="margin-top: 35px; display: flex; justify-content: center; gap: 8px;">
+                       <div th:utext="${pagiNation}" style="display: flex; gap: 8px; align-items: center;"></div>
+                       
+                       <!-- <button class="page-btn"><i class="fa fa-chevron-left" style="font-size: 12px;"></i></button>
+                        <button class="page-btn active">1</button>
+                        <button class="page-btn">2</button>
+                        <button class="page-btn">3</button>
+                        <button class="page-btn">4</button>
+                        <button class="page-btn" style="background: transparent; color: #fff;">...</button>
+                        <button class="page-btn">10</button>
+                        <button class="page-btn">11</button>
+                        <button class="page-btn" ><i class="fa fa-chevron-right" style="font-size: 12px;"></i></button>  -->
+                    </div>
+                </div> 
+            </div>
         </div>
+        
+        
+     
+        <div class="modal fade" id="statusModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 350px;">
+                <div class="modal-content" style="background: #1b2a47; color: #fff; border-radius: 12px; border: 1px solid #344463;">
+                    <div class="modal-body" style="padding: 30px; text-align: center;">
+                        <h4 style="margin-bottom: 20px; font-weight: 600;">예약을 취소할까요?</h4>
+                        <div style="display: flex; gap: 10px; justify-content: center;">
+                            <input type="button" value="아니오" class="btn" data-dismiss="modal" style="background: #344463; color: #fff; width: 100px;">
+                            <input type="button" id="revCancelBtn" value="취소하기"  th:onclick="cancel()" class="btn" style="background: #f19b9b; color: #fff; width: 100px; font-weight: bold;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> 
+    <!--     
+        <div class="modal fade" id="flagModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 350px;">
+                <div class="modal-content" style="background: #1b2a47; color: #fff; border-radius: 12px; border: 1px solid #344463;">
+                    <div class="modal-body" style="padding: 30px; text-align: center;">
+                        <h4 style="margin-bottom: 20px; font-weight: 600;">예약을 정상적으로 취소하였습니다.</h4>
+                        <div style="display: flex; gap: 10px; justify-content: center;">
+                            <input type="button" value="아니오" class="btn" data-dismiss="modal" style="background: #344463; color: #fff; width: 100px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>  -->
+        
+           <form th:action="@{/admin/dinningMember/dinningDetail}" method="get" id="hiddenFrm">
+	        	<input type="hidden" name="currentPage" th:value="${param.currentPage eq null || param.currentPage==''?1 :param.currentPage}"/>
+	        	<input type="hidden" name="field"   th:value="${param.field==''?reserveNum : param.field}"/>
+	        	<input type="hidden" name="keyword"  th:value="${param.keyword}"/>
+	        	<input type="hidden" name="resNum"  id="detailRevNum" />
+         
+        	</form>
+        	
+      <div class="pagination">
+    	<th:block th:utext="${pagination}">
+    	</th:block>
+    </div>
+        
+        
+
+        <div th:replace="~{manager/fragments/footer :: footer}"></div>
     </div>
 
-    <div class="table-wrapper">
-        <table>
-            <thead>
-                <tr>
-                    <th>예약 번호</th>
-                    <th>성명</th>
-                    <th>E-mail</th>
-                    <th>상품명</th>
-                    <th>금액</th>
-                    <th>결제시간</th>
-                    <th>상태</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>박이소</td>
-                    <td>ADMIN0001</td>
-                    <td>1</td>
-                    <td>150,000</td>
-                    <td>25.05.23:00:00</td>
-                    <td><button class="refund-btn">환불</button></td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>이</td>
-                    <td>ADMIN0002</td>
-                    <td>2</td>
-                    <td>1,200,000</td>
-                    <td>25.05.23</td>
-                    <td><button class="refund-btn">환불</button></td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>박</td>
-                    <td>ADMIN0003</td>
-                    <td>3</td>
-                    <td></td>
-                    <td>25.05.23</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>4</td>
-                    <td>박</td>
-                    <td>ADMIN0004</td>
-                    <td>2</td>
-                    <td></td>
-                    <td>25.05.23</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>5</td>
-                    <td>조</td>
-                    <td>ADMIN0005</td>
-                    <td>2</td>
-                    <td></td>
-                    <td>25.05.23</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>6</td>
-                    <td>조</td>
-                    <td>ADMIN0005</td>
-                    <td>2</td>
-                    <td></td>
-                    <td>25.05.23</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>7</td>
-                    <td>조</td>
-                    <td>ADMIN0005</td>
-                    <td>2</td>
-                    <td></td>
-                    <td>25.05.23</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>8</td>
-                    <td>조</td>
-                    <td>ADMIN0005</td>
-                    <td>2</td>
-                    <td></td>
-                    <td>25.05.23</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>9</td>
-                    <td>조</td>
-                    <td>ADMIN0005</td>
-                    <td>2</td>
-                    <td></td>
-                    <td>25.05.23</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>10</td>
-                    <td>조</td>
-                    <td>ADMIN0005</td>
-                    <td>2</td>
-                    <td></td>
-                    <td>25.05.23</td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <div class="pagination">
-        <a href="#" class="arrow">&lt;</a>
-        <a href="#" class="page-num active">1</a>
-        <a href="#" class="page-num">2</a>
-        <a href="#" class="page-num">3</a>
-        <a href="#" class="page-num">4</a>
-        <span style="color:white">...</span>
-        <a href="#" class="page-num">10</a>
-        <a href="#" class="page-num">11</a>
-        <a href="#" class="arrow">&gt;</a>
-    </div>
-        </div>        
-       
-	<div th:replace="~{/manager/fragments/footer :: footer}"></div>        
-    </div>
+    <script src="/admin_common/js/vendor/jquery-1.12.4.min.js"></script>
+    <script src="/admin_common/js/bootstrap.min.js"></script>
+    <script src="/admin_common/js/wow.min.js"></script>
+    <script src="/admin_common/js/jquery-price-slider.js"></script>
+    <script src="/admin_common/js/jquery.meanmenu.js"></script>
+    <script src="/admin_common/js/owl.carousel.min.js"></script>
+    <script src="/admin_common/js/jquery.sticky.js"></script>
+    <script src="/admin_common/js/jquery.scrollUp.min.js"></script>
+    <script src="/admin_common/js/scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="/admin_common/js/scrollbar/mCustomScrollbar-active.js"></script>
+    <script src="/admin_common/js/metisMenu/metisMenu.min.js"></script>
+    <script src="/admin_common/js/metisMenu/metisMenu-active.js"></script>
+    <script src="/admin_common/js/sparkline/jquery.sparkline.min.js"></script>
+    <script src="/admin_common/js/sparkline/jquery.charts-sparkline.js"></script>
+    <script src="/admin_common/js/calendar/moment.min.js"></script>
+    <script src="/admin_common/js/calendar/fullcalendar.min.js"></script>
+    <script src="/admin_common/js/calendar/fullcalendar-active.js"></script>
+    <script src="/admin_common/js/flot/jquery.flot.js"></script>
+    <script src="/admin_common/js/flot/jquery.flot.resize.js"></script>
+    <script src="/admin_common/js/flot/curvedLines.js"></script>
+    <script src="/admin_common/js/flot/flot-active.js"></script>
+    <script src="/admin_common/js/plugins.js"></script>
+    <script src="js/main.js"></script>
 </body>
-
 </html>

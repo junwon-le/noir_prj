@@ -30,5 +30,8 @@ public interface DinningReserveMapper {
 	
 	public String selectDinningtype(String dinning_time);
 	
+	public int insertNonMember(DinningReserveDTO drDTO);
+	
+	public int insertNonDinningReserve(DinningReserveDTO drDTO);
 	
 }
