@@ -8,7 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900" rel="stylesheet">
-    
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+ 	<script src="/common/js/comm/jquery.bxslider.js"></script>
     <link rel="stylesheet" href="/admin_common/css/bootstrap.min.css">
     <link rel="stylesheet" href="/admin_common/css/font-awesome.min.css">
     <link rel="stylesheet" href="/admin_common/css/nalika-icon.css">
@@ -113,16 +114,16 @@
     </style>
     
     
-  <script type="text/javascript">
-/*   $(function(){
-		  
-	  
-	  
-	  
-	  
-	  
-  });//ready 
-   */
+ <script th:inline="javascript">
+  $(function(){
+		 
+		 var flag = /*[[${flag}]]*/ false;
+		 if (flag==true) {
+		        // 성공 모달 띄우기
+		        $('#resultModal').modal('show');
+		    }
+		
+	 });
   
   function setRevNum(reserveNum){
 	  $("#detailRevNum").val(reserveNum);
@@ -285,6 +286,19 @@
                 </div>
             </div>
         </div> 
+        
+        <div class="modal fade" id="resultModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 350px;">
+                <div class="modal-content" style="background: #1b2a47; color: #fff; border-radius: 12px; border: 1px solid #344463;">
+                    <div class="modal-body" style="padding: 30px; text-align: center;">
+                        <h4 style="margin-bottom: 20px; font-weight: 600;"th:text="${msg}">예약을 취소할까요?</h4>
+                        <div style="display: flex; gap: 10px; justify-content: center;">
+                            <input type="button" value="확인" class="btn" data-dismiss="modal" style="background: #344463; color: #fff; width: 100px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     <!--     
         <div class="modal fade" id="flagModal" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 350px;">

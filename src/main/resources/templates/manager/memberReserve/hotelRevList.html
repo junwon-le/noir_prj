@@ -8,7 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900" rel="stylesheet">
-    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+ 	<script src="/common/js/comm/jquery.bxslider.js"></script>
     <link rel="stylesheet" href="/admin_common/css/bootstrap.min.css">
     <link rel="stylesheet" href="/admin_common/css/font-awesome.min.css">
     <link rel="stylesheet" href="/admin_common/css/nalika-icon.css">
@@ -28,6 +29,8 @@
     <link rel="stylesheet" href="/admin_common/style.css">
     <link rel="stylesheet" href="css/responsive.css">
     <script src="js/vendor/modernizr-2.8.3.min.js"></script>
+    
+    
     
     <style>
         /* 테이블 헤더(th) 및 데이터(td) 가운데 정렬 */
@@ -110,7 +113,45 @@
     text-align: left;
     vertical-align: middle;
 }
+
+tr{
+	cursor: pointer;
+
+}
     </style>
+    
+ <script th:inline="javascript">
+ $(function(){
+	 
+	 var flag = /*[[${flag}]]*/ false;
+	 if (flag==true) {
+	        // 성공 모달 띄우기
+	        $('#resultModal').modal('show');
+	    }
+	
+ });
+ 
+ 
+ function setRevNum(reserveNum){
+	  $("#detailRevNum").val(reserveNum);
+ }  
+ 
+ 
+ function cancel(){
+			$("#hiddenFrm").prop("action","/admin/hotelMember/cancel");
+			$("#hiddenFrm").submit();
+ }//cancel
+ 
+ function hotelDetail(reserveNum){
+	 if(event.target.tagName !== 'INPUT'){
+		 $("#hiddenFrm").prop("action","/admin/hotelMember/hotelDetail")
+		 $("#detailRevNum").val(reserveNum);
+		 $("#hiddenFrm").submit();
+
+	 }
+ }
+ 
+ </script>
 </head>
 
 <body>
@@ -180,7 +221,7 @@
                             
                             <th:block th:each="hotelReserveList:${hotelMemberList}" th:object="${hotelReserveList}">
                             
-                                <tr class="table-row" onclick="if(event.target.tagName !== 'INPUT') alert('ㄹㅇㅋㅋ')">
+                                <tr class="table-row" th:onclick="hotelDetail([[*{reserveNum}]])">
                                     <td style="padding: 20px; font-family: 'Roboto';" th:text="*{reserveNum}">1</td>
                                     <td style="font-weight: 500;" th:text="*{reserveTime}">박OO</td>
                                     <td style="color: #5d87ff;"th:text="*{reserveName}">jonajona</td>
@@ -224,12 +265,33 @@
                         <h4 style="margin-bottom: 20px; font-weight: 600;">예약을 취소할까요?</h4>
                         <div style="display: flex; gap: 10px; justify-content: center;">
                             <input type="button" value="아니오" class="btn" data-dismiss="modal" style="background: #344463; color: #fff; width: 100px;">
-                            <input type="button" value="취소하기" class="btn" style="background: #f19b9b; color: #fff; width: 100px; font-weight: bold;">
+                    <input type="button" id="revCancelBtn" value="취소하기"  th:onclick="cancel()" class="btn" style="background: #f19b9b; color: #fff; width: 100px; font-weight: bold;">
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        
+        <div class="modal fade" id="resultModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 350px;">
+                <div class="modal-content" style="background: #1b2a47; color: #fff; border-radius: 12px; border: 1px solid #344463;">
+                    <div class="modal-body" style="padding: 30px; text-align: center;">
+                        <h4 style="margin-bottom: 20px; font-weight: 600;"th:text="${msg}">예약을 취소할까요?</h4>
+                        <div style="display: flex; gap: 10px; justify-content: center;">
+                            <input type="button" value="확인" class="btn" data-dismiss="modal" style="background: #344463; color: #fff; width: 100px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+          <form th:action="@{/admin/hotelMember/hotelDetail}" method="get" id="hiddenFrm">
+	        	<input type="hidden" name="currentPage" th:value="${param.currentPage != null && param.currentPage != '' ? param.currentPage : 1}"/>
+	        	<input type="hidden" name="field"   th:value="${param.field != null && param.field != '' ? param.field : 'N/A'}"/>
+	        	<input type="hidden" name="keyword"  th:value="${param.keyword}"/>
+	        	<input type="hidden" name="reserveNum"  id="detailRevNum" />
+         
+        	</form>
 
         <div th:replace="~{manager/fragments/footer :: footer}"></div>
     </div>

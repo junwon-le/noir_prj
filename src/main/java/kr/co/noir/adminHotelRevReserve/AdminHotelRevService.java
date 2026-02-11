@@ -4,7 +4,11 @@ import java.util.List;
 
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.encrypt.Encryptors;
+import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.noir.adminDinningReserve.AdminRangeDTO;
 
@@ -15,6 +19,12 @@ public class AdminHotelRevService {
 	@Autowired(required = false)
 	private AdminHotelRevMapper ahrm;
 	
+	@Value("${user.crypto.key}")
+	private String key;
+
+	@Value("${user.crypto.salt}")
+	private String salt;
+
 	
 	
 	
@@ -98,11 +108,49 @@ public class AdminHotelRevService {
 		}//end catch
 		
 		return list;
-		
-		
-		
-		
+
 	}//SearchHotelRevList
+	
+	
+	public List<AdminHotelRevDetailDomain> searchOneHotelDetail(int reserveNum){
+		List<AdminHotelRevDetailDomain> list =null;
+		TextEncryptor te = Encryptors.text(key, salt);
+		try {
+			
+			list=ahrm.adminHotelRevDetail(reserveNum);
+			
+			for (AdminHotelRevDetailDomain ar :list) {
+				ar.setTel(te.decrypt(ar.getTel()));
+				
+			}//end for
+			
+		}catch (PersistenceException pe) {
+			pe.printStackTrace();
+		}//end catch 
+		
+		return list;
+		
+	}//searchOneHotelDetail
+	
+	
+	@Transactional
+	public boolean modifyHotelRev(int reseveNum) {
+		boolean flag=false;
+		try {
+			int revCnt=ahrm.removeHotelReserve(reseveNum);
+			int payCnt=ahrm.removeRevPay(reseveNum);
+			
+			flag=(revCnt+payCnt)==2;
+			
+			
+		}catch (PersistenceException pe) {
+
+			pe.printStackTrace();
+		}//end catch
+		
+		return flag;
+		
+	}//modifyDinningRev
 	
 	
 	public String pagenation(AdminRangeDTO arDTO) {

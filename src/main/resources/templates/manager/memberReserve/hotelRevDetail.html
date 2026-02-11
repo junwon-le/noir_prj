@@ -234,44 +234,45 @@
                 </div>
             </div>
         </div>
-        <div class="container" style="min-height:670px; width:100%; color:#ffffff">
+        <div class="container" style="min-height:670px; width:100%; color:#ffffff" th:object="${hotelMemberDetail[0]}">
     <div class="container-fluid" style="min-height:750px; padding: 30px;">
     <div class="reservation-main-card">
     <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1400&q=80" class="wide-banner" alt="Hotel Banner">
 
     <div class="top-full-section">
     <span class="detail-label">숙박 일정 및 객실 정보</span>
-    
+    <th:block th:each="hotelDetail:${hotelMemberDetail}" th:object="${hotelDetail}"> 
     <div class="stay-period-bar" style="display: flex; align-items: center; justify-content: space-between; padding: 15px 30px;">
         
         <div style="display: flex; align-items: center; gap: 40px; flex: 1;">
             <div style="text-align: left;">
                 <small style="color: #8994bc; font-weight: 700; display: block; margin-bottom: 4px;">CHECK-IN</small>
-                <h4 style="margin: 0; font-weight: 700; display: inline-block;">2025. 07. 22 (화)</h4>
-                <span class="badge" style="background:#8994bc; margin-left: 8px;">15:00</span>
+                <h4 style="margin: 0; font-weight: 700; display: inline-block;" th:text="*{startDate}">2025. 07. 22 (화)</h4>
+                <span class="badge" style="background:#8994bc; margin-left: 8px;"th:text="*{checkIn}">15:00</span>
             </div>
             
-            <div style="margin-top:5	px;  font-size: 16px; font-weight: 800; color: #8994bc; background: #fff; padding: 5px 20px; border-radius: 50px; border: 1px solid #eef0f5; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);">
+            <div style="margin-top:5	px;  font-size: 16px; font-weight: 800; color: #8994bc; background: #fff; padding: 5px 20px; border-radius: 50px; border: 1px solid #eef0f5; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);" th:text="|*{stayCount}박|">
                 3박
             </div>
             
             <div style="text-align: left;">
                 <small style="color: #8994bc; font-weight: 700; display: block; margin-bottom: 4px;">CHECK-OUT</small>
-                <h4 style="margin: 0; font-weight: 700; display: inline-block;">2025. 07. 25 (금)</h4>
-                <span class="badge" style="background:#8994bc; margin-left: 8px;">11:00</span>
+                <h4 style="margin: 0; font-weight: 700; display: inline-block;"th:text="*{endDate}">2025. 07. 25 (금)</h4>
+                <span class="badge" style="background:#8994bc; margin-left: 8px;"th:text="*{checkOut}">11:00</span>
             </div>
         </div>
 
         <div style="display: flex; align-items: center; gap: 20px; padding-left: 30px; border-left: 1px dashed #dce4f5;">
             <div style="text-align: right;">
-                <h4 style="margin: 0; font-weight: 700; color: #1b2a47;">세미 더블룸 (금연실)</h4>
+                <h4 style="margin: 0; font-weight: 700; color: #1b2a47;" th:text="*{roomType}">세미 더블룸 (금연실)</h4>
                 
             </div>
-            <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" 
-                 style="width: 100px; height: 65px; border-radius: 6px; object-fit: cover; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            <img th:src="@{/common/images/homepage/{fileName}(fileName=*{roomImg})}" 
+                 style="width: 100px; height: 65px; border-radius: 6px;">
         </div>
         
     </div>
+     </th:block> 
 </div>
 
     <div class="bottom-grid-container">
@@ -281,16 +282,13 @@
             <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
                 <div class="info-item">
                     <p class="title">예약 번호</p>
-                    <p class="content" style="color: #5d87ff; font-size: 18px;">REV-20250722-0042</p>
+                    <p class="content" style="color: #5d87ff; font-size: 18px;" th:text="|No. *{reserveNum}|">REV-20250722-0042</p>
                 </div>
-                <div class="info-item" style="text-align: right;">
-                    <p class="title">예약 접수일</p>
-                    <p class="content">2025. 05. 15</p>
-                </div>
+                
             </div>
 
             <span class="detail-label">고객 요청사항</span>
-            <div class="memo-box">
+            <div class="memo-box" th:text="*{reserveMsg}">
                 "고층 객실로 배정 부탁드립니다. 조용한 방을 선호합니다. 체크인 시간이 조금 늦어질 수 있습니다."
             </div>
         </div>
@@ -300,19 +298,19 @@
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                 <div class="info-item">
                     <p class="title">예약자명</p>
-                    <p class="content">박OO (Park OO)</p>
+                    <p class="content" th:text="*{reserveName}">박OO (Park OO)</p>
                 </div>
                 <div class="info-item">
                     <p class="title">예약 인원</p>
-                    <p class="content">성인 2명 / 아동 0명</p>
+                    <p class="content" th:text="|성인 *{adultCount}명 / 아동  *{kidCount}명|">성인 2명 / 아동 0명</p>
                 </div>
                 <div class="info-item">
                     <p class="title">휴대폰</p>
-                    <p class="content">010-4325-2345</p>
+                    <p class="content" th:text="*{tel}">010-4325-2345</p>
                 </div>
                 <div class="info-item">
                     <p class="title">이메일</p>
-                    <p class="content">sist@naver.com</p>
+                    <p class="content" th:text="*{email}">sist@naver.com</p>
                 </div>
             </div>
 
@@ -320,29 +318,29 @@
         <div style="background: #f8faff; padding: 25px; border-radius: 10px; color: #1b2a47; border: 1px solid #eef0f5;">
             <div style="display: flex; justify-content: space-between; margin-bottom: 10px; opacity: 0.8;">
                 <span style="font-weight: 500;">결제 일시</span>
-                <span style="font-weight: 600;" th:text="*{#dates.format(payInfoInputDate,'yyyy.MM.dd HH:mm')}">2025. 05. 15 14:32</span>
+                <span style="font-weight: 600;" th:text="*{payInfoInputDate}">2025. 05. 15 14:32</span>
             </div>
             <div style="display: flex; justify-content: space-between; margin-bottom: 10px; opacity: 0.8;">
                 <span style="font-weight: 500;">결제 수단 (카드번호)</span>
-                <span style="font-weight: 600;" th:text="|*{payAgency}(*{#strings.substring(cardData,0,4)}-*{#strings.substring(cardData,4,8)}-*{#strings.substring(cardData,8,12)}-*{#strings.substring(cardData,12,16)})|">신한카드 (4518-****-****-1234)</span>
+                <span style="font-weight: 600;" th:text="|*{payAgency} (*{#strings.substring(cardData,0,4)}-*{#strings.substring(cardData,4,8)}-*{#strings.substring(cardData,8,12)}-*{#strings.substring(cardData,12,16)})|" >신한카드 (4518-****-****-1234)</span>
             </div>
             <hr style="border-top: 1px dashed #dce4f5; margin: 15px 0;">
             <div style="display: flex; justify-content: space-between; margin-bottom: 10px; opacity: 0.8;">
                 <span style="font-weight: 500;">객실 요금</span>
-                <span style="font-weight: 500;" th:text="|*{#numbers.formatInteger(roomPrice,3,'COMMA')}원|">1,100,000원</span>
+                <span style="font-weight: 500;" th:text="|*{#numbers.formatInteger(roomPrice,3,'COMMA')} 원|">1,100,000원</span>
             </div>
             <div style="display: flex; justify-content: space-between; margin-bottom: 15px; opacity: 0.8;">
                 <span style="font-weight: 500;">세금 및 봉사료</span>
-                <span style="font-weight: 500;" th:text="|*{#numbers.formatInteger(roomTax,3,'COMMA')}원|">100,000원</span>
+                <span style="font-weight: 500;" th:text="|*{#numbers.formatInteger(roomTax,3,'COMMA')} 원|">100,000원</span>
             </div>
             <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #dce4f5; padding-top: 15px; margin-top: 15px;">
                 <span style="font-size: 15px; font-weight: 600;">총 결제금액</span>
                 
         	<th:block th:if="*{reserveFlag =='N'}">
-                <span style="font-size: 24px; font-weight: 800; color: #1b2a47;" th:text="|*{#numbers.formatInteger(roomPriceTotal,3,'COMMA')} KRW|">1,200,000 KRW</span>
+                <span style="font-size: 24px; font-weight: 800; color: #1b2a47;" th:text="|*{#numbers.formatInteger(totalPrice,3,'COMMA')} KRW|">1,200,000 KRW</span>
             </th:block>
         	<th:block th:unless="*{reserveFlag =='N'}">
-                <span style="font-size: 24px; font-weight: 800; color: #aaa;text-decoration:line-through;" th:text="|*{#numbers.formatInteger(roomPriceTotal,3,'COMMA')} KRW|">1,200,000 KRW</span>
+                <span style="font-size: 24px; font-weight: 800; color: #aaa;text-decoration:line-through;" th:text="|*{#numbers.formatInteger(totalPrice,3,'COMMA')} KRW|">1,200,000 KRW</span>
             </th:block>
             
             </div>
@@ -352,7 +350,8 @@
 </div>
 
     <div style="text-align: center; margin-top: 40px;">
-        <button type="button" class="btn" onclick="location.href='/hotelRev'"
+        <button type="button" class="btn" 
+th:onclick="location.href='/admin/hotelMember/?currentPage=' + [[${param.currentPage!=null?param.currentPage[0] : 1}]] + '&field=' + [[${param.field!=null?param.field[0]:''}]] + '&keyword=' + [[${param.keyword!=null?param.keyword[0]:''}]] "
                 style="background: #8994bc; color: #fff; width: 180px; height: 45px; border-radius: 8px; font-weight: 600; box-shadow: 0 4px 10px rgba(137, 148, 188, 0.3);">
             리스트
         </button>
