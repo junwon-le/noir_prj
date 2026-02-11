@@ -76,8 +76,8 @@ background-color: #FFF;
 }
 .ffffff{
 	background-color: #fff;
-	height: 150px;
-	width: 1000px;
+	height: 100px;
+	width: 100%;
 	
 }
 
@@ -89,15 +89,6 @@ background-color: #FFF;
   color: #000;
 }
 
-.banner{
-  position: relative;
-  width: 100vw;
-  height: 500px;
-
-  left: 50%;
-  transform: translateX(-50%);
-  overflow: hidden;
-}
 
 .eventbanner{
   width: 100%;
@@ -105,17 +96,34 @@ background-color: #FFF;
   object-fit: cover;
 }
 
-/* 텍스트 영역 */
-.banner-text{
+/* 배너 컨테이너 */
+.banner {
+  position: relative;
+  width: 100%;       /* 전체 너비 */
+  height: 500px;     /* 고정 높이 (원하는 대로 조절) */
+  overflow: hidden;  /* 이미지가 넘치면 잘라냄 */
+  background-color: #000; /* 이미지 로딩 전이나 없을 때 대비 */
+}
+
+/* 배너 내부 이미지 */
+.banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;    /* 비율을 유지하면서 영역을 꽉 채움 (중요!) */
+  object-position: center; /* 이미지의 중심을 기준으로 맞춤 */
+}
+
+/* 텍스트 영역이 이미지 위에 잘 보이도록 그림자 추가 (선택) */
+.banner-text {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-
   text-align: center;
   color: #fff;
   z-index: 2;
   padding: 0 20px;
+  text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7); /* 글자 가독성 향상 */
 }
 
 /* 제목 */
@@ -143,14 +151,19 @@ background-color: #FFF;
 .event-date{
   font-weight: 400;
 }
-.event-thum-img{
-  display:flex;
-  padding:0px 350px;
-
+.event-thum-img {
+  display: flex;
+  align-items: flex-start; /* 위쪽 정렬 */
+  justify-content: center; /* 중앙 정렬 */
+  gap: 40px;               /* 이미지와 텍스트 사이 간격 */
+  margin: 0 auto;          /* 중앙 배치 */
+  padding: 40px 20px;      /* 양옆 여백은 작게, 위아래는 적당히 */
 }
-.thumimg{
-  height: 250px;
 
+.thumimg {
+  flex: 0 0 450px;         /* 이미지 너비 고정 (필요시 조절) */
+  height: 200px;            /* 비율 유지 */
+  object-fit: cover;
 }
 
 .event-title-title{
@@ -226,7 +239,7 @@ hr{
 }
 
 #listbtn{
-	
+  margin-top:20px;
   padding: 12px 100px;
 
 }
@@ -249,7 +262,7 @@ hr{
 </div>
 <div class="maincontainer">
 <div class="banner">
-	<img src="../common/images/homepage/img_1.jpg" class="eventbanner">
+  <img th:src="@{/common/images/homepage/event/} + ${eventDetail.eventImg1}" alt="이벤트 이미지">
 	<div class="banner-text">
 	<div class="event-title" >
 	<span th:text="${eventDetail.eventTitle}"></span>&nbsp;[<span th:text="${eventDetail.eventSubTitle}"></span>]
@@ -271,7 +284,7 @@ hr{
 	<hr>
 	
 	<div class="event-thum-img">
-	<img src="../common/images/homepage/img_1.jpg" class="thumimg">
+	<img th:src="@{/common/images/homepage/event/} + ${eventDetail.eventImg2}" class="thumimg" alt="이벤트 이미지">
 	 <div class="event-text">
     <div class="event-title-title"><span th:text="${eventDetail.eventTitle}"></span>&nbsp;[<span th:text="${eventDetail.eventSubTitle}"></span>]</div>
     <span class="event-title-desc" th:text="${eventDetail.eventMsg}">
@@ -301,8 +314,9 @@ hr{
 	<div class="backlist">
 	  <button type="button" class="btn btn-outline-dark" id="listbtn" th:onclick="|location.href='@{/eventList}'|">목록</button>
 	</div>
-	
 </div>
+	<div class="ffffff"></div>
+
 <footer>
         <div th:replace="~{fragments/footer :: footer}"></div>
     </footer>
