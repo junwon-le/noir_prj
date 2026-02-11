@@ -123,8 +123,48 @@ tr{
  <script th:inline="javascript">
  $(function(){
 	 
+	 $("#searchBtn").click(function(){		 
+		 var field=$("#field").val();
+		 var keyword=$("#keyword").val().trim();
+		 
+		 if(field=='N/A'){
+			 if(keyword==''){
+				 $("#boardSearchFrm").submit();
+				 }//end if 
+			 }
+		 
+		 var reg = [new RegExp('^\\d+$'), new RegExp('^[a-zA-Z0-9ㄱ-ㅎ가-힣]+$')];
+		 if(field=="reserveNum"){
+			if(!keyword.match(reg[0])){
+				$("#resultText").text("숫자만 입력해주세요");
+				$('#resultModal').modal('show');
+				return false;
+			}	//end if			 
+		 }//end if
+		 if(field=="userName"){
+			 if(!keyword.match(reg[1])){
+					$("#resultText").text("특수문자는 사용 불가능합니다.");
+					$('#resultModal').modal('show');
+					return false;
+				}//end if
+		 }//end if
+		 
+		 if(field=="memberId"){
+			 if(!keyword.match(reg[1])){
+					$("#resultText").text("특수문자는 사용 불가능합니다.");
+					$('#resultModal').modal('show');
+					return false;
+				}//end if
+		 }//end if
+
+		 $("#boardSearchFrm").submit();
+
+	 });//click
+	 
 	 var flag = /*[[${flag}]]*/ false;
 	 if (flag==true) {
+		 
+		 
 	        // 성공 모달 띄우기
 	        $('#resultModal').modal('show');
 	    }
@@ -150,7 +190,6 @@ tr{
 
 	 }
  }
- 
  </script>
 </head>
 
@@ -166,12 +205,15 @@ tr{
                                 <div class="row">
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                         <div class="breadcomb-wp" style="color:#ffffff; font-size: 20px">
-											<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle;">
-											  <path d="M7 2V10C7 12.7614 9.23858 15 12 15C14.7614 15 17 12.7614 17 10V2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-											  <path d="M12 2V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-											  
-											  <path d="M12 15V22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-											</svg><span>&nbsp; 호텔 에약 관리(회원)</span>
+											<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+												  <path d="M2 21H22" stroke="#2C3E50" stroke-width="2" stroke-linecap="round"></path>
+												  
+												  <path d="M5 21V5C5 3.89543 5.89543 3 7 3H17C18.1046 3 19 3.89543 19 5V21" stroke="#2C3E50" stroke-width="2"></path>
+												  
+												  <path d="M9 7V11M15 7V11M9 9H15" stroke="#3498DB" stroke-width="1.5" stroke-linecap="round"></path>
+												  
+												  <path d="M10 21V18C10 16.8954 10.8954 16 12 16C13.1046 16 14 16.8954 14 18V21" stroke="#2C3E50" stroke-width="1.5"></path>
+												</svg><span>&nbsp; 호텔 예약 관리(회원)</span>
 										</div>
                                     </div>
                                 </div>
@@ -191,9 +233,9 @@ tr{
                             <option value="reserveNum" th:selected="${#strings.equals(param.field,'reserveNum')}">예약번호</option>
                             <option value="userName" th:selected="${#strings.equals(param.field,'userName')}">예약자명</option>
                             <option value="memberId" th:selected="${#strings.equals(param.field,'memberId')}">아이디</option>
-                        </select>
+                        </select> 
                         <div style="position: relative; flex-grow: 1; max-width: 350px;">
-                            <button style="position: absolute; right: 6px; top: 6px; border: none; background: #8e99bc; color: #fff; border-radius: 6px; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">
+                            <button id="searchBtn" style="position: absolute; right: 6px; top: 6px; border: none; background: #8e99bc; color: #fff; border-radius: 6px; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;" onclick="return false;">
                                 <i class="fa fa-search"></i>
                             </button>
                             <input type="text" name="keyword" id="keyword" th:value="${param.keyword!=''?param.keyword:''}" class="form-control" placeholder="검색어를 입력하세요" style="background: white; border-radius: 8px; height: 42px; color:black; padding-right: 45px; border: 1px solid #e0e6ed;">
@@ -224,8 +266,8 @@ tr{
                                 <tr class="table-row" th:onclick="hotelDetail([[*{reserveNum}]])">
                                     <td style="padding: 20px; font-family: 'Roboto';" th:text="*{reserveNum}">1</td>
                                     <td style="font-weight: 500;" th:text="*{reserveTime}">박OO</td>
-                                    <td style="color: #5d87ff;"th:text="*{reserveName}">jonajona</td>
-                                    <td style="font-family: 'Roboto'; color: #7c8fac;" th:text="*{memberId}">2026-01-15 ~ 2026-01-20</td>
+                                    <td style="font-family: 'Roboto'; color: #7c8fac;" th:text="*{reserveName}">2026-01-15 ~ 2026-01-20</td>
+                                    <td style="color: #5d87ff;" th:text="*{memberId}">jonajona</td>
                                     <td style="font-family: 'Roboto'; color: #7c8fac;"th:text="|*{startDate} ~ *{endDate}|">2026-01-15 ~ 2026-01-20</td>
                                     <td style="font-family: 'Roboto'; color: #7c8fac;" th:text="|*{#numbers.formatInteger(totalPrice,3,'COMMA')} KRW|">2026-01-15 ~ 2026-01-20</td>
                                     <td style="font-family: 'Roboto'; color: #7c8fac;"th:text="*{inputDate}">2026-01-15 ~ 2026-01-20</td>
@@ -276,7 +318,7 @@ tr{
             <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 350px;">
                 <div class="modal-content" style="background: #1b2a47; color: #fff; border-radius: 12px; border: 1px solid #344463;">
                     <div class="modal-body" style="padding: 30px; text-align: center;">
-                        <h4 style="margin-bottom: 20px; font-weight: 600;"th:text="${msg}">예약을 취소할까요?</h4>
+                        <h4 id="resultText" style="margin-bottom: 20px; font-weight: 600;"th:text="${msg}">예약을 취소할까요?</h4>
                         <div style="display: flex; gap: 10px; justify-content: center;">
                             <input type="button" value="확인" class="btn" data-dismiss="modal" style="background: #344463; color: #fff; width: 100px;">
                         </div>

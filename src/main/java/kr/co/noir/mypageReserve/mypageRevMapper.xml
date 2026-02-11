@@ -73,8 +73,35 @@
 	<result column="payInputDate" property="payInputDate"></result>
 </resultMap>
 
+
+
+<select id="hotelRevDetail" parameterType="reserveDetailDTO" resultMap="hrdDomain">
+    select r.reserve_num, ri.room_type, r.END_USER_LAST_NAME||r.END_USER_FIRST_NAME as reserveName,
+    r.reserve_start_date, r.reserve_end_date
+    ,to_char(to_date(REPLACE(ri.room_check_in, '24:', '00:'), 'HH24:MI'), 'HH24:MI AM', 'NLS_DATE_LANGUAGE=AMERICAN') as checkInTime
+    ,to_char(to_date(REPLACE(ri.room_check_out, '24:', '00:'), 'HH24:MI'), 'HH24:MI AM', 'NLS_DATE_LANGUAGE=AMERICAN') as checkOutTime
+    ,to_char(r.reserve_time, 'yyyy-MM-dd') as reserveDate
+    ,r.reserve_email
+    ,r.reserve_tel
+    ,r.reserve_adult_count
+    ,r.reserve_kid_count
+    ,pi.pay_agency
+    ,pi.card_num
+    ,to_char(pi.input_date, 'yyyy-MM-dd AM HH24:MI') as payInputDate
+    ,r.reserve_msg
+    ,p.pay_price
+    ,r.reserve_status
+    from reserve r, room_res rr, room_info ri, pay p, pay_info pi
+    where r.reserve_num = rr.reserve_num
+        and rr.room_type_num = ri.room_type_num
+        and p.reserve_num = r.reserve_num
+        and p.pay_num = pi.pay_num
+        and r.member_num = (select member_num from member where member_id = #{memberId})
+        and r.RESERVE_TYPE = 'room'
+        and r.reserve_num = #{reserveNum}
+</select>
  
- <select id="hotelRevDetail" parameterType="reserveDetailDTO" resultMap="hrdDomain">
+<!--  <select id="hotelRevDetail" parameterType="reserveDetailDTO" resultMap="hrdDomain">
    
 	select r.reserve_num,ri.room_type,r.END_USER_LAST_NAME||r.END_USER_FIRST_NAME as reserveName,
 	r.reserve_start_date,r.reserve_end_date
@@ -99,7 +126,7 @@
 		and r.member_num=(select member_num from member where member_id=#{memberId})
 		and r.RESERVE_TYPE='room'
 		and r.reserve_num=#{reserveNum}
-</select> 
+</select>  -->
 
  <update id="removeHotelReserve" parameterType="int" >
 	update reserve

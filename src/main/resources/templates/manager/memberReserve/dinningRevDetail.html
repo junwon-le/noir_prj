@@ -40,7 +40,7 @@
     <link rel="stylesheet" href="/admin_common/css/morrisjs/morris.css">
     <!-- mCustomScrollbar CSS
 		============================================ -->
-    <link rel="stylesheet" href="css/scrollbar/jquery.mCustomScrollbar.min.css">
+       <link rel="stylesheet" href="/admin_common/css/scrollbar/jquery.mCustomScrollbar.min.css">
     <!-- metisMenu CSS
 		============================================ -->
     <link rel="stylesheet" href="/admin_common/css/metisMenu/metisMenu.min.css">
@@ -127,6 +127,8 @@
         font-size: 15px;
         line-height: 1.6;
     }
+    
+
 </style>
 </head>
 
@@ -135,23 +137,28 @@
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
-    <div th:replace="~{manager/fragments/sidebar :: sidebar}"></div>
     <!-- Start Welcome area -->
+    <th:block th:replace="~{manager/fragments/sidebar :: sidebar}"></th:block>
     <div class="all-content-wrapper">
         <div class="header-advance-area">
             <div class="breadcome-area">
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <div class="breadcome-list">
+                            <div class="breadcome-list" style="margin-left:40px; width:95%; border-radius: 20px;">
                                 <div class="row">
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                         <div class="breadcomb-wp" style="color:#ffffff; font-size: 20px">
-											객실 예약 관리
+											<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle;">
+  <path d="M7 2V10C7 12.7614 9.23858 15 12 15C14.7614 15 17 12.7614 17 10V2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+  <path d="M12 2V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+  
+  <path d="M12 15V22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg><span>&nbsp; 다이닝 예약 관리(회원)</span>
 										</div>
                                     </div>
                                 </div>
-                            </div>
+                            </div>	
                         </div>
                     </div>
                 </div>
@@ -264,7 +271,7 @@
 
     <div style="text-align: center; margin-top: 40px;">
 			 <button type="button" class="btn" 
-			       th:onclick="location.href='/admin/dinningMember/?currentPage=' + [[${param.currentPage!=null?param.currentPage[0] : 1}]] + '&field=' + [[${param.field!=null?param.field[0]:''}]] + '&keyword=' + [[${param.keyword!=null?param.keyword[0]:''}]] + '&reserveType=dinning'"
+			       th:onclick="location.href='/admin/dinningMember/?currentPage=' + [[${param.currentPage!=null?param.currentPage[0] : 1}]] + '&field=' + [[${param.field!=null?param.field[0]:''}]] + '&keyword=' + [[${param.keyword!=null?param.keyword[0]:'N/A'}]] "
 			        style="background: #8994bc; color: #fff; width: 180px; height: 45px; border-radius: 8px; font-weight: 600; border: none; box-shadow: 0 4px 10px rgba(137, 148, 188, 0.3);">
 			    리스트
 			</button>
@@ -330,6 +337,6 @@
     <script src="/admin_common/js/plugins.js"></script>
     <!-- main JS
 		============================================ -->
-    <script src="/admin_common/js/main.js"></script>
+     <script src="js/main.js"></script>
 </body>
 </html>

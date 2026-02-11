@@ -39,16 +39,16 @@ public class MypageController {
 
         // 2. 로그인 제공자 판별 (HEAD 로직 통합)
         // memberId가 'kakao_...' 또는 'google_...' 형태인 경우를 처리
-        String memberProvider = "LOCAL";
+        String memberProvider = "local";
         String[] memberSplit = memberId.split("_");
         if (memberSplit.length > 1) {
-            String prefix = memberSplit[0].toUpperCase();
-            if ("KAKAO".equals(prefix) || "GOOGLE".equals(prefix) || "NAVER".equals(prefix)) {
+            String prefix = memberSplit[0];
+            if ("kakao".equals(prefix) || "google".equals(prefix) || "naver".equals(prefix)) {
                 memberProvider = prefix;
             }
         }
         // HTML에서 사용할 수 있도록 세션에 저장
-        session.setAttribute("memberProvider", memberProvider);
+        session.setAttribute("memberProd", memberProvider);
 
         // 3. 데이터 조회
         int hotelRevcnt = mps.searchHotelRevCnt(memberId);

@@ -40,7 +40,7 @@
     <link rel="stylesheet" href="/admin_common/css/morrisjs/morris.css">
     <!-- mCustomScrollbar CSS
 		============================================ -->
-    <link rel="stylesheet" href="css/scrollbar/jquery.mCustomScrollbar.min.css">
+   <link rel="stylesheet" href="/admin_common/css/scrollbar/jquery.mCustomScrollbar.min.css">
     <!-- metisMenu CSS
 		============================================ -->
     <link rel="stylesheet" href="/admin_common/css/metisMenu/metisMenu.min.css">
@@ -224,7 +224,7 @@
 												  <path d="M9 7V11M15 7V11M9 9H15" stroke="#3498DB" stroke-width="1.5" stroke-linecap="round"/>
 												  
 												  <path d="M10 21V18C10 16.8954 10.8954 16 12 16C13.1046 16 14 16.8954 14 18V21" stroke="#2C3E50" stroke-width="1.5"/>
-												</svg> <span style="text-align: center;"> &nbsp; 호텔 에약 관리(회원)</span>
+												</svg> <span style="text-align: center;"> &nbsp; 호텔 예약 관리(회원)</span>
 										</div>
                                     </div>
                                 </div>
@@ -351,7 +351,7 @@
 
     <div style="text-align: center; margin-top: 40px;">
         <button type="button" class="btn" 
-th:onclick="location.href='/admin/hotelMember/?currentPage=' + [[${param.currentPage!=null?param.currentPage[0] : 1}]] + '&field=' + [[${param.field!=null?param.field[0]:''}]] + '&keyword=' + [[${param.keyword!=null?param.keyword[0]:''}]] "
+				th:onclick="location.href='/admin/hotelMember/?currentPage=' + [[${param.currentPage!=null?param.currentPage[0] : 1}]] + '&field=' + [[${param.field!=null?param.field[0]:''}]] + '&keyword=' + [[${param.keyword!=null?param.keyword[0]:'N/A'}]] "
                 style="background: #8994bc; color: #fff; width: 180px; height: 45px; border-radius: 8px; font-weight: 600; box-shadow: 0 4px 10px rgba(137, 148, 188, 0.3);">
             리스트
         </button>
@@ -414,6 +414,6 @@ th:onclick="location.href='/admin/hotelMember/?currentPage=' + [[${param.current
     <script src="/admin_common/js/plugins.js"></script>
     <!-- main JS
 		============================================ -->
-    <script src="/admin_common/js/main.js"></script>
+     <script src="js/main.js"></script>
 </body>
 </html>

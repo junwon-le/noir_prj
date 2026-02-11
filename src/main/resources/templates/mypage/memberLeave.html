@@ -1,194 +1,434 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>NOIR - 마이페이지 회원탈퇴</title>
+<title>마이페이지</title>
 
-<meta name="_csrf" th:content="${_csrf.token}"/>
-<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 
-<link rel="stylesheet" type="text/css" th:href="@{/common/css/homepage/base.css}">
-<link rel="stylesheet" type="text/css" th:href="@{/common/css/homepage/style.css(v='0312')}">
-<link rel="stylesheet" type="text/css" th:href="@{/common/css/homepage/sub.css(v='0312')}">
+<link rel="stylesheet" type="text/css" href="/common/css/homepage/base.css">
+<link rel="stylesheet" type="text/css" href="/common/css/homepage/style.css?v=0312">
+<link rel="stylesheet" type="text/css" href="/common/css/homepage/sub.css?v=0312">
+<!-- jQeury CDN 시작 -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="/common/js/comm/jquery.bxslider.js"></script>
+<script src="/common/js/homepage/jquery.rwdImageMaps.min.js"></script>
+<script src="/common/js/homepage/jquery.accessibility.modal.js"></script>
+<script src="/common/js/comm/jquery.cookie.js"></script>
+<script src="/common/js/homepage/plugin.js"></script>
+<script src="/common/js/homepage/custom.js"></script>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-<script th:src="@{/common/js/comm/jquery.bxslider.js}"></script>
-<script th:src="@{/common/js/homepage/jquery.rwdImageMaps.min.js}"></script>
-<script th:src="@{/common/js/homepage/jquery.accessibility.modal.js}"></script>
-<script th:src="@{/common/js/comm/jquery.cookie.js}"></script>
-<script th:src="@{/common/js/homepage/plugin.js}"></script>
-<script th:src="@{/common/js/homepage/custom.js}"></script>
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <style type="text/css">
-    /* 기본 다크 테마 */
-    html, body {
-        background-color: #181818 !important;
-        color: #ffffff !important;
-        font-family: 'Pretendard', sans-serif;
-        padding-top: 0;
-    }
+/* 기존 스타일 유지 */
+html{
+	background-color: #181818;
+}
 
-    .container { margin-top: 160px; margin-bottom: 100px; height: auto; }
-    .equal-height-row { display: flex; align-items: stretch; }
+  body {
+            background-color: #181818;
+            color: #ffffff;
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+            padding: 95px 0;
+        }
+.subject
+{
+color:white;
+text-decoration: none;
+}
 
-    /* 사이드바 스타일 */
-    .sidebar {
-        background-color: #000000;
-        padding: 25px;
-        border-radius: 10px;
-        border: 1px solid #2a2a2a;
-        display: flex;
-        flex-direction: column;
-        min-height: 600px;
-    }
-    .mypage-title { border: 1px solid #c5a47e; padding: 20px; margin-bottom: 35px; text-align: center; }
-    .mypage-title h2 { font-size: 1.1rem; letter-spacing: 2px; margin: 0; color: #fff; }
-    .mypage-title p { font-size: 1.2rem; margin-top: 10px; font-weight: bold; color: #fff; }
-    .menu-group { margin-bottom: 25px; }
-    .menu-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; color: #888; text-decoration: none; font-size: 0.85rem; border-bottom: 1px solid #151515; }
-    .menu-item:hover, .menu-item.menuCilck, .menu-item.now_page { color: #c5a47e; }
-    .badge-outline { border: 1px solid #c5a47e; color: #c5a47e; padding: 1px 8px; font-size: 0.65rem; border-radius: 12px; }
-    .badge-outline.now_page_icon { color: black; background-color: #c5a47e; font-weight: bold; }
+.main-sub > ul > li > a {
+	text-decoration: none;
+}
 
-    /* 탈퇴 컨텐츠 박스 */
-    .withdrawal-container {
-        background: #000000;
-        border: 1px solid #2a2a2a;
-        padding: 60px 50px;
-        border-radius: 10px;
-        text-align: center;
-        min-height: 600px;
-    }
-    .logo-section { margin-bottom: 50px; }
-    .logo-section h3 { font-size: 2rem; font-weight: bold; letter-spacing: 4px; color: #fff; margin-bottom: 10px; }
-    .logo-section p { font-size: 0.9rem; color: #c5a47e; letter-spacing: 3px; font-weight: 500; }
+.info > ul > li > a {
+	color:white;
+	text-decoration: none;
+}
+.info > ul > li {
+	list-style:none;
+}
 
-    /* 유의사항 정책 박스 */
-    .policy-box {
-        background: #111111;
-        text-align: left;
-        padding: 40px;
-        border: 1px solid #2a2a2a;
-        margin-bottom: 40px;
-        border-radius: 4px;
-    }
-    .policy-section { margin-bottom: 30px; }
-    .policy-section h5 {
-        font-size: 1.1rem;
-        font-weight: bold;
-        color: #ffffff;
-        margin-bottom: 15px;
-        border-left: 3px solid #c5a47e;
-        padding-left: 15px;
-    }
-    .policy-section p { font-size: 0.9rem; color: #aaa; margin-bottom: 10px; line-height: 1.6; }
-    .policy-section ul { padding-left: 20px; }
-    .policy-section li { font-size: 0.85rem; color: #888; margin-bottom: 8px; list-style-type: disc; }
+.footer_bot{
+padding:0px;
+}
 
-    /* 동의 및 확인 폼 */
-    .agree-check { margin-bottom: 40px; font-size: 1rem; color: #c5a47e; display: flex; justify-content: center; align-items: center; }
-    .agree-check label { cursor: pointer; display: flex; align-items: center; gap: 10px; }
-    .agree-check input { width: 18px; height: 18px; accent-color: #c5a47e; cursor: pointer; transform: scale(1.2); }
+.container{
+margin-top :160px;
+height:auto;
+}
 
-    .confirm-wrapper {
-        display: flex;
-        justify-content: center;
-        max-width: 500px;
-        margin: 0 auto;
-        border: 1px solid #333;
-        border-radius: 4px;
+  body {
+            background-color: #181818;
+            color: #ffffff;
+            font-family: 'Pretendard', sans-serif;
+            padding: 60px 0;
+        }
+
+        .equal-height-row {
+            display: flex;
+            align-items: stretch; 
+        }
+
+        .sidebar {
+            background-color: #000000;
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid #2a2a2a;
+            height: auto; 
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-content-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            height: 100%;
+        }
+
+        .content-section {
+            background: #111111;
+            border: 1px solid #2a2a2a;
+            padding: 35px;
+            border-radius: 10px;
+        }
+
+        .flex-fill-section {
+            flex-grow: 1;
+        }
+
+        .mypage-title { border: 1px solid #c5a47e; padding: 20px; margin-bottom: 35px; text-align: center; }
+        .mypage-title h2 { font-size: 1.1rem; letter-spacing: 2px; margin: 0; }
+        .mypage-title p { font-size: 1.2rem; margin-top: 10px; font-weight: bold; }
+
+        .menu-group { margin-bottom: 25px; }
+        .menu-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .header-content { display: flex; align-items: center; font-size: 0.95rem; font-weight: 500; line-height: 1; }
+        .icon-wrapper { width: 22px; height: 22px; margin-right: 8px; display: flex; align-items: center; justify-content: center; }
+        .icon-wrapper svg { stroke: #c5a47e; }
+
+        .menu-group>.menu-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; color: #888; text-decoration: none; font-size: 0.85rem; border-bottom: 1px solid #151515; }
+        .menu-item:hover { color: #c5a47e; }
+        .badge-outline { border: 1px solid #c5a47e; color: #c5a47e; padding: 1px 8px; font-size: 0.65rem; border-radius: 12px; }
+
+        .summary-card { background: #1a1a1a; border: 1px solid #2a2a2a; padding: 22px; display: flex; align-items: center; justify-content: space-between; text-decoration: none; color: #fff; border-radius: 4px; }
+        .icon-circle { width: 48px; height: 48px; background: #000; color: #c5a47e; border: 1px solid #2a2a2a; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 18px; }
+        
+        .event-card img { width: 100%; height: 180px; object-fit: cover; border-radius: 4px; margin-bottom: 15px; border: 1px solid #2a2a2a; }
+        .event-card h6 { font-weight: bold; color: #fff; margin-bottom: 5px; }
+        .event-period { font-size: 0.75rem; color: #666; }
+        
+    .thumb-img-wrapper {
+        position: relative;
+        height: 80px; 
+        border-radius: 2px;
         overflow: hidden;
-    }
-    .pw-input {
+        border: 1px solid #2a2a2a;
         background: #000;
-        border: none;
-        color: #fff;
-        padding: 15px 25px;
-        flex-grow: 1;
-        outline: none;
-        font-size: 1rem;
     }
-    .btn-confirm {
-        background: #c5a47e;
-        color: #000;
-        border: none;
-        padding: 0 40px;
-        font-size: 1rem;
-        font-weight: bold;
-        transition: 0.3s;
-        cursor: pointer;
-        white-space: nowrap;
+    
+    .thumb-img-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0.4; 
+        transition: 0.4s;
     }
-    .btn-confirm:hover { background: #e2c29d; color: black; }
-    .btn-confirm.big { width: 100%; max-width: 300px; height: 50px; padding: 0; }
 
-    /* 모달 공통 스타일 */
-    .hotel-modal-content { background-color: #1a1a1a !important; border: 1px solid #c5a47e !important; border-radius: 0 !important; }
-    .hotel-modal-header { border-bottom: 1px solid #2a2a2a !important; }
-    .hotel-modal-title { color: #c5a47e !important; letter-spacing: 2px; font-size: 1rem !important; }
-    .hotel-modal-body { color: #ffffff !important; text-align: center; padding: 40px 20px !important; font-size: 1.1rem; }
-    .hotel-modal-footer { border-top: 1px solid #2a2a2a !important; justify-content: center !important; gap: 10px; }
-    .hotel-modal-btn { background-color: #c5a47e !important; color: #000 !important; border: none; padding: 10px 40px !important; font-weight: bold !important; border-radius: 0 !important; }
-    .hotel-modal-btn-secondary { background-color: #333 !important; color: #fff !important; border: none; padding: 10px 40px !important; font-weight: bold !important; border-radius: 0 !important; }
+    .thumb-overlay {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .thumb-overlay span {
+        color: #fff;
+        font-size: 0.65rem;
+        font-weight: bold;
+        letter-spacing: 1px;
+        border-bottom: 1px solid #c5a47e;
+        padding-bottom: 2px;
+    }
+
+    .facility-thumb-card:hover img {
+        opacity: 0.7;
+        transform: scale(1.1);
+    }
+    .facility-thumb-card:hover .thumb-img-wrapper {
+        border-color: #c5a47e;
+    }
+    
+    .summary-card:hover{
+    	 border-color: #c5a47e;
+    }
+    
+    .siteBorder{
+    	text-decoration: none;
+    }
+    .menu-item.menuCilck{
+    	color: #c5a47e;
+    }
+    .footer-title{
+    	margin-top: 5px;
+    }
+
+        .withdrawal-container {
+    		background: black;
+            border: 1px solid #2a2a2a;
+            padding: 60px 50px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .logo-section { margin-bottom: 50px; }
+        .logo-section h3 { font-weight: bold; letter-spacing: 4px; color: #fff; }
+        .logo-section p { font-size: 0.8rem; color: #c5a47e; letter-spacing: 2px; margin-top: 5px; }
+
+        .policy-box {
+            background: #1a1a1a; 
+            color: #ccc;
+            text-align: left;
+            padding: 40px;
+            border: 1px solid #2a2a2a;
+            margin-bottom: 40px;
+            max-height: none; 
+            overflow: visible; 
+        }
+        .policy-section { margin-bottom: 40px; }
+        .policy-section h5 { 
+            font-weight: bold; 
+            font-size: 1.1rem; 
+            color: #ffffff; 
+            margin-bottom: 20px; 
+            border-left: 3px solid #c5a47e; 
+            padding-left: 15px; 
+        }
+        .policy-section p { font-size: 0.9rem; line-height: 1.8; color: #aaa; margin-bottom: 12px; }
+        .policy-section ul { padding-left: 18px; margin-bottom: 0; }
+        .policy-section li { font-size: 0.85rem; color: #888; margin-bottom: 8px; list-style-type: disc; }
+
+        .agree-check { margin-bottom: 45px; font-size: 0.95rem; color: #c5a47e; }
+        .agree-check input { 
+            margin-right: 12px; 
+            accent-color: #c5a47e; 
+            transform: scale(1.2);
+            cursor: pointer;
+        }
+
+        .confirm-wrapper {
+            display: flex;
+            justify-content: center;
+            max-width: 500px;
+            margin: 0 auto;
+            border: 1px solid #333;
+        }
+        .pw-input {
+            background: #000;
+            border: none;
+            color: #fff;
+            padding: 15px 25px;
+            flex-grow: 1;
+            outline: none;
+            font-size: 0.9rem;
+        }
+        .btn-confirm {
+            background: #c5a47e;
+            color: #000;
+            border: none;
+            padding: 0 45px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            transition: 0.3s;
+            white-space: nowrap;
+        }
+        .btn-confirm:hover { background: #e2c29d; }
+        
+        .menu-group>.menu-item.now_page{
+        	color:#FFFFFF;
+        }
+        .badge-outline.now_page_icon{
+        	color: black;
+        	background-color: #c5a47e;
+        	font-weight: bold;
+        }
+
+        /* 신규 모달 공통 스타일 */
+        .hotel-modal-content {
+            background-color: #1a1a1a !important;
+            border: 1px solid #c5a47e !important;
+            border-radius: 0 !important;
+        }
+        .hotel-modal-header {
+            border-bottom: 1px solid #2a2a2a !important;
+        }
+        .hotel-modal-title {
+            color: #c5a47e !important;
+            font-size: 1rem !important;
+            letter-spacing: 2px;
+        }
+        .hotel-modal-body {
+            color: #ffffff !important;
+            text-align: center;
+            padding: 40px 20px !important;
+        }
+        .hotel-modal-footer {
+            border-top: 1px solid #2a2a2a !important;
+            justify-content: center !important;
+            gap: 15px;
+        }
+        .hotel-modal-btn {
+            background-color: #c5a47e !important;
+            color: #000 !important;
+            border-radius: 0 !important;
+            padding: 8px 40px !important;
+            font-weight: bold !important;
+            border: none;
+        }
+        .hotel-modal-btn-secondary {
+            background-color: #333 !important;
+            color: #fff !important;
+            border-radius: 0 !important;
+            padding: 8px 40px !important;
+            font-weight: bold !important;
+            border: none;
+        }
+    .footer-title{
+    
+    	margin-top: 5px;
+    }
+    
+    a{
+    	text-decoration: none;	
+    
+    }
+    
+    .btn-confirm.big{
+    
+    	width: 50%;
+    	height: 50px;
+    	font-size: 16px;
+    }
+    
+    .btn-confirm.big:hover {
+	color: block;
+	}
+
+
 </style>
 
 <script th:inline="javascript">
-$(document).ready(function() {
-    // 1. 초기 메시지 및 비밀번호 불일치 처리
-    var flag = /*[[${flag == true}]]*/ false;
-    var msg = /*[[${msg}]]*/ null;
+/* 스크립트 상단 배치 */
+var CONTEXT = '';
+$(document).ready(function($) {
+	var flag = /*[[${flag == true}]]*/ false;
+/* 	var flag=[[${flag==true}]]; */
+	if(flag){
+		showHotelAlert("비밀번호가 일치하기 않습니다.");
+		
+	}//end if
+	
+    // 기존 모달 로직
+    $('.open_modal').click(function(e) {    	
+        $("iframe").attr("src", $(this).attr('url')).show();        	
+        e.preventDefault();
+    });
 
-    if(flag) {
-        showHotelAlert("비밀번호가 일치하지 않습니다.");
-    } else if(msg) {
-        showHotelAlert(msg);
-    }
+    $(document).on('click','.btn_pop_close',function(e){
+        $('#popIframe > iframe').attr('src','').hide();
+        e.preventDefault();
+    });
 
-    // 알림 모달 함수
+    // 커스텀 알림창 함수
     function showHotelAlert(msg) {
         $('#hotelModalBody').html(msg);
         var hotelModal = new bootstrap.Modal(document.getElementById('hotelNotifyModal'));
         hotelModal.show();
     }
+    
+    
+    
+    $("#btn").click(function(){
+    	var isChecked=$("#agree").prop("checked");
+    	var password=$("#password").val();
+    	if(!isChecked){
+    		 showHotelAlert("회원탈퇴 유의사항을 확인하신 후<br>동의 체크박스를 클릭해 주세요.");
+    		 return false;
+    	}
+    	if(password==''){
+    		showHotelAlert("본인 확인을 위해<br>비밀번호를 입력해 주세요.");
+			$("#password").focus();   		
+    	
+    		 return false;
+    	}
+    	   var confirmModal = new bootstrap.Modal(document.getElementById('hotelConfirmModal'));
+           confirmModal.show();
+    });
+    
+    $("#Confirmbtn").click(function(){
+    	
+    	$("#passwordFrm").submit();
+    	
+    });//click
+    
+    
+    $("#platformBtn").click(function(){
+    	/* $("#passwordFrm").prop("action","/memberLeave.html의 378번라인에 바꿀 uri(PostMapping) 추가해주세요"); */
+    	var agreeChecked = $("#agree").prop("checked");
+    	
+    	if(!agreeChecked){
+    		 showHotelAlert("회원탈퇴 유의사항을 확인하신 후<br>동의 체크박스를 클릭해 주세요.");
+    		 return false;
+    	}//end if
+    	
+    	   var confirmModal = new bootstrap.Modal(document.getElementById('hotelConfirmModal'));
+           confirmModal.show();
+    	
+    });//click 
+    
+    
+    
+    
+/* 
+    // 회원탈퇴 폼 유효성 검사 및 최종 확인 모달 제어
+    $('form[action="deleteAccount.do"]').on('submit', function(e) {
+        var isChecked = $('input[name="agree"]').is(':checked');
+        var password = $('input[name="password"]').val().trim();
 
-    // 2. [일반 회원] 확인 버튼 클릭 (LOCAL 로그인)
-    $("#btn").click(function() {
-        if(!$("#agree").prop("checked")) {
+        // 1. 유효성 검사
+        if (!isChecked) {
             showHotelAlert("회원탈퇴 유의사항을 확인하신 후<br>동의 체크박스를 클릭해 주세요.");
+            e.preventDefault();
             return false;
         }
-        
-        var pwd = $("#password").val();
-        if(!pwd || pwd.trim() === '') {
+
+        if (password === "") {
             showHotelAlert("본인 확인을 위해<br>비밀번호를 입력해 주세요.");
-            $("#password").focus();
+            $('input[name="password"]').focus();
+            e.preventDefault();
             return false;
         }
-        
+
+        // 2. 유효성 통과 시 기본 submit 중단 후 커스텀 confirm 모달 표시
+        e.preventDefault(); 
         var confirmModal = new bootstrap.Modal(document.getElementById('hotelConfirmModal'));
         confirmModal.show();
     });
-
-    // 3. [SNS 회원] 탈퇴 버튼 클릭 (SOCIAL 로그인)
-    $("#platformBtn").click(function() {
-        if(!$("#agree").prop("checked")) {
-            showHotelAlert("회원탈퇴 유의사항을 확인하신 후<br>동의 체크박스를 클릭해 주세요.");
-            return false;
-        }
-        
-        var confirmModal = new bootstrap.Modal(document.getElementById('hotelConfirmModal'));
-        confirmModal.show();
-    });
-
-    // 4. 모달 내 [최종 탈퇴하기] 버튼
-    $("#Confirmbtn").click(function() {
-        $("#passwordFrm").submit();
-    });
+ */
+/*     // 3. 커스텀 컨펌 모달에서 '최종 탈퇴' 클릭 시 실행
+    $('#btnFinalSubmit').on('click', function() {
+        $('form[action="deleteAccount.do"]')[0].submit();
+    }); */
 });
+
+
+
+
 </script>
+
+
 </head>
 
 <body>
@@ -198,8 +438,8 @@ $(document).ready(function() {
 
 <div class="container">
     <div class="row equal-height-row g-4">
-        <th:block th:replace="~{fragments/myPageSideBar :: myPageSideBar}"></th:block>
-        <div class="col-lg-9">
+          <th:block th:replace="~{fragments/myPageSideBar :: myPageSideBar}"></th:block>
+        	<div class="col-lg-9">
             <div class="withdrawal-container">
                 <div class="logo-section">
                     <h3>HOTEL NOIR</h3>
@@ -211,43 +451,58 @@ $(document).ready(function() {
                         <h5>예약 및 서비스 이용 안내</h5>
                         <p>탈퇴 시 온라인 예약 시스템을 통한 모든 이력 확인 및 관리가 불가능합니다.</p>
                         <ul>
-                            <li>진행 중인 예약이 있는 경우 탈퇴가 제한될 수 있습니다.</li>
+                            <li>이용 예정인 객실 및 다이닝 예약이 있는 경우 탈퇴가 제한될 수 있습니다.</li>
                             <li>탈퇴 후에는 기존 예약에 대한 온라인 조회 및 변경이 불가능합니다.</li>
+                            <li>과거 투숙 이력 및 개인별 맞춤 서비스 데이터가 영구 삭제됩니다.</li>
                         </ul>
                     </div>
+
                     <div class="policy-section">
                         <h5>개인정보 파기 및 보유 안내</h5>
                         <p>개인정보는 탈퇴 시 즉시 파기되나, 관계 법령에 따라 일정 기간 보존됩니다.</p>
                         <ul>
                             <li>계약 또는 청약철회 등에 관한 기록: 5년</li>
+                            <li>소비자의 불만 또는 분쟁 처리에 관한 기록: 3년</li>
+                            <li>웹사이트 방문 기록: 3개월</li>
+                        </ul>
+                    </div>
+
+                    <div class="policy-section">
+                        <h5>재가입 및 정보 복구 불가 안내</h5>
+                        <p>회원 탈퇴는 복구가 불가능한 영구적인 조치입니다.</p>
+                        <ul>
+                            <li>재가입 시에도 이전의 투숙 이력 및 서비스 기록은 복구되지 않습니다.</li>
+                            <li class="fw-bold" style="color: #ff4d4d;">보안 정책에 따라 탈퇴 후 10일 동안은 동일한 정보로 재가입이 제한됩니다.</li>
                         </ul>
                     </div>
                 </div>
 
-                <form th:action="@{/mypage/info/delete}" method="post" id="passwordFrm">
+               <form th:action="@{/mypage/info/removeMember}" method="post" id="passwordFrm">
                     <div class="agree-check">
                         <label>
                             <input type="checkbox" name="agree" id="agree"> 
-                            <span>위의 회원탈퇴 유의사항을 모두 확인하였으며, 이에 동의합니다.</span>
+                            위의 회원탈퇴 유의사항을 모두 확인하였으며, 이에 동의합니다.
                         </label>
                     </div>
+				
+	                    <th:block th:if="${session.memberProd =='local'}">
+                    <div class="confirm-wrapper">
+	                        <input type="password" id="password" name="currentPassword" class="pw-input" placeholder="PASSWORD" maxlength="20">
+	                        <!-- <button type="submit" class="btn-confirm">CONFIRM</button> -->
+	                        <input type="button" id="btn" class="btn-confirm" value="확인"/> 
+                    </div>
+						</th:block>
+						<th:block th:unless="${session.memberProd == 'local'}">
+							<input type="button" value="회원탈퇴" class="btn-confirm big" id="platformBtn" />
+						</th:block>
+               </form>
             
-                    <th:block th:if="${session.memberProvider == 'LOCAL'}">
-                        <div class="confirm-wrapper">
-                            <input type="password" id="password" name="currentPassword" class="pw-input" placeholder="비밀번호를 입력하세요" maxlength="20">
-                            <input type="button" id="btn" class="btn-confirm" value="확인"/> 
-                        </div>
-                    </th:block>
+				 
 
-                    <th:block th:unless="${session.memberProvider == 'LOCAL'}">
-                        <input type="button" value="회원탈퇴" class="btn-confirm big" id="platformBtn" />
-                    </th:block>
-                </form>
             </div>
         </div>
-    </div>
-</div>
-
+        
+        
 <div class="modal fade" id="hotelNotifyModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content hotel-modal-content">
@@ -259,6 +514,8 @@ $(document).ready(function() {
             <div class="modal-footer hotel-modal-footer">
                 <button type="button" class="btn hotel-modal-btn" data-bs-dismiss="modal">확인</button>
             </div>
+            
+            
         </div>
     </div>
 </div>
@@ -272,11 +529,19 @@ $(document).ready(function() {
             </div>
             <div class="modal-body hotel-modal-body">
                 정말로 회원탈퇴하시겠습니까?<br>
-                <span style="font-size: 0.9rem; color: #888; display: block; margin-top: 15px;">탈퇴 후에는 정보를 복구할 수 없습니다.</span>
+                <span style="font-size: 0.85rem; color: #888; display: block; margin-top: 10px;">탈퇴 후에는 정보를 복구할 수 없습니다.</span>
             </div>
             <div class="modal-footer hotel-modal-footer">
                 <button type="button" class="btn hotel-modal-btn-secondary" data-bs-dismiss="modal">취소</button>
+               <!-- 
+               
+               
+                <button type="button" id="btnFinalSubmit" class="btn hotel-modal-btn">탈퇴하기</button> -->
+<!--                 <from th:action="@{}"> -->
                 <input type="button" id="Confirmbtn" class="btn hotel-modal-btn" value="탈퇴하기"/>
+                
+                
+<!--           	</from>  --> 
             </div>
         </div>
     </div>
@@ -285,8 +550,13 @@ $(document).ready(function() {
 <footer>
     <th:block th:replace="~{fragments/footer :: footer}"></th:block>
 </footer>
+   <div id="privacy-layer">
+        <div th:replace="~{fragments/privacy :: privacy}"></div>
+    </div>
+<script type="text/javascript" src="/common/js/comm/jquery.validate.js"></script>
+<script type="text/javascript" src="/common/js/comm/wings.core.js"></script>
+<script type="text/javascript" src="/common/js/comm/PAGING_HOMEPAGE.js"></script>
+<script type="text/javascript" src="/common/js/comm/kendo.web.min.js"></script>
 
-<script type="text/javascript" th:src="@{/common/js/comm/jquery.validate.js}"></script>
-<script type="text/javascript" th:src="@{/common/js/comm/wings.core.js}"></script>
 </body>
 </html>
