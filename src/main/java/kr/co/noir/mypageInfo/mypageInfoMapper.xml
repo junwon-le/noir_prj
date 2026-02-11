@@ -14,7 +14,7 @@
 	</select>
 	
 	
-	<resultMap type="kr.co.noir.mypageInfo.MemberInfoDomain" id="mInfoDomain">
+	<resultMap type="mInfoDomain" id="mInfoDomain">
 	
 		<result column="member_pass" property="pass"/>
 		<result column="member_last_name" property="lastName"/>
@@ -28,7 +28,7 @@
 	
 
  	
-	<select id="kr.co.noir.mypageInfo.MemberInfoDomain" parameterType="String" resultMap="mInfoDomain" >
+	<select id="memberInfo" parameterType="String" resultMap="mInfoDomain" >
 		select member_pass,member_last_name, member_first_name, member_email, member_tel, member_birth
 		from member
 		where member_id =#{memberId}

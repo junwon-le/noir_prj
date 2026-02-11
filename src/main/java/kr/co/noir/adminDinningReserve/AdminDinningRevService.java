@@ -15,7 +15,6 @@ import kr.co.noir.mypageReserve.DinningRevDetailDomain;
 @Service
 public class AdminDinningRevService {
 
-    private final LoginService loginService;
 
 	@Autowired(required = false)
 	private AdminDinningRevMapper adrm;
@@ -25,9 +24,7 @@ public class AdminDinningRevService {
 	@Value("${user.crypto.salt}")
 	private String salt;
 
-    AdminDinningRevService(LoginService loginService) {
-        this.loginService = loginService;
-    }
+
 	
 	/**
 	 * 검색된 총 게시물의 수 
@@ -54,7 +51,7 @@ public class AdminDinningRevService {
 	 */
 	public int pageScale() {
 		
-		return 8;
+		return 7;
 		
 	}//pageScale
 	

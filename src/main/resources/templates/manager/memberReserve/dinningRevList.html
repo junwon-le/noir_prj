@@ -8,7 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900" rel="stylesheet">
-    
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+ 	<script src="/common/js/comm/jquery.bxslider.js"></script>
     <link rel="stylesheet" href="/admin_common/css/bootstrap.min.css">
     <link rel="stylesheet" href="/admin_common/css/font-awesome.min.css">
     <link rel="stylesheet" href="/admin_common/css/nalika-icon.css">
@@ -28,6 +29,7 @@
     <link rel="stylesheet" href="/admin_common/style.css">
     <link rel="stylesheet" href="/admin_common/css/responsive.css">
     <script src="/admin_common/js/vendor/modernizr-2.8.3.min.js"></script>
+   
     
      <style>
         /* 테이블 헤더(th) 및 데이터(td) 가운데 정렬 */
@@ -110,19 +112,66 @@
     text-align: left;
     vertical-align: middle;
 }
+
+tr{
+	cursor: pointer;
+
+}
+
+
     </style>
     
     
-  <script type="text/javascript">
-/*   $(function(){
+ <script th:inline="javascript">
+  $(function(){
+	  $("#searchBtn").click(function(){		 
+		  var field=$("#field").val();
+		  var keyword=$("#keyword").val().trim();
 		  
+		  if(field=='N/A'){
+			 if(keyword==''){
+				 $("#boardSearchFrm").submit();
+				 }//end if 
+			 }
+			 var reg = [new RegExp('^\\d+$'), new RegExp('^[a-zA-Z0-9ㄱ-ㅎ가-힣]+$')];
+			 if(field=="reserveNum"){
+				if(!keyword.match(reg[0])){
+					$("#resultText").text("숫자만 입력해주세요");
+					$('#resultModal').modal('show');
+					return false;
+				}	//end if			 
+			 }//end if
+			 if(field=="userName"){
+				 if(!keyword.match(reg[1])){
+						$("#resultText").text("특수문자는 사용 불가능합니다.");
+						$('#resultModal').modal('show');
+						return false;
+					}//end if
+			 }//end if
+			 
+			 if(field=="memberId"){
+				 if(!keyword.match(reg[1])){
+						$("#resultText").text("특수문자는 사용 불가능합니다.");
+						$('#resultModal').modal('show');
+						return false;
+					}//end if
+			 }//end if
+
+			 $("#boardSearchFrm").submit();
+
+		 });//click
 	  
 	  
-	  
-	  
-	  
-  });//ready 
-   */
+		 
+		 var flag = /*[[${flag}]]*/ false;
+		 if (flag==true) {
+		        // 성공 모달 띄우기
+		        $('#resultModal').modal('show');
+		    }//end if
+		    
+		  
+		
+	 });
   
   function setRevNum(reserveNum){
 	  $("#detailRevNum").val(reserveNum);
@@ -151,8 +200,10 @@
 </head>
 
 <body>
+
+
     <div th:replace="~{manager/fragments/sidebar :: sidebar}"></div>
-    <div class="all-content-wrapper">
+        <div class="all-content-wrapper">
         <div class="header-advance-area">
             <div class="breadcome-area">
                 <div class="container-fluid">
@@ -167,7 +218,7 @@
   <path d="M12 2V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
   
   <path d="M12 15V22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-</svg><span>&nbsp; 다이닝 에약 관리(회원)</span>
+</svg><span>&nbsp; 다이닝 예약 관리(회원)</span>
 										</div>
                                     </div>
                                 </div>
@@ -183,16 +234,17 @@
                 <div class="col-lg-12">
                     <form th:action="@{/admin/dinningMember/}" id="boardSearchFrm" method="get" class="d-flex" style="display: flex; gap: 10px; margin-bottom: 25px; align-items: center;">
                         <select class="form-control select_style" name="field" id="field"> 
+                            <option value="N/A" th:selected="${#strings.equals(param.field,'N/A')}">전체</option>
                             <option value="reserveNum" th:selected="${#strings.equals(param.field,'reserveNum')}">예약번호</option>
                             <option value="userName" th:selected="${#strings.equals(param.field,'userName')}">예약자명</option>
                             <option value="memberId" th:selected="${#strings.equals(param.field,'memberId')}">아이디</option>
                         </select>
                         <div style="position: relative; flex-grow: 1; max-width: 350px;">
-                            <button style="position: absolute; right: 6px; top: 6px; border: none; background: #8e99bc; color: #fff; border-radius: 6px; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">
+                            <button id="searchBtn" onclick="return false;"style="position: absolute; right: 6px; top: 6px; border: none; background: #8e99bc; color: #fff; border-radius: 6px; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">
                                 <i class="fa fa-search"></i>
                             </button>
                             <input type="text" name="keyword" id="keyword" th:value="${param.keyword}" class="form-control" placeholder="검색어를 입력하세요" style="background: white; border-radius: 8px; height: 42px; color:black; padding-right: 45px; border: 1px solid #e0e6ed;">
-                             <input type="hidden" name="currentPage" id="currentPage" th:value="${param.currentPage eq null? 1 : param.currentPage }"/> 
+                             <input type="hidden" name="currentPage" id="currentPage" th:value="${param.keyword != null ? 1 : (param.currentPage ?: 1)}"/> 
 						
                         </div>
                     </form>
@@ -284,6 +336,19 @@
                 </div>
             </div>
         </div> 
+        
+        <div class="modal fade" id="resultModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 350px;">
+                <div class="modal-content" style="background: #1b2a47; color: #fff; border-radius: 12px; border: 1px solid #344463;">
+                    <div class="modal-body" style="padding: 30px; text-align: center;">
+                        <h4 style="margin-bottom: 20px; font-weight: 600;" id="resultText" th:text="${msg}">예약을 취소할까요?</h4>
+                        <div style="display: flex; gap: 10px; justify-content: center;">
+                            <input type="button" value="확인" class="btn" data-dismiss="modal" style="background: #344463; color: #fff; width: 100px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     <!--     
         <div class="modal fade" id="flagModal" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 350px;">
@@ -299,7 +364,7 @@
         </div>  -->
         
            <form th:action="@{/admin/dinningMember/dinningDetail}" method="get" id="hiddenFrm">
-	        	<input type="hidden" name="currentPage" th:value="${param.currentPage==''?1 :param.currentPage}"/>
+	        	<input type="hidden" name="currentPage" th:value="${param.currentPage != null && param.currentPage != '' ? param.currentPage : 1}"/>
 	        	<input type="hidden" name="field"   th:value="${param.field==''?reserveNum : param.field}"/>
 	        	<input type="hidden" name="keyword"  th:value="${param.keyword}"/>
 	        	<input type="hidden" name="reserveNum"  id="detailRevNum" />
@@ -335,6 +400,6 @@
     <script src="/admin_common/js/flot/curvedLines.js"></script>
     <script src="/admin_common/js/flot/flot-active.js"></script>
     <script src="/admin_common/js/plugins.js"></script>
-    <script src="js/main.js"></script>
+     <script src="js/main.js"></script>
 </body>
 </html>

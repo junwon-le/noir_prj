@@ -18,18 +18,28 @@
      			and r.member_num is not null
      			and r.non_user_num is null
      	<if test="keyword != null and keyword != ''">
-              <choose>
-                  <when test="field == 'userName'">
-                      AND (r.END_USER_LAST_NAME || r.END_USER_FIRST_NAME) LIKE '%' || #{keyword} || '%'
-                  </when>
-                  <when test="field == 'reserveNum'">
-                      AND r.reserve_num LIKE '%' || #{keyword} || '%'
-                  </when>
-                  <when test="field == 'memberId'">
-                      AND m.member_id LIKE '%' || #{keyword} || '%'
-                  </when>
-              </choose>
-          </if>
+					      <choose>
+					        <when test="field == 'userName'">
+					          AND (r.END_USER_LAST_NAME || r.END_USER_FIRST_NAME) LIKE '%' || #{keyword} || '%'
+					        </when>
+					        <when test="field == 'reserveNum'">
+					          AND r.reserve_num = #{keyword}
+					        </when>
+					        <when test="field == 'memberId'">
+					          AND m.member_id LIKE '%' || #{keyword} || '%'
+					        </when>
+					        <otherwise>
+					          AND 
+					           (
+							  (r.END_USER_LAST_NAME || r.END_USER_FIRST_NAME) LIKE '%' || #{keyword} || '%'
+							  OR m.member_id LIKE '%' || #{keyword} || '%'
+							  OR (REGEXP_LIKE(#{keyword}, '^[0-9]+$') AND r.reserve_num = TO_NUMBER(#{keyword}))
+
+							)
+
+					        </otherwise>
+					      </choose>
+  					  </if>
      			
 				
 	</select>
@@ -63,18 +73,28 @@
      			and r.member_num is not null
      			and r.non_user_num is null
      			<if test="keyword != null and keyword != ''">
-              <choose>
-                  <when test="field == 'userName'">
-                      and (r.END_USER_LAST_NAME || r.END_USER_FIRST_NAME) LIKE '%' || #{keyword} || '%'
-                  </when>
-                  <when test="field == 'reserveNum'">
-                      and r.reserve_num LIKE '%' || #{keyword} || '%'
-                  </when>
-                  <when test="field == 'memberId'">
-                      and m.member_id LIKE '%' || #{keyword} || '%'
-                  </when>
-              </choose>
-          </if>
+					      <choose>
+					        <when test="field == 'userName'">
+					          AND (r.END_USER_LAST_NAME || r.END_USER_FIRST_NAME) LIKE '%' || #{keyword} || '%'
+					        </when>
+					        <when test="field == 'reserveNum'">
+					          AND r.reserve_num = #{keyword}
+					        </when>
+					        <when test="field == 'memberId'">
+					          AND m.member_id LIKE '%' || #{keyword} || '%'
+					        </when>
+					        <otherwise>
+					          AND 
+					           (
+							  (r.END_USER_LAST_NAME || r.END_USER_FIRST_NAME) LIKE '%' || #{keyword} || '%'
+							  OR m.member_id LIKE '%' || #{keyword} || '%'
+							  OR (REGEXP_LIKE(#{keyword}, '^[0-9]+$') AND r.reserve_num = TO_NUMBER(#{keyword}))
+
+							)
+
+					        </otherwise>
+					      </choose>
+  					  </if>
      			
 				)
 				

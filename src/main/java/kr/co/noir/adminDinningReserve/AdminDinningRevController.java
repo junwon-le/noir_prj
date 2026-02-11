@@ -70,7 +70,7 @@ public class AdminDinningRevController {
 			msg="예약취소가 완료되었습니다.";
 		}//end if
 		rattr.addFlashAttribute("flag", flag);
-		model.addAttribute("msg",msg);
+		rattr.addFlashAttribute("msg",msg);
 		return "redirect:/admin/dinningMember/";
 		
 	}//dinningReseveCancel
