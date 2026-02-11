@@ -64,10 +64,18 @@ public class RoomReserveService {
 		try {
 			memberDomain=rrDAO.selectMember(id);
 			TextEncryptor te = Encryptors.text(key,salt);
+			if(memberDomain.getMember_provider()!=null) {
+				memberDomain.setMember_last_name(memberDomain.getMember_first_name().substring(0,1));
+				memberDomain.setMember_first_name(memberDomain.getMember_first_name().substring(1,3));
+			}
+			if(memberDomain.getMember_tel()!=null) {
 			memberDomain.setMember_tel(te.decrypt(memberDomain.getMember_tel()));
+			}
+			if(memberDomain.getMember_email()!=null) {
 			String email=te.decrypt(memberDomain.getMember_email());
 			memberDomain.setMember_email_id(email.substring(0,email.indexOf('@')));
 			memberDomain.setMember_email_domain(email.substring(email.indexOf('@')+1));
+			}
 		}catch(SQLException se) {
 			se.printStackTrace();
 		}

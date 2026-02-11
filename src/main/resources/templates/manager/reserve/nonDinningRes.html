@@ -166,7 +166,7 @@
   
   
   function cancel(){
-			$("#hiddenFrm").prop("action","/admin/dinningMember/cancel");
+			$("#hiddenFrm").prop("action","/admin/nonDinningRefund");
 			$("#hiddenFrm").submit();
   }//cancel
  function dinningDetail(reserveNum){
@@ -336,7 +336,7 @@
         </div>  -->
         
            <form th:action="@{/admin/dinningMember/dinningDetail}" method="get" id="hiddenFrm">
-	        	<input type="hidden" name="currentPage" th:value="${param.currentPage==''?1 :param.currentPage}"/>
+	        	<input type="hidden" name="currentPage" th:value="${param.currentPage eq null || param.currentPage==''?1 :param.currentPage}"/>
 	        	<input type="hidden" name="field"   th:value="${param.field==''?reserveNum : param.field}"/>
 	        	<input type="hidden" name="keyword"  th:value="${param.keyword}"/>
 	        	<input type="hidden" name="resNum"  id="detailRevNum" />

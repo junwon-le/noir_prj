@@ -33,12 +33,21 @@
     <script>
 $(function() {
     // #table 안에 있는 tbody를 감시하다가, 그 안의 tr이 클릭되면 실행합니다.
-    $("#table").on("click", "tbody tr", function() {
+    $("#table").on("click", "tbody tr", function(e) {
+    		 $("#detailRevNum").val($(this).find(".resNum").text());
+    	if ($(e.target).is("button, button *")) {
+            return;
+        }
         location.href="/admin/nonRoomResDetail?resNum="+$(this).find(".resNum").text()
         // 클릭한 행의 데이터를 가져오는 팁
     });
     
 });//ready
+function cancel(){
+	$("#hiddenFrm").prop("action","/admin/nonRoomRefund");
+	$("#hiddenFrm").submit();
+	
+}//cancel
 </script>
     <style>
         /* 페이지네이션 영역 수정 */
@@ -225,7 +234,7 @@ $(function() {
                                     <td style="font-family: 'Roboto'; font-weight: 600;" th:text="|*{#numbers.formatInteger(payPrice,3,'COMMA')}KRW|">150,000</td>
                                     <td th:text="*{reserveTime}">SUITE ROOM</td>
                                      <td th:if="*{reserveStatus eq 'N'}">
-                                     <input type="button" value="예약취소" class="badge-status status-complete btn-cancel" data-toggle="modal" data-target="#statusModal">
+                                     <button type="button" value="예약취소" class="badge-status status-complete btn-cancel" data-toggle="modal" data-target="#statusModal">예약취소</button>
         				            </td>
                    					 <td th:if="*{reserveStatus eq 'Y'}">
                     					 <span class="badge-status status-refund">환불처리</span>
@@ -243,6 +252,13 @@ $(function() {
                 </div>
             </div>
         </div>
+          
+           <form th:action="@{/admin/dinningMember/dinningDetail}" method="get" id="hiddenFrm">
+	        	<input type="hidden" name="currentPage" th:value="${param.currentPage eq null || param.currentPage==''?1 :param.currentPage}"/>
+	        	<input type="hidden" name="field"   th:value="${param.field==''?reserveNum : param.field}"/>
+	        	<input type="hidden" name="keyword"  th:value="${param.keyword}"/>
+	        	<input type="hidden" name="resNum"  id="detailRevNum" />
+        	</form>
         
         <div class="modal fade" id="statusModal" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 350px;">
@@ -251,7 +267,7 @@ $(function() {
                         <h4 style="margin-bottom: 20px; font-weight: 600;">예약을 취소할까요?</h4>
                         <div style="display: flex; gap: 10px; justify-content: center;">
                             <input type="button" value="아니오" class="btn" data-dismiss="modal" style="background: #344463; color: #fff; width: 100px;">
-                            <input type="button" value="취소하기" class="btn" style="background: #f19b9b; color: #fff; width: 100px; font-weight: bold;">
+                            <input type="button" id="revCancelBtn" value="취소하기"  th:onclick="cancel()" class="btn" style="background: #f19b9b; color: #fff; width: 100px; font-weight: bold;">
                         </div>
                     </div>
                 </div>

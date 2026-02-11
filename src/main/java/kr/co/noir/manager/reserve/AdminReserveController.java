@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 @RequestMapping("/admin")
@@ -32,7 +33,6 @@ public class AdminReserveController {
 		
 		model.addAttribute("list",list);
 		model.addAttribute("pagination",pagination);
-		
 		return "/manager/reserve/nonRoomRes";
 	}
 	
@@ -53,6 +53,7 @@ public class AdminReserveController {
 		model.addAttribute("list",list);
 		model.addAttribute("pagination",pagination);
 		
+		System.out.println(arrDTO);
 		
 		return "/manager/reserve/nonDinningRes";
 	}//nonDinningReserve
@@ -73,9 +74,23 @@ public class AdminReserveController {
 	}//nonDinningResDetail
 	
 	@GetMapping("/nonDinningRefund")
-	public String nonDinningRefund(int resNum, Model model) {
-		ars.modifyDinningRes(resNum);
+	public String nonDinningRefund(int resNum, AdminResRangeDTO arrDTO , Model model, RedirectAttributes rab) {
+		ars.modifyRes(resNum);
+		System.out.println(arrDTO);
+		rab.addAttribute("currentPage", arrDTO.getCurrentPage());
+		rab.addAttribute("keyword", arrDTO.getKeyword());
+		rab.addAttribute("field", arrDTO.getField());
 		
 		return "redirect:/admin/nonDinningReserve";
+	}//nonDinningResDetail
+	@GetMapping("/nonRoomRefund")
+	public String nonRoomRefund(int resNum, AdminResRangeDTO arrDTO , Model model, RedirectAttributes rab) {
+		ars.modifyRes(resNum);
+		System.out.println(arrDTO);
+		rab.addAttribute("currentPage", arrDTO.getCurrentPage());
+		rab.addAttribute("keyword", arrDTO.getKeyword());
+		rab.addAttribute("field", arrDTO.getField());
+		
+		return "redirect:/admin/nonRoomReserve";
 	}//nonDinningResDetail
 }

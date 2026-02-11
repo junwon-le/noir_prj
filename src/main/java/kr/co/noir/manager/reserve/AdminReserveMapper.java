@@ -20,6 +20,7 @@ public interface AdminReserveMapper {
 
 	public NonDinningDetailDomain selectnonDinningDetail(int resNum);
 	
-	public int updateDinningRes(int resNum);
-	public int updateDinningPay(int resNum);
+	public int updateRes(int resNum);
+	public int updatePay(int resNum);
+	
 }

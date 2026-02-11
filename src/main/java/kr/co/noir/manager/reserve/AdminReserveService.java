@@ -93,7 +93,7 @@ public class AdminReserveService {
 			
 			String field = switch(arrDTO.getField()) {
 			case "예약번호" ->"r.reserve_num";
-			case "성명" -> "res_name";
+			case "성명" -> "non_user_res_last_name || non_user_res_first_name";
 			case "아이디" -> "r.reserve_email";
 			default -> null;
 			};//end switch
@@ -112,9 +112,9 @@ public class AdminReserveService {
 		if(arrDTO.getField() != null) {
 			
 			String field = switch(arrDTO.getField()) {
-			case "예약번호" ->"reserve_num";
-			case "성명" -> "res_name";
-			case "아이디" -> "reserve_email";
+			case "예약번호" ->"r.reserve_num";
+			case "성명" -> "non_user_res_last_name || non_user_res_first_name";
+			case "아이디" -> "r.reserve_email";
 			default -> null;
 			};//end switch
 			arrDTO.setField(field);
@@ -331,11 +331,12 @@ public class AdminReserveService {
 			return dinningDetail;
 		}//searchNonRoomDetail
 		
-		//객실 예약 상세
+		//예약 취소
 		@Transactional
-		public void modifyDinningRes(int resNum) {
-			 arm.updateDinningRes(resNum) ;
-			 arm.updateDinningPay(resNum);
+		public void modifyRes(int resNum) {
+			 arm.updateRes(resNum) ;
+			 arm.updatePay(resNum);
 		}//searchNonRoomDetail
+		
 	
 }//class
