@@ -9,6 +9,7 @@ public interface MypageMapper {
 
     // 2. 탈퇴 처리 (삭제 플래그 업데이트)
     void updateMemberDelFlag(String memberId);
-   
+    void deleteSnsToken(String memberId, String provider);
+    
 
 }
