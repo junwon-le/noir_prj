@@ -9,9 +9,10 @@
 		SELECT COUNT(*) cnt 
 		FROM event
 		<where>
-			<if test="keyword != null and keyword != ''">
-				instr(${fieldStr}, #{keyword}) != 0
-			</if>
+			AND TO_CHAR(SYSDATE, 'YYYY-MM-DD') BETWEEN event_start_date AND event_end_date
+        <if test="keyword != null and keyword != ''">
+            AND instr(${fieldStr}, #{keyword}) != 0
+        </if>
 		</where>
 	</select>
 
@@ -22,17 +23,21 @@
 			event_title AS eventTitle, 
 			event_sub_title AS eventSubTitle, 
 			event_msg AS eventMsg, 
+			event_img1 AS eventImg1,
 			event_del_flag AS eventDelFlag, 
 			event_start_date AS eventStartDate, 
 			event_date AS eventDate, 
 			event_end_date AS eventEndDate
 		FROM (
 			SELECT 
-				event_num, event_title, event_sub_title, event_msg, event_del_flag, event_start_date, event_date, event_end_date,
+				event_num, event_title, event_sub_title, event_msg,event_img1, event_del_flag, event_start_date, event_date, event_end_date,
 				ROW_NUMBER() OVER(ORDER BY event_date DESC) rnum
 			FROM event
-			
-		) 
+			WHERE TO_CHAR(SYSDATE, 'YYYY-MM-DD') BETWEEN event_start_date AND event_end_date
+        <if test="keyword != null and keyword != ''">
+            AND instr(${fieldStr}, #{keyword}) != 0
+        </if>
+    )
 		WHERE rnum BETWEEN #{startNum} AND #{endNum}
 	</select>
 

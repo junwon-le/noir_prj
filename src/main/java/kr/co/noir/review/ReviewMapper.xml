@@ -35,7 +35,7 @@
             m.member_last_name as memberLastName,
             img.review_img1 as reviewImg1,
             rv.reserve_start_date as reserveStartDate,
-            DENSE_RANK() OVER(ORDER BY r.review_date DESC) as rnum
+            DENSE_RANK() OVER(ORDER BY r.review_date DESC, r.review_num DESC) as rnum
         from review r
         inner join member m on r.member_num = m.member_num
         inner join room_res res on r.room_res_num = res.room_res_num

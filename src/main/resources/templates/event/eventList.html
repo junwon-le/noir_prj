@@ -44,6 +44,7 @@ $(document).on('click','.btn_pop_close',function(e){
 
 
 <style>
+
 .wrapper{
 	background-color: white;
 }
@@ -70,15 +71,66 @@ padding:0px;
  height: 127px;
 }
 
-.maincontainer{
-height:auto;
-background-color: #FFF;
+.maincontainer {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(180deg, #1e2024 0%, #2c3e50 100%) !important;
 }
 
-.pagination .page-link {
-  color: #000;
-  background-color: #fff;
-  border: 1px solid #ddd;
+.snow-area, .snow-area:after, .snow-area:before {
+    content: "";
+    position: absolute;
+    top: -1000px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    /* 눈송이들을 불규칙하게 배치한 배경 이미지 */
+    background-image: 
+        radial-gradient(4px 4px at 100px 50px, #C47E27 , transparent),
+        radial-gradient(6px 6px at 200px 150px, #E0C763, transparent),
+        radial-gradient(3px 3px at 300px 250px, #C47E27, transparent),
+        radial-gradient(4px 4px at 400px 350px, #E0C763, transparent),
+        radial-gradient(6px 6px at 500px 100px, #C47E27, transparent),
+        radial-gradient(3px 3px at 600px 450px, #C47E27, transparent),
+        radial-gradient(4px 4px at 700px 550px, #C47E27, transparent),
+        radial-gradient(5px 5px at 800px 650px, #E0C763, transparent),
+        radial-gradient(3px 3px at 900px 50px, #C47E27, transparent);
+    background-size: 1000px 1000px;
+    animation: snowFall 9s linear infinite;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* 두 번째 눈 레이어: 속도 다르게, 살짝 흐리게 */
+.snow-area:after {
+    margin-left: -250px;
+    opacity: 0.5;
+    filter: blur(2px);
+    animation-duration: 8s;
+    animation-direction: reverse;
+}
+
+/* 세 번째 눈 레이어: 더 작은 눈송이 */
+.snow-area:before {
+    margin-left: -350px;
+    opacity: 0.7;
+    filter: blur(1px);
+    animation-duration: 12s;
+}
+
+@keyframes snowFall {
+    from { transform: translateY(0); }
+    to { transform: translateY(1000px); }
+}
+
+/* 카드와 글자가 눈에 파묻히지 않게 앞으로 빼주기 */
+.event-card-grid, .ffffff, #pagenation {
+    position: relative;
+    z-index: 5;
+}
+
+.event-card {
+    background: rgba(255, 255, 255, 0.95) !important;
 }
 
 .pagination .page-link:hover {
@@ -113,7 +165,6 @@ background-color: #FFF;
   background:#fff;
   overflow:hidden;
   transition:transform 0.2s ease, box-shadow 0.2s ease;
-  border:1px solid #ddd;
   
 }
 
@@ -162,7 +213,7 @@ background-color: #FFF;
 }
 
 .ffffff{
-	background-color: #fff;
+	background: transparent !important;
 	height: 150px;
 	width: 1000px;
 	
@@ -195,7 +246,10 @@ background-color: #FFF;
   padding-left:350px;
   font-size: 50px;
   font-weight: 800;
-  color: #000;
+  color: #fff;
+  text-shadow: 
+        0 0 10px rgba(255, 255, 255, 0.5), 
+        2px 2px 15px rgba(0, 0, 0, 0.8);
 }
 
 .pagination{
@@ -242,6 +296,7 @@ background-color: #FFF;
 <div class="title-box">
 </div>
 <div class="maincontainer">
+<div class="snow-area"></div>
 <div class="ffffff">
 <div class="pagetitle">
 	EVENT
@@ -253,8 +308,8 @@ background-color: #FFF;
 
   <div class="event-card"  th:each="e : ${EventList}">
     <div class="event-card__thumb">
-      <img src="../common/images/homepage/logoo2.png" alt="이벤트 이미지">
-    </div>
+  <img th:src="@{/common/images/homepage/event/} + ${e.eventImg1}" alt="이벤트 이미지">
+</div>
     <div class="event-card__body">
       <div class="event-card__title">
         <span th:text="${e.eventTitle}">제목</span> [<span th:text="${e.eventSubTitle}">제목</span>]
