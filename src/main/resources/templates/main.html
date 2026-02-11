@@ -136,6 +136,48 @@ height:700px
     font-family: Arial, sans-serif;
 }
 
+#eventPopup {
+  display: none;
+  position: fixed;
+  top: -80px;
+  left: 450px;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  z-index: 9999;
+}
+
+.popup-box {
+  position: relative;
+  width: 460px;
+  height: 550px;
+  background: #0B253E;
+  margin: 180px auto 10px auto;
+  padding: 25px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.popup-footer {
+  width: 360px;
+  margin: 0 auto;
+  text-align: right;
+  color: #fff;
+  font-size: 14px;
+}
+
+#hideTodayText {
+  cursor: pointer;
+}
+
 </style>
 
 <div class="wrapper">
@@ -185,8 +227,34 @@ $(document).ready(function(){
 	    e.preventDefault();
 	    $('#popIframe iframe').attr('src', '').hide();
 	});
+	
+	 	 function getCookie(name) {
+		    const value = "; " + document.cookie;
+		    const parts = value.split("; " + name + "=");
+		    if (parts.length === 2) return parts.pop().split(";").shift();
+		  }
 
-})
+		  if (getCookie("hideEvent") !== "Y") {
+		    $("#eventPopup").fadeIn();
+		  }
+
+		  $(".close-btn").click(function() {
+		    $("#eventPopup").fadeOut();
+		  });
+
+		  $("#hideTodayText").click(function() {
+		    const d = new Date();
+		    d.setHours(23, 59, 59, 999);
+
+		    document.cookie =
+		      "hideEvent=Y; expires=" + d.toUTCString() + "; path=/";
+
+		    $("#eventPopup").fadeOut();
+		  });
+
+	
+
+});
 
 // 배경 변경 함수를 따로 분리하여 관리
 function updateBg(index) {
@@ -197,6 +265,18 @@ function updateBg(index) {
 
 
 </script>
+	
+<!-- 	<div id="eventPopup" th:if="${eventActive}"> -->
+	<div id="eventPopup">
+	  <div class="popup-box">
+	    <span class="close-btn">✕</span>
+	    <img src="../common/images/homepage/event.png">
+	  </div>
+	
+	  <div class="popup-footer">
+	    <span id="hideTodayText">오늘 하루 안 보기</span>
+	  </div>
+	</div>
 
 	<div class="fullsizeImage">
 		<ul>
