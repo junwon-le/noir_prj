@@ -327,7 +327,7 @@ public class LoginController {
                                     Model model) {
         
         // OAuth2User를 통해 로그인한 유저의 정보를 가져옵니다.
-        // registrationId(google, kakao, naver)에 따라 데이터 구조가 다르므로 처리가 필요합니다.
+        // registrationId(google, kakao, naver)에 따라 데이터 구조가 다르므로 처리가 필요함.
         Map<String, Object> attributes = oAuth2User.getAttributes();
         
         // 

@@ -103,9 +103,12 @@ public class MypageController {
                 return "redirect:/mypage/info/memberLeave";
             }
         }
+        
+        System.out.println(" SNS provider : " +provider);
+        System.out.println(" 탈퇴 멤버 id : " + memberId);
 
         // 2. 탈퇴 처리
-        mps.withdrawMember(memberId); 
+        mps.withdrawMember(memberId, provider);
         
         // 3. 세션 초기화
         session.invalidate();

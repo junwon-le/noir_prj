@@ -64,4 +64,10 @@
         WHERE MEMBER_ID = #{memberId}
     </update>
 
+	<delete id="deleteSnsToken">
+	    DELETE FROM MEMBER_SNS_TOKEN 
+	    WHERE MEMBER_NUM = (SELECT MEMBER_NUM FROM MEMBER WHERE MEMBER_ID = #{memberId})
+	      AND PROVIDER = #{provider}
+	</delete>
+
 </mapper>

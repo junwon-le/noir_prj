@@ -106,8 +106,10 @@ public class MypageService {
 	}
 
 	// 2. 회원 탈퇴 처리 (DEL_FLAG 업데이트 등)
-	public void withdrawMember(String memberId) {
+	public void withdrawMember(String memberId, String provider) {
 	    mypageMapper.updateMemberDelFlag(memberId);
+	    mypageMapper.deleteSnsToken(memberId, provider);
+	    
 	}
 	
 }//class
