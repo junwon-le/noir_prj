@@ -1,8 +1,7 @@
-package kr.co.noir.login;
+package kr.co.noir.login.sns;
 
 import java.util.Collections;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.encrypt.Encryptors;
@@ -10,6 +9,7 @@ import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
@@ -18,29 +18,35 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import kr.co.noir.login.MemberDTO;
+import kr.co.noir.login.MemberMapper;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
-    @Autowired
-    private MemberMapper memberMapper; // 🔍 의존성 주입 확인
+    private final MemberMapper memberMapper; // 🔍 의존성 주입 확인
+    private final HttpSession httpSession;
+    private final MemberRepository memberRepository;  // Member 테이블 접근용
 
     @Value("${user.crypto.key}")
     private String key;
     @Value("${user.crypto.salt}")
     private String salt;    
-    
-    @Autowired
-    private HttpSession httpSession;
+
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
-        // 1. 제공자 정보 및 Access Token 추출
+        // 1. SNS에서 사용자 정보 및 Access Token 추출
         String registrationId = userRequest.getClientRegistration().getRegistrationId(); // google, kakao 등
         String provider = registrationId.toUpperCase(); 
         String accessToken = userRequest.getAccessToken().getTokenValue();
+
+        String providerId=registrationId;
+        
         
         // userRequest에서 RefreshToken은 직접 가져올 수 없으므로 우선 null 처리
         String refreshToken = null; 
@@ -51,9 +57,41 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         
         OAuthAttributes attributes = OAuthAttributes.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
 
-        // 3. 회원 저장 및 정보 가져오기 (매개변수 타입 일치시킴)
-        // DB에서 회원 정보를 가져오거나 가입시킴
-        MemberDTO member = saveOrUpdate(attributes); 
+        // 3. DB 조회 및 탈퇴 여부 체크 
+        // DB에서 회원 정보를 가져와서 탈퇴훠원이라면 로그인하면 안됨 
+        MemberEntity member = memberRepository
+        		.findByMemberProviderAndMemberProviderId(attributes.getProvider(),attributes.getProviderId())
+                .orElse(null);
+        
+        if (member != null && "Y".equals(member.getMemberDelFlag() )) {
+
+        		// 1. 세션에서 "재가입 모드"인지 확인
+            Boolean isRejoinMode = (Boolean) httpSession.getAttribute("IS_REJOIN_MODE");
+            MemberDTO memberReionDTO = memberMapper.findByProviderAndId(provider, registrationId);    
+
+            if (isRejoinMode != null && isRejoinMode) {
+                // [재가입 처리]
+                // A. 탈퇴 플래그를 'N'으로 복구 (DB 업데이트)
+            		memberMapper.updateMemberRejoin(registrationId);
+            		// MERGE SQL 실행! (복구됨)
+                memberMapper.insertSnsMember(memberReionDTO);            		
+                
+                // B. 세션 표식 제거 (일회용이므로)
+                httpSession.removeAttribute("IS_REJOIN_MODE");
+                
+                // C. 로그인 계속 진행 (성공!)
+//                return new PrincipalDetails(member, oAuth2User.getAttributes());
+                
+            } else {
+                // [일반 로그인 시도] -> 예외 발생시켜서 모달 띄우기
+                throw new OAuth2AuthenticationException(new OAuth2Error("withdrawn_member"), "탈퇴한 회원입니다.");
+            }
+
+        }
+
+        
+        MemberDTO memberDTO = saveOrUpdate(attributes); 
+        
         
         // 기존 세션 무효화 및 새 세션 발급
         ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
@@ -69,16 +107,16 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         HttpSession nSession = request.getSession(true);        
         
         
-        // UI 출력용 성과 이름을 합쳐서 저장, 세션에 이름 및 회원 정보 저장 
-        String fullName = (member.getMemberLastName() != null ? member.getMemberLastName() : "") 
-                        + (member.getMemberFirstName() != null ? member.getMemberFirstName() : "");
+        // UI 출력용 성+이름을 합쳐서 저장, 세션에 이름 및 회원 정보 저장 
+        String fullName = (memberDTO.getMemberLastName() != null ? memberDTO.getMemberLastName() : "") 
+                        + (memberDTO.getMemberFirstName() != null ? memberDTO.getMemberFirstName() : "");
         
-        nSession.setAttribute("memberId", member.getMemberId());   // 헤더의 th:if 조건을 충족
+        nSession.setAttribute("memberId", memberDTO.getMemberId());   // 헤더의 th:if 조건을 충족
         nSession.setAttribute("memberName", fullName);           // 이름 표시용
-        nSession.setAttribute("memberNum", member.getMemberNum()); // PK 값
-        nSession.setAttribute("loginUser", member);              // 객체 전체        
-        nSession.setAttribute("memberProvider", member.getMemberProvider()); // 
-        nSession.setAttribute("memberProviderId", member.getMemberProviderId()); // 
+        nSession.setAttribute("memberNum", memberDTO.getMemberNum()); // PK 값
+        nSession.setAttribute("loginUser", memberDTO);              // 객체 전체        
+        nSession.setAttribute("memberProvider", memberDTO.getMemberProvider()); // 
+        nSession.setAttribute("memberProviderId", memberDTO.getMemberProviderId()); // 
         
 //        System.out.println("SNS login : "+ fullName);
         
@@ -90,9 +128,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             userRequest.getAccessToken().getExpiresAt().getEpochSecond() - java.time.Instant.now().getEpochSecond()
         );
 
-        // SnsTokenDTO 객체 생성 및 실제 Mapper 호출 [이 부분이 빠져있었습니다]
+        // SnsTokenDTO 객체 생성 및 실제 Mapper 호출
+        // member가 null일 수 있으므로 memberDTO에서 번호를 가져옴
         SnsTokenDTO tokenDTO = SnsTokenDTO.builder()
-                .memberNum(member.getMemberNum())
+                .memberNum(memberDTO.getMemberNum()) 
                 .provider(provider)
                 .accessToken(te.encrypt(accessToken))
                 .refreshToken(refreshToken != null ? te.encrypt(refreshToken) : null)
@@ -100,12 +139,15 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .build();
 
         // 실제 DB 저장 실행!
+        // 5. 정상 회원이면 OAuth2User 반환 (로그인 진행)
         memberMapper.updateSnsToken(tokenDTO);
         
         return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")),
                 attributes.getAttributes(),
                 attributes.getNameAttributeKey());
+        
+//        return oAuth2User;        
     }
 
     private MemberDTO saveOrUpdate(OAuthAttributes attributes) {
