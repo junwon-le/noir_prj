@@ -1,4 +1,4 @@
-package kr.co.noir.login;
+package kr.co.noir.login.sns;
 
 import java.util.Collections;
 
@@ -18,6 +18,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import kr.co.noir.login.MemberDTO;
+import kr.co.noir.login.MemberMapper;
 import lombok.RequiredArgsConstructor;
 
 @Service
