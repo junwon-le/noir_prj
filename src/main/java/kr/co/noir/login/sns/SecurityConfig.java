@@ -1,4 +1,4 @@
-package kr.co.noir.login;
+package kr.co.noir.login.sns;
 
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;

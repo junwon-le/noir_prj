@@ -1,7 +1,8 @@
-package kr.co.noir.login;
+package kr.co.noir.login.sns;
 
 import java.io.Serializable;
 
+import kr.co.noir.login.MemberDTO;
 import lombok.Getter;
 
 @Getter

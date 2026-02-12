@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="kr.co.noir.login.AdminMapper">
-<select id="adminLogin" parameterType="kr.co.noir.login.AdminMapper" resultType="kr.co.noir.login.AdminDomain" >
+<mapper namespace="kr.co.noir.login.admin.AdminMapper">
+<select id="adminLogin" parameterType="kr.co.noir.login.admin.AdminMapper" resultType="kr.co.noir.login.admin.AdminDomain" >
     SELECT admin_num, admin_id, admin_pass
     FROM admin
     WHERE admin_id = #{adminId}
 </select>
-<select id="selectAdmin" parameterType="kr.co.noir.login.AdminMapper" resultType="kr.co.noir.login.AdminDomain" >
+<select id="selectAdmin" parameterType="kr.co.noir.login.admin.AdminMapper" resultType="kr.co.noir.login.admin.AdminDomain" >
     SELECT admin_num, admin_id, admin_pass
     FROM admin
     WHERE admin_id = #{adminId}

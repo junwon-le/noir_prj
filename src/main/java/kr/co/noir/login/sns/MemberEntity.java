@@ -1,4 +1,4 @@
-package kr.co.noir.login;
+package kr.co.noir.login.sns;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
