@@ -71,7 +71,7 @@ padding:0px;
 }
 
 .maincontainer{
-height:1600px;
+min-height:1600px;
 background-color: #FFF;
 }
 .ffffff{
@@ -161,9 +161,35 @@ background-color: #FFF;
 }
 
 .thumimg {
-  flex: 0 0 450px;         /* 이미지 너비 고정 (필요시 조절) */
-  height: 200px;            /* 비율 유지 */
+  width: 500px;
+  height: 400px;
   object-fit: cover;
+  display: block;
+  
+  padding: 15px 15px 60px 15px;
+  background: #ffffff;
+  border: 1px solid #ddd;
+  
+  box-shadow: 
+    15px 15px 30px rgba(0, 0, 0, 0.1),
+    0 0 5px rgba(0, 0, 0, 0.05);
+    
+  transform: rotate(-2deg);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  
+  position: relative;
+  z-index: 1;
+}
+
+.thumimg::after {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Georgia', serif;
+  font-size: 14px;
+  color: #888;
+  letter-spacing: 2px;
 }
 
 .event-title-title{
@@ -262,7 +288,7 @@ hr{
 </div>
 <div class="maincontainer">
 <div class="banner">
-  <img th:src="@{/common/images/homepage/event/} + ${eventDetail.eventImg1}" alt="이벤트 이미지">
+  <img th:src="@{/common/images/homepage/event/} + ${eventDetail.eventImg2}" alt="이벤트 이미지">
 	<div class="banner-text">
 	<div class="event-title" >
 	<span th:text="${eventDetail.eventTitle}"></span>&nbsp;[<span th:text="${eventDetail.eventSubTitle}"></span>]
@@ -284,7 +310,7 @@ hr{
 	<hr>
 	
 	<div class="event-thum-img">
-	<img th:src="@{/common/images/homepage/event/} + ${eventDetail.eventImg2}" class="thumimg" alt="이벤트 이미지">
+	<img th:src="@{/common/images/homepage/event/} + ${eventDetail.eventImg1}" class="thumimg" alt="이벤트 이미지">
 	 <div class="event-text">
     <div class="event-title-title"><span th:text="${eventDetail.eventTitle}"></span>&nbsp;[<span th:text="${eventDetail.eventSubTitle}"></span>]</div>
     <span class="event-title-desc" th:text="${eventDetail.eventMsg}">
@@ -315,8 +341,8 @@ hr{
 	  <button type="button" class="btn btn-outline-dark" id="listbtn" th:onclick="|location.href='@{/eventList}'|">목록</button>
 	</div>
 </div>
-	<div class="ffffff"></div>
 
+	<div class="ffffff"></div>
 <footer>
         <div th:replace="~{fragments/footer :: footer}"></div>
     </footer>
