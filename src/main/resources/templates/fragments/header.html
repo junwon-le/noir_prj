@@ -95,7 +95,12 @@
 					<div class="main-sub">
 						<ul>
 							<li><a href="/reserve/roomResSearch"><span>Book</span></a></li>
-							<li><a href="#popIframe" class="open_modal" url="/view/login.do"><span>Cancel</span></a></li>
+							<th:block th:if="${session.memberId == null}">
+							<li><a th:href="@{/login/memberLogin}"><span>Cancel</span></a></li>
+        					</th:block>
+        					<th:block th:if="${session.memberId != null}">
+            				<li><a th:href="@{/mypage/}">Cancel</a></li>
+            				</th:block>
 						</ul>
 					</div> 
 				</li>
