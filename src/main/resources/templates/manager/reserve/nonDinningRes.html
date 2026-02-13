@@ -28,7 +28,8 @@
     <link rel="stylesheet" href="/admin_common/style.css">
     <link rel="stylesheet" href="/admin_common/css/responsive.css">
     <script src="/admin_common/js/vendor/modernizr-2.8.3.min.js"></script>
-    
+      <!-- jQeury CDN 시작 -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
      <style>
          /* 페이지네이션 영역 수정 */
 .pagination {
@@ -149,16 +150,15 @@
     </style>
     
     
-  <script type="text/javascript">
-/*   $(function(){
-		  
-	  
-	  
-	  
-	  
-	  
+  <script th:inline="javascript">
+   $(function(){
+	    var flag = /*[[${flag}]]*/ false;
+	       if (flag==true) {
+	              // 성공 모달 띄우기
+	              $('#resultModal').modal('show');
+	          }//end if
   });//ready 
-   */
+  
   
   function setRevNum(reserveNum){
 	  $("#detailRevNum").val(reserveNum);
@@ -189,7 +189,7 @@
 <body>
     <div th:replace="~{manager/fragments/sidebar :: sidebar}"></div>
     <div class="all-content-wrapper">
-        <div class="header-advance-area">
+       <div class="header-advance-area">
             <div class="breadcome-area">
                 <div class="container-fluid">
                     <div class="row">
@@ -203,7 +203,7 @@
   <path d="M12 2V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
   
   <path d="M12 15V22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-</svg><span>&nbsp; 다이닝 에약 관리(회원)</span>
+</svg><span>&nbsp; 다이닝 에약 관리(비회원)</span>
 										</div>
                                     </div>
                                 </div>
@@ -240,7 +240,7 @@
                                 <tr>
                                     <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600; width: 90px;">예약번호</th>
                                     <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600;">예약자명</th>
-                                    <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600;">ID</th>
+                                    <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600;">E-mail</th>
                                     <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600;">방문일</th>
                                     <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600;">인원</th>
                                     <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600;">금액</th>
@@ -342,7 +342,18 @@
 	        	<input type="hidden" name="resNum"  id="detailRevNum" />
          
         	</form>
-        	
+        	<div class="modal fade" id="resultModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 350px;">
+                <div class="modal-content" style="background: #1b2a47; color: #fff; border-radius: 12px; border: 1px solid #344463;">
+                    <div class="modal-body" style="padding: 30px; text-align: center;">
+                        <h4 style="margin-bottom: 20px; font-weight: 600;" id="resultText">예약을 취소되었습니다.</h4>
+                        <div style="display: flex; gap: 10px; justify-content: center;">
+                            <input type="button" value="확인" class="btn" data-dismiss="modal" style="background: #344463; color: #fff; width: 100px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
       <div class="pagination">
     	<th:block th:utext="${pagination}">
     	</th:block>

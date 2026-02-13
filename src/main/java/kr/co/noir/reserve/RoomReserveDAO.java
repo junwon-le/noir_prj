@@ -115,6 +115,17 @@ public class RoomReserveDAO {
 		return cnt;
 	}//insertNonRoomReserve
 	
+	public void deleteNonRoomReserve() {
+		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
+		ss.delete("kr.co.sist.reserve.deleteNonRoomReserve");
+		if(ss!=null) {	ss.close();	}
+	}//deleteNonRoomReserve
+	public void deleteNonDinningReserve() {
+		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
+		ss.delete("kr.co.sist.reserve.deleteNonDinningReserve");
+		if(ss!=null) {	ss.close();	}
+	}//deleteNonDinningReserve
+	
 	
 	
 }

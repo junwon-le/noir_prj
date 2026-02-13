@@ -30,7 +30,7 @@
     <script src="js/vendor/modernizr-2.8.3.min.js"></script>
     <!-- jQeury CDN 시작 -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script>
+  <script th:inline="javascript">
 $(function() {
     // #table 안에 있는 tbody를 감시하다가, 그 안의 tr이 클릭되면 실행합니다.
     $("#table").on("click", "tbody tr", function(e) {
@@ -38,10 +38,17 @@ $(function() {
     	if ($(e.target).is("button, button *")) {
             return;
         }
-        location.href="/admin/nonRoomResDetail?resNum="+$(this).find(".resNum").text()
+    	alert($("#keyword").val());
+        location.href="/admin/nonRoomResDetail?resNum="+$(this).find(".resNum").text()+"&field="+$("#field").val()+"&keyword="+$("#keyword").val()+"&currentPage="
+        		+$("#currentPage").val()
         // 클릭한 행의 데이터를 가져오는 팁
     });
     
+    var flag = /*[[${flag}]]*/ false;
+    if (flag==true) {
+           // 성공 모달 띄우기
+           $('#resultModal').modal('show');
+       }//end if
 });//ready
 function cancel(){
 	$("#hiddenFrm").prop("action","/admin/nonRoomRefund");
@@ -170,19 +177,39 @@ function cancel(){
 </head>
 
 <body>
-     <div th:replace="~{manager/fragments/sidebar :: sidebar}"></div>
-    <div class="all-content-wrapper">
+<div th:replace="~{manager/fragments/sidebar :: sidebar}"></div>    
+<div class="all-content-wrapper">
+<div class="modal fade" id="resultModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 350px;">
+                <div class="modal-content" style="background: #1b2a47; color: #fff; border-radius: 12px; border: 1px solid #344463;">
+                    <div class="modal-body" style="padding: 30px; text-align: center;">
+                        <h4 style="margin-bottom: 20px; font-weight: 600;" id="resultText">예약을 취소되었습니다.</h4>
+                        <div style="display: flex; gap: 10px; justify-content: center;">
+                            <input type="button" value="확인" class="btn" data-dismiss="modal" style="background: #344463; color: #fff; width: 100px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="header-advance-area">
             <div class="breadcome-area">
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <div class="breadcome-list">
+                           <div class="breadcome-list" style="margin-left:40px; width:95%; border-radius: 20px;">
                                 <div class="row">
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                         <div class="breadcomb-wp" style="color:#ffffff; font-size: 20px">
-                                            객실 예약관리
-                                        </div>
+                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                      <path d="M2 21H22" stroke="#2C3E50" stroke-width="2" stroke-linecap="round"></path>
+                                      
+                                      <path d="M5 21V5C5 3.89543 5.89543 3 7 3H17C18.1046 3 19 3.89543 19 5V21" stroke="#2C3E50" stroke-width="2"></path>
+                                      
+                                      <path d="M9 7V11M15 7V11M9 9H15" stroke="#3498DB" stroke-width="1.5" stroke-linecap="round"></path>
+                                      
+                                      <path d="M10 21V18C10 16.8954 10.8954 16 12 16C13.1046 16 14 16.8954 14 18V21" stroke="#2C3E50" stroke-width="1.5"></path>
+                                    </svg> <span style="text-align: center;"> &nbsp; 호텔 예약 관리(비회원)</span>
+                              </div>
                                     </div>
                                 </div>
                             </div>
@@ -197,14 +224,14 @@ function cancel(){
                 <div class="col-lg-12">
                 <form id="searchFrm" action="/admin/nonRoomReserve">
                     <div class="d-flex" style="display: flex; gap: 10px; margin-bottom: 25px; align-items: center;">
-                        <select class="form-control select_style" name="field">
-                        <option value="전체" selected>전체</option> 
+                        <select class="form-control select_style" name="field" id="field">
+                        	<option value="전체" selected>전체</option> 
                             <option value="예약번호" th:selected="${#strings.equals(param.field, '예약번호')}">예약번호</option>
-            <option value="성명" th:selected="${#strings.equals(param.field, '성명')}" >성명</option>
-            <option value="아이디" th:selected="${#strings.equals(param.field, '아이디')}" >아이디</option>
+            				<option value="성명" th:selected="${#strings.equals(param.field, '성명')}" >성명</option>
+            				<option value="아이디" th:selected="${#strings.equals(param.field, '아이디')}" >아이디</option>
                         </select>
                         <div style="position: relative; flex-grow: 1; max-width: 350px;">
-                            <input type="text" name="keyword" class="form-control" placeholder="검색어를 입력하세요" style="background: white; border-radius: 8px; height: 42px; color:black; padding-right: 45px; border: 1px solid #e0e6ed;">
+                            <input type="text" name="keyword" id="keyword" th:value="${param.keyword}" class="form-control" placeholder="검색어를 입력하세요" style="background: white; border-radius: 8px; height: 42px; color:black; padding-right: 45px; border: 1px solid #e0e6ed;">
                             <button style="position: absolute; right: 6px; top: 6px; border: none; background: #8e99bc; color: #fff; border-radius: 6px; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">
                                 <i class="fa fa-search"></i>
                             </button>
@@ -218,7 +245,7 @@ function cancel(){
                                 <tr>
                                     <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600; width: 90px;">예약번호</th>
                                     <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600;">성명</th>
-                                    <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600;">ID</th>
+                                    <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600;">E-mail</th>
                                     <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600;">숙박일</th>
                                     <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600;">금액</th>
                                     <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600;">결제일시</th>
@@ -254,7 +281,7 @@ function cancel(){
         </div>
           
            <form th:action="@{/admin/dinningMember/dinningDetail}" method="get" id="hiddenFrm">
-	        	<input type="hidden" name="currentPage" th:value="${param.currentPage eq null || param.currentPage==''?1 :param.currentPage}"/>
+	        	<input type="hidden" name="currentPage" id="currentPage" th:value="${param.currentPage eq null || param.currentPage==''?1 :param.currentPage}"/>
 	        	<input type="hidden" name="field"   th:value="${param.field==''?reserveNum : param.field}"/>
 	        	<input type="hidden" name="keyword"  th:value="${param.keyword}"/>
 	        	<input type="hidden" name="resNum"  id="detailRevNum" />

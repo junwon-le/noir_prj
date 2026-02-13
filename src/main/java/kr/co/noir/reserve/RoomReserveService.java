@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.encrypt.Encryptors;
 import org.springframework.security.crypto.encrypt.TextEncryptor;
@@ -64,7 +65,7 @@ public class RoomReserveService {
 		try {
 			memberDomain=rrDAO.selectMember(id);
 			TextEncryptor te = Encryptors.text(key,salt);
-			if(memberDomain.getMember_provider()!=null) {
+			if(memberDomain.getMember_provider_id()!=null) {
 				memberDomain.setMember_last_name(memberDomain.getMember_first_name().substring(0,1));
 				memberDomain.setMember_first_name(memberDomain.getMember_first_name().substring(1,3));
 			}
@@ -102,6 +103,12 @@ public class RoomReserveService {
 			pe.printStackTrace();
 		}
 		return cnt;
+	}
+	
+	@Scheduled(fixedDelay = 60000*60)
+	public void deleteLastDepending() {
+		rrDAO.deleteNonRoomReserve();
+		rrDAO.deleteNonDinningReserve();
 	}
 	
 	public boolean addRoomReserve(PayInfoDTO pDTO, RoomReserveDTO rrDTO ) {
