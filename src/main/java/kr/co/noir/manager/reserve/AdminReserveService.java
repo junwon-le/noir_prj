@@ -98,9 +98,14 @@ public class AdminReserveService {
 			default -> null;
 			};//end switch
 			arrDTO.setField(field);
+			
 		}//end if
 		try {
 			list = arm.selectNonRoomList(arrDTO);
+			for(NonRoomResDomain nrrd : list) {
+				TextEncryptor te = Encryptors.text(key,salt);
+				nrrd.setReserveEmail(te.decrypt(nrrd.getReserveEmail()));
+			}//end for
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -121,6 +126,10 @@ public class AdminReserveService {
 		}//end if
 		try {
 			list = arm.selectNonDinningList(arrDTO);
+			for(NonRoomResDomain nrrd : list) {
+				TextEncryptor te = Encryptors.text(key,salt);
+				nrrd.setReserveEmail(te.decrypt(nrrd.getReserveEmail()));
+			}//end for
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
