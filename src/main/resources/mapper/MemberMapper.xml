@@ -70,4 +70,77 @@
           AND MEMBER_DEL_FLAG = 'N'
     </select>
 
+	<update id="insertSnsMember" parameterType="kr.co.noir.login.MemberDTO">
+	    MERGE INTO MEMBER m
+	    USING dual
+	    ON (m.MEMBER_PROVIDER = #{memberProvider} AND m.MEMBER_PROVIDER_ID = #{memberProviderId})
+	    
+	    /* 1. 이미 가입된 정보가 있는 경우 (탈퇴 포함) */
+	    WHEN MATCHED THEN
+	        UPDATE SET 
+	            m.MEMBER_LAST_NAME = #{memberLastName},
+	            m.MEMBER_FIRST_NAME = #{memberFirstName},
+	            m.MEMBER_EMAIL = #{memberEmail},
+	            m.MEMBER_DEL_FLAG = 'N',    /* 계정 재활성화 */
+	            m.MEMBER_INPUTDATE = SYSDATE /* 가입일(또는 갱신일) 업데이트 */
+	
+	    /* 2. 처음 가입하는 경우 */
+	    WHEN NOT MATCHED THEN
+	        INSERT (
+	            MEMBER_NUM, MEMBER_ID, MEMBER_PASS, 
+	            MEMBER_LAST_NAME, MEMBER_FIRST_NAME, MEMBER_EMAIL, 
+	            MEMBER_DEL_FLAG, MEMBER_INPUTDATE,
+	            MEMBER_PROVIDER, MEMBER_PROVIDER_ID
+	        ) VALUES (
+	            MEMBER_SEQ.NEXTVAL, #{memberId}, 'SNS_USER', 
+	            #{memberLastName}, #{memberFirstName}, #{memberEmail}, 
+	            'N', SYSDATE, 
+	            #{memberProvider}, #{memberProviderId}
+	        )
+	</update>
+	<select id="selectSnsToken" resultType="kr.co.noir.login.sns.SnsTokenDTO">
+	    SELECT MEMBER_NUM, PROVIDER, ACCESS_TOKEN, REFRESH_TOKEN, TOKEN_EXPIRES_AT, UPDATE_DATE
+	    FROM MEMBER_SNS_TOKEN
+	    WHERE MEMBER_NUM = (SELECT MEMBER_NUM FROM MEMBER WHERE MEMBER_ID = #{memberId})
+	      AND PROVIDER = #{provider}
+	</select>
+	
+	<delete id="deleteSnsToken">
+	    DELETE FROM MEMBER_SNS_TOKEN 
+	    WHERE MEMBER_NUM = (SELECT MEMBER_NUM FROM MEMBER WHERE MEMBER_ID = #{memberId})
+	      AND PROVIDER = #{provider}
+	</delete>
+	
+	<update id="updateSnsToken" parameterType="kr.co.noir.login.sns.SnsTokenDTO">
+	    MERGE INTO MEMBER_SNS_TOKEN t
+	    USING dual
+	    ON (t.MEMBER_NUM = #{memberNum} AND t.PROVIDER = #{provider})
+	    
+	    /* 데이터가 이미 존재할 경우 실행 */
+	    WHEN MATCHED THEN
+	        UPDATE SET 
+	            ACCESS_TOKEN = #{accessToken},
+	            REFRESH_TOKEN = #{refreshToken},
+	            TOKEN_EXPIRES_AT = #{tokenExpiresAt},
+	            UPDATE_DATE = SYSDATE
+	            
+	    /* 데이터가 없을 경우 실행 */
+	    WHEN NOT MATCHED THEN
+	        INSERT (
+	            MEMBER_NUM, 
+	            PROVIDER, 
+	            ACCESS_TOKEN, 
+	            REFRESH_TOKEN, 
+	            TOKEN_EXPIRES_AT, 
+	            UPDATE_DATE
+	        )
+	        VALUES (
+	            #{memberNum}, 
+	            #{provider}, 
+	            #{accessToken}, 
+	            #{refreshToken}, 
+	            #{tokenExpiresAt}, 
+	            SYSDATE
+	        )
+	</update>
 </mapper>
