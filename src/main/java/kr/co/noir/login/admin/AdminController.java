@@ -1,4 +1,4 @@
-package kr.co.noir.login;
+package kr.co.noir.login.admin;
 
 import java.util.List;
 import java.util.Map;
@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import kr.co.noir.login.MemberService;
 
 @Controller
 public class AdminController {

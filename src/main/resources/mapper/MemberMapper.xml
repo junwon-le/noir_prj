@@ -50,6 +50,11 @@
         SET MEMBER_DEL_FLAG = 'Y' 
         WHERE MEMBER_ID = #{memberId} 
     </update>
+    <update id="updateMemberRejoin">
+        UPDATE MEMBER 
+        SET MEMBER_DEL_FLAG = 'N' 
+        WHERE MEMBER_ID = #{memberId} 
+    </update>
     <update id="updateMembersWithdraw">
         UPDATE MEMBER 
         SET MEMBER_DEL_FLAG = 'Y' 
@@ -64,6 +69,7 @@
           AND MEMBER_PROVIDER_ID = #{providerId}
           AND MEMBER_DEL_FLAG = 'N'
     </select>
+
 	<update id="insertSnsMember" parameterType="kr.co.noir.login.MemberDTO">
 	    MERGE INTO MEMBER m
 	    USING dual
@@ -92,7 +98,7 @@
 	            #{memberProvider}, #{memberProviderId}
 	        )
 	</update>
-	<select id="selectSnsToken" resultType="kr.co.noir.login.SnsTokenDTO">
+	<select id="selectSnsToken" resultType="kr.co.noir.login.sns.SnsTokenDTO">
 	    SELECT MEMBER_NUM, PROVIDER, ACCESS_TOKEN, REFRESH_TOKEN, TOKEN_EXPIRES_AT, UPDATE_DATE
 	    FROM MEMBER_SNS_TOKEN
 	    WHERE MEMBER_NUM = (SELECT MEMBER_NUM FROM MEMBER WHERE MEMBER_ID = #{memberId})
@@ -105,7 +111,7 @@
 	      AND PROVIDER = #{provider}
 	</delete>
 	
-	<update id="updateSnsToken" parameterType="kr.co.noir.login.SnsTokenDTO">
+	<update id="updateSnsToken" parameterType="kr.co.noir.login.sns.SnsTokenDTO">
 	    MERGE INTO MEMBER_SNS_TOKEN t
 	    USING dual
 	    ON (t.MEMBER_NUM = #{memberNum} AND t.PROVIDER = #{provider})

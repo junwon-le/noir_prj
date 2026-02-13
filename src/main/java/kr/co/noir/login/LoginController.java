@@ -42,13 +42,24 @@ public class LoginController {
 	}
     
 	@PostMapping("/memberLogin")
-	@ResponseBody //문자열 응답을 할 것임..^^
-	public String login(LoginDTO lDTO, HttpServletRequest request, HttpSession session, Model model) {
+	@ResponseBody
+	public String login(@RequestParam(value = "error", required = false) String error,
+                        @RequestParam(value = "message", required = false) String message,
+                        LoginDTO lDTO, HttpServletRequest request, HttpSession session, Model model) {
 
 		String url = "login/memberLogin"; // 실패 시 기본 경로
+		lDTO.setMemberIp(request.getRemoteAddr());
+		LoginMemberDomain md = ls.searchOneMember(lDTO); // DB 조회 결과
+		
+		// 1. 에러가 있을 때
+		if ("withdrawn".equals(error)) {
+	        model.addAttribute("showRejoinModal", true); // 모달 표시 플래그
+	        model.addAttribute("rejoinMessage", message);
+
+	        return "login/memberLogin";
+	    }
 	    
-	    lDTO.setMemberIp(request.getRemoteAddr());
-	    LoginMemberDomain md = ls.searchOneMember(lDTO); // DB 조회 결과
+	    
 	    
 	    // 로그인 성공 ("S")
 	    if ("S".equals(lDTO.getResult())) {
@@ -281,18 +292,14 @@ public class LoginController {
     public String joinProcess(MemberDTO memberDTO, HttpServletRequest request) {
 
     	String telPattern = "^010-\\d{4}-\\d{4}$";
-        if (!memberDTO.getMemberTel().matches(telPattern)) {
-            // 에러 처리: 다시 가입 폼으로 리턴
-            return "redirect:/join?error=tel";
+        if (memberDTO.getMemberTel() == null || !memberDTO.getMemberTel().matches(telPattern)) {
+            return "INVALID_TEL"; // 명확한 에러 코드 반환            
         }    	
-
         
         // 1. 비밀번호 암호화 (BCrypt 적용)
         // 2. 성(lastName)과 이름(firstName)을 합쳐서 저장하거나 각각 저장하는 로직
         
         boolean isSuccess = ls.registerMember(memberDTO, request);
-
-        System.out.println(isSuccess);
         
         if(isSuccess) {
             return "OK";
@@ -300,6 +307,17 @@ public class LoginController {
             return "FAIL";
         }
         
+    }
+    
+    @GetMapping("/rejoinProcess")
+    public String rejoinProcess(@RequestParam("provider") String provider, 
+                                HttpSession session) {
+        
+        // 1. 세션에 "재가입 모드"라는 표시를 남김
+        session.setAttribute("IS_REJOIN_MODE", true);
+        
+        // 2. 그리고 나서 원래 가려던 SNS 로그인 페이지로 토스!
+        return "redirect:/oauth2/authorization/" + provider;
     }
     
     @GetMapping("/result")
@@ -327,7 +345,7 @@ public class LoginController {
                                     Model model) {
         
         // OAuth2User를 통해 로그인한 유저의 정보를 가져옵니다.
-        // registrationId(google, kakao, naver)에 따라 데이터 구조가 다르므로 처리가 필요합니다.
+        // registrationId(google, kakao, naver)에 따라 데이터 구조가 다르므로 처리가 필요함.
         Map<String, Object> attributes = oAuth2User.getAttributes();
         
         // 

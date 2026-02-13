@@ -1,4 +1,4 @@
-package kr.co.noir.login;
+package kr.co.noir.login.sns;
 
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -12,8 +12,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.client.RestTemplate;
 
+import lombok.RequiredArgsConstructor;
+
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
 	@Bean
@@ -27,11 +30,8 @@ public class SecurityConfig {
     }
 	
     private final CustomOAuth2UserService customOAuth2UserService;
+    private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
 
-    // 생성자 주입 방식 권장
-    public SecurityConfig(CustomOAuth2UserService customOAuth2UserService) {
-        this.customOAuth2UserService = customOAuth2UserService;
-    }
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -62,6 +62,10 @@ public class SecurityConfig {
                     .userService(customOAuth2UserService) 
                 )
                 .defaultSuccessUrl("/", true)
+                
+             // 4. 여기서 .failureHandler()를 호출
+                .failureHandler(oAuth2LoginFailureHandler)
+                
             )
             
             // 4. 로그아웃 설정
