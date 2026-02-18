@@ -259,6 +259,12 @@ tr{
                                 </tr>
                             </thead>
                             <tbody style="color: #2a3547; vertical-align: middle; text-align: center;">
+                            <th:block th:if="${hotelMemberList.size()==0}">
+                                	<tr class="table-row">
+                                		<td colspan="7" style="font-family: 'Roboto'; color: #7c8fac; text-align: center;"> 검색 결과가 없습니다.</td>
+                                	</tr>
+                                </th:block>
+                                <th:block th:unless="${hotelMemberList.size()==0}">
                             
                             
                             <th:block th:each="hotelReserveList:${hotelMemberList}" th:object="${hotelReserveList}">
@@ -279,6 +285,7 @@ tr{
                                 	</th:block>
                                     
                                 </tr>
+                             </th:block>
                              </th:block>
                             </tbody>
                         </table>
