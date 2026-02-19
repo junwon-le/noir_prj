@@ -127,7 +127,7 @@ public class DinningResController {
 	        if(flag) {
 	        	return ResponseEntity.ok("success"); 
 	        }else {
-	        	return ResponseEntity.badRequest().body("fail");
+	        	return ResponseEntity.badRequest().body("이미 예약중인 내역이 있습니다.");
 	        }//end else	        	
 	        // 2. 성공 응답 보내기 (HTTP 200)
 	        

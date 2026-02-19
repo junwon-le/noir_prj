@@ -42,7 +42,7 @@ public class RoomReserveService {
 		
 		try {
 			list=rrDAO.selectRoom(rsDTO);
-		}catch(SQLException se) {
+		}catch(PersistenceException se) {
 			se.printStackTrace();
 		}
 		return list;
@@ -53,7 +53,7 @@ public class RoomReserveService {
 		
 		try {
 			list=rrDAO.selectRoomServer(rsDTO);
-		}catch(SQLException se) {
+		}catch(PersistenceException se) {
 			se.printStackTrace();
 		}
 		return list;
@@ -77,7 +77,7 @@ public class RoomReserveService {
 			memberDomain.setMember_email_id(email.substring(0,email.indexOf('@')));
 			memberDomain.setMember_email_domain(email.substring(email.indexOf('@')+1));
 			}
-		}catch(SQLException se) {
+		}catch(PersistenceException se) {
 			se.printStackTrace();
 		}
 		return memberDomain;
