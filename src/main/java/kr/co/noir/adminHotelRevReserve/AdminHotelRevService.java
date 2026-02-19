@@ -121,7 +121,7 @@ public class AdminHotelRevService {
 			
 			for (AdminHotelRevDetailDomain ar :list) {
 				ar.setTel(te.decrypt(ar.getTel()));
-				
+				ar.setEmail(te.decrypt(ar.getEmail()));
 			}//end for
 			
 		}catch (PersistenceException pe) {
