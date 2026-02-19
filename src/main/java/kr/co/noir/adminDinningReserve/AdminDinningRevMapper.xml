@@ -50,7 +50,7 @@
 	
 	  	from(select
 	  			ROW_NUMBER() OVER (ORDER BY r.reserve_status ASC, CASE WHEN dr.dinning_visit_date  <![CDATA[<]]> TRUNC(SYSDATE) THEN 1 ELSE 0 END ASC,dr.dinning_visit_date ASC,dr.dinning_res_detail_time ASC) AS rnum,
-	  					m.member_id as memberId,
+	  					nvl(m.member_id,'탈퇴한 회원') as memberId,
 	  					r.END_USER_LAST_NAME||r.END_USER_FIRST_NAME as userName,
       			  r.reserve_num AS reserveNum,
        			 TRUNC(r.reserve_time) AS reserveDate,

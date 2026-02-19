@@ -53,12 +53,12 @@ FROM (
     ) AS rnum,
     r.reserve_num AS reserveNum,
     r.end_user_last_name || r.end_user_first_name AS reserveName,
-    m.member_id AS memberId,
+    nvl(m.member_id,'탈퇴한 회원')AS memberId,
     TO_CHAR(r.reserve_time,'YYYY-MM-DD') AS reserveTime,
     p.pay_price AS totalPrice,
     TO_CHAR(r.reserve_start_date,'YYYY-MM-DD') AS startDate,
     TO_CHAR(r.reserve_end_date,'YYYY-MM-DD') AS endDate,
-    TO_CHAR(pi.input_date,'YYYY-MM-DD HH24:MI') AS inputDate,
+    TO_CHAR(pi.input_date,'YYYY-MM-DD HH24:MI:SS') AS inputDate,
     r.reserve_status AS reserveFlag
   FROM reserve r, member m, pay p, pay_info pi
   WHERE m.member_num = r.member_num
