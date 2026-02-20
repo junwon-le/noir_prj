@@ -3,7 +3,7 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="kr.co.noir.inquiry">
+<mapper namespace="kr.co.noir.inquiryAdmin">
 
   <!-- 1) 총 개수 -->
   <select id="selectInquiryTotalCnt"
@@ -13,7 +13,6 @@
     FROM inquiry i
     LEFT JOIN member m ON m.member_num = i.member_num
     WHERE i.inquiry_del_flag = 'N'
-
     <if test="keyword != null and keyword != ''">
       <choose>
         <when test="field == '1'">
@@ -40,13 +39,14 @@
         i.member_num     AS memberNum,
         i.inquiry_title  AS inquiryTitle,
         i.inquiry_date   AS inquiryDate,
+        -- ✅ (선택) 답변 여부 표시용
+        i.inquiry_return AS inquiryReturn,
         m.member_email   AS memberEmail,
         m.member_id      AS memberId,
         ROW_NUMBER() OVER (ORDER BY i.inquiry_num DESC) rnum
       FROM inquiry i
       LEFT JOIN member m ON m.member_num = i.member_num
       WHERE i.inquiry_del_flag = 'N'
-
       <if test="keyword != null and keyword != ''">
         <choose>
           <when test="field == '1'">
@@ -89,7 +89,7 @@
           parameterType="kr.co.noir.inquiry.InquiryAdminDTO">
     UPDATE inquiry
     SET
-      inquiry_return = #{inquiryReturn},
+      inquiry_return = #{inquiryReturn, jdbcType=CLOB},
       admin_num      = #{adminNum}
     WHERE inquiry_num = #{inquiryNum}
       AND inquiry_del_flag = 'N'

@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -20,130 +19,168 @@ public class NoticeAdminController {
 
     @Autowired
     private NoticeAdminService nas;
-    
-    //공지사항 목록
+
+    private Integer getAdminNum(HttpSession session) {
+        return (Integer) session.getAttribute("adminNum");
+    }
+
+    // 1) 공지사항 목록
     @GetMapping("/noticeAdminList")
     public String adminNoticeList(BoardRangeDTO rDTO, Model model, HttpSession session) {
 
-//        int currentPage = rDTO.getCurrentPage();
-//        if (currentPage <= 0) {
-//            currentPage = 1;
-//            rDTO.setCurrentPage(currentPage);
-//        }
-//
-//        // ✅ 추가: 기본값 세팅 (첫 화면에서 전체 목록 보장)
-//        if (rDTO.getField() == null || rDTO.getField().trim().isEmpty()) {
-//            rDTO.setField("1");
-//        }
-//        if (rDTO.getKeyword() == null) {
-//            rDTO.setKeyword("");
-//        }
-
-        // 관리자 로그인 체크만
-        String adminIp = (String) session.getAttribute("adminIp");
-        if (adminIp == null) {
+        Integer adminNum = getAdminNum(session);
+        if (adminNum == null) {
             return "redirect:/admin/login";
         }
-	    
+
+        int currentPage = rDTO.getCurrentPage();
+        if (currentPage <= 0) currentPage = 1;
+        rDTO.setCurrentPage(currentPage);
+
+        if (rDTO.getField() == null || rDTO.getField().trim().isEmpty()) {
+            rDTO.setField("1");
+        }
+        if (rDTO.getKeyword() == null) {
+            rDTO.setKeyword("");
+        }
+
         int totalCnt = nas.totalCnt(rDTO);
         int pageScale = nas.pageScale();
         int totalPage = nas.totalPage(totalCnt, pageScale);
-		int currentPage = rDTO.getCurrentPage(); //현재 페이지
+
         int startNum = nas.startNum(currentPage, pageScale);
         int endNum = nas.endNum(startNum, pageScale);
 
         rDTO.setStartNum(startNum);
         rDTO.setEndNum(endNum);
         rDTO.setTotalPage(totalPage);
-        rDTO.setUrl("notice/noticeAdminList");
+        rDTO.setUrl("/notice/noticeAdminList");
 
         List<NoticeAdminDomain> noticeList = nas.searchAdminNoticeList(rDTO);
-        String pagination = nas.pagination2(rDTO,"center");//페이지 네이션
+        String pagination = nas.pagination2(rDTO, "center");
 
-
-		model.addAttribute("listNum",totalCnt-(currentPage-1)*pageScale);
-		model.addAttribute("noticeList", noticeList);
+        model.addAttribute("listNum", totalCnt - (currentPage - 1) * pageScale);
+        model.addAttribute("noticeList", noticeList);
         model.addAttribute("pagination", pagination);
+        model.addAttribute("rDTO", rDTO);
 
-        return "manager/notice/noticeAdmin";
+        return "manager/notice/noticeAdminList";
     }
 
-    
-    //공지사항 상세보기
-    @GetMapping("/DetailNotice")
-    public String NoticeDetail(@RequestParam int noticeNum, Model model) {
+    // 2) 공지 상세보기(선택)
+    @GetMapping("/noticeDetailAdmin")
+    public String noticeDetail(@RequestParam int noticeNum,
+                               @RequestParam(defaultValue = "1") int currentPage,
+                               Model model,
+                               HttpSession session) {
+
+        Integer adminNum = getAdminNum(session);
+        if (adminNum == null) {
+            return "redirect:/admin/login";
+        }
+
         model.addAttribute("notice", nas.searchOneNotice(noticeNum));
+        model.addAttribute("currentPage", currentPage);
+
         return "manager/notice/noticeDetailAdmin";
     }
-    
-    //공지사항 작성 폼
+
+    // 3) 공지 작성 폼
     @GetMapping("/writeNoticeFrm")
-    public String writeNoticeForm(HttpServletRequest request, Model model) {
-        model.addAttribute("ip", request.getRemoteAddr());
+    public String writeNoticeForm(@RequestParam(defaultValue = "1") int currentPage,
+                                  Model model,
+                                  HttpSession session) {
+
+        Integer adminNum = getAdminNum(session);
+        if (adminNum == null) {
+            return "redirect:/admin/login";
+        }
+
+        model.addAttribute("currentPage", currentPage);
         return "manager/notice/noticeWriteFrmAdmin";
     }
-    //공지사항 작성 처리
+
+    // 4) 공지 작성 처리
     @PostMapping("/noticeWriteProcess")
     public String writeNoticeProcess(NoticeAdminDTO naDTO,
-                                     HttpServletRequest request,
-                                     HttpSession session,
-                                     RedirectAttributes ra) {
+                                     RedirectAttributes ra,
+                                     HttpSession session) {
 
-        Integer adminNum = (Integer) session.getAttribute("adminNum");
-
+        Integer adminNum = getAdminNum(session);
         if (adminNum == null) {
             ra.addFlashAttribute("msg", "로그인이 필요합니다.");
-            return "redirect:/noticeAdmin";  
+            return "redirect:/admin/login";
         }
 
         naDTO.setAdminNum(adminNum);
-        naDTO.setIp(request.getRemoteAddr());
 
         int cnt = nas.addAdminNotice(naDTO);
 
         ra.addFlashAttribute("msg",
                 cnt == 1 ? "공지사항이 등록되었습니다." : "공지사항 등록에 실패했습니다.");
 
-        return cnt == 1
-                ? "redirect:/notice/searchAllNotice"
-                : "redirect:/notice/writeNoticeFrm";
+        return (cnt == 1)
+                ? "redirect:/notice/noticeAdminList?currentPage=1"
+                : "redirect:/notice/writeNoticeFrm?currentPage=1";
     }
-    
-    
- // 공지사항 수정
+
+    // 5) 공지 수정 폼 (작성 폼 재사용)
+    @GetMapping("/modifyNoticeFrm")
+    public String modifyNoticeForm(@RequestParam int noticeNum,
+                                   @RequestParam(defaultValue = "1") int currentPage,
+                                   Model model,
+                                   HttpSession session) {
+
+        Integer adminNum = getAdminNum(session);
+        if (adminNum == null) {
+            return "redirect:/admin/login";
+        }
+
+        model.addAttribute("notice", nas.searchOneNotice(noticeNum));
+        model.addAttribute("currentPage", currentPage);
+
+        return "manager/notice/noticeWriteFrmAdmin";
+    }
+
+    // 6) 공지 수정 처리
     @PostMapping("/modifyNoticeProcess")
     public String modifyNoticeProcess(NoticeAdminDTO naDTO,
                                       @RequestParam(defaultValue = "1") int currentPage,
                                       RedirectAttributes ra,
-                                      HttpServletRequest request) {
+                                      HttpSession session) {
 
-        naDTO.setIp(request.getRemoteAddr());
+        Integer adminNum = getAdminNum(session);
+        if (adminNum == null) {
+            return "redirect:/admin/login";
+        }
 
-        int cnt = nas.modifyNotice(naDTO); // 1 or 0
+        naDTO.setAdminNum(adminNum);
+
+        int cnt = nas.modifyNotice(naDTO);
 
         ra.addFlashAttribute("msg",
                 cnt == 1 ? "수정되었습니다." : "수정에 실패했습니다.");
 
-        return "redirect:/notice/searchAllNotice?currentPage=" + currentPage;
+        return "redirect:/notice/noticeAdminList?currentPage=" + currentPage;
     }
 
+    // 7) 공지 삭제 (soft delete)
+    @PostMapping("/removeNotice")
+    public String removeNotice(@RequestParam int noticeNum,
+                               @RequestParam(defaultValue = "1") int currentPage,
+                               RedirectAttributes ra,
+                               HttpSession session) {
 
-    
-    
-    //공지사항 삭제
-	@PostMapping("/removeNotice")
-	public String removeNotice(@RequestParam int noticeNum,
-	                           @RequestParam(defaultValue = "1") int currentPage,
-	                           Model model) {
+        Integer adminNum = getAdminNum(session);
+        if (adminNum == null) {
+            return "redirect:/admin/login";
+        }
 
-	    int cnt = nas.removeAdminNotice(noticeNum);
-	    boolean flag = (cnt == 1);
+        int cnt = nas.removeAdminNotice(noticeNum);
 
-	    model.addAttribute("flag", flag);
-	    model.addAttribute("currentPage", currentPage);
+        ra.addFlashAttribute("msg",
+                cnt == 1 ? "공지사항이 삭제되었습니다." : "공지사항 삭제에 실패했습니다.");
 
-	    return "manager/notice/removeNoticeProcess"; 
-	}
-
-	}
-
+        return "redirect:/notice/noticeAdminList?currentPage=" + currentPage;
+    }
+}

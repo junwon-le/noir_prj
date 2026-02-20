@@ -5,8 +5,8 @@
 
 <mapper namespace="kr.co.noir.noticeAdmin">
 
-  <!-- ✅ 총 개수 -->
-  <select id="selectNoticeTotal"
+  <!-- ✅ 총 개수 (DAO: selectNoticeTotalCnt) -->
+  <select id="selectNoticeTotalCnt"
           parameterType="kr.co.noir.notice.BoardRangeDTO"
           resultType="int">
     select count(*)
@@ -14,7 +14,7 @@
     <where>
       notice_del_flag = 'N'
 
-      <!-- ✅ field(1~4) 기반 카테고리 필터 -->
+      <!-- field(1~4) 기반 카테고리 필터 -->
       <if test="field != null and field != '' and field != '1'">
         <choose>
           <when test="field == '2'">and notice_category = '일반공지'</when>
@@ -23,19 +23,18 @@
         </choose>
       </if>
 
-      <!-- ✅ keyword -->
+      <!-- keyword(제목 검색) -->
       <if test="keyword != null and keyword != ''">
         and instr(notice_title, #{keyword}) != 0
       </if>
     </where>
   </select>
 
-  <!-- ✅ 목록 -->
+  <!-- ✅ 목록 (DAO: selectNoticeList) -->
   <select id="selectNoticeList"
           parameterType="kr.co.noir.notice.BoardRangeDTO"
           resultType="kr.co.noir.notice.NoticeAdminDomain">
-    select
-      noticeNum, noticeTitle, noticeCategory, noticeDate, noticeMsg, adminNum
+    select *
     from (
       select
         notice_num      as noticeNum,
@@ -49,7 +48,6 @@
       <where>
         notice_del_flag = 'N'
 
-        <!-- ✅ field(1~4) 기반 카테고리 필터 -->
         <if test="field != null and field != '' and field != '1'">
           <choose>
             <when test="field == '2'">and notice_category = '일반공지'</when>
@@ -58,7 +56,6 @@
           </choose>
         </if>
 
-        <!-- ✅ keyword -->
         <if test="keyword != null and keyword != ''">
           and instr(notice_title, #{keyword}) != 0
         </if>
@@ -67,7 +64,7 @@
     where rnum between #{startNum} and #{endNum}
   </select>
 
-  <!-- ✅ 상세 -->
+  <!-- ✅ 상세 (DAO: selectNoticeDetail) -->
   <select id="selectNoticeDetail"
           parameterType="int"
           resultType="kr.co.noir.notice.NoticeAdminDomain">
@@ -80,18 +77,31 @@
       notice_date     as noticeDate
     from notice
     where notice_num = #{value}
+      and notice_del_flag = 'N'
   </select>
 
-  <!-- ✅ 등록 -->
+  <!-- ✅ 등록 (DAO: insertNotice) -->
   <insert id="insertNotice" parameterType="kr.co.noir.notice.NoticeAdminDTO">
     insert into notice (
-      notice_num, admin_num, notice_title, notice_category, notice_msg, notice_date, notice_del_flag
+      notice_num,
+      admin_num,
+      notice_title,
+      notice_category,
+      notice_msg,
+      notice_date,
+      notice_del_flag
     ) values (
-      seq_notice.nextval, #{adminNum}, #{noticeTitle}, #{noticeCategory}, #{noticeMsg}, sysdate, 'N'
+      seq_notice.nextval,
+      #{adminNum},
+      #{noticeTitle},
+      #{noticeCategory},
+      #{noticeMsg},
+      sysdate,
+      'N'
     )
   </insert>
 
-  <!-- ✅ 수정 -->
+  <!-- ✅ 수정 (DAO: updateNotice) -->
   <update id="updateNotice" parameterType="kr.co.noir.notice.NoticeAdminDTO">
     update notice
     set
@@ -99,13 +109,15 @@
       notice_category = #{noticeCategory},
       notice_msg = #{noticeMsg}
     where notice_num = #{noticeNum}
+      and notice_del_flag = 'N'
   </update>
 
-  <!-- ✅ 삭제(플래그) -->
+  <!-- ✅ 삭제(soft delete) (DAO: deleteNotice) -->
   <update id="deleteNotice" parameterType="int">
     update notice
     set notice_del_flag = 'Y'
     where notice_num = #{value}
+      and notice_del_flag = 'N'
   </update>
 
 </mapper>

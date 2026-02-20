@@ -1,5 +1,7 @@
 package kr.co.noir.inquiry;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -18,7 +20,7 @@ public class InquiryAdminService {
     public int totalCnt(InquiryRangeDTO irDTO) {
         int totalCnt = 0;
         try {
-            totalCnt = iaDAO.selectinquiryTotal(irDTO);
+            totalCnt = iaDAO.selectInquiryTotal(irDTO);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -66,7 +68,8 @@ public class InquiryAdminService {
     public List<InquiryAdminDomain> searchInquiryList(InquiryRangeDTO irDTO) {
         List<InquiryAdminDomain> list = null;
         try {
-            list = iaDAO.selectinquiryList(irDTO);
+            list = iaDAO.selectInquiryList(irDTO);
+            titleSubStr(list);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -90,7 +93,7 @@ public class InquiryAdminService {
     public boolean updateInquiryReturn(InquiryAdminDTO iaDTO) {
         boolean flag = false;
         try {
-            flag = iaDAO.updateinquiry(iaDTO) == 1;
+            flag = iaDAO.updateInquiry(iaDTO) == 1;
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (PersistenceException pe) {
@@ -103,13 +106,12 @@ public class InquiryAdminService {
     public boolean removeInquiry(int inquiryNum) {
         boolean flag = false;
         try {
-            flag = iaDAO.deleteinquiry(inquiryNum) == 1;
+            flag = iaDAO.deleteInquiry(inquiryNum) == 1; // ✅ 이름 통일 권장
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return flag;
     }
-    
     
 
     public String pagination2(InquiryRangeDTO rDTO, String justify) {
@@ -123,21 +125,29 @@ public class InquiryAdminService {
             endPage = rDTO.getTotalPage();
         }
 
+        // ✅ keyword 인코딩 준비
+        boolean hasKeyword = (rDTO.getKeyword() != null && !rDTO.getKeyword().isEmpty());
+        String encodedKeyword = hasKeyword
+                ? URLEncoder.encode(rDTO.getKeyword(), StandardCharsets.UTF_8)
+                : "";
+
         int movePage = 0;
+
         StringBuilder prevMark = new StringBuilder();
-        prevMark.append("<li class='page-item disabled'>");
-        prevMark.append("<a class='page-link'>Previous</a>");
-        prevMark.append("</li>");
+        prevMark.append("<li class='page-item disabled'>")
+                .append("<a class='page-link'>Previous</a>")
+                .append("</li>");
 
         if (rDTO.getCurrentPage() > pageNumber) {
             movePage = startPage - 1;
-            prevMark.delete(0, prevMark.length());
-            prevMark.append("<li class='page-item'><a class='page-link' href='").append(rDTO.getUrl())
+            prevMark.setLength(0);
+            prevMark.append("<li class='page-item'><a class='page-link' href='")
+                    .append(rDTO.getUrl())
                     .append("?currentPage=").append(movePage);
 
-            if (rDTO.getKeyword() != null && !rDTO.getKeyword().isEmpty()) {
+            if (hasKeyword) {
                 prevMark.append("&field=").append(rDTO.getField())
-                        .append("&keyword=").append(rDTO.getKeyword());
+                        .append("&keyword=").append(encodedKeyword);
             }
 
             prevMark.append("'>Previous</a></li>");
@@ -148,31 +158,36 @@ public class InquiryAdminService {
 
         while (movePage <= endPage) {
             if (movePage == rDTO.getCurrentPage()) {
-                pageLink.append("<li class='page-item active page-link'>").append(movePage).append("</li>");
+                pageLink.append("<li class='page-item active'>")
+                        .append("<a class='page-link'>").append(movePage).append("</a>")
+                        .append("</li>");
             } else {
                 pageLink.append("<li class='page-item'><a class='page-link' href='")
-                        .append(rDTO.getUrl()).append("?currentPage=").append(movePage);
+                        .append(rDTO.getUrl())
+                        .append("?currentPage=").append(movePage);
 
-                if (rDTO.getKeyword() != null && !rDTO.getKeyword().isEmpty()) {
+                if (hasKeyword) {
                     pageLink.append("&field=").append(rDTO.getField())
-                            .append("&keyword=").append(rDTO.getKeyword());
+                            .append("&keyword=").append(encodedKeyword);
                 }
 
-                pageLink.append("'>").append(movePage).append("</a>");
+                // ✅ </li> 닫기 추가
+                pageLink.append("'>").append(movePage).append("</a></li>");
             }
             movePage++;
         }
 
-        StringBuilder nextMark = new StringBuilder("<li class='page-item page-link'>Next</li>");
+        StringBuilder nextMark = new StringBuilder("<li class='page-item disabled'><a class='page-link'>Next</a></li>");
         if (rDTO.getTotalPage() > endPage) {
             movePage = endPage + 1;
-            nextMark.delete(0, nextMark.length());
-            nextMark.append("<li class='page-item page-link'><a href='")
-                    .append(rDTO.getUrl()).append("?currentPage=").append(movePage);
+            nextMark.setLength(0);
+            nextMark.append("<li class='page-item'><a class='page-link' href='")
+                    .append(rDTO.getUrl())
+                    .append("?currentPage=").append(movePage);
 
-            if (rDTO.getKeyword() != null && !rDTO.getKeyword().isEmpty()) {
+            if (hasKeyword) {
                 nextMark.append("&field=").append(rDTO.getField())
-                        .append("&keyword=").append(rDTO.getKeyword());
+                        .append("&keyword=").append(encodedKeyword);
             }
 
             nextMark.append("'>Next</a></li>");
@@ -183,15 +198,14 @@ public class InquiryAdminService {
         }
 
         pagination.append("<nav aria-label='...'>")
-                .append("  <ul class='pagination d-flex justify-content-")
-                .append(justify)
-                .append("'>");
-
-        pagination.append(prevMark).append(pageLink).append(nextMark);
-
-        pagination.append("</ul>")
-                .append("  </nav>");
+                  .append("<ul class='pagination d-flex justify-content-")
+                  .append(justify)
+                  .append("'>")
+                  .append(prevMark).append(pageLink).append(nextMark)
+                  .append("</ul>")
+                  .append("</nav>");
 
         return pagination.toString();
     }
+    
 }//class

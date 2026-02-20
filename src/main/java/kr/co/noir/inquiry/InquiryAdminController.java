@@ -1,5 +1,7 @@
 package kr.co.noir.inquiry;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,101 +12,127 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/inquiryAdmin")
 public class InquiryAdminController {
-	
-	@Autowired
-	private InquiryAdminService ias;
-	
-	@ResponseBody
-	@GetMapping("/inquiryDetailAjax")
-	public InquiryAdminDomain inquiryDetailAjax(@RequestParam int inquiryNum) {
-	    return ias.searchInquiryDetail(inquiryNum);
-	}
+
+    @Autowired
+    private InquiryAdminService ias;
 
     /**
-     * 문의사항 관리(상단 리스트 + 하단 상세)
-     * - inquiryNum이 있으면 하단 상세 채움
+     * 상세는 AJAX로만 조회
      */
-	@GetMapping("/inquiryListAdmin")
-	public String searchInquiryList( Model model, 
-									@RequestParam(required = false) Integer inquiryNum, 
-									 InquiryRangeDTO irDTO ) {
+    @ResponseBody
+    @GetMapping("/inquiryDetailAjax")
+    public InquiryAdminDomain inquiryDetailAjax(@RequestParam int inquiryNum) {
+        return ias.searchInquiryDetail(inquiryNum);
+    }
 
-        int totalCnt = ias.totalCnt(irDTO);
-        int pageScale = ias.pageScale();
-        int totalPage = ias.totalPage(totalCnt, pageScale);
+    /**
+     * 문의사항 관리(상단 리스트)
+     * - 하단 상세는 AJAX가 채움
+     */
+    @GetMapping("/inquiryListAdmin")
+    public String inquiryListAdmin(InquiryRangeDTO irDTO,
+                                   Model model,
+                                   @RequestParam(required = false) Integer inquiryNum) {
 
+        // 1) currentPage 안전 처리
         int currentPage = irDTO.getCurrentPage();
-        if (currentPage <= 0) { // 안전
+        if (currentPage <= 0) {
             currentPage = 1;
             irDTO.setCurrentPage(currentPage);
         }
 
+        // 2) 검색 기본값 (mapper field가 1/2/3 기대)
+        if (irDTO.getField() == null || irDTO.getField().trim().isEmpty()) {
+            irDTO.setField("1"); // 기본: 제목
+        }
+        if (irDTO.getKeyword() == null) {
+            irDTO.setKeyword("");
+        }
+
+        // 3) 페이징 계산
+        int totalCnt = ias.totalCnt(irDTO);
+        int pageScale = ias.pageScale();
+        int totalPage = ias.totalPage(totalCnt, pageScale);
+
         int startNum = ias.startNum(pageScale, currentPage);
         int endNum = ias.endNum(startNum, pageScale);
 
-        irDTO.setCurrentPage(currentPage);
-        irDTO.setEndNum(endNum);
         irDTO.setStartNum(startNum);
+        irDTO.setEndNum(endNum);
         irDTO.setTotalPage(totalPage);
         irDTO.setUrl("/inquiryAdmin/inquiryListAdmin");
 
+        // 4) 목록 조회
         List<InquiryAdminDomain> inquiryList = ias.searchInquiryList(irDTO);
         String pagination = ias.pagination2(irDTO, "center");
 
-        model.addAttribute("listNum", (totalCnt - (currentPage - 1) * pageScale));
+        int listNum = totalCnt - (currentPage - 1) * pageScale;
+
+        model.addAttribute("listNum", listNum);
         model.addAttribute("inquiryList", inquiryList);
         model.addAttribute("pagination", pagination);
 
-        // ✅ 하단 상세
-        InquiryAdminDomain detail = null;
-
-        // inquiryNum이 없으면: 첫 번째 글 자동 선택(원하면 이 부분 제거 가능)
-        if (inquiryNum == null && inquiryList != null && !inquiryList.isEmpty()) {
-            inquiryNum = inquiryList.get(0).getInquiryNum();
-        }
-
-        if (inquiryNum != null) {
-            detail = ias.searchInquiryDetail(inquiryNum);
-        }
-
-        model.addAttribute("detail", detail);
+        // 선택된 번호(있으면 active 처리용)
         model.addAttribute("selectedInquiryNum", inquiryNum);
 
         return "manager/inquiry/inquiryAdminList";
-	}
+    }
 
-    // 문의 답변 처리 (POST 권장)
+    /**
+     * 답변 처리 (AJAX 아님, submit)
+     * - 성공/실패 flash msg로 알림
+     */
     @PostMapping("/replyInquiryProcess")
-    public String replyInquiryProcess(InquiryAdminDTO iaDTO, InquiryRangeDTO irDTO) {
+    public String replyInquiryProcess(InquiryAdminDTO iaDTO,
+                                      InquiryRangeDTO irDTO,
+                                      HttpSession session,
+                                      RedirectAttributes ra) {
 
-        ias.updateInquiryReturn(iaDTO);
+        Integer adminNum = (Integer) session.getAttribute("adminNum");
+        if (adminNum == null) {
+            return "redirect:/admin/login";
+        }
+        iaDTO.setAdminNum(adminNum);
 
-        // 상세 유지 + 검색 유지
+        boolean flag = ias.updateInquiryReturn(iaDTO);
+
+        ra.addFlashAttribute("msg", flag ? "답변이 등록되었습니다." : "답변 등록에 실패했습니다.");
+
         StringBuilder redirect = new StringBuilder();
         redirect.append("redirect:/inquiryAdmin/inquiryListAdmin?currentPage=")
-                .append(irDTO.getCurrentPage() <= 0 ? 1 : irDTO.getCurrentPage())
-                .append("&inquiryNum=").append(iaDTO.getInquiryNum());
+                .append(irDTO.getCurrentPage() <= 0 ? 1 : irDTO.getCurrentPage());
 
+        // 답변 후에도 선택 유지(선택된 글 highlight + JS가 자동 클릭 가능)
+        redirect.append("&inquiryNum=").append(iaDTO.getInquiryNum());
+
+        // 검색 유지
         if (irDTO.getKeyword() != null && !irDTO.getKeyword().isEmpty()) {
             redirect.append("&field=").append(irDTO.getField())
-                    .append("&keyword=").append(irDTO.getKeyword());
+                    .append("&keyword=").append(URLEncoder.encode(irDTO.getKeyword(), StandardCharsets.UTF_8));
         }
 
         return redirect.toString();
     }
 
-	
-
-    // 문의 삭제(논리삭제)
+    /**
+     * 삭제 처리(논리삭제) - AJAX 안 씀
+     * - 성공/실패 flash msg로 알림
+     */
     @PostMapping("/removeInquiry")
-    public String removeInquiry(@RequestParam int inquiryNum, InquiryRangeDTO irDTO) {
+    public String removeInquiry(@RequestParam int inquiryNum,
+                                InquiryRangeDTO irDTO,
+                                RedirectAttributes ra) {
 
-        ias.removeInquiry(inquiryNum);
+        boolean flag = ias.removeInquiry(inquiryNum);
+
+        ra.addFlashAttribute("msg", flag ? "삭제되었습니다." : "삭제에 실패했습니다.");
 
         StringBuilder redirect = new StringBuilder();
         redirect.append("redirect:/inquiryAdmin/inquiryListAdmin?currentPage=")
@@ -112,10 +140,10 @@ public class InquiryAdminController {
 
         if (irDTO.getKeyword() != null && !irDTO.getKeyword().isEmpty()) {
             redirect.append("&field=").append(irDTO.getField())
-                    .append("&keyword=").append(irDTO.getKeyword());
+                    .append("&keyword=").append(URLEncoder.encode(irDTO.getKeyword(), StandardCharsets.UTF_8));
         }
 
         return redirect.toString();
     }
-	
-}//class
+
+}

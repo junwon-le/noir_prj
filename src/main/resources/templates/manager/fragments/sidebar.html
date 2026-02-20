@@ -58,17 +58,22 @@
                         
                         <hr style="height: 0.5px;  background-color: #ccc;  width: 80%; margin: 5px auto;    ">
                         <li>
-                            <a href="mailbox.html" aria-expanded="false"><i class="icon nalika-table icon-wrap"></i> 
+                            <a th:href="@{/notice/noticeAdminList}" aria-expanded="false"><i class="icon nalika-table icon-wrap"></i> 
                             <span class="mini-click-non">공지사항 관리</span></a>
                           
                         </li>
                         <li>
-                            <a href="mailbox.html" aria-expanded="false"><i class="icon nalika-mail icon-wrap"></i> 
+                            <a th:href="@{/inquiry/inquiryAdminList}" aria-expanded="false"><i class="icon nalika-mail icon-wrap"></i> 
                             <span class="mini-click-non">문의사항 관리</span></a>
                             
                         </li>
                         <li>
-                            <a href="mailbox.html" aria-expanded="false"><i class="icon nalika-smartphone-call icon-wrap"></i>
+                            <a th:href="@{/event/eventAdminList}" aria-expanded="false"><i class="icon nalika-mail icon-wrap"></i> 
+                            <span class="mini-click-non">이벤트 관리</span></a>
+                            
+                        </li>
+                        <li>
+                            <a th:href="@{/review/reviewAdminList}" aria-expanded="false"><i class="icon nalika-smartphone-call icon-wrap"></i>
                             <span class="mini-click-non">후기 관리</span></a>
                            
                         </li>
