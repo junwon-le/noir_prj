@@ -48,6 +48,8 @@
         <typeAlias type="kr.co.noir.inquiry.InquiryAdminDTO" alias="inquiryAdminDTO"/>	
         <typeAlias type="kr.co.noir.inquiry.InquiryAdminDomain" alias="inquiryAdminDomain"/>	
         <typeAlias type="kr.co.noir.inquiry.InquiryRangeDTO" alias="inquiryRangeDTO"/>	
+        <typeAlias type="kr.co.noir.review.ReviewAdminDTO" alias="reviewAdminDTO"/>	
+        <typeAlias type="kr.co.noir.review.ReviewAdminDomain" alias="reviewAdminDomain"/>	
         
         
         
@@ -76,15 +78,14 @@
     <mapper resource="kr/co/noir/inquiry/inquiryMapper.xml"/>
     <mapper resource="kr/co/noir/notice/noticeMapper.xml"/>
     <mapper resource="kr/co/noir/event/eventMapper.xml"/>
-	<mapper resource="kr/co/noir/event/EventAdminMapper.xml"></mapper>
     <mapper resource="kr/co/noir/review/WriteReviewMapper.xml"/>
     <mapper resource="kr/co/noir/review/ReviewMapper.xml"/>
+    <mapper resource="kr/co/noir/review/ReviewAdminMapper.xml"/>
     <mapper resource="kr/co/noir/notice/noticeAdminMapper.xml"></mapper>
     <mapper resource="mapper/AdminMapper.xml"/>
     
     <mapper resource="kr/co/noir/event/EventAdminMapper.xml"/>
     <mapper resource="kr/co/noir/inquiry/InquiryAdminMapper.xml"/>
-    <mapper resource="kr/co/noir/notice/noticeAdminMapper.xml"/>
     
     
   </mappers>

@@ -1,10 +1,11 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8" />
 <title>이벤트 관리</title>
 
 <style>
+  /* ---- 화면 톤(스샷 느낌) ---- */
   body { margin:0; background:#0f1b2d; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:#e8eefb; }
 
   .all-content-wrapper { display:flex; min-height:100vh; }
@@ -81,14 +82,15 @@
 </head>
 
 <body>
+  ✅ NOIR 기본 구조: sidebar + all-content-wrapper 유지
   <div class="all-content-wrapper">
-    <!-- <th:block th:replace="~{/manager/include/sidebar :: sidebar}"></th:block> -->
+    ※ 너희 include 규칙에 맞게 바꿔
+    <th:block th:replace="~{/manager/include/sidebar :: sidebar}"></th:block>
 
     <div class="content-area">
       <div class="panel">
         <div class="panel-title">이벤트 관리</div>
 
-        <!-- 검색 -->
         <form class="toolbar" method="get" th:action="@{/event/eventAdminList}">
           <select name="field">
             <option value="1" th:selected="${range != null and range.field == '1'}">제목</option>
@@ -113,7 +115,6 @@
                 <th style="width:15%;">등록일</th>
               </tr>
             </thead>
-
             <tbody>
               <tr th:if="${eventList == null or #lists.isEmpty(eventList)}">
                 <td colspan="5">등록된 이벤트가 없습니다.</td>
@@ -122,9 +123,8 @@
               <tr th:each="e : ${eventList}">
                 <td th:text="${listNum--}">1</td>
 
-                <!-- ✅ 선택(제목 클릭) → 수정 폼으로 이동 -->
                 <td class="td-title">
-                  <a th:href="@{/event/modifyAdminEventFrm(eventNum=${e.eventNum})}"
+                  <a th:href="@{/event/eventAdminDetail(eventNum=${e.eventNum})}"
                      th:text="${e.eventTitle}">이벤트 제목</a>
                 </td>
 
@@ -151,8 +151,9 @@
 
       </div>
 
-      <!-- <th:block th:replace="~{/manager/include/footer :: footer}"></th:block> -->
+      <th:block th:replace="~{/manager/include/footer :: footer}"></th:block>
     </div>
   </div>
 </body>
 </html>
+ -->

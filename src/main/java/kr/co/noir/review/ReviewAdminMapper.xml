@@ -3,7 +3,7 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="kr.co.noir.review.ReviewMapper">
+<mapper namespace="kr.co.noir.review.admin.ReviewAdminMapper">
 
   <!-- ✅ 관리자용 ResultMap -->
   <resultMap id="ReviewAdminMap" type="kr.co.noir.review.ReviewAdminDomain">

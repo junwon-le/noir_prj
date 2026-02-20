@@ -25,164 +25,30 @@
 <script src="/common/js/comm/jquery.cookie.js"></script>
 <script src="/common/js/homepage/plugin.js"></script>
 <script src="/common/js/homepage/custom.js"></script>
-</head>
 
 
 
 <style>
-
-/* ===============================
-	   Admin - Notice Search UI (Light)
-	   =============================== */
-
-.notice-search-bar {
-	display: flex;
-	align-items: center;
-	gap: 12px;
-	margin-bottom: 25px;
-}
-
-/* 카테고리 버튼 */
-.room-type-select {
-	margin-bottom: 10px;
-	min-width: 130px;
-	background: #ffffff;
-	color: #b1c1e2;
-	border: 1px solid #e3e8f3;
-	padding: 8px 12px;
-	border-radius: 8px;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	
-}
-
-.room-type-select:hover {
-	background: #f6f8fc;
-}
-
-/* 검색 입력창 */
-.notice-search-input {
-	width: 240px;
-	background: #ffffff;
-	border: 1px solid #e3e8f3;
-	color: #b1c1e2;
-	padding: 8px 12px;
-	border-radius: 8px;
-}
-
-.notice-search-input::placeholder {
-	color: #b1c1e2;
-	opacity: 0.7;
-}
-
-/* 검색 버튼 */
-.notice-search-btn {
-	background: #b1c1e2;
-	color: #ffffff;
-	border: 1px solid #e3e8f3;
-	padding: 8px 18px;
-	font-weight: 600;
-	border-radius: 8px;
-	transition: all 0.2s ease;
-}
-
-.notice-search-btn:hover {
-	background: #f6f8fc;
-}
-
-.notice-detail-btns .notice-write-btn:hover {
-	opacity: 0.85;
-}
-
-.notice-detail-btns {
-	padding: 0 4px;
-}
-
-/* ===============================
-   Admin - Notice Table
-   =============================== */
-.notice-table-wrap {
-	background: #ffffff;
-	border: 1px solid #e3e8f3;
-	border-radius: 12px;
-	padding: 10px;
-}
-
-/* 테이블 기본 */
-.notice-table {
-	margin-bottom: 0;
-	color: #38599a;
-}
-
-/* 헤더 */
-.notice-table thead th {
-	background: #f6f8fc;
-	color: #38599a;
-	font-weight: 600;
-	text-align: center;
-	border-bottom: 1px solid #e3e8f3;
-}
-
-/* 바디 */
-.notice-table tbody td {
-	text-align: center;
-	vertical-align: middle;
-	border-top: 1px solid #e3e8f3;
-}
-
-/* 제목만 좌측 정렬 */
-.notice-table tbody td:nth-child(3) {
-	text-align: left;
-}
-
-/* hover 효과 */
-.notice-table tbody tr:hover {
-	background: #f9fbff;
-}
-
-/* 하단 버튼 영역 */
-.notice-table-footer {
-	text-align: right;
-	margin-top: 12px;
-}
-
-/* 답변쓰기 버튼 */
-.notice-write-btn {
-	background: #b1c1e2;
-	color: #ffffff;
-	border: 1px solid #e3e8f3;
-	padding: 8px 18px;
-	border-radius: 8px;
-	font-weight: 600;
-	transition: all 0.2s ease;
-}
-
-.notice-detail-btns {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	margin-top: 15px;
-}
-
-/* 삭제 */
-.notice-detail-btns .btn-delete {
-	background: #c0392b;
-}
-
-/* 취소 */
-.notice-detail-btns .btn-cancel {
-	background: #7f8c8d;
-	margin-right: 10px;
-}
-
-#adminReply {
-    background: #ffffff !important;
-    color: #333333 !important;
-    border: 1px solid #e3e8f3;
-}
-
+.notice-search-bar{display:flex;align-items:center;gap:12px;margin-bottom:25px;}
+.room-type-select{margin-bottom:10px;min-width:180px;background:#fff;color:#b1c1e2;border:1px solid #e3e8f3;padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;}
+.room-type-select:hover{background:#f6f8fc;}
+.notice-table-wrap{background:#fff;border:1px solid #e3e8f3;border-radius:12px;padding:10px;}
+.notice-table{margin-bottom:0;color:#38599a;}
+.notice-table thead th{background:#f6f8fc;color:#38599a;font-weight:600;text-align:center;border-bottom:1px solid #e3e8f3;}
+.notice-table tbody td{text-align:center;vertical-align:middle;border-top:1px solid #e3e8f3;}
+.notice-table tbody td:nth-child(2){text-align:left;}
+.notice-table tbody tr:hover{background:#f9fbff;}
+.notice-write-btn{background:#b1c1e2;color:#fff;border:1px solid #e3e8f3;padding:8px 18px;border-radius:8px;font-weight:600;transition:all .2s ease;}
+.notice-detail-btns{display:flex;justify-content:space-between;align-items:center;margin-top:15px;}
+.notice-detail-btns .btn-delete{background:#c0392b;}
+.notice-detail-btns .btn-cancel{background:#7f8c8d;margin-right:10px;}
+#adminReply{background:#fff!important;color:#333!important;border:1px solid #e3e8f3;}
+.thumb{width:110px;height:110px;object-fit:cover;border-radius:10px;border:1px solid #e3e8f3;margin:6px;}
+.detail-img-wrap{display:flex;flex-wrap:wrap;gap:6px;}
+.badge-answered{background:#2ecc71;}
+.badge-not{background:#95a5a6;}
 </style>
+
 
 </head>
 
@@ -196,169 +62,163 @@
 	<div class="all-content-wrapper">
 		<div class="header-advance-area">
 			<div class="breadcome-area">
-				<div class="container">
-					<div class="row">
-						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-							<div class="breadcome-list">
-								<div class="row">
-									<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-										<div class="breadcomb-wp"
-											style="color: #ffffff; font-size: 20px">후기 관리</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!--         <div class="contatiner" style="height:700px; color:#ffffff">-->
-		<div class="container" style="color: white; min-height: 700px">
+  <div class="container" style="color:white;min-height:700px">
+
+    <div style="margin-bottom:20px;">
+      <h3 style="font-weight:600;">후기 목록</h3>
+    </div>
+
+    <!-- 객실 타입 필터 -->
+    <div class="dropdown search-filter">
+      <button class="room-type-select dropdown-toggle" type="button" data-bs-toggle="dropdown" id="roomTypeText">
+        객실 타입 선택
+      </button>
 
 
-			<!-- 타이틀 -->
-			<div style="margin-bottom: 20px;">
-				<h3 style="font-weight: 600;">후기 목록</h3>
-			</div>
-			
-				
-	        <!-- 객실 카테고리 -->
-	        <div class="dropdown search-filter">
-	            <button class="room-type-select dropdown-toggle"
-	                type="button" data-toggle="dropdown" id="field_text">
-	                객실 타입 선택
-	            </button>
-	            <input type="hidden" name="field" id="field_value" value="1">
-	
-	            <ul class="dropdown-menu">
-	                <li><a class="dropdown-item" data-value="1">객실타입</a></li>
-	                <li><a class="dropdown-item" data-value="2">STANDARD QUEEN</a></li>
-	                <li><a class="dropdown-item" data-value="3">SEMI-DELUXE DOUBLE</a></li>
-	                <li><a class="dropdown-item" data-value="4">DELUXE DOUBLE</a></li>
-	                <li><a class="dropdown-item" data-value="5">DELUXE TWIN</a></li>
-	                <li><a class="dropdown-item" data-value="6">FAMILY TWIN</a></li>
-	            </ul>
-	        </div>
-				
-			
-			<!-- 검색 영역 -->
-			<form id="searchFrm">
-				<!-- 후기 목록 테이블 -->
-				<div class="table-responsive notice-table-wrap">
-					<table class="table notice-table">
-						<thead>
-							<tr>
-								<th style="width: 80px;">번호</th>
-								<th>제목</th>
-								<th style="width: 120px;">작성자</th>
-								<th style="width: 120px;">등록일</th>
-								<th style="width: 120px;">별점</th>
-								<th style="width: 120px;">답변여부</th>
-							</tr>
-						</thead>
-						<tbody>
-
-							<!-- 게시글 없을 때 -->
-							<c:if test="${empty reviewList}">
-								<tr>
-									<td colspan="6" style="padding: 40px; color: #b1c1e2;">
-										작성된 후기가 없습니다.</td>
-								</tr>
-							</c:if>
-
-							<!-- 게시글 있을 때 -->
-							<c:forEach var="review" items="${reviewList}">
-								<!-- 🔴 [수정] 클릭 시 후기 선택 -->
-								<tr style="cursor: pointer;"
-									onclick="selectReview(
-                        '${review.reviewNo}',
-                        '${review.writer}',
-                        '${review.rating}',
-                        '${review.content}',
-                        '${review.replyFlag}'
-                    )">
-									<!-- ⭐⭐⭐ 이거 별 로 나옴-->
-									<td>${review.reviewNo}</td>
-									<td style="text-align: left;">${review.title}</td>
-									<td>${review.writer}</td>
-									<td>${review.regDate}</td>
-									<td>${review.rating}</td>
-									<td>${review.replyFlag}</td>
-
-								</tr>
-							</c:forEach>
-
-						</tbody>
-					</table>
-				</div>
-	
-	
-				<div id="reviewDetailBox" class="d-none">
-				
-				<!-- 후기 상세 테이블 -->
-				<h3 style="font-weight: 600; margin-top: 40px; margin-bottom: 10px;">후기
-					상세</h3>
-				<div class="notice-table-wrap" style="margin-top: 40px;">
+      <ul class="dropdown-menu">
+        <li><a class="dropdown-item" th:href="@{/admin/review/list}">전체</a></li>
+        <li><a class="dropdown-item" th:href="@{/admin/review/adminRoomList(num=1)}">STANDARD QUEEN</a></li>
+        <li><a class="dropdown-item" th:href="@{/admin/review/adminRoomList(num=2)}">SEMI-DELUXE DOUBLE</a></li>
+        <li><a class="dropdown-item" th:href="@{/admin/review/adminRoomList(num=3)}">DELUXE DOUBLE</a></li>
+        <li><a class="dropdown-item" th:href="@{/admin/review/adminRoomList(num=4)}">DELUXE TWIN</a></li>
+        <li><a class="dropdown-item" th:href="@{/admin/review/adminRoomList(num=5)}">FAMILY TWIN</a></li>
+      </ul>
+    </div>
+    </div>
+    </div>
 
 
-					<table class="table notice-table">
-						<tbody>
-							<tr>
-								<th style="width: 150px;">제목</th>
-								<td id="detailTitle">-</td>
-							</tr>
-							<tr>
-								<th style="width: 150px;">작성자</th>
-								<td id="detailWriter">-</td>
-							</tr>
-							<tr>
-								<th>평점</th>
-								<td id="detailRating">-</td>
-							</tr>
-							<tr>
-								<th>후기 내용</th>
-								<td id="detailContent" style="height: 100px;">-</td>
-							</tr>
-							<tr>
-								<th>관리자 답변</th>
-								<td><textarea id="adminReply" class="form-control"
-										style="height: 120px;" placeholder="관리자 답변을 입력하세요">
-</textarea></td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
+    <!-- 후기 목록 테이블 -->
+    <div class="table-responsive notice-table-wrap">
+      <table class="table notice-table">
+        <thead>
+          <tr>
+            <th style="width:80px;">번호</th>
+            <th>제목</th>
+            <th style="width:120px;">작성자</th>
+            <th style="width:140px;">등록일</th>
+            <th style="width:100px;">별점</th>
+            <th style="width:120px;">답변여부</th>
+          </tr>
+        </thead>
+        <tbody>
 
-				<!-- 버튼 영역  -->
-				<div class="notice-detail-btns">
+          <!-- 게시글 없을 때 -->
+          <tr th:if="${#lists.isEmpty(reviewAllList)}">
+            <td colspan="6" style="padding:40px;color:#b1c1e2;">작성된 후기가 없습니다.</td>
+          </tr>
 
-					<!-- 삭제 -->
-					<button type="button" class="notice-write-btn btn-delete"
-						onclick="deleteReview()">삭제</button>
+          <!-- 게시글 있을 때 -->
+          <tr th:each="r : ${reviewAllList}"
+              class="review-row"
+              style="cursor:pointer;"
+              th:data-reviewnum="${r.reviewNum}">
+            <td th:text="${r.reviewNum}">1</td>
+            <td th:text="${r.reviewTitle}">제목</td>
+            <td th:text="${r.memberLastName}">작성자</td>
+            <td th:text="${#dates.format(r.reviewDate, 'yyyy-MM-dd')}">2026-02-20</td>
+            <td th:text="${r.reviewStar}">5</td>
+            <td>
+              <span th:if="${r.reviewReturn != null and !#strings.isEmpty(r.reviewReturn)}"
+                    class="badge badge-answered">답변완료</span>
+              <span th:unless="${r.reviewReturn != null and !#strings.isEmpty(r.reviewReturn)}"
+                    class="badge badge-not">미답변</span>
+            </td>
+          </tr>
 
-					<!-- 취소 / 답변 -->
-					<div>
-						<button type="button" class="notice-write-btn btn-cancel"
-							onclick="cancelReply()">취소</button>
-						<button type="button" class="notice-write-btn"
-							onclick="submitReply()">답변</button>
-					</div>
+        </tbody>
+      </table>
+    </div>
 
-				</div>
-				
-				</div> <!-- reviewDetailBox 끝 -->
-				
-			</form>
+    <!-- 상세 박스 -->
+    <div id="reviewDetailBox" class="d-none">
 
-		</div>
+      <h3 style="font-weight:600;margin-top:40px;margin-bottom:10px;">후기 상세</h3>
 
-		<!-- 페이징 -->
-		<div id="pagination" style="text-align: center; margin-top: 30px;">
-			<c:out value="${pagination}" escapeXml="false" />
-		</div>
+      <div class="notice-table-wrap" style="margin-top:10px;">
+        <table class="table notice-table">
+          <tbody>
+            <tr>
+              <th style="width:150px;">제목</th>
+              <td id="d_title">-</td>
+            </tr>
+            <tr>
+              <th>작성자</th>
+              <td id="d_writer">-</td>
+            </tr>
+            <tr>
+              <th>평점</th>
+              <td id="d_star">-</td>
+            </tr>
+            <tr>
+              <th>객실 타입</th>
+              <td id="d_room">-</td>
+            </tr>
+            <tr>
+              <th>예약 시작일</th>
+              <td id="d_reserveDate">-</td>
+            </tr>
+            <tr>
+              <th>후기 내용</th>
+              <td id="d_msg" style="height:100px;">-</td>
+            </tr>
+            <tr>
+              <th>사진</th>
+              <td>
+                <div id="d_imgs" class="detail-img-wrap"></div>
+              </td>
+            </tr>
+            <tr>
+              <th>관리자 답변</th>
+              <td>
+                <textarea id="adminReply" name="reviewReturn" class="form-control" style="height:120px;"
+                          placeholder="관리자 답변을 입력하세요"></textarea>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 버튼 영역 -->
+      <div class="notice-detail-btns">
+
+        <!-- 삭제 -->
+        <form method="post" th:action="@{/admin/review/delete}" style="margin:0;">
+          <input type="hidden" name="reviewNum" id="deleteReviewNum">
+          <input type="hidden" name="currentPage" th:value="${rrDTO.currentPage}">
+          <input type="hidden" name="roomTypeNum" th:value="${rrDTO.roomTypeNum}">
+          <button type="submit" class="notice-write-btn btn-delete">삭제</button>
+        </form>
+
+        <div style="display:flex;align-items:center;">
+          <!-- 답변만 삭제 -->
+          <form method="post" th:action="@{/admin/review/delete-reply}" style="margin:0;margin-right:10px;">
+            <input type="hidden" name="reviewNum" id="deleteReplyReviewNum">
+            <button type="submit" class="notice-write-btn btn-cancel">답변삭제</button>
+          </form>
+
+          <!-- 답변 저장 -->
+          <form method="post" th:action="@{/admin/review/reply}" id="replyFrm" style="margin:0;">
+            <input type="hidden" name="reviewNum" id="replyReviewNum">
+            <input type="hidden" name="currentPage" th:value="${rrDTO.currentPage}">
+            <input type="hidden" name="roomTypeNum" th:value="${rrDTO.roomTypeNum}">
+            <input type="hidden" name="reviewReturn" id="replyHidden">
+            <button type="button" class="notice-write-btn" id="replyBtn">답변</button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 페이징 -->
+    <div id="pagination" style="text-align:center;margin-top:30px;">
+      <span th:utext="${pagination}"></span>
+    </div>
+
+  </div>
+</div>
 
 
-	</div>
 
 <th:block th:replace="~{fragments/footer :: footer}"></th:block>
 
@@ -418,30 +278,68 @@
 	<script src="js/main.js"></script>
 
 
-	<!-- 리뷰 페이지 전용 JS -->
-	<script>
-		$(function() {
+<script>
+  // row 클릭 → 상세 AJAX
+  $(document).on("click", ".review-row", function () {
+    const reviewNum = $(this).data("reviewnum");
 
-			$('.search-filter .dropdown-item').on('click', function(e) {
-				e.preventDefault();
+    $.get("/admin/review/detail-json", { reviewNum: reviewNum }, function (res) {
+      if (!res || res.ok !== true) {
+        alert("상세 조회에 실패했습니다.");
+        return;
+      }
 
-				$('#field_text').text($(this).text());
-				$('#field_value').val($(this).data('value'));
-			});
+      const d = res.detail || {};
+      const imgs = res.imgList || [];
 
-			$('#writeBtn').on('click', function() {
-				$('#noticeFrm').submit();
-			});
-		});
+      $("#reviewDetailBox").removeClass("d-none");
 
-		function search() {
-			$('#searchFrm').submit();
-		}
-		
-		function selectReview() {
-		    $('#reviewDetailBox').removeClass('d-none');
-		}
-	</script>
+      $("#d_title").text(d.reviewTitle || "-");
+      $("#d_writer").text(d.memberLastName || "-");
+      $("#d_star").text(d.reviewStar != null ? d.reviewStar : "-");
+      $("#d_room").text(d.roomType || "-");
+      $("#d_reserveDate").text(d.reserveStartDate || "-");
+      $("#d_msg").text(d.reviewMsg || "-");
+
+      // textarea 세팅
+      $("#adminReply").val(d.reviewReturn || "");
+
+      // 폼 hidden reviewNum 세팅
+      $("#replyReviewNum").val(d.reviewNum);
+      $("#deleteReviewNum").val(d.reviewNum);
+      $("#deleteReplyReviewNum").val(d.reviewNum);
+
+      // 이미지 렌더 (DB엔 파일명만 저장한다는 가정)
+      const box = $("#d_imgs").empty();
+      if (imgs.length === 0) {
+        box.append("<div style='color:#b1c1e2;'>등록된 사진이 없습니다.</div>");
+      } else {
+        imgs.forEach(function (fn) {
+          const safe = (fn || "").trim();
+          if (!safe) return;
+          const url = "/upload/review/" + safe;
+          box.append("<img class='thumb' src='" + url + "' alt='review image'>");
+        });
+      }
+    });
+  });
+
+  // 답변 버튼 → textarea 값을 hidden에 복사 후 submit
+  $("#replyBtn").on("click", function () {
+    const txt = ($("#adminReply").val() || "").trim();
+    if (!$("#replyReviewNum").val()) {
+      alert("먼저 후기를 선택해주세요.");
+      return;
+    }
+    if (txt.length === 0) {
+      alert("답변 내용을 입력해주세요.");
+      return;
+    }
+    $("#replyHidden").val(txt);
+    $("#replyFrm").submit();
+  });
+</script>
+
 
 </body>
 
