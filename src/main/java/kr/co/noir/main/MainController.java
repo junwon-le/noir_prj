@@ -7,12 +7,12 @@ public class MainController {
 	
 	@GetMapping("/main")
 	public String Main() {
-		return "/main";
+		return "main";
 	}
 	
 	@GetMapping("/adminLogin")
 	public String adminLogin() {
-		return "/login/adminLogin";
+		return "login/adminLogin";
 	}
 	
 	@GetMapping("/admin")
@@ -23,32 +23,32 @@ public class MainController {
 	
 	@GetMapping("/hotel/about")
 	public String aboutHotel() {
-		return "/hotel/about";
+		return "hotel/about";
 	}
 	
 	@GetMapping("/hotel/library")
 	public String hotelLibrary() {
-		return "/hotel/library";
+		return "hotel/library";
 	}
 
 	@GetMapping("/hotel/gym")
 	public String hotelGym() {
-		return "/hotel/gym";
+		return "hotel/gym";
 	}	
 
 	@GetMapping("/hotel/laundry")
 	public String hotelLaundry() {
-		return "/hotel/laundry";
+		return "hotel/laundry";
 	}	
 	
 	@GetMapping("/hotel/location")
 	public String location() {
-		return "/hotel/location";
+		return "hotel/location";
 	}	
 
 	@GetMapping("/join")
 	public String join() {
-		return "/login/join";
+		return "login/join";
 	}
 	@GetMapping("/noticeAdmin")
 	public String notice() {
