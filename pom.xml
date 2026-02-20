@@ -178,6 +178,12 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<resources>
+        <resource>
+            <directory>src/main/resources</directory>
+            <excludes>
+                <exclude>noir.env</exclude> </excludes>
+        </resource>
+	    </resources>		
 	</build>
-
 </project>
