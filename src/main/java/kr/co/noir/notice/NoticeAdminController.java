@@ -55,7 +55,7 @@ public class NoticeAdminController {
         rDTO.setStartNum(startNum);
         rDTO.setEndNum(endNum);
         rDTO.setTotalPage(totalPage);
-        rDTO.setUrl("/notice/noticeAdminList");
+        rDTO.setUrl("notice/noticeAdminList");
 
         List<NoticeAdminDomain> noticeList = nas.searchAdminNoticeList(rDTO);
         String pagination = nas.pagination2(rDTO,"center");//페이지 네이션
@@ -142,7 +142,7 @@ public class NoticeAdminController {
 	    model.addAttribute("flag", flag);
 	    model.addAttribute("currentPage", currentPage);
 
-	    return "/manager/notice/removeNoticeProcess"; 
+	    return "manager/notice/removeNoticeProcess"; 
 	}
 
 	}
