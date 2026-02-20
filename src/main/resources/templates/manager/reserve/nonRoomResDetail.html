@@ -59,6 +59,8 @@
 		============================================ -->
     <script src="/admin_common/js/vendor/modernizr-2.8.3.min.js"></script>
     
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    
     
     <style>
   	/* 전체 컨테이너: 좌우로 넓게 확장 */
@@ -194,9 +196,52 @@
         line-height: 1.6;
     }
     
+        .text-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  box-shadow: none;
+
+  color: #2b6cff;       
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.text-btn:hover {
+  text-decoration: underline;
+}
+    
+    
     
    
 </style>
+
+<script th:inline="javascript">
+$(function(){
+$("#confrimBtn").click(function(){
+	
+	$("#emailFrm").submit();
+	
+});
+	
+	
+var emailflag = /*[[${emailFlag}]]*/ false;
+if (emailflag==true) {
+       // 성공 모달 띄우기
+       $('#resultModal').modal('show');
+   }//end if
+   
+ 
+
+
+});//ready
+
+	
+	
+	
+		
+</script>
 </head>
 
 <body>
@@ -309,7 +354,7 @@
                 </div>
                 <div class="info-item">
                     <p class="title">이메일</p>
-                    <p class="content" th:text="${room[0].nonUserEmail}">sist@naver.com</p>
+                    <p class="content" th:text="${room[0].nonUserEmail}">sist@naver.com</p><input type="button" class="title text-btn" id="emailBtn"  data-toggle="modal" data-target="#emailModal" value="[ 예약 확인서 발송 ]"/>
                 </div>
             </div>
 
@@ -365,6 +410,44 @@
       <div th:replace="~{manager/fragments/footer :: footer}"></div>
         
     </div>
+    
+    <div class="modal fade" id="emailModal" tabindex="-1" role="dialog" aria-hidden="true" style="margin-top: 320px;">
+            <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 350px;">
+                <div class="modal-content" style="background: #1b2a47; color: #fff; border-radius: 12px; border: 1px solid #344463;">
+                    <div class="modal-body" style="padding: 30px; text-align: center;">
+                        <h4 style="margin-bottom: 20px; font-weight: 600;">이메일을 발송할까요?</h4>
+                        <div style="display: flex; gap: 10px; justify-content: center;">
+                            <input type="button" value="아니오" class="btn" data-dismiss="modal" style="background: #344463; color: #fff; width: 100px;">
+                            <input type="button" id="confrimBtn" value="확인" class="btn"  style="background: #f19b9b; color: #fff; width: 100px; font-weight: bold;">
+                       		
+                       
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+          <div class="modal fade" id="resultModal" tabindex="-1" role="dialog" aria-hidden="true" style="margin-top: 320px;">
+            <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 350px;">
+                <div class="modal-content" style="background: #1b2a47; color: #fff; border-radius: 12px; border: 1px solid #344463;">
+                    <div class="modal-body" style="padding: 30px; text-align: center;">
+                        <h4 style="margin-bottom: 20px; font-weight: 600;"th:text="${msg}">이메일을 발송할까요?</h4>
+                        <div style="display: flex; gap: 10px; justify-content: center;">
+                            <input type="button" value="확인" class="btn" data-dismiss="modal" style="background: #344463; color: #fff; width: 100px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> 
+        
+        
+       	<form th:action="@{/nonMember/sendReserveEmail}" method="post" id="emailFrm">
+		    <input type="hidden" name="reserveNum" th:value="${room[0].reserveNum}">
+		    <input type="hidden" name="reserveType" value="room">
+		</form>
+    
+    
+    
     <!-- jquery
 		============================================ -->
     <script src="/admin_common/js/vendor/jquery-1.12.4.min.js"></script>

@@ -1,3 +1,4 @@
+
 package kr.co.noir.adminDinningReserve;
 
 import java.util.List;
@@ -14,17 +15,17 @@ import kr.co.noir.mypageReserve.DinningRevDetailDomain;
 
 @Service
 public class AdminDinningRevService {
-
-
+	
+	
 	@Autowired(required = false)
 	private AdminDinningRevMapper adrm;
 	@Value("${user.crypto.key}")
 	private String key;
-
+	
 	@Value("${user.crypto.salt}")
 	private String salt;
-
-
+	
+	
 	
 	/**
 	 * 검색된 총 게시물의 수 
@@ -36,7 +37,7 @@ public class AdminDinningRevService {
 		
 		try {
 			totalCnt=adrm.totalCount(adDTO);
-					
+			
 			
 		}catch (PersistenceException pe) {
 			pe.printStackTrace();
@@ -97,12 +98,12 @@ public class AdminDinningRevService {
 		
 		
 		try {
-		
+			
 			list=adrm.selectAdminDinningRevList(arDTO);
 			
 			System.out.println(list);
 		}catch (PersistenceException pe) {
-
+			
 			pe.printStackTrace();
 		}//end catch
 		
@@ -141,7 +142,7 @@ public class AdminDinningRevService {
 			
 			
 		}catch (PersistenceException pe) {
-
+			
 			pe.printStackTrace();
 		}//end catch
 		
@@ -151,60 +152,60 @@ public class AdminDinningRevService {
 	
 	
 	public String pagenation(AdminRangeDTO arDTO) {
-		    StringBuilder pagiNation = new StringBuilder();
-		    int pageNumber = 5; // 한 번에 보여줄 페이지 번호 개수
-		    
-		    // 시작 페이지와 끝 페이지 계산
-		    int startPage = ((arDTO.getCurrentPage() - 1) / pageNumber) * pageNumber + 1;
-		    int endPage = startPage + pageNumber - 1;
-		    if (endPage > arDTO.getTotalPage()) {
-		        endPage = arDTO.getTotalPage();
-		    }  
-
-		    // 공통 파라미터(검색어) 미리 생성
-		    String params = "";
-		    if (arDTO.getKeyword() != null && !arDTO.getKeyword().isEmpty()) {
-		        params = "&field=" + arDTO.getField() + "&keyword=" + arDTO.getKeyword();
-		    }
-		    if (arDTO.getReserveType() != null) {
-		        params += "&reserveType=" + arDTO.getReserveType();
-		    }
-
-		    // 1. [이전] 버튼 블록
-		    if (arDTO.getCurrentPage() > pageNumber) {
-		        int movePage = startPage - 1;
-		        pagiNation.append("<button type='button' class='page-btn'  onclick=\"location.href='")
-		                  .append(arDTO.getUrl()).append("?currentPage=").append(movePage).append(params)
-		                  .append("'\"><i class='fa fa-chevron-left' style='font-size: 12px;'></i></button>");
-		    } else {
-		        // 이전으로 갈 수 없을 때 (비활성화)
-		        pagiNation.append("<button type='button' class='page-btn' disabled><i class='fa fa-chevron-left' style='font-size: 12px;'></i></button>");
-		    }
-
-		    // 2. [숫자] 버튼 블록 (1 2 3 ... 10)
-		    for (int i = startPage; i <= endPage; i++) {
-		        if (i == arDTO.getCurrentPage()) {
-		            // 현재 보고 있는 페이지 (active 클래스 추가)
-		            pagiNation.append("<button type='button'  class='page-btn active'>").append(i).append("</button>");
-		        } else {
-		            pagiNation.append("<button type='button' class='page-btn' onclick=\"location.href='")
-		                      .append(arDTO.getUrl()).append("?currentPage=").append(i).append(params)
-		                      .append("'\">").append(i).append("</button>");
-		        }
-		    }
-
-		    // 3. [다음] 버튼 블록
-		    if (endPage < arDTO.getTotalPage()) {
-		        int movePage = endPage + 1;
-		        pagiNation.append("<button type='button' class='page-btn' onclick=\"location.href='")
-		                  .append(arDTO.getUrl()).append("?currentPage=").append(movePage).append(params)
-		                  .append("'\"><i class='fa fa-chevron-right' style='font-size: 12px;'></i></button>");
-		    } else {
-		        // 다음으로 갈 수 없을 때 (비활성화)
-		        pagiNation.append("<button type='button' class='page-btn' disabled><i class='fa fa-chevron-right' style='font-size: 12px;'></i></button>");
-		    }
-
-		    return pagiNation.toString();
+		StringBuilder pagiNation = new StringBuilder();
+		int pageNumber = 5; // 한 번에 보여줄 페이지 번호 개수
+		
+		// 시작 페이지와 끝 페이지 계산
+		int startPage = ((arDTO.getCurrentPage() - 1) / pageNumber) * pageNumber + 1;
+		int endPage = startPage + pageNumber - 1;
+		if (endPage > arDTO.getTotalPage()) {
+			endPage = arDTO.getTotalPage();
+		}  
+		
+		// 공통 파라미터(검색어) 미리 생성
+		String params = "";
+		if (arDTO.getKeyword() != null && !arDTO.getKeyword().isEmpty()) {
+			params = "&field=" + arDTO.getField() + "&keyword=" + arDTO.getKeyword();
+		}
+		if (arDTO.getReserveType() != null) {
+			params += "&reserveType=" + arDTO.getReserveType();
+		}
+		
+		// 1. [이전] 버튼 블록
+		if (arDTO.getCurrentPage() > pageNumber) {
+			int movePage = startPage - 1;
+			pagiNation.append("<button type='button' class='page-btn'  onclick=\"location.href='")
+			.append(arDTO.getUrl()).append("?currentPage=").append(movePage).append(params)
+			.append("'\"><i class='fa fa-chevron-left' style='font-size: 12px;'></i></button>");
+		} else {
+			// 이전으로 갈 수 없을 때 (비활성화)
+			pagiNation.append("<button type='button' class='page-btn' disabled><i class='fa fa-chevron-left' style='font-size: 12px;'></i></button>");
+		}
+		
+		// 2. [숫자] 버튼 블록 (1 2 3 ... 10)
+		for (int i = startPage; i <= endPage; i++) {
+			if (i == arDTO.getCurrentPage()) {
+				// 현재 보고 있는 페이지 (active 클래스 추가)
+				pagiNation.append("<button type='button'  class='page-btn active'>").append(i).append("</button>");
+			} else {
+				pagiNation.append("<button type='button' class='page-btn' onclick=\"location.href='")
+				.append(arDTO.getUrl()).append("?currentPage=").append(i).append(params)
+				.append("'\">").append(i).append("</button>");
+			}
+		}
+		
+		// 3. [다음] 버튼 블록
+		if (endPage < arDTO.getTotalPage()) {
+			int movePage = endPage + 1;
+			pagiNation.append("<button type='button' class='page-btn' onclick=\"location.href='")
+			.append(arDTO.getUrl()).append("?currentPage=").append(movePage).append(params)
+			.append("'\"><i class='fa fa-chevron-right' style='font-size: 12px;'></i></button>");
+		} else {
+			// 다음으로 갈 수 없을 때 (비활성화)
+			pagiNation.append("<button type='button' class='page-btn' disabled><i class='fa fa-chevron-right' style='font-size: 12px;'></i></button>");
+		}
+		
+		return pagiNation.toString();
 		
 	}//pagenation
 	

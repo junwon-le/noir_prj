@@ -4,16 +4,35 @@
 
 
 	<select id="nonMemberRevCheck" parameterType="nonMemberRevDTO" resultType="nonReserveCheckDomain">
-		select non_user_pass as password,RESERVE_EMAIL as email
-		from(select
- 			rownum rum, r.reserve_num,r.RESERVE_TYPE,nm.NON_USER_PASS ,r.RESERVE_EMAIL,r.RESERVE_STATUS
-			from RESERVE r, NON_MEMBER nm
-			where r.NON_USER_NUM = nm.NON_user_num
-			and r.reserve_num=#{reserveNum}
-			and r.RESERVE_TYPE=#{reserveType}
-			and r.RESERVE_START_DATE >=trunc(sysdate)
-			and r.RESERVE_STATUS='N')
-		where rum=1
+		select non_user_pass as password, RESERVE_EMAIL as email
+from (
+    select
+        rownum rum, 
+        r.reserve_num, 
+        r.RESERVE_TYPE, 
+        nm.NON_USER_PASS, 
+        r.RESERVE_EMAIL, 
+        r.RESERVE_STATUS
+    from RESERVE r, NON_MEMBER nm
+    <if test="reserveType == 'dinning'">
+        , dinning_res dr
+    </if>
+    where r.NON_USER_NUM = nm.NON_user_num
+    <if test="reserveType == 'dinning'">
+        and r.reserve_num = dr.reserve_num
+    </if>
+    and r.reserve_num = #{reserveNum}
+    and r.RESERVE_TYPE = #{reserveType}
+    and r.RESERVE_STATUS = 'N'
+    
+    <if test="reserveType == 'dinning'">
+        and dr.DINNING_VISIT_DATE >= trunc(sysdate)
+    </if>
+    <if test="reserveType != 'dinning'">
+        and r.RESERVE_START_DATE >= trunc(sysdate)
+    </if>
+)
+where rum = 1
 	</select>
 	
 	

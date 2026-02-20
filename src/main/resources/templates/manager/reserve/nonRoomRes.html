@@ -38,7 +38,7 @@ $(function() {
     	if ($(e.target).is("button, button *")) {
             return;
         }
-    	alert($("#keyword").val());
+    	//alert($("#keyword").val());//삭제
         location.href="/admin/nonRoomResDetail?resNum="+$(this).find(".resNum").text()+"&field="+$("#field").val()+"&keyword="+$("#keyword").val()+"&currentPage="
         		+$("#currentPage").val()
         // 클릭한 행의 데이터를 가져오는 팁
@@ -172,6 +172,11 @@ function cancel(){
     display: inline-block;
     text-align: left;
     vertical-align: middle;
+}
+
+tr{
+	cursor: pointer;
+
 }
     </style>
 </head>

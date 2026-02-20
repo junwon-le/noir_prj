@@ -64,8 +64,7 @@ public class MypageReseveController {
 		
 		rsDTO.setMemberId((String)session.getAttribute("memberId"));
 
-//		System.out.println(rsDTO.getMemberId());
-//		System.out.println(mrs.searchHotelRevList(rsDTO));
+
 		rsDTO.setReserveType("room");
 		return mrs.searchHotelRevList(rsDTO);
 	}//searchRevHotel
@@ -76,11 +75,7 @@ public class MypageReseveController {
 	  public String hotelRevDetail(ReserveDetailDTO rdDTO,HttpSession session, Model model) { 
 		  rdDTO.setMemberId(((String)session.getAttribute("memberId")));
 		  
-	  System.out.println(rdDTO.getReserveNum());
-	  System.out.println(rdDTO.getMemberId());
-	  System.out.println(rdDTO.getReserveType());
-	  
-	  System.out.println("출력된 리스트---------"+mrs.searchOneHotelRevDetail(rdDTO));
+
 	  model.addAttribute("hotelRevDetail",  mrs.searchOneHotelRevDetail(rdDTO));
 	  
 	  
@@ -91,7 +86,7 @@ public class MypageReseveController {
 	  @PostMapping("/cancelHotelReserve")
 	  public String cancelHotelReserve(HttpSession session,int reserveNum,Model model) {
 		  String uri="/mypage/memberHotelRevDetail";
-		  System.out.println("예약번호--------"+reserveNum);
+		  //System.out.println("예약번호--------"+reserveNum);
 		  int cnt = mrs.removeHotelReserve(reserveNum);
 		  if(cnt<2) {
 			 model.addAttribute("cancelFlag",true); 
