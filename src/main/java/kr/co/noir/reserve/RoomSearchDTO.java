@@ -9,5 +9,5 @@ import lombok.ToString;
 @ToString
 public class RoomSearchDTO {
 
-	private String startDate,endDate;
+	private String startDate, endDate;
 }

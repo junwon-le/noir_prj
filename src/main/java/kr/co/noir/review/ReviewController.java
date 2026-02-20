@@ -48,7 +48,7 @@ public class ReviewController {
         return "review/myReviewList";
     }
 
-    @GetMapping("/roomReviewList")
+    @GetMapping("/roomReviewLists")
     public String roomReviewList(@RequestParam(value="num", defaultValue="1") int num, 
                                  BoardRangeDTO rDTO, Model model) {
         rDTO.setRoomTypeNum(num);

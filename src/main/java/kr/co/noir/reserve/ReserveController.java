@@ -159,6 +159,8 @@ public class ReserveController {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
+		System.out.println("-----------------------------------------------------------------------------------------"+rsDTO.getStartDate());
+		System.out.println(rsDTO.getEndDate());
 		List<RoomSearchDomain> list = rrs.searchRoom(rsDTO);
 		for(RoomSearchDomain rsd :list) {
 			rsd.setPeriod(period);
