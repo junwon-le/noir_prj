@@ -35,7 +35,7 @@ public class DinningResController {
 	public String dinningResSearch(Model model) {
 		List<DinningMenuDomain> list = drs.SearchDinning();
 		model.addAttribute("dinning", list);
-		return "/reserve/dinningResSearch";
+		return "reserve/dinningResSearch";
 	}//dinningResSearch
 	
 	@GetMapping("/dinningReserve")
@@ -45,18 +45,18 @@ public class DinningResController {
 		System.out.println(mDomain);
 		model.addAttribute("memberDomain",mDomain);
 		
-		return "/reserve/dinningRes";
+		return "reserve/dinningRes";
 	}//dinningReserve
 	
 	@GetMapping("/nonDinningReserve")
 	public String nonDinningReserve() {
 		
-		return "/reserve/nonDinningRes";
+		return "reserve/nonDinningRes";
 	}//dinningReserve
 	
 	@PostMapping("/complete")
 	public String reserveComplete(DinningReserveDTO drDTO ,PayInfoDTO pDTO, HttpSession session, HttpServletRequest request, Model model) {
-		String url ="/reserve/dinningComplete";
+		String url ="reserve/dinningComplete";
 		//session id 가져오기
 		String id = String.valueOf(session.getAttribute("memberId")) ;
 		//String id=session.getAttribute("userId");
@@ -81,7 +81,7 @@ public class DinningResController {
 	}//reserveComplete
 	@PostMapping("/nonComplete")
 	public String reserveNonComplete(DinningReserveDTO drDTO ,PayInfoDTO pDTO, HttpSession session, HttpServletRequest request, Model model) {
-		String url ="/main";
+		String url ="main";
 		//session id 가져오기
 		String id = session.getId() ;
 		String ip= request.getRemoteAddr();

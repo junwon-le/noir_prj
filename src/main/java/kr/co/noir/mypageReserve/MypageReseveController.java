@@ -45,7 +45,7 @@ public class MypageReseveController {
 	@GetMapping("/memberHotelList")
 	public String hotelReserveList(HttpSession session) {
 		
-		return "/mypage/memberHotelRevList";
+		return "mypage/memberHotelRevList";
 		
 		
 	}//HotelReserveList
@@ -76,13 +76,13 @@ public class MypageReseveController {
 	  model.addAttribute("hotelRevDetail",  mrs.searchOneHotelRevDetail(rdDTO));
 	  
 	  
-	  return "/mypage/memberHotelRevDetail";
+	  return "mypage/memberHotelRevDetail";
 	  
 	  }
 	 
 	  @PostMapping("/cancelHotelReserve")
 	  public String cancelHotelReserve(HttpSession session,int reserveNum,Model model) {
-		  String uri="/mypage/memberHotelRevDetail";
+		  String uri="mypage/memberHotelRevDetail";
 		  System.out.println("예약번호--------"+reserveNum);
 		  int cnt = mrs.removeHotelReserve(reserveNum);
 		  if(cnt<2) {
@@ -92,7 +92,7 @@ public class MypageReseveController {
 		  }else {
 			  
 			  model.addAttribute("msg","예약취소가 완료되었습니다.");
-			  uri="/mypage/successPage";
+			  uri="mypage/successPage";
 			  
 		  }//end else
 		  
@@ -102,7 +102,7 @@ public class MypageReseveController {
 	  @GetMapping("/hotelRevDetail2")
 	  public String hotelRevDetail2() {
 		  
-		  return "/mypage/memberHotelRevDetail";
+		  return "mypage/memberHotelRevDetail";
 	  }
 		  
 		 

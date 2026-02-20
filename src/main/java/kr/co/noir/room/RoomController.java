@@ -48,7 +48,7 @@ public class RoomController {
 		int number =  Integer.parseInt(num);
 		model.addAttribute("room",rService.searchRoom(number));
 		
-		return "/room/room";
+		return "room/room";
 	}
 	
 	
@@ -66,7 +66,7 @@ public class RoomController {
 		model.addAttribute("room",rService.searchDetailRoom(number));
 		
 		
-		return "/room/roomDetail";
+		return "room/roomDetail";
 	}
 	
 	/**
@@ -110,7 +110,7 @@ public class RoomController {
 		model.addAttribute("sessionId",id);
 		
 		
-		return "/manager/room/roomManage";
+		return "manager/room/roomManage";
 	}
 	
 	
@@ -131,7 +131,7 @@ public class RoomController {
 		int number =  Integer.parseInt(num);
 		model.addAttribute("room",rService.searchDetailRoom(number));
 		
-		return "/manager/room/roomManageModify";
+		return "manager/room/roomManageModify";
 	}
 	
 	@Value("${user.upload-dir}")
@@ -225,7 +225,7 @@ public class RoomController {
 		//rDTO.setUpFileName(fileName);		
 		model.addAttribute("cnt", cnt);
 
-		return "/manager/room/roomMgrModifyProcess";
+		return "manager/room/roomMgrModifyProcess";
 	}
 	
 	
@@ -242,7 +242,7 @@ public class RoomController {
 		}
 		
 		
-		return "/manager/room/roomManagePrice";
+		return "manager/room/roomManagePrice";
 	}
 	
 	

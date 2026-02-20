@@ -37,14 +37,14 @@ public class NonMemberRevController {
 				//model로해서 값보내기
 				
 				model.addAttribute("hotelRevDetail",  nmrs.searchOneHotelRevDetail(nmrDTO));
-				uri="/nonReserve/nonMemberHotelRevDetail";
+				uri="nonReserve/nonMemberHotelRevDetail";
 			}else {
 				
 				//dinningDetailServic 넣기
 				//model로해서 값보내기
 				model.addAttribute("dinningRevDetail",  nmrs.searchOneDinningRevDetail(nmrDTO));
 				
-				uri="/nonReserve/nonMemberDinningDetail";
+				uri="nonReserve/nonMemberDinningDetail";
 			}//end else
 				
 		}else {

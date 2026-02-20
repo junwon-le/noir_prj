@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.noir.notice">
+   
+   <!-- board 테이블에 추가하는 작업 -->
+   
+   <select id="selectRangeBoard" parameterType="kr.co.noir.notice.BoardRangeDTO" resultType="kr.co.noir.notice.NoticeDomain">
+   select  noticeNum,noticeTitle,noticeCategory, noticeDate,noticeMsg
+    from (
+    select
+      notice_num      as noticeNum,
+      notice_title    as noticeTitle,
+      notice_category as noticeCategory,
+      notice_date     as noticeDate,
+      notice_msg      as noticeMsg,
+      row_number() over(order by notice_date desc) rnum
+    from notice
+   <where>
+      notice_del_flag = 'N'
+       <if test="category != null and category != ''">
+        and notice_category = #{category}
+      </if>
+      <if test="keyword neq null and keyword neq ''">
+      and instr( notice_title, #{keyword}) !=0
+      </if>   
+   </where>
+      ) where rnum between #{startNum} and #{endNum}
+   </select>
+   
+   <select id="selectBoardTotalCnt" parameterType="kr.co.noir.notice.BoardRangeDTO" resultType="int">
+   select count(*) cnt from notice
+   <where>
+      notice_del_flag='N'
+      <if test="category != null and category != ''">
+      and notice_category = #{category}
+    </if>
+      <if test="keyword neq null and keyword neq ''">
+      and instr( notice_title, #{keyword}) !=0
+      </if>   
+   </where>
+   
+   </select>
+   
+   <!-- 글번호를 받아서 해당하는 글 하나를 검색 -->
+   <select id="selectBoardDetail" parameterType="int" resultType="kr.co.noir.notice.NoticeDomain">
+   select
+    notice_title    as noticeTitle,
+    notice_category as noticeCategory,
+    notice_date     as noticeDate,
+    notice_msg      as noticeMsg
+     from notice
+     where notice_num = #{value}
+   </select>
+   
+</mapper>

@@ -171,7 +171,7 @@ public class LoginController {
 	    }
 	    
 	    // 다시 아이디 찾기 페이지(findId.html)로 돌아가서 스크립트를 실행
-	    return "/login/findId";   
+	    return "login/findId";   
 
 	}
 	

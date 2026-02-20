@@ -42,7 +42,7 @@ public class InquiryController {
 		rDTO.setStartNum(startNum);
 		rDTO.setEndNum(endNum);
 		rDTO.setTotalPage(totalPage);
-		rDTO.setUrl("/inquiryList");
+		rDTO.setUrl("inquiryList");
 		//rDTO.setCurrentPage(currentPage); 1이 기본이라서 안넣어도됨
 		
 		List<InquiryDomain> inquiryList = is.searchBoardList(rDTO);//게시물의 내용

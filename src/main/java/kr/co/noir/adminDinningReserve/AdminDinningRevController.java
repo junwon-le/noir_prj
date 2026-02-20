@@ -37,7 +37,7 @@ public class AdminDinningRevController {
 		arDTO.setStartNum(startNum);
 		arDTO.setEndNum(endNum);
 		arDTO.setTotalPage(totalPage);
-		arDTO.setUrl("/admin/dinningMember/");
+		arDTO.setUrl("admin/dinningMember/");
 		
 		
 		
@@ -47,7 +47,7 @@ public class AdminDinningRevController {
 		model.addAttribute("DinningRevList", list);
 		model.addAttribute("pagiNation", pagiNation);
 		 
-		return "/manager/memberReserve/dinningRevList";
+		return "manager/memberReserve/dinningRevList";
 		
 	}//AdminDinningRevView
 	
@@ -55,7 +55,7 @@ public class AdminDinningRevController {
 	public String dinningMemberDetail (int reserveNum,Model model) {
 	
 		model.addAttribute("adminMemberDininngDetail", adrs.serachOneDinningDetail(reserveNum));
-		return "/manager/memberReserve/dinningRevDetail";
+		return "manager/memberReserve/dinningRevDetail";
 	}//dinningMemberDetail
 	
 	

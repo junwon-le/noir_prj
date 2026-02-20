@@ -35,7 +35,7 @@ public class ReserveController {
 //		String id="user1";
 		model.addAttribute("member",rrs.searchMember(id));
 		
-		return "/reserve/roomRes";
+		return "reserve/roomRes";
 	}	
 	
 	@PostMapping("/pending")
@@ -67,39 +67,39 @@ public class ReserveController {
 	
 	@GetMapping("/nonRoomReserve")
 	public String nonReserve() {
-		return "/reserve/nonRoomRes";
+		return "reserve/nonRoomRes";
 	}
 	
 	@GetMapping("/roomResSearch")
 	public String roomResSearch() {
-		return "/reserve/roomResSearch";
+		return "reserve/roomResSearch";
 	}
 	
 	@GetMapping("/dinningResSearch")
 	public String dinningResSearch() {
-		return "/reserve/dinningResSearch";
+		return "reserve/dinningResSearch";
 	}
 	@GetMapping("/dinningRes")
 	public String dinningRes() {
-		return "/reserve/dinningRes";
+		return "reserve/dinningRes";
 	}
 	@GetMapping("/nonDinningRes")
 	public String nonDinningRes() {
-		return "/reserve/nonDinningRes";
+		return "reserve/nonDinningRes";
 	}
 	
 	@GetMapping("/admin/nonRoomRes")
 	public String adminNonRoomRes() {
-		return "/manager/reserve/nonRoomRes";
+		return "manager/reserve/nonRoomRes";
 	}
 	@GetMapping("/admin/nonDinningRes")
 	public String adminNonDinningRes() {
-		return "/manager/reserve/nonDinningRes";
+		return "manager/reserve/nonDinningRes";
 	}
 	
 	@PostMapping("/complete")
 	public String reserveComplete(RoomReserveDTO rrDTO ,PayInfoDTO pDTO, HttpSession session, HttpServletRequest request, Model model) {
-		String url ="/reserve/complete";
+		String url ="reserve/complete";
 		//session id 가져오기
 		String id = String.valueOf(session.getAttribute("memberId")) ;
 		//String id=session.getAttribute("userId");
@@ -124,7 +124,7 @@ public class ReserveController {
 	}//reserveComplete
 	@PostMapping("/nonComplete")
 	public String nonReserveComplete(RoomReserveDTO rrDTO ,PayInfoDTO pDTO, HttpSession session, HttpServletRequest request, Model model) {
-		String url ="/reserve/complete";
+		String url ="reserve/complete";
 		//session id 가져오기
 		//String id=session.getAttribute("userId");
 		String id=session.getId();

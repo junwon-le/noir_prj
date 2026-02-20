@@ -33,7 +33,7 @@ public class AdminReserveController {
 		
 		model.addAttribute("list",list);
 		model.addAttribute("pagination",pagination);
-		return "/manager/reserve/nonRoomRes";
+		return "manager/reserve/nonRoomRes";
 	}
 	
 	@GetMapping("/nonDinningReserve")
@@ -55,14 +55,14 @@ public class AdminReserveController {
 		
 		System.out.println(arrDTO);
 		
-		return "/manager/reserve/nonDinningRes";
+		return "manager/reserve/nonDinningRes";
 	}//nonDinningReserve
 	@GetMapping("/nonRoomResDetail")
 	public String nonRoomResDetail(int resNum, Model model) {
 		List<NonRoomDetailDomain> roomDetail = ars.searchNonRoomDetail(resNum);
 		
 		model.addAttribute("room",roomDetail);
-		return "/manager/reserve/nonRoomResDetail";
+		return "manager/reserve/nonRoomResDetail";
 	}//nonRoomResDetail
 	
 	@GetMapping("/nonDinningResDetail")
@@ -70,7 +70,7 @@ public class AdminReserveController {
 		NonDinningDetailDomain dinningDetail = ars.searchnonDinningDetail(resNum);
 		
 		model.addAttribute("dinning",dinningDetail);
-		return "/manager/reserve/nonDinningResDetail";
+		return "manager/reserve/nonDinningResDetail";
 	}//nonDinningResDetail
 	
 	@GetMapping("/nonDinningRefund")

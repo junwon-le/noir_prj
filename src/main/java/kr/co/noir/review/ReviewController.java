@@ -29,7 +29,7 @@ public class ReviewController {
 	    int memberNum = rs.getMemberNumById(sessionMemberId);
 	    
 	    rDTO.setMemberNum(memberNum);
-	    rDTO.setUrl("/myReviewList");
+	    rDTO.setUrl("myReviewList");
 
         int totalCount = rs.totalCnt(rDTO);
         int pageScale = rs.pageScale();
@@ -52,7 +52,7 @@ public class ReviewController {
     public String roomReviewList(@RequestParam(value="num", defaultValue="1") int num, 
                                  BoardRangeDTO rDTO, Model model) {
         rDTO.setRoomTypeNum(num);
-        rDTO.setUrl("/roomReviewList");
+        rDTO.setUrl("roomReviewList");
 
         int totalCount = rs.roomTotalCnt(rDTO);
         int pageScale = rs.pageScale();

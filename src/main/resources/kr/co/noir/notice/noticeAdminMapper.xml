@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.noir.noticeAdmin">
+
+  <select id="selectNoticeTotal"
+          parameterType="kr.co.noir.notice.BoardRangeDTO"
+          resultType="int">
+    select count(*)
+    from notice
+    <where>
+      notice_del_flag = 'N'
+      <if test="category != null and category != ''">
+        and notice_category = #{category}
+      </if>
+      <if test="keyword != null and keyword != ''">
+        and instr(notice_title, #{keyword}) != 0
+      </if>
+    </where>
+  </select>
+
+  <select id="selectNoticeList"
+          parameterType="kr.co.noir.notice.BoardRangeDTO"
+          resultType="kr.co.noir.notice.NoticeAdminDomain">
+    select
+      noticeNum, noticeTitle, noticeCategory, noticeDate, noticeMsg, adminNum
+    from (
+      select
+        notice_num      as noticeNum,
+        admin_num       as adminNum,
+        notice_title    as noticeTitle,
+        notice_category as noticeCategory,
+        notice_msg      as noticeMsg,
+        notice_date     as noticeDate,
+        row_number() over(order by notice_date desc) rnum
+      from notice
+      <where>
+        notice_del_flag = 'N'
+        <if test="category != null and category != ''">
+          and notice_category = #{category}
+        </if>
+        <if test="keyword != null and keyword != ''">
+          and instr(notice_title, #{keyword}) != 0
+        </if>
+      </where>
+    )
+    where rnum between #{startNum} and #{endNum}
+  </select>
+
+  <select id="selectNoticeDetail"
+          parameterType="int"
+          resultType="kr.co.noir.notice.NoticeAdminDomain">
+    select
+      notice_num      as noticeNum,
+      admin_num       as adminNum,
+      notice_title    as noticeTitle,
+      notice_category as noticeCategory,
+      notice_msg      as noticeMsg,
+      notice_date     as noticeDate
+    from notice
+    where notice_num = #{value}
+  </select>
+
+  <insert id="insertNotice" parameterType="kr.co.noir.notice.NoticeAdminDTO">
+    insert into notice (
+      notice_num, admin_num, notice_title, notice_category, notice_msg, notice_date, notice_del_flag
+    ) values (
+      seq_notice.nextval, #{adminNum}, #{noticeTitle}, #{noticeCategory}, #{noticeMsg}, sysdate, 'N'
+    )
+  </insert>
+
+  <update id="updateNotice" parameterType="kr.co.noir.notice.NoticeAdminDTO">
+    update notice
+    set
+      notice_title = #{noticeTitle},
+      notice_category = #{noticeCategory},
+      notice_msg = #{noticeMsg}
+    where notice_num = #{noticeNum}
+  </update>
+
+  <update id="deleteNotice" parameterType="int">
+    update notice
+    set notice_del_flag = 'Y'
+    where notice_num = #{value}
+  </update>
+
+</mapper>

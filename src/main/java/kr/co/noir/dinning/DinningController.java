@@ -30,7 +30,7 @@ public class DinningController {
 		
 		model.addAttribute("dinning",dDomain);
 		
-		return "/dinning/dinning";
+		return "dinning/dinning";
 	}
 	
 	@GetMapping("/dinningDetail")
@@ -49,7 +49,7 @@ public class DinningController {
 		
 		
 		
-		return "/dinning/dinningDetail";
+		return "dinning/dinningDetail";
 	}
 	
 	@GetMapping("/admin/dinningMgr")
@@ -97,7 +97,7 @@ public class DinningController {
 		
 		model.addAttribute("dinning",dDomain);
 		model.addAttribute("dinningList",list);
-		return "/manager/dinning/dinningManageModify";
+		return "manager/dinning/dinningManageModify";
 	}
 	
 	@Value("${user.upload-dir}")

@@ -54,7 +54,7 @@ public class NoticeAdminController {
         model.addAttribute("pagination", pagination);
         model.addAttribute("range", rDTO);
 
-        return "/manager/notice/noticeAdmin";
+        return "manager/notice/noticeAdmin";
     }
 
     
@@ -62,14 +62,14 @@ public class NoticeAdminController {
     @GetMapping("/searchDetailNotice")
     public String searchNoticeDetail(@RequestParam int noticeNum, Model model) {
         model.addAttribute("notice", nas.searchOneNotice(noticeNum));
-        return "/manager/notice/noticeDetailAdmin";
+        return "manager/notice/noticeDetailAdmin";
     }
     
     //공지사항 작성 폼
     @GetMapping("/writeNoticeFrm")
     public String writeNoticeForm(HttpServletRequest request, Model model) {
         model.addAttribute("ip", request.getRemoteAddr());
-        return "/manager/notice/noticeWriteFrmAdmin";
+        return "manager/notice/noticeWriteFrmAdmin";
     }
     //공지사항 작성 처리
     @PostMapping("/noticeWriteProcess")

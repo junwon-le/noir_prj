@@ -39,7 +39,7 @@ public class AdminHotelRevController {
 		arDTO.setStartNum(startNum);
 		arDTO.setEndNum(endNum);
 		arDTO.setTotalPage(totalPage);
-		arDTO.setUrl("/admin/hotelMember/");
+		arDTO.setUrl("admin/hotelMember/");
 		
 		
 		
@@ -50,7 +50,7 @@ public class AdminHotelRevController {
 		model.addAttribute("hotelMemberList", list);
 		model.addAttribute("pagiNation", pagiNation);
 		
-		return "/manager/memberReserve/hotelRevList";
+		return "manager/memberReserve/hotelRevList";
 	}//hotelMemberDetail
 	
 	
@@ -63,7 +63,7 @@ public class AdminHotelRevController {
 		model.addAttribute("hotelMemberDetail", list);
 
 		System.out.println("결과는요~~"+list);
-		return "/manager/memberReserve/hotelRevDetail";
+		return "manager/memberReserve/hotelRevDetail";
 	}//hotelMemberDetail
 	
 	@GetMapping("/cancel")

@@ -28,12 +28,12 @@ public class MyPageInfoController {
 	public String passwoadCheck(HttpSession session,Model model) {
 		  String memberProd= (String)session.getAttribute("memberProd");
 		  String userId = (String)session.getAttribute("memberId");
-		  String uri="/mypage/passwordCheck";
+		  String uri="mypage/passwordCheck";
 		  if(!memberProd.equals("local")) {
 			  
 		    	MemberInfoDomain miDomain = mms.searchMemmberInfo(userId);
 		    	model.addAttribute("miDomain", miDomain);
-		    	uri = "/mypage/memberModify"; // 맞으면 이동할 페이지 변경
+		    	uri = "mypage/memberModify"; // 맞으면 이동할 페이지 변경
 		  }//end if
 		
 		
@@ -75,11 +75,11 @@ public class MyPageInfoController {
 		mDTO.setMemberId((String)session.getAttribute("memberId"));
 	  
 	    
-		String uri = "/mypage/memberModify";
+		String uri = "mypage/memberModify";
 		if(mms.modifyMemberInfo(mDTO)) {
 			
 			model.addAttribute("msg","회원정보 수정이 완료되었습니다.");
-			uri="/mypage/successPage";
+			uri="mypage/successPage";
 			
 			
 		}//end if
@@ -92,12 +92,12 @@ public class MyPageInfoController {
 	
 	@GetMapping("/passwordChangeFrm")	
 	public String passwordModifyFrm(HttpSession session) {
-		return "/mypage/passwordChange";
+		return "mypage/passwordChange";
 	}//passwordModifyFrm
 	
 	@PostMapping("/updatePassword")
 	public String updatePassword(PasswordCheckDTO pcDTO,HttpSession session,Model model) {
-		String uri="/mypage/passwordChange";
+		String uri="mypage/passwordChange";
 		boolean flag =false;
 		pcDTO.setMemberid((String)session.getAttribute("memberId"));
 		
@@ -106,7 +106,7 @@ public class MyPageInfoController {
 		if(flag) {
 			session.invalidate();
 			model.addAttribute("msg","비밀번호 수정이 완료되었습니다.");
-			return"/mypage/successPage";
+			return"mypage/successPage";
 		}else {
 			model.addAttribute("flag",flag);
 			model.addAttribute("pcDTO", pcDTO);
