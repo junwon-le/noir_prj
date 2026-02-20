@@ -50,7 +50,6 @@ public class AdminDinningRevController {
 		
 		
 		List<AdminDinningRevDomain> list =adrs.SearchDinningRevList(arDTO);
-		System.out.println("릿그트의 결과는"+list);
 		String pagiNation=adrs.pagenation(arDTO);
 		
 		model.addAttribute("DinningRevList", list);
@@ -73,7 +72,6 @@ public class AdminDinningRevController {
 		
 		boolean flag= adrs.modifyDinningRev(reserveNum);
 		
-		System.out.println("결과는 "+flag);
 		String msg="예약 취소를 실패하였습니다.";
 		if(flag) {
 			msg="예약취소가 완료되었습니다.";

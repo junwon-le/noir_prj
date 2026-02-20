@@ -51,7 +51,7 @@ public class AdminDinningRevService {
 	 */
 	public int pageScale() {
 		
-		return 7;
+		return 10;
 		
 	}//pageScale
 	
@@ -118,7 +118,7 @@ public class AdminDinningRevService {
 		try {
 			
 			drdDomain=adrm.selectOneAdminDinningDetail(reserveNum);
-			System.out.println("아아아아아아아앙"+drdDomain);
+			//System.out.println("아아아아아아아앙"+drdDomain);
 			drdDomain.setTel(te.decrypt(drdDomain.getTel()));
 			drdDomain.setEmail(te.decrypt(drdDomain.getEmail()));
 			

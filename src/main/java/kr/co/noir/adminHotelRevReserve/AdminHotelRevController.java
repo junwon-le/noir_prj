@@ -75,7 +75,7 @@ public class AdminHotelRevController {
 		list=ahrs.searchOneHotelDetail(reserveNum);
 		model.addAttribute("hotelMemberDetail", list);
 
-		System.out.println("결과는요~~"+list);
+		//System.out.println("결과는요~~"+list);
 		return "/manager/memberReserve/hotelRevDetail";
 	}//hotelMemberDetail
 	
@@ -84,7 +84,6 @@ public class AdminHotelRevController {
 		
 		boolean flag= ahrs.modifyHotelRev(reserveNum);
 		
-		System.out.println("결과는 "+flag);
 		String msg="예약 취소를 실패하였습니다.";
 		if(flag) {
 			msg="예약취소가 완료되었습니다.";
