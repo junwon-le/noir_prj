@@ -120,6 +120,7 @@ public class AdminDinningRevService {
 			drdDomain=adrm.selectOneAdminDinningDetail(reserveNum);
 			System.out.println("아아아아아아아앙"+drdDomain);
 			drdDomain.setTel(te.decrypt(drdDomain.getTel()));
+			drdDomain.setEmail(te.decrypt(drdDomain.getEmail()));
 			
 		}catch (PersistenceException pe) {
 			pe.printStackTrace();

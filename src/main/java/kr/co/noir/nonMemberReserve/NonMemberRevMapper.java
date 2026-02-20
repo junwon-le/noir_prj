@@ -14,7 +14,7 @@ public interface NonMemberRevMapper {
 
 	//예약조회시 내역확인을 위한 예약번호, 이메일, 비밀번호 체크
 	/*<select id="nonMemberRevCheck" parameterType="nonMemberRevDTO" resultType="String">*/
-	public String nonMemberRevCheck (NonMemberRevDTO nurDTO) throws PersistenceException;
+	public NonReserveCheckDomain nonMemberRevCheck (NonMemberRevDTO nurDTO) throws PersistenceException;
 	
 	
 	//예약체크 후 있으면 보여줄 Hoteldetail

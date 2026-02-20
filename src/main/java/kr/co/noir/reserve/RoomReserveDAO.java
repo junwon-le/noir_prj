@@ -12,7 +12,7 @@ import kr.co.noir.dao.MyBatisHandler;
 @Repository
 public class RoomReserveDAO {
 	
-	public List<RoomSearchDomain> selectRoom(RoomSearchDTO rsDTO) throws SQLException{
+	public List<RoomSearchDomain> selectRoom(RoomSearchDTO rsDTO) throws PersistenceException{
 		List<RoomSearchDomain> list = null;
 		
 		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
@@ -21,7 +21,7 @@ public class RoomReserveDAO {
 		return list;
 	}//selectRoom
 	
-	public List<RoomSearchDomain> selectRoomServer(RoomSearchDTO rsDTO) throws SQLException{
+	public List<RoomSearchDomain> selectRoomServer(RoomSearchDTO rsDTO) throws PersistenceException{
 		List<RoomSearchDomain> list = null;
 		
 		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
@@ -30,7 +30,7 @@ public class RoomReserveDAO {
 		return list;
 	}//selectRoomServer
 	
-	public MemberDomain selectMember(String id) throws SQLException{
+	public MemberDomain selectMember(String id) throws PersistenceException{
 		MemberDomain memberDomain = null;
 		
 		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
@@ -110,17 +110,15 @@ public class RoomReserveDAO {
 		}else {
 			ss.rollback();
 		}
-		
-		
 		return cnt;
 	}//insertNonRoomReserve
 	
-	public void deleteNonRoomReserve() {
+	public void deleteNonRoomReserve() throws PersistenceException {
 		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
 		ss.delete("kr.co.sist.reserve.deleteNonRoomReserve");
 		if(ss!=null) {	ss.close();	}
 	}//deleteNonRoomReserve
-	public void deleteNonDinningReserve() {
+	public void deleteNonDinningReserve() throws PersistenceException {
 		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
 		ss.delete("kr.co.sist.reserve.deleteNonDinningReserve");
 		if(ss!=null) {	ss.close();	}

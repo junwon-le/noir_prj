@@ -30,13 +30,19 @@ public class NonMemberRevService {
 	
 	public boolean NonReserveCheck(NonMemberRevDTO rmrDTO) {
 		boolean flag=false;
+		NonReserveCheckDomain nrcDomain=null;
 		BCryptPasswordEncoder bpe = new BCryptPasswordEncoder();
+		TextEncryptor te = Encryptors.text(key, salt);
 		try {
-			
-			String password=nmrm.nonMemberRevCheck(rmrDTO);
+			nrcDomain=nmrm.nonMemberRevCheck(rmrDTO);
+			String password =nrcDomain.getPassword();
 			String nowPassword= rmrDTO.getPassword();
-			flag=bpe.matches(nowPassword, password);
-			
+			String email = rmrDTO.getEmail();
+			String nowEmail =te.decrypt(nrcDomain.getEmail());
+					
+			boolean passwordFlag=bpe.matches(nowPassword, password);
+			boolean emailFlag=email.equals(nowEmail);
+			flag=passwordFlag&&emailFlag;
 		}catch (PersistenceException pe) {
 			pe.printStackTrace();
 			
@@ -54,6 +60,7 @@ public class NonMemberRevService {
 			list=nmrm.selectOneHotelDetail(rmrDTO);
 			for(HotelRevDetailDomain hd: list) {
 				hd.setTel(te.decrypt(hd.getTel()));
+				hd.setEmail(te.decrypt(hd.getEmail()));
 				
 			}//end for
 		}catch (PersistenceException pe) {
@@ -73,6 +80,7 @@ public class NonMemberRevService {
 			
 			drdDomain =nmrm.selectOnedinningDetail(rmrDTO);
 			drdDomain.setTel(te.decrypt(drdDomain.getTel()));
+			drdDomain.setEmail(te.decrypt(drdDomain.getEmail()));
 		}catch (PersistenceException pe) {
 			pe.printStackTrace();
 		}//end catch
