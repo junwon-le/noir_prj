@@ -306,74 +306,7 @@ font-family: 'Nanum Myeongjo', serif;
             color: #000;
         }
 
-/* ============================================================
-   [PRINT] A4 한 페이지 딱 맞게 채우기 설정
-   ============================================================ */
-@media print {
-    /* 브라우저 기본 여백 제거 */
-    @page {
-        size: A4;
-        margin: 0;
-    }
 
-    /* 인쇄 시 불필요한 요소 제거 (사이드바, 헤더, 푸터 등) */
-    header, footer, .sidebar, .btn-noir-cancel, .btn-link, .mypage-title, .text-center.mt-4 {
-        display: none !important;
-    }
-
-    body {
-        background: white !important;
-        color: black !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        -webkit-print-color-adjust: exact;
-    }
-    
-
-    /* 컨테이너를 A4 크기로 강제 확장 */
-    .container {
-        width: 210mm !important;
-        height: 297mm !important;
-        max-width: none !important;
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-
-    .col-lg-9 {
-        width: 100% !important;
-        flex: 0 0 100% !important;
-        max-width: 100% !important;
-    }
- 
-
-    /* 카드를 A4 전체 배경으로 반전 및 꽉 채우기 */
-    .reservation-detail-container {
-        background: white !important;
-        border: none !important;
-        width: 210mm !important;
-        height: 297mm !important;
-        padding: 20mm !important; /* 인쇄 시 내부 여백 */
-        box-shadow: none !important;
-        border-radius: 0 !important;
-        color: black !important;
-    }
-
-    /* 인쇄 시 텍스트 가독성 조정 */
-    .info-value-noir, .res-id-number, .total-price-gold {
-        color: black !important;
-        border-bottom: 1px solid #eee !important;
-    }
-
-    .payment-summary-noir {
-        background: #f8f8f8 !important;
-        border: 1px solid #ddd !important;
-    }
-
-    .policy-box-noir {
-        background: #fafafa !important;
-        border-left: 3px solid #000 !important;
-    }
-}
 
 .main-content-wrapper, 
 .reservation-detail-container, 
@@ -402,6 +335,96 @@ font-family: 'Nanum Myeongjo', serif;
     
     	margin-top: 5px;
     }
+    
+    
+    
+/* dsfafdsafdsafdsaf */
+@media print {
+
+
+  #printArea {
+    min-height: 100vh;   /* 화면 기준 */
+    background: #151515;
+  }
+  /* A4 여백 최소 */
+  @page { size: A4; margin: 4mm 8mm; }
+
+  body { 
+    -webkit-print-color-adjust: exact; 
+    print-color-adjust: exact; 
+  }
+
+  /* ✅ 출력은 printArea만 */
+  body * { visibility: hidden !important; }
+  #printArea, #printArea * { visibility: visible !important; }
+
+  #printArea{
+    position: fixed;
+    left: 0; top: 0;
+    width: 100%;
+  }
+
+  /* ✅ 2열 레이아웃 유지(스샷처럼) */
+  #printArea .row{ 
+    margin: 0 !important;
+    --bs-gutter-x: 10px;  /* 너무 크면 6px로 */
+    --bs-gutter-y: 6px;
+  }
+
+  /* 위 정보 영역: col-md-6 두 칸 유지 */
+  #printArea .col-md-6{
+    flex: 0 0 50% !important;
+    max-width: 50% !important;
+  }
+
+  /* 결제 영역: 5/7 비율 유지 */
+  #printArea .col-md-5{
+    flex: 0 0 41.6667% !important;
+    max-width: 41.6667% !important;
+  }
+  #printArea .col-md-7{
+    flex: 0 0 58.3333% !important;
+    max-width: 58.3333% !important;
+  }
+
+  /* ✅ 여백/패딩 압축 (2장 되는 주범) */
+  #printArea .mt-5, #printArea .mt-4, #printArea .pt-4, #printArea .pt-2{
+    margin-top: 6px !important;
+    padding-top: 6px !important;
+  }
+  #printArea .mb-3, #printArea .mb-2{
+    margin-bottom: 6px !important;
+  }
+
+  #printArea .reservation-detail-container{
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* ✅ 폰트/라인하이트 살짝만 줄임(안 깨지게) */
+  #printArea *{
+    font-size: 11px !important;
+    line-height: 1.2 !important;
+  }
+  #printArea h2{ font-size: 16px !important; margin: 0 0 6px 0 !important; }
+  #printArea .res-total-price{ font-size: 16px !important; font-weight: 700 !important; }
+
+  /* ✅ 정책은 빼되, 가격/결제는 유지 */
+   #printArea #cancelText{ display: none !important; } 
+
+  /* ✅ 버튼/모달/헤더/푸터 제거 (프린트에 섞이면 2장됨) */
+  header, footer, .btn, .backBtn, .modal{ display: none !important; }
+
+  /* ✅ 페이지 쪼개짐 방지(특히 결제 박스) */
+  #printArea, 
+  #printArea .payment-summary-noir{
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+}
+
+
+   
 </style>
 <script th:inline="javascript">
 
@@ -418,6 +441,28 @@ $(function(){
 		alert("예약취소가 실패되었습니다. \n 잠시후 다시 시도해주세요");
 		
 	}//end if
+	
+	var emailFlag = /*[[${emailFlag == true}]]*/ false;
+	/* 	var cancelFlag=[[${cancelFlag==true}]]; */
+		
+		if(emailFlag){
+			const modalElement = $("#emailModal");
+			
+			const emailModal = new bootstrap.Modal(modalElement);
+
+			// 모달을 보여줍니다.
+			emailModal.show();
+			
+		}    
+
+
+
+
+
+	$("#emailBtn").click(function(){
+		$("#emailFrm").submit();
+		
+	});//click
 	
 	
 });
@@ -441,7 +486,7 @@ function goBackToList(){
 
          <div class="col-lg-9">
             <div class="main-content-wrapper">
-    <div class="reservation-detail-container">
+    <div class="reservation-detail-container" id="printArea">
         
         <div class="res-header">
             <div class="res-status-badge">DINING RESERVATION CONFIRMED</div>
@@ -514,7 +559,7 @@ function goBackToList(){
                         <span class="small text-secondary">Tax & Service Charge (10%)</span>
                         <span class="small text-info" th:text="*{#numbers.formatInteger(roomTax,3,'COMMA')}">Included</span>
                     </div>
-			        <div class="d-flex justify-content-between mb-3">
+			        <div class="d-flex justify-content-between mb-3" id="cancelText">
 			        <span class="small text-danger">Current Cancellation Fee</span>
 			        <span class="small text-danger fw-bold" >KRW 0 (Free)</span> 
 			        </div>
@@ -549,7 +594,7 @@ function goBackToList(){
                     <button class="btn btn-action me-2" onclick="window.print()">
                         <i class="bi bi-printer me-2"></i>출력
                     </button>
-                   <th:block th:if="*{reserveFlag ne 'Y' and !checkInToday}"> 
+                    <input type="button" class="btn btn-action me-2" value="이메일 발송" id="emailBtn"/>
                     <button class="btn btn-noir-cancel" data-bs-toggle="modal" data-bs-target="#cancelModal">
                        예약취소
                     </button>
@@ -571,6 +616,14 @@ function goBackToList(){
     	th:value="${param.monthBtnValue == null || param.monthBtnValue == ''} ? '' : ${param.monthBtnValue}"/>
     
     </form>
+    
+    
+		
+		<form th:action="@{/nonMember/sendReserveEmail}" method="post" id="emailFrm">
+		    <input type="hidden" name="reserveNum" th:value="${dinningRevDetail.reserveNum}">
+		    <input type="hidden" name="reserveType" value="dinning">
+		</form>
+
 
         </div>
     </div>
@@ -598,6 +651,25 @@ function goBackToList(){
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="emailModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content noir-modal-content p-3">
+            <div class="modal-header border-0">
+                <h5 class="modal-title fw-bold" style="color:#c5a47e;">이메일발송</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body py-4 text-center">
+                <p th:text="${msg}">예약하신 이메일로 에약내역이 발송되었습니다.</p>
+            </div>
+            <div class="modal-footer border-0 justify-content-center">
+                <button type="button" class="btn btn-secondary btn-sm rounded-0 px-4" data-bs-dismiss="modal">확인</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 <footer>
     <th:block th:replace="~{fragments/footer :: footer}"></th:block>

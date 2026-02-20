@@ -28,12 +28,24 @@ public class ReserveDetailDomain {
 	private String payInputDate;
 	private boolean checkInToday;
 	
+//	public int getRoomPrice() {
+//		price = (int)(priceTotal / 1.1);
+//	    return price;
+//	}
+//	public int getRoomTax() {
+//		tax = priceTotal - (int)(priceTotal / 1.1);
+//	    return tax;
+//	}
+	
 	public int getRoomPrice() {
-		price = (int)(priceTotal / 1.1);
+	    // totalPrice * 0.9는 roomPrice 계산에 사용
+		price = (int) (priceTotal * 0.9);
 	    return price;
 	}
+
 	public int getRoomTax() {
-		tax = priceTotal - (int)(priceTotal / 1.1);
+	    // totalPrice * 0.1은 roomTax 계산에 사용
+		tax = (int) (priceTotal * 0.1);
 	    return tax;
 	}
 	public int getRoomPriceTotal() {

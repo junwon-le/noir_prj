@@ -55,7 +55,7 @@ public class AdminHotelRevService {
 	 */
 	public int pageScale() {
 		
-		return 7;
+		return 10;
 		
 	}//pageScale
 	

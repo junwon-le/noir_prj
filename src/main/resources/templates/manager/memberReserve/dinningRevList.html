@@ -230,7 +230,7 @@ tr{
         </div>
 
         <div class="container" style="min-height:630px; width:100%; color:#ffffff">
-            <div class="row" style="padding: 30px; margin-left: 5px;">
+            <div class="row" style="padding: 30px; margin-left: 1px;">
                 <div class="col-lg-12">
                     <form th:action="@{/admin/dinningMember/}" id="boardSearchFrm" method="get" class="d-flex" style="display: flex; gap: 10px; margin-bottom: 25px; align-items: center;">
                         <select class="form-control select_style" name="field" id="field"> 
@@ -261,9 +261,14 @@ tr{
                                     <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600;">금액</th>
                                     <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600; width: 140px;">예약상태</th>
                                 </tr>
-                            </thead>
+                            </thead> 
                             <tbody style="color: #2a3547; vertical-align: middle; text-align: center;">
-                                
+                                <th:block th:if="${DinningRevList.size()==0}">
+                                	<tr class="table-row">
+                                		<td colspan="7" style="font-family: 'Roboto'; color: #7c8fac; text-align: center;"> 검색 결과가 없습니다.</td>
+                                	</tr>
+                                </th:block>
+                                <th:block th:unless="${DinningRevList.size()==0}">
                                 <th:block th:each="dinningRevList:${DinningRevList}" th:object="${dinningRevList}">
                               <!--   <tr class="table-row" onclick="if(event.target.tagName !== 'INPUT') location.href='/admin/dinningMember/detail'"> -->
                                 <tr class="table-row" th:onclick="dinningDetail([[*{reserveNum}]])">
@@ -282,17 +287,8 @@ tr{
                                 	</th:block>
                                 </tr>
                                </th:block> 
-                                
-                             <!--    <tr class="table-row" onclick="if(event.target.tagName !== 'INPUT') alert('ㄹㅇㅋㅋ')" style="cursor: pointer;">
-                                    <td style="padding: 20px; font-family: 'Roboto';">2</td>
-                                    <td style="font-weight: 500;">이OO</td>
-                                    <td style="color: #5d87ff;">jypprincess</td>
-                                    <td style="font-family: 'Roboto'; color: #7c8fac;">2026-01-15</td>
-                                    <td>3</td>
-                                    <td style="font-family: 'Roboto'; font-weight: 600;">1,200,000</td>
-                                    <td><input type="button" value="예약취소" class="badge-status status-complete btn-cancel" data-toggle="modal" data-target="#statusModal"></td>
-                                </tr> -->
-                               
+                               </th:block>
+                            
                               
                                
                                

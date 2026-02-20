@@ -35,7 +35,8 @@ public class NonMemberRevService {
 		TextEncryptor te = Encryptors.text(key, salt);
 		try {
 			nrcDomain=nmrm.nonMemberRevCheck(rmrDTO);
-			String password =nrcDomain.getPassword();
+			System.out.println("이ㅏ럼니"+nrcDomain);
+			String password=nrcDomain.getPassword();
 			String nowPassword= rmrDTO.getPassword();
 			String email = rmrDTO.getEmail();
 			String nowEmail =te.decrypt(nrcDomain.getEmail());

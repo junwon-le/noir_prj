@@ -64,7 +64,6 @@ public class MypageDAO {
 		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
 		list=ss.selectList("kr.co.noir.mypage.MypageMapper.eventList");
 		
-		System.out.println(list);
 		if(ss!=null) {ss.close();}//end if
 		return list;
 		

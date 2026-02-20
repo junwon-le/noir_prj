@@ -225,7 +225,7 @@ tr{
         </div>
 
         <div class="container" style="min-height:670px; width:100%; color:#ffffff">
-            <div class="row" style="padding: 30px; margin-left: 5px;">
+            <div class="row" style="padding: 30px; margin-left: 1px;">
                 <div class="col-lg-12">
                      <form th:action="@{/admin/hotelMember/}" id="boardSearchFrm" method="get" class="d-flex" style="display: flex; gap: 10px; margin-bottom: 25px; align-items: center;">
                         <select class="form-control select_style" name="field" id="field"> 
@@ -254,11 +254,17 @@ tr{
                                     <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600;">ID</th>
                                     <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600;">투숙기간</th>
                                     <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600;">금액</th>
-                                    <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600;">결제일</th>
+                                    <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600;">결제일시</th>
                                     <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600; width: 140px;">예약상태</th>
                                 </tr>
                             </thead>
                             <tbody style="color: #2a3547; vertical-align: middle; text-align: center;">
+                            <th:block th:if="${hotelMemberList.size()==0}">
+                                	<tr class="table-row">
+                                		<td colspan="7" style="font-family: 'Roboto'; color: #7c8fac; text-align: center;"> 검색 결과가 없습니다.</td>
+                                	</tr>
+                                </th:block>
+                                <th:block th:unless="${hotelMemberList.size()==0}">
                             
                             
                             <th:block th:each="hotelReserveList:${hotelMemberList}" th:object="${hotelReserveList}">
@@ -269,7 +275,7 @@ tr{
                                     <td style="font-family: 'Roboto'; color: #7c8fac;" th:text="*{reserveName}">2026-01-15 ~ 2026-01-20</td>
                                     <td style="color: #5d87ff;" th:text="*{memberId}">jonajona</td>
                                     <td style="font-family: 'Roboto'; color: #7c8fac;"th:text="|*{startDate} ~ *{endDate}|">2026-01-15 ~ 2026-01-20</td>
-                                    <td style="font-family: 'Roboto'; color: #7c8fac;" th:text="|*{#numbers.formatInteger(totalPrice,3,'COMMA')} KRW|">2026-01-15 ~ 2026-01-20</td>
+                                    <td style="font-family: 'Roboto'; font-weight: 600;" th:text="|*{#numbers.formatInteger(totalPrice,3,'COMMA')} KRW|">2026-01-15 ~ 2026-01-20</td>
                                     <td style="font-family: 'Roboto'; color: #7c8fac;"th:text="*{inputDate}">2026-01-15 ~ 2026-01-20</td>
                                     <th:block th:if="*{reserveFlag eq 'Y'}">
                                     	<td><span class="badge-status status-refund">환불처리</span></td>
@@ -279,6 +285,7 @@ tr{
                                 	</th:block>
                                     
                                 </tr>
+                             </th:block>
                              </th:block>
                             </tbody>
                         </table>
