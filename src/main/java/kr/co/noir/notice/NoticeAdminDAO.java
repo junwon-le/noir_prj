@@ -9,20 +9,20 @@ import org.springframework.stereotype.Repository;
 
 import kr.co.noir.dao.MyBatisHandler;
 
-@Repository
+@Repository("noticeAdminDAO")
 public class NoticeAdminDAO {
 	
 
 
-	public int selectNoticeTotal(BoardRangeDTO rDTO) throws SQLException{
+	public int selectNoticeTotalCnt(BoardRangeDTO rDTO) throws SQLException{
 		int totalCnt = 0;
 		SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
-		totalCnt = ss.selectOne("kr.co.noir.noticeAdmin.selectNoticeTotal",rDTO);
+		totalCnt = ss.selectOne("kr.co.noir.noticeAdmin.selectNoticeTotalCnt",rDTO);
 		
 		if(ss !=null) {ss.close();}
 		return totalCnt;
 		
-	}//selectNoticeTotal
+	}//selectNoticeTotalCnt
 	
 	
 	   public List<NoticeAdminDomain> selectNoticeList(BoardRangeDTO rDTO) throws SQLException{
@@ -34,7 +34,7 @@ public class NoticeAdminDAO {
 		      return list;
 		   }//selectNoticeList
 	   
-	   
+	   //////확인
 	   
 	   public NoticeAdminDomain selectNoticeDetail(int noticeNum) throws SQLException{
 		   NoticeAdminDomain nDomain = null;

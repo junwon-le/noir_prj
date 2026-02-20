@@ -17,5 +17,5 @@ public class ReviewDomain {
 	private Date reserveStartDate,reviewDate;
 
 	
-	private List<String> reviewImgList = new ArrayList<>();;
+	private List<String> reviewImgList = new ArrayList<>();
 }

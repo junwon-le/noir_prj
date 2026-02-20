@@ -5,116 +5,194 @@ import java.util.List;
 
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+
+import kr.co.noir.inquiry.InquiryDomain;
 
 @Service
 public class NoticeAdminService {
 
-	@Qualifier("noticeAdminDAO")
 	@Autowired
 	private NoticeAdminDAO naDAO;
 
-
-    /* ===================== 페이징 관련 ===================== */
-
-    /** 한 페이지에 보여줄 글 수 */
-    public int pageScale() {
-        return 10;
-    }
-
-    /** 전체 페이지 수 */
-    public int totalPage(int totalCnt, int pageScale) {
-        return (int) Math.ceil((double) totalCnt / pageScale);
-    }
-
-    /** 시작 번호 */
-    public int startNum(int currentPage, int pageScale) {
-        return currentPage * pageScale - pageScale + 1;
-    }
-
-    /** 끝 번호 */
-    public int endNum(int startNum, int pageScale) {
-        return startNum + pageScale - 1;
-    }
-
-    /* ===================== 공지사항 ===================== */
-
-    /** 관리자 공지사항 총 개수 */
+	/**
+	 * 총 게시물의 수
+	 * @param rDTO
+	 * @return
+	 */
 	public int totalCnt(BoardRangeDTO rDTO) {
-		int totalCnt = 0;
+		int totalCnt=0;
 		try {
-			setCategory(rDTO);
-			totalCnt = naDAO.selectNoticeTotal(rDTO);
-
-		} catch (SQLException se) {
-			se.printStackTrace();
-
-		} // end catch
-
+			totalCnt=naDAO.selectNoticeTotalCnt(rDTO);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}//end catch
+		
 		return totalCnt;
-	}// totalCnt
-    
-
-    /** 관리자 공지사항 목록 */
-    public List<NoticeAdminDomain> searchAdminNoticeList(BoardRangeDTO rDTO) {
-        List<NoticeAdminDomain> list = null;
-        try {
-        	setCategory(rDTO);
-            list = naDAO.selectNoticeList(rDTO);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
-    
-    
-    //카테고리 
-    public void setCategory(BoardRangeDTO rDTO) {
-
-        String field = rDTO.getField();
-        String keyword = rDTO.getKeyword();
-
-        // 1) keyword가 ""(빈값/공백)이면 null로 정리 (XML if 조건 안정화)
-        if (keyword != null && keyword.trim().isEmpty()) {
-            rDTO.setKeyword(null);
-        }
-
-        // 2) 카테고리 선택(field 2~4)이면 category 세팅 + keyword는 끈다
-        if ("2".equals(field)) {
-            rDTO.setCategory("일반");
-            rDTO.setKeyword(null);
-            return;
-        }
-        if ("3".equals(field)) {
-            rDTO.setCategory("멤버십");
-            rDTO.setKeyword(null);
-            return;
-        }
-        if ("4".equals(field)) {
-            rDTO.setCategory("약관개정");
-            rDTO.setKeyword(null);
-            return;
-        }
-
-        // 3) 그 외(field 1/null/기타)는 카테고리 조건 없음(전체/제목검색)
-        rDTO.setCategory(null);
-    }
-
-
-    
-	 //제목이 20자를 초과하면 19자까지 보여주고 뒤에 ..을 붙이는일
-	public void titleSubStr(List<NoticeAdminDomain> boardlist) {
-		String title = "";
-		for (NoticeAdminDomain bDTO : boardlist) {
-			title = bDTO.getNoticeTitle();
-			if (title.length() > 19) {
-				bDTO.setNoticeTitle(title.substring(0, 20) + "...");
-
-			} // end if
-		} // end for
-	}// titleSubStr
+	}//totalCnt
 	
+	/**
+	 * 한 화면에 보여줄 페이지의 수
+	 * @return
+	 */
+	public int pageScale() {
+		return 10;
+	}//pageScale
+	
+	/**
+	 * 총 페이지 수
+	 * @param totalCount - 전체 게시물의 수
+	 * @param pageScale - 한 화면에 보여줄 게시물의 수
+	 * @return
+	 */
+	public int totalPage(int totalCount, int pageScale) {
+		return (int)Math.ceil((double)totalCount/pageScale);
+	}//totalPage
+	
+	/**
+	 * 페이지의 시작번호 구하기
+	 * @param currentPage - 현재페이지
+	 * @param pageScale - 한 화면에 보여줄 게시물의 수
+	 * @return
+	 */
+	public int startNum(int currentPage, int pageScale) {
+		return currentPage * pageScale-pageScale+1;
+	}//startNum
+	
+	/**
+	 * 페이지의 끝 번호 구하기
+	 * @param startNum - 시작번호
+	 * @param pageScale - 한 화면에 보여줄 게시물의 수
+	 * @return
+	 */
+	public int endNum(int startNum, int pageScale) {
+		return startNum+pageScale-1;
+	}//endNum
+	 
+	/**
+	 * 시작번호, 끝 번호, 검색 필드, 검색 키워드를 사용한 게시글 검색
+	 * @param rDTO
+	 * @return
+	 */
+	public List<NoticeAdminDomain> searchAdminNoticeList(BoardRangeDTO rDTO){
+		List<NoticeAdminDomain> list=null; 
+		try {
+			list=naDAO.selectNoticeList(rDTO);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}//end catch
+		
+		return list;
+	}//searchBoardList
+	
+	/**
+	 * 제목이 20자를 초과하면 19자까지 보여주고 ...을 붙이는 일 
+	 * @param list
+	 */
+	public void titleSubStr(List<InquiryDomain> boardList) {
+		String title="";
+		for(InquiryDomain bDTO:boardList){
+			title=bDTO.getInquiryTitle();
+			if(title !=null && title.length() > 19){
+				bDTO.setInquiryTitle(title.substring(0,20)+"...");
+			}//end if
+		}//end for
+	}
+
+	   public String pagination2( BoardRangeDTO rDTO, String justify ) {
+	         StringBuilder pagination=new StringBuilder();
+	         //1. 한 화면에 보여줄 pagination의 수.
+	         int pageNumber=3;
+	         //2. 화면에 보여줄 시작페이지 번호. 1,2,3 => 1로 시작 , 4,5,6=> 4, 7,8,9=>7
+	         int startPage= ((rDTO.getCurrentPage()-1)/pageNumber)*pageNumber+1;
+	         //3. 화면에 보여줄 마지막 페이지 번호 1,2,3 =>3
+	         int endPage= (((startPage-1)+pageNumber)/pageNumber)*pageNumber;
+	         //4. 총페이지수가 연산된 마지막 페이지수보다 작다면 총페이지 수가 마지막 페이지수로 설정
+	         //456 인경우 > 4로 설정
+	         if( rDTO.getTotalPage() <= endPage) {
+	            endPage=rDTO.getTotalPage();
+	         }//end if
+	         //5.첫페이지가 인덱스 화면 (1페이지) 가 아닌 경우
+	         int movePage=0;
+	         StringBuilder prevMark=new StringBuilder();
+	         prevMark.append("<li class='page-item prev disabled'>");
+	         prevMark.append("<a class='page-link'>이전</a>");
+	         prevMark.append("</li>");
+	         //prevMark.append("<li class='page-item'><a class='page-link' href='#'>Previous</a></li>");
+	         if(rDTO.getCurrentPage() > pageNumber) {// 시작페이지 번호가 3보다 크면 
+	            movePage=startPage-1;// 4,5,6->3 ->1 , 7 ,8 ,9 -> 6 -> 4
+	            prevMark.delete(0, prevMark.length());// 이전에 링크가 없는 [<<] 삭제
+	            prevMark.append("<li class='page-item prev'><a class='page-link' href='").append(rDTO.getUrl())
+	            .append("?currentPage=").append(movePage);
+	            //검색 키워드가 있다면 검색 키워드를 붙인다.
+	            if( rDTO.getCategory() != null && !rDTO.getCategory().isEmpty() ) {
+	            	  prevMark.append("&category=").append(rDTO.getCategory());
+	            	}
+	            	if( rDTO.getKeyword() != null && !rDTO.getKeyword().isEmpty() ) {
+	            	  prevMark.append("&keyword=").append(rDTO.getKeyword());
+	            	}
+
+	            prevMark.append("'>이전</a></li>");
+	         }//end if
+	         
+	         //6.시작페이지 번호부터 끝 번호까지 화면에 출력
+	         StringBuilder pageLink=new StringBuilder();
+	         movePage=startPage;
+	         
+	         while( movePage <= endPage ) {
+	            if( movePage == rDTO.getCurrentPage()) { //현재 페이지 : 링크 x
+	               pageLink.append("<li class='page-item active page-link'>") 
+	               .append(movePage).append("</li>");
+	            }else {//현재페이지가 아닌 다른 페이지 : 링크 O
+	               pageLink.append("<li class='page-item'><a class='page-link' href='")
+	               .append(rDTO.getUrl()).append("?currentPage=").append(movePage);
+	               //검색 키워드가 있다면 검색 키워드를 붙인다.
+	               if( rDTO.getCategory() != null && !rDTO.getCategory().isEmpty() ) {
+	            	   pageLink.append("&category=").append(rDTO.getCategory());
+		            	}
+		            	if( rDTO.getKeyword() != null && !rDTO.getKeyword().isEmpty() ) {
+		            		pageLink.append("&keyword=").append(rDTO.getKeyword());
+		            	}
+	               pageLink.append("'>").append(movePage).append("</a>");
+	               
+	            }//else
+	            
+	            movePage++;
+	         }//end while
+	         
+	         //7. 뒤에 페이지가 더 있는 경우
+	         StringBuilder nextMark=new StringBuilder("<li class='page-item next disabled'><span class='page-link'>다음</span></li>");
+
+	         if( rDTO.getTotalPage() > endPage) { // 뒤에 페이지가 더 있음.
+	            movePage= endPage+1;
+	            nextMark.delete(0, nextMark.length());
+	            nextMark.append("<li class='page-item next'><a class='page-link' href='")
+	            .append(rDTO.getUrl()).append("?currentPage=").append(movePage);
+	            if( rDTO.getCategory() != null && !rDTO.getCategory().isEmpty() ) {
+	            	nextMark.append("&category=").append(rDTO.getCategory());
+		            	}
+		            	if( rDTO.getKeyword() != null && !rDTO.getKeyword().isEmpty() ) {
+		            		nextMark.append("&keyword=").append(rDTO.getKeyword());
+		            	}
+	            
+	            nextMark.append("'>다음</a></li>");
+	            
+	         }//end if
+	         
+	         if(!("center".equals(justify) || "left".equals(justify))) {
+	            justify="left";
+	         }
+	         pagination.append("<nav aria-label='...'>")
+	         .append("  <ul class='pagination d-flex justify-content-")
+	         .append(justify)
+	         .append("'>");
+	         pagination.append(prevMark).append(pageLink).append(nextMark);
+	         pagination.append("</ul>")
+	         .append("  </nav>");
+	         
+	         return pagination.toString();
+	      }//pagination2
+	   
 	
     /** 관리자 공지사항 상세 */
     public NoticeAdminDomain searchOneNotice(int noticeNum) {
@@ -163,67 +241,5 @@ public class NoticeAdminService {
         return cnt;
     }
 
-    /* ===================== 페이지네이션 HTML ===================== */
 
-    public String pagination(BoardRangeDTO rDTO) {
-
-        StringBuilder sb = new StringBuilder();
-
-        int pageBlock = 5;
-        int startPage = ((rDTO.getCurrentPage() - 1) / pageBlock) * pageBlock + 1;
-        int endPage = startPage + pageBlock - 1;
-
-        if (endPage > rDTO.getTotalPage()) {
-            endPage = rDTO.getTotalPage();
-        }
-
-        // ✅ 검색 파라미터 유지용 쿼리스트링
-        String query = "";
-        if (rDTO.getField() != null && !rDTO.getField().isBlank()) {
-            query += "&field=" + rDTO.getField();
-        }
-        if (rDTO.getKeyword() != null && !rDTO.getKeyword().isBlank()) {
-            // 공백 등 깨질 수 있어서 인코딩이 정석이지만,
-            // 지금은 최소 수정으로 유지 (가능하면 URLEncoder 권장)
-            query += "&keyword=" + rDTO.getKeyword();
-        }
-
-        sb.append("<ul class='pagination'>");
-
-        // 이전
-        if (startPage > 1) {
-            sb.append("<li><a href='")
-              .append(rDTO.getUrl())
-              .append("?currentPage=").append(startPage - 1)
-              .append(query)
-              .append("'>이전</a></li>");
-        }
-
-        // 페이지 번호
-        for (int i = startPage; i <= endPage; i++) {
-            if (i == rDTO.getCurrentPage()) {
-                sb.append("<li class='active'><span>")
-                  .append(i).append("</span></li>");
-            } else {
-                sb.append("<li><a href='")
-                  .append(rDTO.getUrl())
-                  .append("?currentPage=").append(i)
-                  .append(query)
-                  .append("'>").append(i).append("</a></li>");
-            }
-        }
-
-        // 다음
-        if (endPage < rDTO.getTotalPage()) {
-            sb.append("<li><a href='")
-              .append(rDTO.getUrl())
-              .append("?currentPage=").append(endPage + 1)
-              .append(query)
-              .append("'>다음</a></li>");
-        }
-
-        sb.append("</ul>");
-
-        return sb.toString();
-    }
 }
