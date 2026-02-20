@@ -31,10 +31,6 @@
 <script src="/admin_common/js/plugins.js"></script>
 <script src="/admin_common/js/main.js"></script>
 
-<!-- Summernote -->
-<link
-	href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.css"
-	rel="stylesheet" />
 <script
 	src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.js"></script>
 <!-- (선택) 한국어 UI 필요하면 아래 주석 해제 -->
@@ -42,180 +38,107 @@
 
 <style>
 .notice-form-wrap {
-	background: #ffffff;
-	border: 1px solid #e3e8f3;
-	border-radius: 12px;
-	padding: 18px;
+  background: #ffffff;
+  border: 1px solid #e3e8f3;
+  border-radius: 12px;
+  padding: 18px;
 }
-
 .notice-form-title {
-	font-weight: 600;
-	margin-bottom: 20px;
-	color: #ffffff;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #ffffff;
 }
-
 .btn-save {
-	background: linear-gradient(135deg, #3f5fa9, #2b4a87);
-	color: #fff;
-	border: none;
-	padding: 8px 18px;
-	border-radius: 8px;
-	font-weight: 600;
+  background: linear-gradient(135deg, #3f5fa9, #2b4a87);
+  color: #fff;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-weight: 600;
 }
+.btn-save:hover { opacity: 0.9; }
 
-.btn-save:hover {
-	opacity: 0.9;
-}
-
-/* 상세 페이지 버튼 통일 */
 .btn-danger, .btn-success, .btn-info {
-	border-radius: 8px !important;
-	padding: 8px 18px !important;
-	font-weight: 600 !important;
-	border: none !important;
+  border-radius: 8px !important;
+  padding: 8px 18px !important;
+  font-weight: 600 !important;
+  border: none !important;
 }
 
-/* ✅ 이 페이지 폼 영역은 흰 배경 기준으로 텍스트 색을 고정 */
-.notice-form-wrap, .notice-form-wrap label, .notice-form-wrap .form-label
-	{
-	color: #38599a;
+.notice-form-wrap, .notice-form-wrap label, .notice-form-wrap .form-label {
+  color: #38599a;
 }
 
-/* ✅ 인풋/셀렉트 모양 통일 (admin 테마 덮어쓰기 방지) */
-.notice-form-wrap .form-control, .notice-form-wrap .form-select,
-	.notice-form-wrap textarea {
-	background: #ffffff !important;
-	color: #38599a !important;
-	border: 1px solid #e3e8f3 !important;
-	border-radius: 10px !important;
-	padding: 10px 12px !important;
-	box-shadow: none !important;
+.notice-form-wrap .form-control, .notice-form-wrap .form-select, .notice-form-wrap textarea {
+  background: #ffffff !important;
+  color: #38599a !important;
+  border: 1px solid #e3e8f3 !important;
+  border-radius: 10px !important;
+  padding: 10px 12px !important;
+  box-shadow: none !important;
+}
+.notice-form-wrap .form-select option { color: #38599a; }
+
+.notice-form-wrap .form-control:focus, .notice-form-wrap .form-select:focus, .notice-form-wrap textarea:focus {
+  border-color: #5f739c !important;
+  outline: none !important;
+  box-shadow: 0 0 0 0.15rem rgba(95, 115, 156, 0.25) !important;
 }
 
-/* ✅ select option 글자색 */
-.notice-form-wrap .form-select option {
-	color: #38599a;
-}
-
-/* ✅ 포커스 강조 */
-.notice-form-wrap .form-control:focus, .notice-form-wrap .form-select:focus,
-	.notice-form-wrap textarea:focus {
-	border-color: #5f739c !important;
-	outline: none !important;
-	box-shadow: 0 0 0 0.15rem rgba(95, 115, 156, 0.25) !important;
-}
-
-/* ✅ 버튼 영역 정렬 + 버튼 통일 */
 .btn-area {
-	display: flex;
-	gap: 10px;
-	justify-content: flex-end;
-	align-items: center;
-	margin-top: 12px;
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 12px;
 }
-
 .btn-area .btn-secondary {
-	background: #5f739c !important;
-	border: 1px solid #e3e8f3 !important;
-	color: #ffffff !important;
-	border-radius: 8px !important;
-	padding: 8px 18px !important;
-	font-weight: 600;
-	text-decoration: none;
+  background: #5f739c !important;
+  border: 1px solid #e3e8f3 !important;
+  color: #ffffff !important;
+  border-radius: 8px !important;
+  padding: 8px 18px !important;
+  font-weight: 600;
+  text-decoration: none;
 }
+.btn-area .btn-secondary:hover { opacity: 0.9; }
 
-.btn-area .btn-secondary:hover {
-	opacity: 0.9;
-}
-
-/* =========================
-           ✅ Summernote 내용 파트 디자인 보정 (핵심)
-           ========================= */
-.note-editor.note-frame {
-	border: 1px solid #e3e8f3 !important;
-	border-radius: 12px !important;
-	overflow: hidden;
-	width: 100% !important;
-	max-width: 100% !important;
-}
-
-.note-editor .note-toolbar {
-	background: #f7f9ff !important;
-	border-bottom: 1px solid #e3e8f3 !important;
-}
-
-/* ✅ 편집 영역(내용 입력) */
-.note-editor .note-editable {
-	background: #ffffff !important;
-	color: #38599a !important; /* 상위 container color:white 상속 차단 */
-	padding: 14px 16px !important;
-	line-height: 1.6 !important;
-	min-height: 260px;
-}
-
-.note-editor .note-editable p {
-	margin: 0 0 10px !important;
-}
-
-.note-editor .note-statusbar {
-	border-top: 1px solid #e3e8f3 !important;
-	background: #ffffff !important;
-}
-
-.note-editor .note-placeholder {
-	color: rgba(56, 89, 154, 0.55) !important;
-}
-
-.note-editor .note-btn, .note-editor .note-icon-font {
-	color: #38599a !important;
-}
+/* textarea 크기만 살짝 보기 좋게 */
+#noticeMsg { min-height: 320px; resize: vertical; }
 </style>
 
 <script type="text/javascript">
-	$(function() {
 
-		// ✅ Summernote 초기화 (없으면 textarea처럼 보이거나 깨짐)
-		$('#noticeMsg').summernote({
-			placeholder : '내용을 입력하세요',
-			height : 320
-		// 한국어 UI 쓰려면 위에 ko-KR 언어파일 추가 후 아래 주석 해제
-		// , lang: 'ko-KR'
-		});
+$(function () {
 
-		// ✅ 등록 버튼 클릭 (DOM 로드 후 바인딩)
-		$("#btnWrite").on("click", function() {
+			  $("#btnWrite").on("click", function () {
 
-			var title = $("#noticeTitle").val().trim();
-			if (title === "") {
-				alert("제목은 필수 입력입니다.");
-				$("#noticeTitle").focus();
-				return;
-			}
+			    var title = $("#noticeTitle").val().trim();
+			    if (title === "") {
+			      alert("제목은 필수 입력입니다.");
+			      $("#noticeTitle").focus();
+			      return;
+			    }
 
-			var category = $("#noticeCategory").val().trim();
-			if (category === "") {
-				alert("카테고리는 필수 입력입니다.");
-				$("#noticeCategory").focus();
-				return;
-			}
+			    var category = $("#noticeCategory").val().trim();
+			    if (category === "") {
+			      alert("카테고리는 필수 입력입니다.");
+			      $("#noticeCategory").focus();
+			      return;
+			    }
 
-			// ✅ summernote 내용 읽기
-			var msg = $('#noticeMsg').summernote('code');
+			    // ✅ textarea 내용 그대로 검증
+			    var msg = $("#noticeMsg").val().trim();
+			    if (msg === "") {
+			      alert("내용은 필수 입력입니다.");
+			      $("#noticeMsg").focus();
+			      return;
+			    }
 
-			// ✅ 빈 값 판별(HTML 제거 후 텍스트 기준)
-			var plain = $('<div>').html(msg).text().trim();
-			if (plain === "") {
-				alert("내용은 필수 입력입니다.");
-				return;
-			}
+			    $("#frm").submit();
+			  });
 
-			// ✅ 제출 전에 textarea 값 동기화
-			$("#noticeMsg").val(msg);
-
-			$("#frm").submit();
-		});
-
-	});
+			});
 </script>
 </head>
 
@@ -267,7 +190,9 @@
 
 					<div class="mb-3">
 						<label class="form-label">내용</label>
-						<textarea name="noticeMsg" id="noticeMsg"></textarea>
+						<textarea name="noticeMsg" id="noticeMsg" rows="12" class="form-control"
+          placeholder="내용을 입력하세요"></textarea>
+						
 					</div>
 
 					<div class="btn-area">
