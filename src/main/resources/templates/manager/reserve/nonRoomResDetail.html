@@ -441,7 +441,7 @@ if (emailflag==true) {
         </div> 
         
         
-       	<form th:action="@{/nonMember/sendReserveEmail}" method="post" id="emailFrm">
+       	<form th:action="@{/admin/sendNonReserveEmail}" method="post" id="emailFrm">
 		    <input type="hidden" name="reserveNum" th:value="${room[0].reserveNum}">
 		    <input type="hidden" name="reserveType" value="room">
 		</form>
