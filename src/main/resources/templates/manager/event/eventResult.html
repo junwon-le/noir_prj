@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>처리 결과</title>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script type="text/javascript">
+$(function () {
+  alert("[[${msg}]]");
+
+  if ("[[${flag}]]" === "true") {
+    location.href = "[[${redirectUrl}]]";
+  } else {
+    history.back();
+  }
+});
+</script>
+</head>
+<body>
+</body>
+</html>

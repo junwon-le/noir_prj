@@ -2,8 +2,10 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="kr.co.noir.noticeAdmin">
 
+  <!-- ✅ 총 개수 -->
   <select id="selectNoticeTotal"
           parameterType="kr.co.noir.notice.BoardRangeDTO"
           resultType="int">
@@ -11,15 +13,24 @@
     from notice
     <where>
       notice_del_flag = 'N'
-      <if test="category != null and category != ''">
-        and notice_category = #{category}
+
+      <!-- ✅ field(1~4) 기반 카테고리 필터 -->
+      <if test="field != null and field != '' and field != '1'">
+        <choose>
+          <when test="field == '2'">and notice_category = '일반공지'</when>
+          <when test="field == '3'">and notice_category = '멤버십'</when>
+          <when test="field == '4'">and notice_category = '약관개정'</when>
+        </choose>
       </if>
+
+      <!-- ✅ keyword -->
       <if test="keyword != null and keyword != ''">
         and instr(notice_title, #{keyword}) != 0
       </if>
     </where>
   </select>
 
+  <!-- ✅ 목록 -->
   <select id="selectNoticeList"
           parameterType="kr.co.noir.notice.BoardRangeDTO"
           resultType="kr.co.noir.notice.NoticeAdminDomain">
@@ -37,9 +48,17 @@
       from notice
       <where>
         notice_del_flag = 'N'
-        <if test="category != null and category != ''">
-          and notice_category = #{category}
+
+        <!-- ✅ field(1~4) 기반 카테고리 필터 -->
+        <if test="field != null and field != '' and field != '1'">
+          <choose>
+            <when test="field == '2'">and notice_category = '일반공지'</when>
+            <when test="field == '3'">and notice_category = '멤버십'</when>
+            <when test="field == '4'">and notice_category = '약관개정'</when>
+          </choose>
         </if>
+
+        <!-- ✅ keyword -->
         <if test="keyword != null and keyword != ''">
           and instr(notice_title, #{keyword}) != 0
         </if>
@@ -48,6 +67,7 @@
     where rnum between #{startNum} and #{endNum}
   </select>
 
+  <!-- ✅ 상세 -->
   <select id="selectNoticeDetail"
           parameterType="int"
           resultType="kr.co.noir.notice.NoticeAdminDomain">
@@ -62,6 +82,7 @@
     where notice_num = #{value}
   </select>
 
+  <!-- ✅ 등록 -->
   <insert id="insertNotice" parameterType="kr.co.noir.notice.NoticeAdminDTO">
     insert into notice (
       notice_num, admin_num, notice_title, notice_category, notice_msg, notice_date, notice_del_flag
@@ -70,6 +91,7 @@
     )
   </insert>
 
+  <!-- ✅ 수정 -->
   <update id="updateNotice" parameterType="kr.co.noir.notice.NoticeAdminDTO">
     update notice
     set
@@ -79,6 +101,7 @@
     where notice_num = #{noticeNum}
   </update>
 
+  <!-- ✅ 삭제(플래그) -->
   <update id="deleteNotice" parameterType="int">
     update notice
     set notice_del_flag = 'Y'

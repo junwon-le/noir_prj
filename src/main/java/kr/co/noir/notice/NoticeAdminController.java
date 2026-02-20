@@ -22,45 +22,56 @@ public class NoticeAdminController {
     private NoticeAdminService nas;
     
     //공지사항 목록
-    @GetMapping("/searchAllNotice")
-    public String searchNoticeList(BoardRangeDTO rDTO, Model model) {
+    @GetMapping("/noticeAdminList")
+    public String adminNoticeList(BoardRangeDTO rDTO, Model model, HttpSession session) {
 
-        // ✅ currentPage 파라미터 없으면 기본 1페이지
-        int currentPage = rDTO.getCurrentPage();
-        if (currentPage <= 0) {
-            currentPage = 1;
-            rDTO.setCurrentPage(currentPage);
+//        int currentPage = rDTO.getCurrentPage();
+//        if (currentPage <= 0) {
+//            currentPage = 1;
+//            rDTO.setCurrentPage(currentPage);
+//        }
+//
+//        // ✅ 추가: 기본값 세팅 (첫 화면에서 전체 목록 보장)
+//        if (rDTO.getField() == null || rDTO.getField().trim().isEmpty()) {
+//            rDTO.setField("1");
+//        }
+//        if (rDTO.getKeyword() == null) {
+//            rDTO.setKeyword("");
+//        }
+
+        // 관리자 로그인 체크만
+        String adminIp = (String) session.getAttribute("adminIp");
+        if (adminIp == null) {
+            return "redirect:/admin/login";
         }
-
+	    
         int totalCnt = nas.totalCnt(rDTO);
         int pageScale = nas.pageScale();
         int totalPage = nas.totalPage(totalCnt, pageScale);
-
+		int currentPage = rDTO.getCurrentPage(); //현재 페이지
         int startNum = nas.startNum(currentPage, pageScale);
         int endNum = nas.endNum(startNum, pageScale);
 
         rDTO.setStartNum(startNum);
         rDTO.setEndNum(endNum);
         rDTO.setTotalPage(totalPage);
-        rDTO.setUrl("/notice/searchAllNotice");
+        rDTO.setUrl("/notice/noticeAdminList");
 
-        List<NoticeAdminDomain> list = nas.searchAdminNoticeList(rDTO);
-        String pagination = nas.pagination(rDTO);
+        List<NoticeAdminDomain> noticeList = nas.searchAdminNoticeList(rDTO);
+        String pagination = nas.pagination2(rDTO,"center");//페이지 네이션
 
-        int listNum = totalCnt - (currentPage - 1) * pageScale;
 
-        model.addAttribute("listNum", listNum);
-        model.addAttribute("naList", list);
+		model.addAttribute("listNum",totalCnt-(currentPage-1)*pageScale);
+		model.addAttribute("noticeList", noticeList);
         model.addAttribute("pagination", pagination);
-        model.addAttribute("range", rDTO);
 
-        return "/manager/notice/noticeAdmin";
+        return "/manager/notice/noticeAdminList";
     }
 
     
     //공지사항 상세보기
-    @GetMapping("/searchDetailNotice")
-    public String searchNoticeDetail(@RequestParam int noticeNum, Model model) {
+    @GetMapping("/DetailNotice")
+    public String NoticeDetail(@RequestParam int noticeNum, Model model) {
         model.addAttribute("notice", nas.searchOneNotice(noticeNum));
         return "/manager/notice/noticeDetailAdmin";
     }
@@ -82,7 +93,7 @@ public class NoticeAdminController {
 
         if (adminNum == null) {
             ra.addFlashAttribute("msg", "로그인이 필요합니다.");
-            return "redirect:/adminLogin";  
+            return "redirect:/noticeAdmin";  
         }
 
         naDTO.setAdminNum(adminNum);
