@@ -283,7 +283,7 @@ public class RoomController {
 		
 		for(int i = 0; i<roomPriceDate.size();i++) {
 			String selectedDate = rDTO.getRoomPriceMonth();
-			if(roomPriceDate.get(i)<9) {
+			if(roomPriceDate.get(i)<=9) {
 				selectedDate += "-0"+roomPriceDate.get(i);
 			}else {
 				selectedDate += "-"+roomPriceDate.get(i);
