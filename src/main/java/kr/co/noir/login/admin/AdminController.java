@@ -52,7 +52,7 @@ public class AdminController {
             newSession.setAttribute("adminId", aDTO.getAdminId());            
             // 성공 시 관리자 메인(대시보드)으로 리다이렉트 -- 나중에 작업
  
-            return "redirect:/admin/dashBoard"; 
+            return "redirect:/dashBoard"; 
         }
         
         // [실패] 서비스에서 담아온 메시지를 그대로 화면에 전달

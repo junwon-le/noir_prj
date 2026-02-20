@@ -2,15 +2,17 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>처리 결과</title>
-
+<title>이벤트 처리 결과</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script type="text/javascript">
-$(function () {
-  alert("[[${msg}]]");
+$(function(){
+  const flag = (document.getElementById("flag").value === "true");
+  const msg = document.getElementById("msg").value || (flag ? "처리 완료" : "처리 실패");
+  const redirectUrl = document.getElementById("redirectUrl").value || "/event/eventAdminList";
 
-  if ("[[${flag}]]" === "true") {
-    location.href = "[[${redirectUrl}]]";
+  alert(msg);
+  if(flag){
+    location.href = redirectUrl;
   } else {
     history.back();
   }
@@ -18,5 +20,8 @@ $(function () {
 </script>
 </head>
 <body>
+  <input type="hidden" id="flag" th:value="${flag}">
+  <input type="hidden" id="msg" th:value="${msg}">
+  <input type="hidden" id="redirectUrl" th:value="${redirectUrl}">
 </body>
 </html>
