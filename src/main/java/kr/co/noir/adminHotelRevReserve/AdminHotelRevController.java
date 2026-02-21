@@ -52,7 +52,7 @@ public class AdminHotelRevController {
 		arDTO.setStartNum(startNum);
 		arDTO.setEndNum(endNum);
 		arDTO.setTotalPage(totalPage);
-		arDTO.setUrl("admin/hotelMember/");
+		arDTO.setUrl("/admin/hotelMember/");
 		
 		
 		

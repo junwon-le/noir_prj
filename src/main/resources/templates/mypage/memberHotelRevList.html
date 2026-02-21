@@ -364,10 +364,24 @@ function movePage(num) {
     searchPage(num);
 }
 
-function revDetail(revNum) {
+/* function revDetail(revNum) {
     $("#hiddenRevNum").val(revNum);
     // 현재 검색 조건이 포함된 URL 전체를 from 파라미터로 넘김 (중요)
     $("#hiddenFrom").val(location.pathname + location.search);
+    $("#hiddenFrm").submit();
+} */
+function revDetail(revNum) {
+    // 1. 현재 검색 조건(?startDate=...&currentPage=...)
+    var currentSearch = location.search; 
+    
+    // 2. from 파라미터 생성 (전체 주소)
+    var fromPath = encodeURIComponent(location.pathname + currentSearch);
+    
+    // 3. POST 전송 주소 뒤에 ?from=... 을 붙임 (이게 주소창에 남음)
+    var actionUrl = "/mypage/reserve/hotelRevDetail?from=" + fromPath;
+    
+    $("#hiddenRevNum").val(revNum);
+    $("#hiddenFrm").attr("action", actionUrl); 
     $("#hiddenFrm").submit();
 }
 
@@ -574,7 +588,7 @@ $(function () {
 <form th:action="@{/mypage/reserve/hotelRevDetail}" method="post" id="hiddenFrm">
 	<input type="hidden" id="hiddenRevNum" name="reserveNum"/>
 	<input type="hidden" id="hiddenRevType" name="reserveType" value="room"/>
-	<input type="hidden" id="hiddenFrom" name="from"/> 
+	 <input type="hidden" id="hiddenFrom" name="from"/>  
 
 </form>
 

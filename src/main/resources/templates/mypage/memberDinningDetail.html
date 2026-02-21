@@ -624,6 +624,11 @@ function goBackToList(){
     <form th:action="@{/mypage/reserve/sendReserveEmail}" method="post" id="emailFrm">
     <input type="hidden" name="reserveNum" th:value="${dinningRevDetail.reserveNum}">
     <input type="hidden" name="reserveType" value="dinning">
+    <input type="hidden" id="pageStartDate" name="startDate" th:value="${param.startDate}"/> 
+    	<input type="hidden" id="pageEndDate" name="endDate"  th:value="${param.endDate}"/>
+    	<input type="hidden" id="currentpage" name="currentpage" th:value="${param.currentpage}"/>
+    	<input type="hidden" id="monthBtnValue" name="period" 
+    	th:value="${param.period == null || param.period == ''} ? '' : ${param.period}"/>
 </form>
     
   	

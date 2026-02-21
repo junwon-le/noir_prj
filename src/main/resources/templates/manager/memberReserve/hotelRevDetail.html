@@ -408,7 +408,7 @@ if (emailflag==true) {
 
     <div style="text-align: center; margin-top: 40px;">
         <button type="button" class="btn" 
-				th:onclick="location.href='/admin/hotelMember/?currentPage=' + [[${param.currentPage!=null?param.currentPage[0] : 1}]] + '&field=' + [[${param.field!=null?param.field[0]:''}]] + '&keyword=' + [[${param.keyword!=null?param.keyword[0]:'N/A'}]] "
+				th:onclick="location.href='/admin/hotelMember/?currentPage=' + [[${param.currentPage!=null?param.currentPage[0] : 1}]] + '&field=' + [[${param.field!=null?param.field[0]:''}]] + '&keyword=' + [[${param.keyword!=null?param.keyword[0]:''}]] "
                 style="background: #8994bc; color: #fff; width: 180px; height: 45px; border-radius: 8px; font-weight: 600; box-shadow: 0 4px 10px rgba(137, 148, 188, 0.3);">
             리스트
         </button>

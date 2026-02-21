@@ -45,7 +45,7 @@ public class AdminDinningRevController {
 		arDTO.setStartNum(startNum);
 		arDTO.setEndNum(endNum);
 		arDTO.setTotalPage(totalPage);
-		arDTO.setUrl("admin/dinningMember/");
+		arDTO.setUrl("/admin/dinningMember/");
 		
 		
 		

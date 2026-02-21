@@ -16,7 +16,6 @@
 <script src="/common/js/homepage/custom.js"></script>
 
 
-
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -457,15 +456,46 @@ $(function(){
 		$("#emailFrm").submit();
 		
 	});//click
-		
 	
+    var urlParams = new URLSearchParams(window.location.search);
+    var fromUrl = urlParams.get('from');
+
+    if (fromUrl && fromUrl !== "null") {
+        // 주소창에 from이 있으면 세션 저장소에 백업해둡니다 (이메일 전송 후를 대비)
+        sessionStorage.setItem('hotelLastSearch', decodeURIComponent(fromUrl));
+    }
+
+    // 만약 주소창에 from이 없으면(이메일 발송 후 등), 세션 저장소에서 꺼내옵니다.
+    var safeListUrl = sessionStorage.getItem('hotelLastSearch') || "/mypage/reserve/memberHotelList";
+
+    // 1. 이메일 발송 후 뒤로가기 에러 방지 (히스토리 세탁)
+    if (document.referrer && document.referrer.includes("sendReserveEmail")) {
+        history.replaceState(null, null, safeListUrl); 
+        history.pushState(null, null, window.location.href);
+    }
+
+    // 2. '목록보기' 버튼이나 뒤로가기 버튼 클릭 시
+    $(".backBtn").off("click").on("click", function(e){
+        e.preventDefault();
+        location.href = safeListUrl; // 무조건 검색 기록이 살아있는 주소로 이동
+    });
+
+    // 3. 브라우저 뒤로가기 시 새로고침
+    window.onpageshow = function(event) {
+        if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+            window.location.reload();
+        }
+    };
 	
+
+
+
 });
 
 
-
-
 </script>
+
+
 </head>
 
 <body>
