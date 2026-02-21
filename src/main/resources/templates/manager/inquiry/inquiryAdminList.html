@@ -1,34 +1,50 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta name="title" content="HOTEL 28">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>HOTEL 28</title>
+<meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<title>NOIR호텔 관리자 페이지</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+<!-- ✅ Admin Common CSS (노티스와 동일) -->
+<link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900" rel="stylesheet">
+<link rel="stylesheet" href="/admin_common/css/bootstrap.min.css">
+<link rel="stylesheet" href="/admin_common/css/font-awesome.min.css">
+<link rel="stylesheet" href="/admin_common/css/nalika-icon.css">
+<link rel="stylesheet" href="/admin_common/css/owl.carousel.css">
+<link rel="stylesheet" href="/admin_common/css/owl.theme.css">
+<link rel="stylesheet" href="/admin_common/css/owl.transitions.css">
+<link rel="stylesheet" href="/admin_common/css/animate.css">
+<link rel="stylesheet" href="/admin_common/css/normalize.css">
+<link rel="stylesheet" href="/admin_common/css/meanmenu.min.css">
+<link rel="stylesheet" href="/admin_common/css/main.css">
+<link rel="stylesheet" href="/admin_common/css/scrollbar/jquery.mCustomScrollbar.min.css">
+<link rel="stylesheet" href="/admin_common/css/metisMenu/metisMenu.min.css">
+<link rel="stylesheet" href="/admin_common/css/metisMenu/metisMenu-vertical.css">
+<link rel="stylesheet" href="/admin_common/style.css">
+<link rel="stylesheet" href="/admin_common/css/responsive.css">
+
+<!-- ✅ Summernote -->
 <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.css" rel="stylesheet">
 
-<link rel="stylesheet" type="text/css" href="/common/css/homepage/base.css">
-<link rel="stylesheet" type="text/css" href="/common/css/homepage/style.css?v=0312">
-<link rel="stylesheet" type="text/css" href="/common/css/homepage/sub.css?v=0312">
+<!-- ✅ Admin Common JS (노티스와 동일) -->
+<script src="/admin_common/js/vendor/jquery-1.12.4.min.js"></script>
+<script src="/admin_common/js/bootstrap.min.js"></script>
+<script src="/admin_common/js/wow.min.js"></script>
+<script src="/admin_common/js/jquery.meanmenu.js"></script>
+<script src="/admin_common/js/owl.carousel.min.js"></script>
+<script src="/admin_common/js/jquery.sticky.js"></script>
+<script src="/admin_common/js/scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+<script src="/admin_common/js/scrollbar/mCustomScrollbar-active.js"></script>
+<script src="/admin_common/js/metisMenu/metisMenu.min.js"></script>
+<script src="/admin_common/js/metisMenu/metisMenu-active.js"></script>
+<script src="/admin_common/js/plugins.js"></script>
+<script src="/admin_common/js/main.js"></script>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<!-- ✅ Summernote JS -->
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
-
-<script src="/common/js/comm/jquery.bxslider.js"></script>
-<script src="/common/js/homepage/jquery.rwdImageMaps.min.js"></script>
-<script src="/common/js/homepage/jquery.accessibility.modal.js"></script>
-<script src="/common/js/comm/jquery.cookie.js"></script>
-<script src="/common/js/homepage/plugin.js"></script>
-<script src="/common/js/homepage/custom.js"></script>
 
 <style>
-/* ===============================
-   Inquiry List (Light Admin)
-   =============================== */
 .inquiry-row.active { background: #eef3ff; }
 .inquiry-card {
   background: #ffffff;
@@ -56,9 +72,6 @@
 .empty-text { padding: 40px 0; color: #b1c1e2; font-size: 14px; }
 .pagination-wrap { text-align: center; margin-top: 20px; }
 
-/* ===============================
-   Inquiry Detail (Light Admin)
-   =============================== */
 #inquiryDetailBox { margin-top: 40px; }
 .inquiry-detail-panel {
   background: #ffffff;
@@ -81,19 +94,19 @@
 .inquiry-detail-actions button { min-width: 100px; margin-left: 8px; }
 
 .btn-search {
-  background: #b1c1e2;
-  border: none;
+  background: #5f739c;
   color: #ffffff;
+  border: 1px solid #e3e8f3;
+  padding: 8px 18px;
   font-weight: 600;
-  height: 34px;
-  padding: 6px 16px;
+  border-radius: 8px;
+  height: 30px;
+  line-height: 14px;
 }
-.btn-search:hover {
-  background: linear-gradient(135deg, #4b6fc0, #345aa0);
-  color: #ffffff;
-}
+.btn-search:hover { background: #4f638a; }
+
 #searchFrm .form-control {
-  height: 34px;
+  height: 30px;
   font-size: 14px;
   margin-bottom: 0;
   min-width: 130px;
@@ -105,12 +118,13 @@
 }
 </style>
 
-<!-- ✅ flash msg (등록/삭제 성공/실패) -->
+<!-- ✅ flash msg -->
 <script th:if="${msg != null}">
   alert('[[${msg}]]');
 </script>
 
-<script>
+<!-- ✅ Inquiry JS -->
+<script th:inline="javascript">
 $(function () {
 
   function initAnswerEditorOnce() {
@@ -126,6 +140,33 @@ $(function () {
         ['view', ['codeview']]
       ]
     });
+
+    // ✅ 처음엔 에디터 잠금
+    $('#detailAnswer').summernote('disable');
+  }
+
+  // ✅ 초기 상태: 하단 숨김 + 값 비움 + 버튼 비활성화
+  function resetDetailUI() {
+    $('#inquiryDetailBox').addClass('d-none');
+
+    $('#detailInquiryNum').val('');
+    $('#deleteInquiryNum').val('');
+
+    $('#detailTitle').text('');
+    $('#detailEmail').text('');
+    $('#detailWriter').text('');
+    $('#detailContent').html('');
+
+    initAnswerEditorOnce();
+    $('#detailAnswer').summernote('code', '');
+    $('#detailAnswer').summernote('disable');
+
+    $('#inquiryReturnHidden').val('');
+
+    $('#answerBtn').prop('disabled', true);
+    $('#deleteBtn').prop('disabled', true);
+
+    $('.inquiry-row').removeClass('active');
   }
 
   function loadDetail(inquiryNum) {
@@ -145,10 +186,9 @@ $(function () {
         $('#detailEmail').text(data.memberEmail || '-');
         $('#detailWriter').text((data.memberId != null && data.memberId !== '') ? data.memberId : '-');
 
-        // ✅ 서머노트(HTML) 렌더링
+        // ✅ 문의 내용은 HTML로 표시
         $('#detailContent').html(data.inquiryMsg || '-');
 
-        // ✅ 답변은 summernote로 편집
         initAnswerEditorOnce();
         $('#detailAnswer').summernote('enable');
         $('#detailAnswer').summernote('code', data.inquiryReturn || '');
@@ -177,15 +217,20 @@ $(function () {
       alert('문의를 선택해주세요.');
       return;
     }
+    if (!$('#detailAnswer').data('summernote')) {
+      alert('에디터 초기화에 실패했습니다. 새로고침 후 다시 시도해주세요.');
+      return;
+    }
 
-    var html = $('#detailAnswer').data('summernote')
-      ? $('#detailAnswer').summernote('code')
-      : $('#detailAnswer').val();
+    var html = $('#detailAnswer').summernote('code');
 
     if (!html || html === '<p><br></p>' || html.trim() === '') {
       alert('답변을 입력해주세요.');
       return;
     }
+
+    // ✅ 전송 안정화: hidden으로 서버에 보냄
+    $('#inquiryReturnHidden').val(html);
 
     $('#answerFrm').submit();
   });
@@ -201,16 +246,14 @@ $(function () {
     }
   });
 
-  // ✅ 첫 화면 자동 선택
-  // 1) selectedInquiryNum이 있으면 그 row 클릭
-  // 2) 없으면 첫 번째 row 자동 클릭
+  // ✅ 1) 첫 진입은 무조건 하단 비우기
+  resetDetailUI();
+
+  // ✅ 2) redirect 후 선택된 글이 있을 때만 자동 선택
   var selected = /*[[${selectedInquiryNum}]]*/ null;
   if (selected != null) {
     var $row = $('.inquiry-row[data-num="' + selected + '"]');
     if ($row.length) $row.trigger('click');
-  } else {
-    var $first = $('.inquiry-row').first();
-    if ($first.length) $first.trigger('click');
   }
 
 });
@@ -219,19 +262,17 @@ $(function () {
 </head>
 
 <body>
+  <div th:replace="~{manager/fragments/sidebar :: sidebar}"></div>
 
-<th:block th:replace="~{fragments/sidebar :: sidebar}"></th:block>
-
-<div class="all-content-wrapper">
-  <div class="header-advance-area">
-    <div class="breadcome-area">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="breadcome-list">
-              <div class="row">
-                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                  <div class="breadcomb-wp" style="color:#ffffff; font-size:20px">문의사항 관리</div>
+  <div class="all-content-wrapper">
+    <div class="header-advance-area">
+      <div class="breadcome-area">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="breadcome-list">
+                <div class="breadcomb-wp" style="color:#ffffff; font-size:20px">
+                  <h2>문의사항 관리</h2>
                 </div>
               </div>
             </div>
@@ -239,149 +280,127 @@ $(function () {
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="container" style="color:#ffffff; min-height:700px">
+    <div class="container" style="color:#ffffff; min-height:700px">
 
-    <div style="margin-bottom:20px;">
-      <h3 style="font-weight:600;">문의사항 목록</h3>
-    </div>
-
-    <!-- 검색 -->
-    <div style="margin:20px 0; text-align:left;">
-      <form id="searchFrm" th:action="@{/inquiryAdmin/inquiryListAdmin}" method="get" class="form-inline" style="margin:20px 0;">
-        <input type="hidden" name="currentPage" value="1">
-        <!-- ✅ mapper field 기본(제목) -->
-        <input type="hidden" name="field" value="1">
-        <input type="text" name="keyword" th:value="${param.keyword}" class="form-control"
-               placeholder="제목 검색" style="width:220px; margin-right:6px;">
-        <button type="submit" class="btn btn-search">검색</button>
-      </form>
-    </div>
-
-    <!-- 목록 -->
-    <div class="panel panel-default inquiry-card">
-      <div class="panel-body" style="padding:0;">
-        <table class="table inquiry-table text-center">
-          <thead>
-            <tr>
-              <th style="width:80px;">번호</th>
-              <th>제목</th>
-              <th style="width:150px;">작성자</th>
-              <th style="width:120px;">등록일</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <tr th:if="${#lists.isEmpty(inquiryList)}">
-              <td colspan="4" class="empty-text">등록된 문의가 없습니다.</td>
-            </tr>
-
-            <tr class="inquiry-row"
-                th:each="inquiry, i : ${inquiryList}"
-                th:attr="data-num=${inquiry.inquiryNum}"
-                th:classappend="${selectedInquiryNum != null and inquiry.inquiryNum == selectedInquiryNum} ? ' active' : ''">
-              <td th:text="${listNum - i.index}"></td>
-              <td class="text-left" th:text="${inquiry.inquiryTitle}"></td>
-              <td th:text="${inquiry.memberEmail != null ? inquiry.memberEmail : inquiry.memberId}"></td>
-              <td th:text="${#dates.format(inquiry.inquiryDate, 'yyyy-MM-dd')}"></td>
-            </tr>
-          </tbody>
-        </table>
+      <div style="margin-bottom:20px;">
+        <h3 style="font-weight:600;">문의사항 목록</h3>
       </div>
-    </div>
 
-    <!-- pagination -->
-    <div class="pagination-wrap">
-      <div th:utext="${pagination}"></div>
-    </div>
+      <!-- 검색 -->
+      <div style="margin:20px 0; text-align:left;">
+        <form id="searchFrm" th:action="@{/inquiryAdmin/inquiryListAdmin}" method="get" class="form-inline" style="margin:20px 0;">
+          <input type="hidden" name="currentPage" value="1">
+          <input type="hidden" name="field" value="1">
+          <input type="text" name="keyword" th:value="${param.keyword}" class="form-control"
+                 placeholder="제목 검색" style="width:220px; margin-right:6px;">
+          <button type="submit" class="btn btn-search">검색</button>
+        </form>
+      </div>
 
-    <!-- 상세(ajax로 채움) -->
-    <div id="inquiryDetailBox" class="d-none">
-      <div class="panel inquiry-detail-panel">
-        <div class="panel-body">
-
-          <!-- 답변 폼 -->
-          <form id="answerFrm" th:action="@{/inquiryAdmin/replyInquiryProcess}" method="post">
-            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-
-            <input type="hidden" name="inquiryNum" id="detailInquiryNum">
-            <input type="hidden" name="currentPage" th:value="${param.currentPage == null ? 1 : param.currentPage}">
-            <input type="hidden" name="keyword" th:value="${param.keyword}">
-            <input type="hidden" name="field" th:value="${param.field != null ? param.field : 1}">
-
-            <table class="table table-bordered inquiry-detail-table">
+      <!-- 목록 -->
+      <div class="panel panel-default inquiry-card">
+        <div class="panel-body" style="padding:0;">
+          <table class="table inquiry-table text-center">
+            <thead>
               <tr>
+                <th style="width:80px;">번호</th>
                 <th>제목</th>
-                <td id="detailTitle" class="text-muted">문의를 선택해주세요.</td>
+                <th style="width:150px;">작성자</th>
+                <th style="width:120px;">등록일</th>
               </tr>
-              <tr>
-                <th>이메일</th>
-                <td id="detailEmail">-</td>
-              </tr>
-              <tr>
-                <th>글쓴이</th>
-                <td id="detailWriter">-</td>
-              </tr>
-              <tr>
-                <th>문의 내용</th>
-                <td id="detailContent">-</td>
-              </tr>
-              <tr>
-                <th>답변</th>
-                <td>
-                  <!-- summernote는 JS에서 init -->
-                  <textarea id="detailAnswer" name="inquiryReturn" class="form-control" disabled></textarea>
-                </td>
-              </tr>
-            </table>
+            </thead>
 
-            <div class="inquiry-detail-actions">
-              <button type="button" class="btn btn-danger" id="deleteBtn" disabled>삭제</button>
-              <button type="button" class="btn btn-secondary" id="answerBtn" disabled>답변</button>
-            </div>
-          </form>
+            <tbody>
+              <tr th:if="${#lists.isEmpty(inquiryList)}">
+                <td colspan="4" class="empty-text">등록된 문의가 없습니다.</td>
+              </tr>
 
-          <!-- 삭제 폼 -->
-          <form id="deleteFrm" th:action="@{/inquiryAdmin/removeInquiry}" method="post">
-            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-            <input type="hidden" name="inquiryNum" id="deleteInquiryNum">
-            <input type="hidden" name="currentPage" th:value="${param.currentPage == null ? 1 : param.currentPage}">
-            <input type="hidden" name="keyword" th:value="${param.keyword}">
-            <input type="hidden" name="field" th:value="${param.field != null ? param.field : 1}">
-          </form>
-
+              <tr class="inquiry-row"
+                  th:each="inquiry, i : ${inquiryList}"
+                  th:attr="data-num=${inquiry.inquiryNum}"
+                  th:classappend="${selectedInquiryNum != null and inquiry.inquiryNum == selectedInquiryNum} ? ' active' : ''">
+                <td th:text="${listNum - i.index}"></td>
+                <td class="text-left" th:text="${inquiry.inquiryTitle}"></td>
+                <td th:text="${inquiry.memberEmail != null ? inquiry.memberEmail : inquiry.memberId}"></td>
+                <td th:text="${#dates.format(inquiry.inquiryDate, 'yyyy-MM-dd')}"></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
+
+      <!-- pagination -->
+      <div class="pagination-wrap">
+        <div th:utext="${pagination}"></div>
+      </div>
+
+      <!-- 상세 (ajax로 채움) -->
+      <div id="inquiryDetailBox" class="d-none">
+        <div class="panel inquiry-detail-panel">
+          <div class="panel-body">
+
+            <!-- 답변 폼 -->
+            <form id="answerFrm" th:action="@{/inquiryAdmin/replyInquiryProcess}" method="post">
+              <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+              <input type="hidden" name="inquiryNum" id="detailInquiryNum">
+
+              <input type="hidden" name="currentPage" th:value="${param.currentPage == null ? 1 : param.currentPage}">
+              <input type="hidden" name="keyword" th:value="${param.keyword}">
+              <input type="hidden" name="field" th:value="${param.field != null ? param.field : 1}">
+
+              <!-- ✅ 전송 안정화용 hidden -->
+              <input type="hidden" name="inquiryReturn" id="inquiryReturnHidden">
+
+              <table class="table table-bordered inquiry-detail-table">
+                <tr>
+                  <th>제목</th>
+                  <td id="detailTitle" class="text-muted"></td>
+                </tr>
+                <tr>
+                  <th>이메일</th>
+                  <td id="detailEmail"></td>
+                </tr>
+                <tr>
+                  <th>글쓴이</th>
+                  <td id="detailWriter"></td>
+                </tr>
+                <tr>
+                  <th>문의 내용</th>
+                  <td id="detailContent"></td>
+                </tr>
+                <tr>
+                  <th>답변</th>
+                  <td>
+                    <!-- ✅ name 제거(중복/충돌 방지), hidden으로 전송 -->
+                    <textarea id="detailAnswer" class="form-control"></textarea>
+                  </td>
+                </tr>
+              </table>
+
+              <div class="inquiry-detail-actions">
+                <button type="button" class="btn btn-danger" id="deleteBtn" disabled>삭제</button>
+                <button type="button" class="btn btn-secondary" id="answerBtn" disabled>답변</button>
+              </div>
+            </form>
+
+            <!-- 삭제 폼 -->
+            <form id="deleteFrm" th:action="@{/inquiryAdmin/removeInquiry}" method="post">
+              <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+              <input type="hidden" name="inquiryNum" id="deleteInquiryNum">
+
+              <input type="hidden" name="currentPage" th:value="${param.currentPage == null ? 1 : param.currentPage}">
+              <input type="hidden" name="keyword" th:value="${param.keyword}">
+              <input type="hidden" name="field" th:value="${param.field != null ? param.field : 1}">
+            </form>
+
+          </div>
+        </div>
+      </div>
+
     </div>
 
+    <div th:replace="~{manager/fragments/footer :: footer}"></div>
   </div>
-</div>
-
-<th:block th:replace="~{fragments/footer :: footer}"></th:block>
-
-<!-- 이하 너 프로젝트 공통 스크립트들 유지 -->
-<script src="js/wow.min.js"></script>
-<script src="js/jquery-price-slider.js"></script>
-<script src="js/jquery.meanmenu.js"></script>
-<script src="js/owl.carousel.min.js"></script>
-<script src="js/jquery.sticky.js"></script>
-<script src="js/jquery.scrollUp.min.js"></script>
-<script src="js/scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
-<script src="js/scrollbar/mCustomScrollbar-active.js"></script>
-<script src="js/metisMenu/metisMenu.min.js"></script>
-<script src="js/metisMenu/metisMenu-active.js"></script>
-<script src="js/sparkline/jquery.sparkline.min.js"></script>
-<script src="js/sparkline/jquery.charts-sparkline.js"></script>
-<script src="js/calendar/moment.min.js"></script>
-<script src="js/calendar/fullcalendar.min.js"></script>
-<script src="js/calendar/fullcalendar-active.js"></script>
-<script src="js/flot/jquery.flot.js"></script>
-<script src="js/flot/jquery.flot.resize.js"></script>
-<script src="js/flot/curvedLines.js"></script>
-<script src="js/flot/flot-active.js"></script>
-<script src="js/plugins.js"></script>
-<script src="js/main.js"></script>
-
 </body>
 </html>

@@ -113,6 +113,19 @@ public class InquiryAdminService {
         return flag;
     }
     
+    
+ // ✅ adminId로 admin_num(PK) 조회 (FK 깨짐 방지용)
+    public Integer selectAdminNumByAdminId(String adminId) {
+        Integer adminNum = null;
+        try {
+            adminNum = iaDAO.selectAdminNumByAdminId(adminId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return adminNum;
+    }
+    
+    
 
     public String pagination2(InquiryRangeDTO rDTO, String justify) {
         StringBuilder pagination = new StringBuilder();
@@ -207,5 +220,7 @@ public class InquiryAdminService {
 
         return pagination.toString();
     }
+    
+    
     
 }//class

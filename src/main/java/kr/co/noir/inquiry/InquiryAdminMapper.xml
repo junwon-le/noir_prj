@@ -63,7 +63,17 @@
     )
     WHERE rnum BETWEEN #{startNum} AND #{endNum}
   </select>
+	
+	<!-- 6) adminId로 admin_num 조회 (FK 만족용) -->
+<select id="selectAdminNumByAdminId"
+        parameterType="string"
+        resultType="int">
+  SELECT admin_num
+  FROM admin
+  WHERE admin_id = #{value}
+</select>
 
+	
   <!-- 3) 상세 (AJAX) -->
   <select id="selectInquiryDetail"
           parameterType="int"
