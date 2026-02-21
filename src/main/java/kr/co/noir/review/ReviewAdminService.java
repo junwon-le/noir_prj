@@ -12,32 +12,27 @@ public class ReviewAdminService {
     @Autowired
     private ReviewAdminDAO raDAO;
 
+    /* =========================
+       1. 총 게시글 수
+       ========================= */
     public int totalCnt(ReviewRangeDTO rrDTO) {
-        int totalCnt = 0;
         try {
             if (rrDTO.getRoomTypeNum() > 0) {
-                totalCnt = raDAO.selectRoomReviewCnt(rrDTO);
+                return raDAO.selectRoomReviewCnt(rrDTO);
             } else {
-                totalCnt = raDAO.selectReviewTotalCnt(rrDTO);
+                return raDAO.selectReviewTotalCnt(rrDTO);
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            return 0;
         }
-        return totalCnt;
     }
 
-    public int roomReviewTotalCnt(ReviewRangeDTO rrDTO) {
-        int totalCnt = 0;
-        try {
-            totalCnt = raDAO.selectRoomReviewCnt(rrDTO);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return totalCnt;
-    }
-
+    /* =========================
+       2. 페이지 설정
+       ========================= */
     public int pageScale() {
-        return 4;
+        return 4;   // 한 페이지당 게시글 수
     }
 
     public int totalPage(int totalCount, int pageScale) {
@@ -52,45 +47,49 @@ public class ReviewAdminService {
         return startNum + pageScale - 1;
     }
 
-    public List<ReviewAdminDomain> getReviewAdminDomains(ReviewRangeDTO rrDTO) {
-        List<ReviewAdminDomain> list = null;
+    /* =========================
+       3. 목록 조회
+       ========================= */
+    public List<ReviewAdminDomain> getReviewAdminList(ReviewRangeDTO rrDTO) {
         try {
-            list = raDAO.selectReviewList(rrDTO);
+            if (rrDTO.getRoomTypeNum() > 0) {
+                return raDAO.selectReviewByRoom(rrDTO);
+            } else {
+                return raDAO.selectReviewList(rrDTO);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
+            return null;
         }
-        return list;
     }
 
-    public List<ReviewAdminDomain> getReviewRoomList(ReviewRangeDTO rrDTO) {
-        List<ReviewAdminDomain> list = null;
-        try {
-            list = raDAO.selectReviewByRoom(rrDTO);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
-
+    /* =========================
+       4. 상세 조회
+       ========================= */
     public ReviewAdminDomain searchOneReview(int reviewNum) {
-        ReviewAdminDomain raDomain = null;
         try {
-            raDomain = raDAO.selectReviewDetail(reviewNum);
+            return raDAO.selectReviewDetail(reviewNum);
         } catch (SQLException e) {
             e.printStackTrace();
+            return null;
         }
-        return raDomain;
     }
 
+    /* =========================
+       5. 답변 등록/수정
+       ========================= */
     public boolean replyReview(ReviewAdminDTO raDTO) {
         try {
             return raDAO.updateReplyReview(raDTO) == 1;
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
     }
 
+    /* =========================
+       6. 리뷰 Soft Delete
+       ========================= */
     public boolean removeReview(int reviewNum) {
         try {
             return raDAO.deleteAdminReview(reviewNum) == 1;
@@ -100,6 +99,9 @@ public class ReviewAdminService {
         }
     }
 
+    /* =========================
+       7. 답변만 삭제
+       ========================= */
     public boolean removeOnlyReply(int reviewNum) {
         try {
             return raDAO.deleteOnlyReply(reviewNum) == 1;
@@ -109,6 +111,9 @@ public class ReviewAdminService {
         }
     }
 
+    /* =========================
+       8. 리뷰 이미지 리스트
+       ========================= */
     public List<String> searchReviewImgList(int reviewNum) {
         try {
             return raDAO.selectReviewImgList(reviewNum);
@@ -118,75 +123,92 @@ public class ReviewAdminService {
         }
     }
 
-    public String pagination2(ReviewRangeDTO rrDTO, String justify) {
+    /* =========================
+       9. 페이징 HTML 생성
+       ========================= */
+    public String pagination(ReviewRangeDTO rrDTO, String justify) {
+
         StringBuilder pagination = new StringBuilder();
 
         int pageNumber = 3;
         int startPage = ((rrDTO.getCurrentPage() - 1) / pageNumber) * pageNumber + 1;
-        int endPage = (((startPage - 1) + pageNumber) / pageNumber) * pageNumber;
-        if (rrDTO.getTotalPage() <= endPage) { endPage = rrDTO.getTotalPage(); }
+        int endPage = startPage + pageNumber - 1;
 
-        // ✅ 관리자 객실필터 페이지인지 판단 (URL 통일 기준)
-        boolean isRoomReview = rrDTO.getUrl() != null && rrDTO.getUrl().contains("/admin/review/adminRoomList\"");
+        if (endPage > rrDTO.getTotalPage()) endPage = rrDTO.getTotalPage();
 
-        int movePage = 0;
+        // ✅ roomTypeNum 있으면 항상 num 파라미터 유지
+        boolean hasRoomFilter = rrDTO.getRoomTypeNum() > 0;
+
+        // ✅ 링크 베이스
+        String baseUrl = rrDTO.getUrl();
+        if (baseUrl == null || baseUrl.isBlank()) {
+            baseUrl = "/admin/review/list";
+        }
+
+        int movePage;
 
         // 이전
-        StringBuilder prevMark = new StringBuilder("<li class='page-item prev disabled'><a class='page-link'>이전</a></li>");
+        StringBuilder prevMark = new StringBuilder();
         if (rrDTO.getCurrentPage() > pageNumber) {
             movePage = startPage - 1;
-            prevMark.setLength(0);
-            prevMark.append("<li class='page-item prev'><a class='page-link' href='")
-                    .append(rrDTO.getUrl())
+            prevMark.append("<li class='page-item'><a class='page-link' href='")
+                    .append(baseUrl)
                     .append("?currentPage=").append(movePage);
 
-            if (isRoomReview && rrDTO.getRoomTypeNum() != 0) {
+            if (hasRoomFilter) {
                 prevMark.append("&num=").append(rrDTO.getRoomTypeNum());
             }
             prevMark.append("'>이전</a></li>");
+        } else {
+            prevMark.append("<li class='page-item disabled'><span class='page-link'>이전</span></li>");
         }
 
-        // 페이지 링크
+        // 페이지 번호
         StringBuilder pageLink = new StringBuilder();
         movePage = startPage;
 
         while (movePage <= endPage) {
             if (movePage == rrDTO.getCurrentPage()) {
-                pageLink.append("<li class='page-item active page-link'>").append(movePage).append("</li>");
+                pageLink.append("<li class='page-item active'><span class='page-link'>")
+                        .append(movePage).append("</span></li>");
             } else {
                 pageLink.append("<li class='page-item'><a class='page-link' href='")
-                        .append(rrDTO.getUrl())
+                        .append(baseUrl)
                         .append("?currentPage=").append(movePage);
 
-                if (isRoomReview && rrDTO.getRoomTypeNum() != 0) {
+                if (hasRoomFilter) {
                     pageLink.append("&num=").append(rrDTO.getRoomTypeNum());
                 }
+
                 pageLink.append("'>").append(movePage).append("</a></li>");
             }
             movePage++;
         }
 
         // 다음
-        StringBuilder nextMark = new StringBuilder("<li class='page-item next disabled'><span class='page-link'>다음</span></li>");
+        StringBuilder nextMark = new StringBuilder();
         if (rrDTO.getTotalPage() > endPage) {
             movePage = endPage + 1;
-            nextMark.setLength(0);
-            nextMark.append("<li class='page-item next'><a class='page-link' href='")
-                    .append(rrDTO.getUrl())
+            nextMark.append("<li class='page-item'><a class='page-link' href='")
+                    .append(baseUrl)
                     .append("?currentPage=").append(movePage);
 
-            if (isRoomReview && rrDTO.getRoomTypeNum() != 0) {
+            if (hasRoomFilter) {
                 nextMark.append("&num=").append(rrDTO.getRoomTypeNum());
             }
             nextMark.append("'>다음</a></li>");
+        } else {
+            nextMark.append("<li class='page-item disabled'><span class='page-link'>다음</span></li>");
         }
 
-        pagination.append("<nav aria-label='...'><ul class='pagination d-flex justify-content-")
+        pagination.append("<nav><ul class='pagination d-flex justify-content-")
                 .append(justify).append("'>")
-                .append(prevMark).append(pageLink).append(nextMark)
+                .append(prevMark)
+                .append(pageLink)
+                .append(nextMark)
                 .append("</ul></nav>");
 
         return pagination.toString();
+    
     }
-
 }

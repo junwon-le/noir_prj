@@ -85,34 +85,46 @@ public class InquiryAdminController {
         return "manager/inquiry/inquiryAdminList";
     }
 
-    /**
-     * 답변 처리 (AJAX 아님, submit)
-     * - 성공/실패 flash msg로 알림
-     */
+    
+    //답변 처리
     @PostMapping("/replyInquiryProcess")
     public String replyInquiryProcess(InquiryAdminDTO iaDTO,
                                       InquiryRangeDTO irDTO,
                                       HttpSession session,
                                       RedirectAttributes ra) {
 
-        Integer adminNum = (Integer) session.getAttribute("adminNum");
-        if (adminNum == null) {
+        // ✅ 1) adminId를 세션에서 가져온다 (로그인 코드는 못 건드리니까 이걸 신뢰)
+        String adminId = (String) session.getAttribute("adminId");
+        System.out.println("session adminId = " + adminId);
+        System.out.println("session adminNum = " + session.getAttribute("adminNum")); // 참고용
+
+        if (adminId == null || adminId.trim().isEmpty()) {
             return "redirect:/admin/login";
         }
-        iaDTO.setAdminNum(adminNum);
 
+        // ✅ 2) adminId로 DB에서 진짜 admin_num(PK) 조회
+        Integer realAdminNum = ias.selectAdminNumByAdminId(adminId);
+        System.out.println("realAdminNum(DB) = " + realAdminNum);
+
+        if (realAdminNum == null) {
+            ra.addFlashAttribute("msg", "관리자 정보 오류. 다시 로그인 해주세요.");
+            return "redirect:/admin/login";
+        }
+
+        // ✅ 3) FK가 만족되는 adminNum 세팅
+        iaDTO.setAdminNum(realAdminNum);
+
+        // ✅ 4) 답변 업데이트
         boolean flag = ias.updateInquiryReturn(iaDTO);
-
         ra.addFlashAttribute("msg", flag ? "답변이 등록되었습니다." : "답변 등록에 실패했습니다.");
 
+        // ✅ 5) redirect (기존 그대로)
         StringBuilder redirect = new StringBuilder();
         redirect.append("redirect:/inquiryAdmin/inquiryListAdmin?currentPage=")
                 .append(irDTO.getCurrentPage() <= 0 ? 1 : irDTO.getCurrentPage());
 
-        // 답변 후에도 선택 유지(선택된 글 highlight + JS가 자동 클릭 가능)
         redirect.append("&inquiryNum=").append(iaDTO.getInquiryNum());
 
-        // 검색 유지
         if (irDTO.getKeyword() != null && !irDTO.getKeyword().isEmpty()) {
             redirect.append("&field=").append(irDTO.getField())
                     .append("&keyword=").append(URLEncoder.encode(irDTO.getKeyword(), StandardCharsets.UTF_8));

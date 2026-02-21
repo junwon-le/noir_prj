@@ -71,4 +71,13 @@ public class InquiryAdminDAO {
         if (ss != null) { ss.close(); }
         return cnt;
     }
+    
+ // ✅ adminId로 admin_num 조회 (FK 만족용)
+    public Integer selectAdminNumByAdminId(String adminId) throws SQLException {
+        SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
+        Integer adminNum = ss.selectOne(NS + "selectAdminNumByAdminId", adminId);
+
+        if (ss != null) { ss.close(); }
+        return adminNum;
+    }
 }

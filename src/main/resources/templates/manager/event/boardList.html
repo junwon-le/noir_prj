@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+
+<title>Insert title here</title>
+<!-- bootstrap CDN 시작 -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+<!-- bootstrap CDN 끝 -->
+<!-- jquery CDN 시작-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<!-- jquery CDN 끝-->
+<style type="text/css">
+#wrap{margin:0px auto; width:1200px; height:1000px;} 
+#header{height:150px;}
+#container{height:700px;}
+#footer{height:150px;}
+
+a{
+color : #000000;
+text-decoration:none
+}
+
+a:hover{
+color : #292929;
+text-decoration:none
+}
+
+
+.prevMark{
+color : #FF0000
+}
+
+.currentPage{
+font-size: 20px;
+font-weight: bold;
+}
+.notCurrentPage{
+font-size: 18px;
+font-weight:normal;
+}
+
+
+</style>
+<!-- jQeury CDN 시작 -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script type="text/javascript">
+
+$(function(){
+
+	
+	$("#btnWrite").click(function(){
+		var currentPage = $("#currentPage").val();
+		location.href="/board/writeFrm?currentPage=" + currentPage;
+	});
+	
+	$("#btnSearch").click(function(){
+		searchBoard();
+	});
+	
+	$("#keyword").keyup(function(evt){
+		if(evt.which == "13"){
+			searchBoard();
+		}
+		
+	});
+	
+
+
+$("#btnWrite").on("click", function () {
+
+    var title = $("#eventTitle").val().trim();
+    if (title === "") {
+      alert("제목은 필수 입력입니다.");
+      $("#eventTitle").focus();
+      return;
+    }
+}); //ready
+    
+function searchBoard(){
+	
+	if($("#keyword").val().trim() != ""){
+		$("#boardSearchFrm").submit();
+	}//end if
+	
+}//searchBoard
+
+
+</script>
+
+
+
+</head>
+<body>		
+	<div id="wrap">
+	<div id="header"> 
+	<th:block  th:replace="~{fragments/header :: header}"></th:block>
+	</div>
+	<div id="container">
+		<div>
+			<strong>아무말 대잔치 게시판</strong><br>
+			<div id="boardList" style="min-height:500px">
+					
+				<input type="button" value="글쓰기" class="btn btn-success btn-sm" id="btnWrite"/>
+				
+				<table class="table table-hover">
+				<thead>
+				<tr>
+				<th style="width:80px">번호</th>
+				<th style="width:450px">제목</th>
+				<th style="width:150px">작성자</th>
+				<th style="width:80px">조회수</th>
+				<th style="width:200px">작성일</th>					
+				</tr>
+				</thead>
+				<tbody>
+				
+				<th:block th:if="${boardList.empty}">
+				<tr>
+				<td colspan="5" style="text-align:center">작성된 게시글이 없습니다.</td>
+				<tr>
+				</th:block>
+				
+				
+				<tr th:each="boardDomain, i : ${boardList}" th:object="${boardDomain}">
+				<td th:text="${listNum-i.index}"></td>
+				<td><a th:href="@{{url}(url='/board/boardDetail',num=*{num},currentPage=${param.currentPage})}"><span th:text="*{title}"></span></a></td>
+				<td th:text="*{id}"></td>
+				<td th:text="*{cnt}"></td>
+				<td th:text="*{#dates.format(input_date,'MM-dd-yyyy EEEE')}"></td>
+				</tr>										
+				</tbody>					
+				</table>
+			</div>
+			<div id="boardSearchDiv" style="text-align:center">
+				<form id="boardSearchFrm" th:action="@{/board/boardList}">
+				<select name="field" id="field" style="height:30px">
+					<option value="1" th:selected="${param.field != null and param.field[0] eq '1'}">제목</option>
+					<option value="2" th:selected="${param.field != null and param.field[0] eq '2'}">내용</option>
+					<option value="3" th:selected="${param.field != null and param.field[0] eq '3'}">작성자</option>
+				</select>
+				<input type="text" name="keyword" id="keyword" style="height:30px" th:value="${param.keyword}"/>
+				
+				<input type="hidden" id="currentPage" name="currentPage" th:value="${param.currentPage eq null ? 1 : param.currentPage}">
+				<input type="text" style="display:none">
+				<input type="button" value="검색" id="btnSearch" class="btn btn-success btn-sm"/>
+				</form>					
+			</div>
+			<div id="pagination" style="text-align:center">
+				<div th:utext="${pagination}"></div>
+			</div>		
+		</div>	
+	</div>
+	<div id="footer">
+	<th:block  th:replace="~{fragments/footer :: footer}"></th:block>
+	</div>
+	</div>
+</body>
+</html>

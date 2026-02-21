@@ -1,128 +1,348 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta name="title" content="HOTEL 28">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>후기 관리</title>
+<meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<title>NOIR호텔 관리자 페이지</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-<link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.css" rel="stylesheet">
-<!-- jQeury CDN 시작 -->
-<link rel="stylesheet" type="text/css" href="/common/css/homepage/base.css">
-<link rel="stylesheet" type="text/css" href="/common/css/homepage/style.css?v=0312">
-<link rel="stylesheet" type="text/css" href="/common/css/homepage/sub.css?v=0312">
-<!-- jQeury CDN 시작 -->
+<!-- 🔥 관리자 공통 CSS -->
+<link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900" rel="stylesheet">
+<link rel="stylesheet" href="/admin_common/css/bootstrap.min.css">
+<link rel="stylesheet" href="/admin_common/css/font-awesome.min.css">
+<link rel="stylesheet" href="/admin_common/css/nalika-icon.css">
+<link rel="stylesheet" href="/admin_common/css/owl.carousel.css">
+<link rel="stylesheet" href="/admin_common/css/owl.theme.css">
+<link rel="stylesheet" href="/admin_common/css/owl.transitions.css">
+<link rel="stylesheet" href="/admin_common/css/animate.css">
+<link rel="stylesheet" href="/admin_common/css/normalize.css">
+<link rel="stylesheet" href="/admin_common/css/meanmenu.min.css">
+<link rel="stylesheet" href="/admin_common/css/main.css">
+<link rel="stylesheet" href="/admin_common/css/scrollbar/jquery.mCustomScrollbar.min.css">
+<link rel="stylesheet" href="/admin_common/css/metisMenu/metisMenu.min.css">
+<link rel="stylesheet" href="/admin_common/css/metisMenu/metisMenu-vertical.css">
+<link rel="stylesheet" href="/admin_common/style.css">
+<link rel="stylesheet" href="/admin_common/css/responsive.css">
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
-
-<script src="/common/js/comm/jquery.bxslider.js"></script>
-<script src="/common/js/homepage/jquery.rwdImageMaps.min.js"></script>
-<script src="/common/js/homepage/jquery.accessibility.modal.js"></script>
-<script src="/common/js/comm/jquery.cookie.js"></script>
-<script src="/common/js/homepage/plugin.js"></script>
-<script src="/common/js/homepage/custom.js"></script>
-
-
+<script src="/admin_common/js/vendor/jquery-1.12.4.min.js"></script>
+<script src="/admin_common/js/bootstrap.min.js"></script>
+<script src="/admin_common/js/metisMenu/metisMenu.min.js"></script>
+<script src="/admin_common/js/metisMenu/metisMenu-active.js"></script>
+<script src="/admin_common/js/plugins.js"></script>
+<script src="/admin_common/js/main.js"></script>
 
 <style>
-.notice-search-bar{display:flex;align-items:center;gap:12px;margin-bottom:25px;}
-.room-type-select{margin-bottom:10px;min-width:180px;background:#fff;color:#b1c1e2;border:1px solid #e3e8f3;padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;}
-.room-type-select:hover{background:#f6f8fc;}
-.notice-table-wrap{background:#fff;border:1px solid #e3e8f3;border-radius:12px;padding:10px;}
-.notice-table{margin-bottom:0;color:#38599a;}
-.notice-table thead th{background:#f6f8fc;color:#38599a;font-weight:600;text-align:center;border-bottom:1px solid #e3e8f3;}
-.notice-table tbody td{text-align:center;vertical-align:middle;border-top:1px solid #e3e8f3;}
-.notice-table tbody td:nth-child(2){text-align:left;}
-.notice-table tbody tr:hover{background:#f9fbff;}
-.notice-write-btn{background:#b1c1e2;color:#fff;border:1px solid #e3e8f3;padding:8px 18px;border-radius:8px;font-weight:600;transition:all .2s ease;}
-.notice-detail-btns{display:flex;justify-content:space-between;align-items:center;margin-top:15px;}
-.notice-detail-btns .btn-delete{background:#c0392b;}
-.notice-detail-btns .btn-cancel{background:#7f8c8d;margin-right:10px;}
-#adminReply{background:#fff!important;color:#333!important;border:1px solid #e3e8f3;}
-.thumb{width:110px;height:110px;object-fit:cover;border-radius:10px;border:1px solid #e3e8f3;margin:6px;}
-.detail-img-wrap{display:flex;flex-wrap:wrap;gap:6px;}
-.badge-answered{background:#2ecc71;}
-.badge-not{background:#95a5a6;}
+/* ✅ 배경(이미지 느낌) */
+body, .all-content-wrapper{
+  background:#0f1a2d;
+}
+
+/* ====== 목록 테이블 ====== */
+.review-table-wrap{
+  background:#ffffff;
+  border-radius:12px;
+  padding:20px;
+  box-shadow:0 3px 8px rgba(0,0,0,0.05);
+}
+
+.review-table{
+  color:#38599a;
+}
+
+.review-table thead th{
+  background:#f4f6fb;
+  text-align:center;
+  font-weight:600;
+}
+
+.review-table tbody td{
+  text-align:center;
+  vertical-align:middle;
+}
+
+.review-table tbody td:nth-child(2){
+  text-align:left;
+}
+
+.review-table tbody tr:hover{
+  background:#f9fbff;
+  cursor:pointer;
+}
+
+/* ✅ 삭제된 리뷰 행 */
+.review-row.is-deleted{
+  opacity:0.55;
+  background:#f7f7f7 !important;
+  cursor:not-allowed !important;
+}
+.review-row.is-deleted:hover{
+  background:#f7f7f7 !important;
+}
+
+/* ✅ 상태 뱃지 */
+.badge-answered{
+  background:#2ecc71;
+  padding:6px 14px;
+  border-radius:20px;
+  font-size:12px;
+  color:#fff;
+}
+.badge-not{
+  background:#bdc3c7;
+  padding:6px 14px;
+  border-radius:20px;
+  font-size:12px;
+  color:#fff;
+}
+.badge-deleted{
+  background:#e74c3c;
+  padding:6px 14px;
+  border-radius:20px;
+  font-size:12px;
+  color:#fff;
+}
+
+/* ====== 상세(테이블형) ====== */
+.review-card{
+  background:#ffffff;
+  border-radius:12px;
+  padding:25px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.08);
+  color:#38599a;
+}
+
+.review-card h4{
+  font-weight:600;
+  margin-bottom:20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.detail-table{
+  width:100%;
+  border-collapse:collapse;
+  background:#fff;
+}
+
+.detail-table th, .detail-table td{
+  border-top:1px solid #e6eaf2;
+  padding:14px 16px;
+  vertical-align:top;
+}
+
+.detail-table th{
+  width:160px;
+  color:#38599a;
+  font-weight:700;
+  background:#fff;
+}
+
+.detail-table td{
+  color:#2c3e50;
+}
+
+.detail-btn-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:18px;
+}
+
+.detail-btn-row .right-btns{
+  display:flex;
+  gap:10px;
+}
+
+/* ✅ 이미지 썸네일 */
+.thumb{
+  width:120px;
+  height:120px;
+  object-fit:cover;
+  border-radius:12px;
+  margin-right:8px;
+  border:1px solid rgba(56,89,154,0.2);
+}
+
+.thumb-link{
+  display:inline-block;
+}
+
+/* ✅ 로딩 텍스트 */
+.loading-txt{
+  color:#7f8c8d;
+  font-size:13px;
+}
+
+/* ====== 객실 드롭다운 ====== */
+.room-select-wrapper{
+  position:relative;
+  width:280px;
+}
+.room-select-box{
+  background:#f4f6fb;
+  border:1px solid #cfd8e6;
+  border-radius:12px;
+  padding:14px 18px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  cursor:pointer;
+  font-weight:600;
+  color:#2c3e50;
+  transition:all 0.2s ease;
+}
+.room-select-box:hover{ border-color:#3f5fa9; }
+.room-select-dropdown{
+  position:absolute;
+  top:100%;
+  left:0;
+  width:100%;
+  background:#ffffff;
+  border-radius:12px;
+  margin-top:8px;
+  list-style:none;
+  padding:10px 0;
+  box-shadow:0 6px 16px rgba(0,0,0,0.08);
+  display:none;
+  z-index:1000;
+}
+.room-select-dropdown li{
+  padding:12px 20px;
+  font-weight:500;
+  color:#38599a;
+  cursor:pointer;
+  transition:all 0.15s ease;
+}
+.room-select-dropdown li:hover{ background:#f4f6fb; }
+
+/* ====== 페이지네이션(중간) ====== */
+.review-pagination{
+  margin:22px 0 16px;
+}
+.review-pagination .pagination{
+  gap:6px;
+}
+.review-pagination .page-item .page-link,
+.review-pagination .page-item span.page-link{
+  border:0 !important;
+  background:#ffffff !important;
+  color:#38599a !important;
+  border-radius:10px !important;
+  min-width:38px;
+  height:38px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+  box-shadow:0 2px 6px rgba(0,0,0,0.08);
+}
+.review-pagination .page-item.active .page-link{
+  background:#bcd0ff !important;
+  color:#1f2d4d !important;
+}
+.review-pagination .page-item.disabled .page-link{
+  background:#eef2fb !important;
+  color:#9aa7c2 !important;
+  box-shadow:none;
+}
+.review-pagination .page-item:not(.disabled):not(.active) .page-link:hover{
+  background:#f4f6fb !important;
+}
 </style>
-
-
 </head>
 
 <body>
-	<!--[if lt IE 8]>
-            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-        <![endif]-->
 
-	<th:block th:replace="~{fragments/sidebar :: sidebar}"></th:block>
-	<!-- Start Welcome area -->
-	<div class="all-content-wrapper">
-		<div class="header-advance-area">
-			<div class="breadcome-area">
-  <div class="container" style="color:white;min-height:700px">
+<!-- 🔥 사이드바 -->
+<div th:replace="~{manager/fragments/sidebar :: sidebar}"></div>
 
-    <div style="margin-bottom:20px;">
-      <h3 style="font-weight:600;">후기 목록</h3>
+<div class="all-content-wrapper">
+
+  <!-- 🔥 header -->
+  <div class="header-advance-area">
+    <div class="breadcome-area">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="breadcome-list">
+              <div class="breadcomb-wp" style="color:#ffffff;font-size:20px">
+                <h2>후기 관리</h2>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <!-- 객실 타입 필터 -->
-    <div class="dropdown search-filter">
-      <button class="room-type-select dropdown-toggle" type="button" data-bs-toggle="dropdown" id="roomTypeText">
-        객실 타입 선택
-      </button>
+  <!-- 🔥 본문 -->
+  <div class="container" style="color:white; min-height:700px">
 
+    <!-- =========================
+         1) 후기 목록
+         ========================= -->
+    <h3 style="margin-bottom:20px;">후기 목록</h3>
 
-      <ul class="dropdown-menu">
-        <li><a class="dropdown-item" th:href="@{/admin/review/list}">전체</a></li>
-        <li><a class="dropdown-item" th:href="@{/admin/review/adminRoomList(num=1)}">STANDARD QUEEN</a></li>
-        <li><a class="dropdown-item" th:href="@{/admin/review/adminRoomList(num=2)}">SEMI-DELUXE DOUBLE</a></li>
-        <li><a class="dropdown-item" th:href="@{/admin/review/adminRoomList(num=3)}">DELUXE DOUBLE</a></li>
-        <li><a class="dropdown-item" th:href="@{/admin/review/adminRoomList(num=4)}">DELUXE TWIN</a></li>
-        <li><a class="dropdown-item" th:href="@{/admin/review/adminRoomList(num=5)}">FAMILY TWIN</a></li>
+    <!-- 객실 필터 (커스텀 드롭다운) -->
+    <div class="room-select-wrapper mb-4">
+      <div class="room-select-box" id="roomSelectBtn">
+        <span id="selectedRoomText">객실 타입 선택</span>
+        <span class="arrow">▾</span>
+      </div>
+
+      <ul class="room-select-dropdown" id="roomSelectMenu">
+        <li data-url="/admin/review/list">전체</li>
+        <li data-url="/admin/review/adminRoomList?num=1">STANDARD QUEEN</li>
+        <li data-url="/admin/review/adminRoomList?num=2">SEMI-DELUXE DOUBLE</li>
+        <li data-url="/admin/review/adminRoomList?num=3">DELUXE DOUBLE</li>
+        <li data-url="/admin/review/adminRoomList?num=4">DELUXE TWIN</li>
+        <li data-url="/admin/review/adminRoomList?num=5">FAMILY TWIN</li>
       </ul>
     </div>
-    </div>
-    </div>
 
-
-    <!-- 후기 목록 테이블 -->
-    <div class="table-responsive notice-table-wrap">
-      <table class="table notice-table">
+    <!-- 리뷰 테이블 -->
+    <div class="table-responsive review-table-wrap">
+      <table class="table review-table">
         <thead>
           <tr>
-            <th style="width:80px;">번호</th>
+            <th>번호</th>
             <th>제목</th>
-            <th style="width:120px;">작성자</th>
-            <th style="width:140px;">등록일</th>
-            <th style="width:100px;">별점</th>
-            <th style="width:120px;">답변여부</th>
+            <th>작성자</th>
+            <th>등록일</th>
+            <th>별점</th>
+            <th>답변여부</th>
           </tr>
         </thead>
         <tbody>
 
-          <!-- 게시글 없을 때 -->
           <tr th:if="${#lists.isEmpty(reviewAllList)}">
-            <td colspan="6" style="padding:40px;color:#b1c1e2;">작성된 후기가 없습니다.</td>
+            <td colspan="6" style="padding:40px 0; color:#9aa7c2;">작성된 후기가 없습니다.</td>
           </tr>
 
-          <!-- 게시글 있을 때 -->
           <tr th:each="r : ${reviewAllList}"
               class="review-row"
-              style="cursor:pointer;"
-              th:data-reviewnum="${r.reviewNum}">
-            <td th:text="${r.reviewNum}">1</td>
-            <td th:text="${r.reviewTitle}">제목</td>
-            <td th:text="${r.memberLastName}">작성자</td>
-            <td th:text="${#dates.format(r.reviewDate, 'yyyy-MM-dd')}">2026-02-20</td>
-            <td th:text="${r.reviewStar}">5</td>
+              th:classappend="${r.reviewDelFlag == 'Y'} ? ' is-deleted' : ''"
+              th:data-reviewnum="${r.reviewNum}"
+              th:data-del="${r.reviewDelFlag}"
+              style="cursor:pointer;">
+            <td th:text="${r.reviewNum}"></td>
+            <td th:text="${r.reviewTitle}"></td>
+            <td th:text="${r.memberLastName}"></td>
+            <td th:text="${#dates.format(r.reviewDate,'yyyy-MM-dd')}"></td>
+            <td th:text="${r.reviewStar}"></td>
             <td>
-              <span th:if="${r.reviewReturn != null and !#strings.isEmpty(r.reviewReturn)}"
-                    class="badge badge-answered">답변완료</span>
-              <span th:unless="${r.reviewReturn != null and !#strings.isEmpty(r.reviewReturn)}"
-                    class="badge badge-not">미답변</span>
+              <!-- 삭제 우선 -->
+              <span th:if="${r.reviewDelFlag == 'Y'}" class="badge-deleted">삭제됨</span>
+
+              <!-- 답변완료 -->
+              <span th:if="${r.reviewDelFlag != 'Y'} and ${r.reviewReturn != null and !#strings.isEmpty(r.reviewReturn)}"
+                    class="badge-answered">답변완료</span>
+
+              <!-- 미답변 -->
+              <span th:if="${r.reviewDelFlag != 'Y'} and ${r.reviewReturn == null or #strings.isEmpty(r.reviewReturn)}"
+                    class="badge-not">미답변</span>
             </td>
           </tr>
 
@@ -130,217 +350,272 @@
       </table>
     </div>
 
-    <!-- 상세 박스 -->
+    <!-- =========================
+         2) 페이지네이션 (중간)
+         ========================= -->
+    <div class="review-pagination"
+         th:utext="${pagination != null ? pagination : ''}">
+    </div>
+
+    <!-- =========================
+         3) 후기 상세 (테이블 분리)
+         ========================= -->
+    <h3 style="margin:30px 0 20px;">후기 상세</h3>
+
     <div id="reviewDetailBox" class="d-none">
+      <div class="review-card">
 
-      <h3 style="font-weight:600;margin-top:40px;margin-bottom:10px;">후기 상세</h3>
+        <h4>
+          <span>후기 상세</span>
+          <span id="detailBadge" class="badge-not">선택 대기</span>
+        </h4>
 
-      <div class="notice-table-wrap" style="margin-top:10px;">
-        <table class="table notice-table">
-          <tbody>
-            <tr>
-              <th style="width:150px;">제목</th>
-              <td id="d_title">-</td>
-            </tr>
-            <tr>
-              <th>작성자</th>
-              <td id="d_writer">-</td>
-            </tr>
-            <tr>
-              <th>평점</th>
-              <td id="d_star">-</td>
-            </tr>
-            <tr>
-              <th>객실 타입</th>
-              <td id="d_room">-</td>
-            </tr>
-            <tr>
-              <th>예약 시작일</th>
-              <td id="d_reserveDate">-</td>
-            </tr>
-            <tr>
-              <th>후기 내용</th>
-              <td id="d_msg" style="height:100px;">-</td>
-            </tr>
-            <tr>
-              <th>사진</th>
-              <td>
-                <div id="d_imgs" class="detail-img-wrap"></div>
-              </td>
-            </tr>
-            <tr>
-              <th>관리자 답변</th>
-              <td>
-                <textarea id="adminReply" name="reviewReturn" class="form-control" style="height:120px;"
-                          placeholder="관리자 답변을 입력하세요"></textarea>
-              </td>
-            </tr>
-          </tbody>
+        <table class="detail-table">
+          <tr>
+            <th>제목</th>
+            <td id="d_title">-</td>
+          </tr>
+          <tr>
+            <th>작성자</th>
+            <td id="d_writer">-</td>
+          </tr>
+          <tr>
+            <th>평점</th>
+            <td id="d_star">-</td>
+          </tr>
+          <tr>
+            <th>객실 타입</th>
+            <td id="d_room">-</td>
+          </tr>
+          <tr>
+            <th>후기 내용</th>
+            <td id="d_msg">-</td>
+          </tr>
+          <tr>
+            <th>사진</th>
+            <td>
+              <div id="d_imgs" class="d-flex"></div>
+            </td>
+          </tr>
+          <tr>
+            <th>관리자 답변</th>
+            <td>
+              <textarea id="adminReply" class="form-control" rows="4" placeholder="관리자 답변을 입력하세요"></textarea>
+            </td>
+          </tr>
         </table>
-      </div>
 
-      <!-- 버튼 영역 -->
-      <div class="notice-detail-btns">
+        <div class="detail-btn-row">
 
-        <!-- 삭제 -->
-        <form method="post" th:action="@{/admin/review/delete}" style="margin:0;">
-          <input type="hidden" name="reviewNum" id="deleteReviewNum">
-          <input type="hidden" name="currentPage" th:value="${rrDTO.currentPage}">
-          <input type="hidden" name="roomTypeNum" th:value="${rrDTO.roomTypeNum}">
-          <button type="submit" class="notice-write-btn btn-delete">삭제</button>
-        </form>
-
-        <div style="display:flex;align-items:center;">
-          <!-- 답변만 삭제 -->
-          <form method="post" th:action="@{/admin/review/delete-reply}" style="margin:0;margin-right:10px;">
-            <input type="hidden" name="reviewNum" id="deleteReplyReviewNum">
-            <button type="submit" class="notice-write-btn btn-cancel">답변삭제</button>
+          <form method="post" th:action="@{/admin/review/delete}" id="deleteFrm">
+            <input type="hidden" name="reviewNum" id="deleteReviewNum">
+            <button class="btn btn-danger" type="submit">삭제</button>
           </form>
 
-          <!-- 답변 저장 -->
-          <form method="post" th:action="@{/admin/review/reply}" id="replyFrm" style="margin:0;">
-            <input type="hidden" name="reviewNum" id="replyReviewNum">
-            <input type="hidden" name="currentPage" th:value="${rrDTO.currentPage}">
-            <input type="hidden" name="roomTypeNum" th:value="${rrDTO.roomTypeNum}">
-            <input type="hidden" name="reviewReturn" id="replyHidden">
-            <button type="button" class="notice-write-btn" id="replyBtn">답변</button>
-          </form>
+          <div class="right-btns">
+            <button type="button" class="btn btn-secondary" id="cancelBtn">취소</button>
+
+            <form method="post" th:action="@{/admin/review/delete-reply}" id="deleteReplyFrm" style="display:inline;">
+              <input type="hidden" name="reviewNum" id="deleteReplyReviewNum">
+              <button class="btn btn-outline-secondary" type="submit">답변삭제</button>
+            </form>
+
+            <form method="post" th:action="@{/admin/review/reply}" id="replyFrm" style="display:inline;">
+              <input type="hidden" name="reviewNum" id="replyReviewNum">
+              <input type="hidden" name="reviewReturn" id="replyHidden">
+              <button type="button" class="btn btn-primary" id="replyBtn">답변</button>
+            </form>
+          </div>
+
         </div>
 
       </div>
     </div>
 
-    <!-- 페이징 -->
-    <div id="pagination" style="text-align:center;margin-top:30px;">
-      <span th:utext="${pagination}"></span>
-    </div>
-
   </div>
+
+  <div th:replace="~{manager/fragments/footer :: footer}"></div>
 </div>
 
-
-
-<th:block th:replace="~{fragments/footer :: footer}"></th:block>
-
-
-	<!-- jquery
-		============================================ -->
-	<script src="js/vendor/jquery-1.12.4.min.js"></script>
-	<!-- bootstrap JS
-		============================================ -->
-	<script src="js/bootstrap.min.js"></script>
-	<!-- wow JS
-		============================================ -->
-	<script src="js/wow.min.js"></script>
-	<!-- price-slider JS
-		============================================ -->
-	<script src="js/jquery-price-slider.js"></script>
-	<!-- meanmenu JS
-		============================================ -->
-	<script src="js/jquery.meanmenu.js"></script>
-	<!-- owl.carousel JS
-		============================================ -->
-	<script src="js/owl.carousel.min.js"></script>
-	<!-- sticky JS
-		============================================ -->
-	<script src="js/jquery.sticky.js"></script>
-	<!-- scrollUp JS
-		============================================ -->
-	<script src="js/jquery.scrollUp.min.js"></script>
-	<!-- mCustomScrollbar JS
-		============================================ -->
-	<script src="js/scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
-	<script src="js/scrollbar/mCustomScrollbar-active.js"></script>
-	<!-- metisMenu JS
-		============================================ -->
-	<script src="js/metisMenu/metisMenu.min.js"></script>
-	<script src="js/metisMenu/metisMenu-active.js"></script>
-	<!-- sparkline JS
-		============================================ -->
-	<script src="js/sparkline/jquery.sparkline.min.js"></script>
-	<script src="js/sparkline/jquery.charts-sparkline.js"></script>
-	<!-- calendar JS
-		============================================ -->
-	<script src="js/calendar/moment.min.js"></script>
-	<script src="js/calendar/fullcalendar.min.js"></script>
-	<script src="js/calendar/fullcalendar-active.js"></script>
-	<!-- float JS
-		============================================ -->
-	<script src="js/flot/jquery.flot.js"></script>
-	<script src="js/flot/jquery.flot.resize.js"></script>
-	<script src="js/flot/curvedLines.js"></script>
-	<script src="js/flot/flot-active.js"></script>
-	<!-- plugins JS
-		============================================ -->
-	<script src="js/plugins.js"></script>
-	<!-- main JS
-		============================================ -->
-	<script src="js/main.js"></script>
-
-
 <script>
-  // row 클릭 → 상세 AJAX
-  $(document).on("click", ".review-row", function () {
-    const reviewNum = $(this).data("reviewnum");
+/** ✅ 설정: 이미지 베이스 경로 */
+const IMG_BASE = "/upload/review/";
 
-    $.get("/admin/review/detail-json", { reviewNum: reviewNum }, function (res) {
-      if (!res || res.ok !== true) {
-        alert("상세 조회에 실패했습니다.");
-        return;
-      }
+/** ✅ URL 파라미터 읽기 */
+function getParam(name){
+  const params = new URLSearchParams(window.location.search);
+  return params.get(name);
+}
 
-      const d = res.detail || {};
-      const imgs = res.imgList || [];
+/** ✅ 객실 번호 → 이름 매핑 */
+const ROOM_MAP = {
+  "0": "전체",
+  "1": "STANDARD QUEEN",
+  "2": "SEMI-DELUXE DOUBLE",
+  "3": "DELUXE DOUBLE",
+  "4": "DELUXE TWIN",
+  "5": "FAMILY TWIN"
+};
 
-      $("#reviewDetailBox").removeClass("d-none");
-
-      $("#d_title").text(d.reviewTitle || "-");
-      $("#d_writer").text(d.memberLastName || "-");
-      $("#d_star").text(d.reviewStar != null ? d.reviewStar : "-");
-      $("#d_room").text(d.roomType || "-");
-      $("#d_reserveDate").text(d.reserveStartDate || "-");
-      $("#d_msg").text(d.reviewMsg || "-");
-
-      // textarea 세팅
-      $("#adminReply").val(d.reviewReturn || "");
-
-      // 폼 hidden reviewNum 세팅
-      $("#replyReviewNum").val(d.reviewNum);
-      $("#deleteReviewNum").val(d.reviewNum);
-      $("#deleteReplyReviewNum").val(d.reviewNum);
-
-      // 이미지 렌더 (DB엔 파일명만 저장한다는 가정)
-      const box = $("#d_imgs").empty();
-      if (imgs.length === 0) {
-        box.append("<div style='color:#b1c1e2;'>등록된 사진이 없습니다.</div>");
-      } else {
-        imgs.forEach(function (fn) {
-          const safe = (fn || "").trim();
-          if (!safe) return;
-          const url = "/upload/review/" + safe;
-          box.append("<img class='thumb' src='" + url + "' alt='review image'>");
-        });
-      }
-    });
-  });
-
-  // 답변 버튼 → textarea 값을 hidden에 복사 후 submit
-  $("#replyBtn").on("click", function () {
-    const txt = ($("#adminReply").val() || "").trim();
-    if (!$("#replyReviewNum").val()) {
-      alert("먼저 후기를 선택해주세요.");
-      return;
+/** ✅ 페이지 로드시: 현재 num 파라미터 기준으로 선택 텍스트 유지 */
+$(function(){
+  const num = getParam("num");
+  if (num && ROOM_MAP[num]) {
+    $("#selectedRoomText").text(ROOM_MAP[num]);
+  } else {
+    // 기본 list 페이지는 전체로 보여주고 싶으면 아래처럼
+    if (window.location.pathname === "/admin/review/list") {
+      $("#selectedRoomText").text("전체");
+    } else {
+      $("#selectedRoomText").text("객실 타입 선택");
     }
-    if (txt.length === 0) {
-      alert("답변 내용을 입력해주세요.");
-      return;
+  }
+});
+
+/** ✅ 뱃지 세팅 */
+function setDetailBadge(delFlag, reviewReturn) {
+  const badge = $("#detailBadge");
+  badge.removeClass("badge-not badge-answered badge-deleted");
+
+  if (delFlag === "Y") {
+    badge.addClass("badge-deleted").text("삭제됨");
+    return;
+  }
+  if (reviewReturn && reviewReturn.trim() !== "") {
+    badge.addClass("badge-answered").text("답변완료");
+  } else {
+    badge.addClass("badge-not").text("미답변");
+  }
+}
+
+/** ✅ 상세 초기화 */
+function resetDetailBox() {
+  $("#d_title").text("-");
+  $("#d_writer").text("-");
+  $("#d_star").text("-");
+  $("#d_room").text("-");
+  $("#d_msg").text("-");
+  $("#adminReply").val("");
+
+  $("#replyReviewNum").val("");
+  $("#deleteReviewNum").val("");
+  $("#deleteReplyReviewNum").val("");
+
+  $("#d_imgs").empty().append("<span class='loading-txt'>후기를 선택하세요.</span>");
+
+  $("#detailBadge").removeClass("badge-answered badge-deleted")
+                   .addClass("badge-not")
+                   .text("선택 대기");
+}
+resetDetailBox();
+
+/** ✅ 상세 로드 */
+$(document).on("click", ".review-row", function () {
+  const reviewNum = $(this).data("reviewnum");
+  const delFlag = ($(this).data("del") || "N").toString();
+
+  if (delFlag === "Y") {
+    alert("삭제된 리뷰입니다.");
+    return;
+  }
+
+  $("#reviewDetailBox").removeClass("d-none");
+  $("#d_imgs").empty().append("<span class='loading-txt'>상세 정보를 불러오는 중...</span>");
+
+  $.get("/admin/review/detail-json", { reviewNum: reviewNum }, function (res) {
+    if (!res || !res.ok) { alert("상세 조회 실패"); return; }
+
+    const d = res.detail || {};
+    const imgs = res.imgList || [];
+
+    $("#d_title").text(d.reviewTitle || "-");
+    $("#d_writer").text(d.memberLastName || "-");
+    $("#d_star").text(d.reviewStar ?? "-");
+    $("#d_room").text(d.roomType || "-");
+    $("#d_msg").text(d.reviewMsg || "-");
+
+    $("#adminReply").val(d.reviewReturn || "");
+
+    const num = d.reviewNum || reviewNum;
+    $("#replyReviewNum").val(num);
+    $("#deleteReviewNum").val(num);
+    $("#deleteReplyReviewNum").val(num);
+
+    setDetailBadge(d.reviewDelFlag || "N", d.reviewReturn || "");
+
+    const box = $("#d_imgs").empty();
+    if (!imgs || imgs.length === 0) {
+      box.append("<span style='color:#7f8c8d;'>등록된 사진이 없습니다.</span>");
+    } else {
+      imgs.forEach(function (fn) {
+        if (!fn) return;
+        box.append(
+          "<a class='thumb-link' href='" + IMG_BASE + fn + "' target='_blank'>" +
+            "<img class='thumb' src='" + IMG_BASE + fn + "' alt='review image'>" +
+          "</a>"
+        );
+      });
     }
-    $("#replyHidden").val(txt);
-    $("#replyFrm").submit();
   });
+});
+
+/** ✅ 답변 저장 */
+$(document).on("click", "#replyBtn", function () {
+  const reviewNum = $("#replyReviewNum").val();
+  const txt = ($("#adminReply").val() || "").trim();
+
+  if (!reviewNum) { alert("후기를 선택하세요"); return; }
+  if (!txt) { alert("답변을 입력하세요"); return; }
+
+  if ($("#detailBadge").hasClass("badge-deleted")) {
+    alert("삭제된 리뷰에는 답변을 저장할 수 없습니다.");
+    return;
+  }
+
+  $("#replyHidden").val(txt);
+  $("#replyFrm").submit();
+});
+
+/** ✅ 삭제 / 답변삭제 submit 가드 */
+$(document).on("submit", "#deleteFrm", function (e) {
+  const reviewNum = $("#deleteReviewNum").val();
+  if (!reviewNum) { alert("후기를 선택하세요"); e.preventDefault(); return; }
+  if (!confirm("정말 삭제하시겠습니까?")) { e.preventDefault(); }
+});
+
+$(document).on("submit", "#deleteReplyFrm", function (e) {
+  const reviewNum = $("#deleteReplyReviewNum").val();
+  if (!reviewNum) { alert("후기를 선택하세요"); e.preventDefault(); return; }
+  if (!confirm("답변을 삭제하시겠습니까?")) { e.preventDefault(); }
+});
+
+/** ✅ 취소: 상세 접기 */
+$(document).on("click", "#cancelBtn", function(){
+  $("#reviewDetailBox").addClass("d-none");
+});
+
+/** ✅ 커스텀 드롭다운 */
+$("#roomSelectBtn").click(function(){
+  $("#roomSelectMenu").slideToggle(150);
+});
+
+$("#roomSelectMenu li").click(function(){
+  const url = $(this).data("url");
+  const txt = $(this).text();
+
+  // 클릭 즉시 텍스트 반영
+  $("#selectedRoomText").text(txt);
+
+  // 페이지 이동
+  if (url) location.href = url;
+});
+
+$(document).click(function(e){
+  if(!$(e.target).closest(".room-select-wrapper").length){
+    $("#roomSelectMenu").slideUp(150);
+  }
+});
 </script>
 
-
 </body>
-
 </html>

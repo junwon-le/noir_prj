@@ -185,6 +185,8 @@ $(function () {
 
           <!-- 목록 돌아갈 때 currentPage 유지 -->
           <input type="hidden" name="currentPage" th:value="${currentPage}"/>
+			<input type="hidden" name="field" th:value="${field}"/>
+			<input type="hidden" name="keyword" th:value="${keyword}"/>
 
           <div class="mb-3">
             <label class="form-label">제목</label>
@@ -200,7 +202,7 @@ $(function () {
             <label class="form-label">카테고리</label>
             <select class="form-select" name="noticeCategory" id="noticeCategory">
               <option value="">카테고리 선택</option>
-              <option value="일반공지" th:selected="${notice != null and notice.noticeCategory == '일반공지'}">일반공지</option>
+              <option value="일반" th:selected="${notice != null and notice.noticeCategory == '일반'}">일반</option>
               <option value="멤버십" th:selected="${notice != null and notice.noticeCategory == '멤버십'}">멤버십</option>
               <option value="약관개정" th:selected="${notice != null and notice.noticeCategory == '약관개정'}">약관개정</option>
             </select>
@@ -230,11 +232,14 @@ $(function () {
                     th:text="${notice == null ? '등록' : '수정'}">등록</button>
 
             <!-- 목록 버튼 -->
-            <a class="btn btn-secondary"
-               th:href="@{/notice/noticeAdminList(currentPage=${currentPage})}">
-              목록
-            </a>
-          </div>
+<a class="btn btn-secondary"
+   th:href="@{/notice/noticeAdminList(
+      currentPage=${currentPage},
+      field=${field},
+      keyword=${keyword}
+   )}">
+  목록
+</a>          </div>
 
         </form>
 
@@ -242,6 +247,9 @@ $(function () {
         <form id="delFrm" th:action="@{/notice/removeNotice}" method="post" style="display:none;">
           <input type="hidden" name="noticeNum" id="delNoticeNum">
           <input type="hidden" name="currentPage" th:value="${currentPage}">
+          
+            <input type="hidden" name="field" th:value="${field}">
+  <input type="hidden" name="keyword" th:value="${keyword}">
         </form>
 
       </div>

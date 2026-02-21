@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>NOIR호텔 관리자 페이지</title>
+
+<!-- Admin Common CSS -->
+<link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900" rel="stylesheet" />
+<link rel="stylesheet" href="/admin_common/css/bootstrap.min.css" />
+<link rel="stylesheet" href="/admin_common/css/font-awesome.min.css" />
+<link rel="stylesheet" href="/admin_common/css/nalika-icon.css" />
+<link rel="stylesheet" href="/admin_common/css/owl.carousel.css" />
+<link rel="stylesheet" href="/admin_common/css/owl.theme.css" />
+<link rel="stylesheet" href="/admin_common/css/owl.transitions.css" />
+<link rel="stylesheet" href="/admin_common/css/animate.css" />
+<link rel="stylesheet" href="/admin_common/css/normalize.css" />
+<link rel="stylesheet" href="/admin_common/css/meanmenu.min.css" />
+<link rel="stylesheet" href="/admin_common/css/main.css" />
+<link rel="stylesheet" href="/admin_common/css/scrollbar/jquery.mCustomScrollbar.min.css" />
+<link rel="stylesheet" href="/admin_common/css/metisMenu/metisMenu.min.css" />
+<link rel="stylesheet" href="/admin_common/css/metisMenu/metisMenu-vertical.css" />
+<link rel="stylesheet" href="/admin_common/style.css" />
+<link rel="stylesheet" href="/admin_common/css/responsive.css" />
+
+<!-- Admin Common JS (jQuery는 1개만) -->
+<script src="/admin_common/js/vendor/jquery-1.12.4.min.js"></script>
+<script src="/admin_common/js/bootstrap.min.js"></script>
+<script src="/admin_common/js/wow.min.js"></script>
+<script src="/admin_common/js/jquery.meanmenu.js"></script>
+<script src="/admin_common/js/owl.carousel.min.js"></script>
+<script src="/admin_common/js/jquery.sticky.js"></script>
+<script src="/admin_common/js/scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+<script src="/admin_common/js/scrollbar/mCustomScrollbar-active.js"></script>
+<script src="/admin_common/js/metisMenu/metisMenu.min.js"></script>
+<script src="/admin_common/js/metisMenu/metisMenu-active.js"></script>
+<script src="/admin_common/js/plugins.js"></script>
+<script src="/admin_common/js/main.js"></script>
+
+<style>
+/* ===============================
+   Admin - Event Search UI
+   =============================== */
+.event-search-bar{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:25px;
+}
+.event-search-input{
+  width:240px;
+  background:#ffffff;
+  border:1px solid #e3e8f3;
+  color:#38599a;
+  padding:8px 12px;
+  border-radius:8px;
+  height:30px;
+}
+.event-search-input::placeholder{
+  color:#b1c1e2;
+  opacity:.7;
+}
+.event-search-btn{
+  background:#5f739c;
+  color:#ffffff;
+  border:1px solid #e3e8f3;
+  padding:8px 18px;
+  font-weight:600;
+  border-radius:8px;
+  height:30px;
+  line-height:14px;
+}
+.event-search-btn:hover{ background:#4f638a; }
+
+/* ===============================
+   Admin - Event Table
+   =============================== */
+.event-table-wrap{
+  background:#ffffff;
+  border:1px solid #e3e8f3;
+  border-radius:12px;
+  padding:10px;
+}
+.event-table{ margin-bottom:0; color:#38599a; }
+.event-table thead th{
+  background:#f6f8fc;
+  color:#38599a;
+  font-weight:600;
+  text-align:center;
+  border-bottom:1px solid #e3e8f3;
+}
+.event-table tbody td{
+  text-align:center;
+  vertical-align:middle;
+  border-top:1px solid #e3e8f3;
+}
+.event-table tbody td:nth-child(2){ text-align:left; } /* 제목만 좌측정렬 */
+.event-table tbody tr:hover{ background:#f9fbff; }
+
+.event-table-footer{ text-align:right; margin-top:12px; }
+.event-write-btn{
+  background: linear-gradient(135deg, #3f5fa9, #2b4a87);
+  color:#ffffff;
+  border:none;
+  padding:8px 18px;
+  border-radius:8px;
+  font-weight:600;
+}
+.event-write-btn:hover{ opacity:.9; }
+
+.event-title-link{ color:#38599a; font-weight:600; }
+.event-title-link:hover{ text-decoration:underline; }
+</style>
+
+<script type="text/javascript">
+$(function(){
+  $("#btnSearch").on("click", function(e){
+    e.preventDefault();
+    $("#currentPage").val("1"); // 검색 시 1페이지로
+    $("#searchFrm").submit();
+  });
+
+  $("#keyword").on("keyup", function(e){
+    if(e.which === 13){
+      e.preventDefault();
+      $("#currentPage").val("1");
+      $("#searchFrm").submit();
+    }
+  });
+
+  $("#writeBtn").on("click", function(){
+    var currentPage = $("#currentPage").val() || "1";
+    location.href = "/event/addEventFrm?currentPage=" + encodeURIComponent(currentPage);
+  });
+});
+</script>
+
+</head>
+
+<body>
+  <div th:replace="~{manager/fragments/sidebar :: sidebar}"></div>
+
+  <div class="all-content-wrapper">
+    <div class="header-advance-area">
+      <div class="breadcome-area">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="breadcome-list">
+                <div class="breadcomb-wp" style="color:#ffffff; font-size:20px">
+                  <h2>이벤트 관리</h2>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container" style="color:white; min-height:700px">
+      <div style="margin-bottom:20px;">
+        <h3 style="font-weight:600; margin-bottom:20px;">이벤트 목록</h3>
+      </div>
+
+      <!-- 검색 (SSR: GET으로 다시 목록 요청) -->
+      <form id="searchFrm" th:action="@{/event/eventList}" method="get">
+        <div class="event-search-bar">
+          <input type="text" name="keyword" id="keyword" class="event-search-input"
+                 placeholder="제목 검색" th:value="${range.keyword}" />
+          <input type="hidden" name="currentPage" id="currentPage" th:value="${range.currentPage}" />
+          <button type="submit" class="event-search-btn" id="btnSearch">조회</button>
+        </div>
+      </form>
+
+      <!-- 테이블 -->
+      <div class="table-responsive event-table-wrap">
+        <table class="table event-table">
+          <thead>
+            <tr>
+              <th style="width:80px;">번호</th>
+              <th>제목</th>
+              <th style="width:220px;">이벤트 기간</th>
+              <th style="width:140px;">작성자</th>
+              <th style="width:120px;">등록일</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- 없을 때 -->
+            <tr th:if="${eventList == null || #lists.isEmpty(eventList)}">
+              <td colspan="5" style="text-align:center; padding:40px 0; color:#b1c1e2; font-size:14px;">
+                등록된 이벤트가 없습니다.
+              </td>
+            </tr>
+
+            <!-- 있을 때 -->
+            <tr th:each="event, i : ${eventList}">
+              <td th:text="${event.eventNum}">1</td>
+
+		      <td>
+			<a class="event-title-link"
+			   th:href="@{/event/eventDetail(eventNum=${event.eventNum}, currentPage=${range.currentPage}, keyword=${range.keyword})}"
+
+			   th:text="${event.eventTitle}">
+			</a>
+              </td>
+
+             <td th:text="${event.eventStartDate != null and event.eventEndDate != null 
+    ? (#temporals.format(event.eventStartDate,'yyyy.MM.dd') + ' ~ ' + #temporals.format(event.eventEndDate,'yyyy.MM.dd'))
+    : ''}">
+</td>
+
+
+              <td th:text="${event.adminNum}"></td>
+
+              <!-- 날짜 타입이 LocalDateTime/LocalDate면 temporals, Date면 dates 쓰면 됨 -->
+              <td th:text="${#temporals.format(event.regDate,'yy.MM.dd')}"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 버튼 -->
+      <div class="event-table-footer">
+        <button type="button" class="event-write-btn" id="writeBtn">이벤트 관리</button>
+      </div>
+
+      <!-- 페이징 (컨트롤러에서 만든 HTML 문자열) -->
+      <div id="pagination" style="text-align:center; margin-top:30px;"
+           th:utext="${pagination != null ? pagination : ''}">
+      </div>
+    </div>
+
+    <div th:replace="~{manager/fragments/footer :: footer}"></div>
+  </div>
+</body>
+</html>

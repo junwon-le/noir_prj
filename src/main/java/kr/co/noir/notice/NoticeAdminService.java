@@ -2,8 +2,9 @@ package kr.co.noir.notice;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
-import org.apache.ibatis.exceptions.PersistenceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -71,98 +72,90 @@ public class NoticeAdminService {
      * 페이지네이션 (field + keyword 유지)
      * - rDTO.url 은 컨트롤러에서 "/notice/noticeAdminList" 형태로 세팅되어 있어야 함
      */
+
+
     public String pagination2(BoardRangeDTO rDTO, String justify) {
         StringBuilder pagination = new StringBuilder();
 
         int pageNumber = 3;
         int startPage = ((rDTO.getCurrentPage() - 1) / pageNumber) * pageNumber + 1;
-        int endPage = (((startPage - 1) + pageNumber) / pageNumber) * pageNumber;
+        int endPage = startPage + pageNumber - 1;
 
-        if (rDTO.getTotalPage() <= endPage) {
-            endPage = rDTO.getTotalPage();
+        if (endPage > rDTO.getTotalPage()) endPage = rDTO.getTotalPage();
+
+        // ✅ 파라미터(필터/검색) 유지용
+        String field = (rDTO.getField() == null) ? "1" : rDTO.getField();
+        String keyword = (rDTO.getKeyword() == null) ? "" : rDTO.getKeyword();
+        String encKeyword = URLEncoder.encode(keyword, StandardCharsets.UTF_8);
+
+        // URL 기본값 방어
+        String baseUrl = rDTO.getUrl();
+        if (baseUrl == null || baseUrl.isBlank()) baseUrl = "/notice/noticeAdminList";
+
+        // justify 보정
+        if (!("center".equals(justify) || "left".equals(justify) || "right".equals(justify))) {
+            justify = "center";
         }
 
-        int movePage = 0;
+        // ✅ 쿼리 스트링 조립 (항상 field 유지, keyword는 빈값 허용)
+        StringBuilder qs = new StringBuilder();
+        qs.append("&field=").append(field);
+        if (!keyword.isEmpty()) {
+            qs.append("&keyword=").append(encKeyword);
+        } else {
+            // 빈 키워드도 유지하고 싶으면 아래 주석 해제
+            // qs.append("&keyword=");
+        }
+
+        int movePage;
 
         // 이전
         StringBuilder prevMark = new StringBuilder();
-        prevMark.append("<li class='page-item prev disabled'>")
-                .append("<a class='page-link'>이전</a>")
-                .append("</li>");
-
         if (rDTO.getCurrentPage() > pageNumber) {
             movePage = startPage - 1;
-            prevMark.setLength(0);
-            prevMark.append("<li class='page-item prev'><a class='page-link' href='")
-                    .append(rDTO.getUrl())
-                    .append("?currentPage=").append(movePage);
-
-            // ✅ field/keyword 유지
-            if (rDTO.getField() != null && !rDTO.getField().isEmpty()) {
-                prevMark.append("&field=").append(rDTO.getField());
-            }
-            if (rDTO.getKeyword() != null && !rDTO.getKeyword().isEmpty()) {
-                prevMark.append("&keyword=").append(rDTO.getKeyword());
-            }
-
-            prevMark.append("'>이전</a></li>");
+            prevMark.append("<li class='page-item'><a class='page-link' href='")
+                    .append(baseUrl)
+                    .append("?currentPage=").append(movePage)
+                    .append(qs)
+                    .append("'>이전</a></li>");
+        } else {
+            prevMark.append("<li class='page-item disabled'><span class='page-link'>이전</span></li>");
         }
 
-        // 페이지 링크
+        // 페이지 번호
         StringBuilder pageLink = new StringBuilder();
         movePage = startPage;
 
         while (movePage <= endPage) {
             if (movePage == rDTO.getCurrentPage()) {
-                pageLink.append("<li class='page-item active'>")
-                        .append("<span class='page-link'>").append(movePage).append("</span>")
-                        .append("</li>");
+                pageLink.append("<li class='page-item active'><span class='page-link'>")
+                        .append(movePage).append("</span></li>");
             } else {
                 pageLink.append("<li class='page-item'><a class='page-link' href='")
-                        .append(rDTO.getUrl())
-                        .append("?currentPage=").append(movePage);
-
-                // ✅ field/keyword 유지
-                if (rDTO.getField() != null && !rDTO.getField().isEmpty()) {
-                    pageLink.append("&field=").append(rDTO.getField());
-                }
-                if (rDTO.getKeyword() != null && !rDTO.getKeyword().isEmpty()) {
-                    pageLink.append("&keyword=").append(rDTO.getKeyword());
-                }
-
-                pageLink.append("'>").append(movePage).append("</a></li>"); // ✅ 닫기까지!
+                        .append(baseUrl)
+                        .append("?currentPage=").append(movePage)
+                        .append(qs)
+                        .append("'>")
+                        .append(movePage)
+                        .append("</a></li>");
             }
             movePage++;
         }
 
         // 다음
-        StringBuilder nextMark = new StringBuilder(
-                "<li class='page-item next disabled'><span class='page-link'>다음</span></li>"
-        );
-
+        StringBuilder nextMark = new StringBuilder();
         if (rDTO.getTotalPage() > endPage) {
             movePage = endPage + 1;
-            nextMark.setLength(0);
-            nextMark.append("<li class='page-item next'><a class='page-link' href='")
-                    .append(rDTO.getUrl())
-                    .append("?currentPage=").append(movePage);
-
-            // ✅ field/keyword 유지
-            if (rDTO.getField() != null && !rDTO.getField().isEmpty()) {
-                nextMark.append("&field=").append(rDTO.getField());
-            }
-            if (rDTO.getKeyword() != null && !rDTO.getKeyword().isEmpty()) {
-                nextMark.append("&keyword=").append(rDTO.getKeyword());
-            }
-
-            nextMark.append("'>다음</a></li>");
+            nextMark.append("<li class='page-item'><a class='page-link' href='")
+                    .append(baseUrl)
+                    .append("?currentPage=").append(movePage)
+                    .append(qs)
+                    .append("'>다음</a></li>");
+        } else {
+            nextMark.append("<li class='page-item disabled'><span class='page-link'>다음</span></li>");
         }
 
-        if (!("center".equals(justify) || "left".equals(justify))) {
-            justify = "left";
-        }
-
-        pagination.append("<nav aria-label='...'>")
+        pagination.append("<nav aria-label='pagination'>")
                 .append("<ul class='pagination d-flex justify-content-").append(justify).append("'>")
                 .append(prevMark).append(pageLink).append(nextMark)
                 .append("</ul>")

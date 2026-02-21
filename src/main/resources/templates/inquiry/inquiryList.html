@@ -43,7 +43,7 @@ $(function() {
         if ($detail.data("loaded")) return;
 
         $.ajax({
-            url: "/inquiryDetail", // 문의 상세 정보를 가져올 URL
+            url: "/inquiryAdmin/inquiryDetailAjax", // 문의 상세 정보를 가져올 URL
             type: "GET",
             dataType: "json",
             data: { inquiryNum: inquiryNum },
@@ -551,8 +551,8 @@ background-color: #FFF;
 </th:block>
 			
 			</div>
-			<div id="pagenation" style="margin:0px auto">
-			<div class="pagenation" th:utext="${pagenation}"></div>		
+			<div id="pagination" style="margin:0px auto">
+			<div class="pagination" th:utext="${pagination}"></div>		
 			</div>
 					<div class="ffffff"></div>
 		</div>
