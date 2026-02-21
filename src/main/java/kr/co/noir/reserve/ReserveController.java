@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +25,9 @@ public class ReserveController {
 	
 	@Autowired
 	private RoomReserveService rrs;
+	
+	@Autowired
+	private RoomReserveService1 rrs1;
 
 	
 	@GetMapping("/roomReserve")
@@ -147,14 +151,17 @@ public class ReserveController {
 	}//nonReserveComplete
 	
 	@ResponseBody
-	@GetMapping("/RoomSearchProcess")
-	public List<RoomSearchDomain> roomSearchProcess(RoomSearchDTO rsDTO) {
+	@GetMapping("/RoomSearchProcess/{startDate}/{endDate}")
+	public List<RoomSearchDomain1> roomSearchProcess(@PathVariable String startDate,@PathVariable String endDate) {
+		RoomSearchDTO1 rsDTO =new RoomSearchDTO1();
+		rsDTO.setEndDate(endDate);
+		rsDTO.setStartDate(startDate);
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		long period = 0;
 		try {
-			Date startDate= sdf.parse(rsDTO.getStartDate());
-			Date endDate= sdf.parse(rsDTO.getEndDate());
-			long diffInMillies = endDate.getTime() - startDate.getTime();
+			Date startDate1= sdf.parse(rsDTO.getStartDate());
+			Date endDate1= sdf.parse(rsDTO.getEndDate());
+			long diffInMillies = endDate1.getTime() - startDate1.getTime();
 			period = diffInMillies / (24 * 60 * 60 * 1000);
 		} catch (ParseException e) {
 			e.printStackTrace();
@@ -163,10 +170,13 @@ public class ReserveController {
 		System.out.println("-----------------------------------------------------------------------------------------"+rsDTO.getEndDate()+"--");
 		rsDTO.setStartDate(rsDTO.getStartDate().trim());
 		rsDTO.setEndDate(rsDTO.getEndDate().trim());
-		List<RoomSearchDomain> list = rrs.searchRoom(rsDTO);  
-		for(RoomSearchDomain rsd :list) {
-			rsd.setPeriod(period);
-		}
+		List<RoomSearchDomain1> list = rrs1.searchRoom1(rsDTO);
+			for(RoomSearchDomain1 rsd :list) {
+				if(rsd != null) {
+		            rsd.setPeriod(period);
+		        }
+			}//end for
+			System.out.println(list);
 		return list;
 	}
 	

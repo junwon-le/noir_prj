@@ -230,9 +230,9 @@ width:100%;
                     <span class="info-label">GUEST:</span> <span th:text="|*{user_last_name} *{user_first_name}|">예약자명</span>
                 </div>
                 <div class="info-row" style="margin-left: 60px; color: #ccc;">
-                <th:block th:each="roomName : *{room_type}">
+               <!--  <th:block th:each="roomName : *{room_type}">
                     <span th:text="${roomName}">객실 이름</span>
-                </th:block>
+                </th:block> -->
                 </div>
                 <div class="info-row">
                     <span class="info-label">DATES:</span> <span th:text="|*{startDate} ~ *{endDate}|">체크인 날짜 - 박 수</span>

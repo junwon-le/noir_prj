@@ -279,12 +279,10 @@ $(function(){
 	}
 	
 	function searchRoom(startDate, endDate ){
-		var param ={startDate : startDate, endDate : endDate};
 		$.ajax({
-			url:"/reserve/RoomSearchProcess",
+			url:"/reserve/RoomSearchProcess/"+startDate+"/"+endDate,
 			type:"GET",
 			dataType: "JSON",
-			data : param,
 			beforeSend: function() {
 	            // 1. 기존 목록을 지우고 로딩바(스켈레톤)를 보여줌
 	            $("#roomList").hide(); // 실제 리스트 숨김
@@ -300,25 +298,25 @@ $(function(){
 			            <div class="space-y-6">
 			                <div class="flex gap-6 py-6 border-b border-gray-800">
 			                    <div class="relative w-1/3 shrink-0">
-			                        <img src="/common/images/homepage/${rd.room_img1}" 
+			                        <img src="/common/images/homepage/${rd.roomImg1}" 
 			                             class="w-full h-44 object-cover rounded-sm bg-gray-700">
-			                        <button onclick="location.href='/roomDetailView?num=${rd.room_type_num}'"
+			                        <button onclick="location.href='/roomDetailView?num=${rd.roomTypeNum}'"
 			                            class="absolute bottom-0 left-0 right-0 bg-blue-900/80 text-[10px] py-2 px-3 flex justify-between">
 			                            <span>객실 상세보기</span><span>→</span>
 			                        </button>
 			                    </div>
 			                    <div class="flex flex-col justify-between flex-1">
 			                        <div>
-			                            <h3 class="text-lg font-semibold" id="roomType${i}">${rd.room_type}</h3>
-			                            <p class="text-gray-500 text-xs" id="personCnt${i}">기준 ${rd.room_max_person} / 최대 ${rd.room_max_person}</p>
+			                            <h3 class="text-lg font-semibold" id="roomType${i}">${rd.roomType}</h3>
+			                            <p class="text-gray-500 text-xs" id="personCnt${i}">기준 ${rd.roomMaxPerson} / 최대 ${rd.roomMaxPerson}</p>
 			                        </div>
 			                        <div class="text-right">
 			                            <p class="text-[11px] text-gray-500">1박/VAT포함</p>
-			                            <p class="text-[15px] text-gray-500">남은 객실:${rd.available_count}</p>
-			                            <p class="text-xl font-bold text-blue-400 mb-2">${rd.start_date_price.toLocaleString()}원~</p>
+			                            <p class="text-[15px] text-gray-500">남은 객실:${rd.availableCount}</p>
+			                            <p class="text-xl font-bold text-blue-400 mb-2">${rd.startDatePrice.toLocaleString()}원~</p>
 			                            <button class="bg-[#8b7355] hover:bg-[#7a654a] px-8 py-2 text-sm rounded-sm transition" 
 			                                    id="select${i}" 
-			                                    onclick="selectRoom('${rd.room_type}', ${rd.room_max_person}, ${rd.total_sum_price},${rd.period},${rd.available_count},${rd.room_type_num})">
+			                                    onclick="selectRoom('${rd.roomType}', ${rd.roomMaxPerson}, ${rd.totalSumPrice},${rd.period},${rd.availableCount},${rd.roomTypeNum})">
 			                                선택
 			                            </button>
 			                        </div>
