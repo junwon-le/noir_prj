@@ -37,6 +37,8 @@
         	$("#merchant_uid").val(rsp.merchant_uid);
         	alert($("#billing_key").val()) */
         	$("#cardInfo").val("true");
+        	 $("#cardCh").text("카드가 등록되었습니다.")
+             $("#cardCh").css("color","green")
       }else {
           // 실패 시 왜 안 넘어오는지 이유를 알려줍니다.
           alert("실패 사유: " + rsp.error_msg);
@@ -157,7 +159,7 @@ $(function(){
 			$("#password2").on('input', function() {
 				if($(this).val() == $("#password").val()){
 				$("#passwordCheck").text("비밀번호가 일치합니다.");
-				$("#passwordCheck").css("color","#eee8cc");
+				$("#passwordCheck").css("color","green");
 				return;
 				}
 				$("#passwordCheck").text("비밀번호를 확인해 주세요.");
@@ -284,6 +286,7 @@ function formatPhone(target) {
                     <input type="hidden" id="cardInfo"/>
                     <img src="/common/images/res_img/hr.png" class="hr"/>
                     <button type="button" class="w-1/4 bg-[#1e293b] text-white py-3 rounded font-bold hover:bg-black transition" onclick="registerCard()">카드 등록</button>
+                    <span id="cardCh" style="color:red; font-size:13px; margin-left:10px;"> 카드를 등록해주세요</span>
                     
               <!--       <div class="space-y-4">
                         <div class="flex items-center">
