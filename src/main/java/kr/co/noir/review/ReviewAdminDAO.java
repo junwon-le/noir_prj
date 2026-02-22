@@ -11,115 +11,116 @@ import kr.co.noir.dao.MyBatisHandler;
 @Repository("reviewAdminDAO")
 public class ReviewAdminDAO {
 
-    // ✅ 관리자 전용 MyBatis namespace (사용자와 충돌 방지)
     private static final String NS = "kr.co.noir.review.admin.ReviewAdminMapper.";
 
-    // 전체 총 게시물 수
+    /* =========================
+       1. 전체 리뷰 수
+       ========================= */
     public int selectReviewTotalCnt(ReviewRangeDTO rrDTO) throws SQLException {
-        int totalCnt = 0;
         SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
         try {
-            totalCnt = ss.selectOne(NS + "selectReviewTotalCnt", rrDTO);
+            return ss.selectOne(NS + "selectReviewTotalCnt", rrDTO);
         } finally {
-            if (ss != null) { ss.close(); }
+            ss.close();
         }
-        return totalCnt;
     }
 
-    // 객실타입으로 필터링된 리뷰의 총 개수
+    /* =========================
+       2. 객실 필터 리뷰 수
+       ========================= */
     public int selectRoomReviewCnt(ReviewRangeDTO rrDTO) throws SQLException {
-        int totalCnt = 0;
         SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
         try {
-            totalCnt = ss.selectOne(NS + "selectRoomReviewCnt", rrDTO);
+            return ss.selectOne(NS + "selectRoomReviewCnt", rrDTO);
         } finally {
-            if (ss != null) { ss.close(); }
+            ss.close();
         }
-        return totalCnt;
     }
 
-    // 관리자 리뷰 목록 조회(페이징 적용)
+    /* =========================
+       3. 목록 조회
+       ========================= */
     public List<ReviewAdminDomain> selectReviewList(ReviewRangeDTO rrDTO) throws SQLException {
-        List<ReviewAdminDomain> list = null;
         SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
         try {
-            list = ss.selectList(NS + "selectReviewList", rrDTO);
+            return ss.selectList(NS + "selectReviewList", rrDTO);
         } finally {
-            if (ss != null) { ss.close(); }
+            ss.close();
         }
-        return list;
     }
 
-    // roomTypeNum으로 필터된 리뷰 목록(페이징 적용)
     public List<ReviewAdminDomain> selectReviewByRoom(ReviewRangeDTO rrDTO) throws SQLException {
-        List<ReviewAdminDomain> list = null;
         SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
         try {
-            list = ss.selectList(NS + "selectReviewByRoom", rrDTO);
+            return ss.selectList(NS + "selectReviewByRoom", rrDTO);
         } finally {
-            if (ss != null) { ss.close(); }
+            ss.close();
         }
-        return list;
     }
 
-    // 리뷰 1건 상세 정보 조회
+    /* =========================
+       4. 상세 조회
+       ========================= */
     public ReviewAdminDomain selectReviewDetail(int reviewNum) throws SQLException {
-        ReviewAdminDomain raDomain = null;
         SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
         try {
-            raDomain = ss.selectOne(NS + "selectReviewDetail", reviewNum);
+            return ss.selectOne(NS + "selectReviewDetail", reviewNum);
         } finally {
-            if (ss != null) { ss.close(); }
+            ss.close();
         }
-        return raDomain;
     }
 
-    // 리뷰 답변 등록/수정
+    /* =========================
+       5. 답변 등록/수정
+       ========================= */
     public int updateReplyReview(ReviewAdminDTO raDTO) throws SQLException {
-        int cnt = 0;
         SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
         try {
-            cnt = ss.update(NS + "updateReplyReview", raDTO);
+            int cnt = ss.update(NS + "updateReplyReview", raDTO);
+            ss.commit();  // 🔥 반드시 필요
+            return cnt;
         } finally {
-            if (ss != null) { ss.close(); }
+            ss.close();
         }
-        return cnt;
     }
 
-    // 해당 리뷰 삭제(soft delete)
+    /* =========================
+       6. 리뷰 soft delete
+       ========================= */
     public int deleteAdminReview(int reviewNum) throws SQLException {
-        int cnt = 0;
         SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
         try {
-            cnt = ss.update(NS + "deleteAdminReview", reviewNum);
+            int cnt = ss.update(NS + "deleteAdminReview", reviewNum);
+            ss.commit();  // 🔥 반드시 필요
+            return cnt;
         } finally {
-            if (ss != null) { ss.close(); }
+            ss.close();
         }
-        return cnt;
     }
 
-    // 답변만 삭제
+    /* =========================
+       7. 답변만 삭제
+       ========================= */
     public int deleteOnlyReply(int reviewNum) throws SQLException {
-        int cnt = 0;
         SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
         try {
-            cnt = ss.update(NS + "deleteOnlyReply", reviewNum);
+            int cnt = ss.update(NS + "deleteOnlyReply", reviewNum);
+            ss.commit();  // 🔥 반드시 필요
+            return cnt;
         } finally {
-            if (ss != null) { ss.close(); }
+            ss.close();
         }
-        return cnt;
     }
 
-    // 리뷰 이미지 리스트 조회 (review_img 테이블)
+    /* =========================
+       8. 이미지 조회
+       ========================= */
     public List<String> selectReviewImgList(int reviewNum) throws SQLException {
-        List<String> imgList = null;
         SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
         try {
-            imgList = ss.selectList(NS + "selectReviewImgList", reviewNum);
+            return ss.selectList(NS + "selectReviewImgList", reviewNum);
         } finally {
-            if (ss != null) { ss.close(); }
+            ss.close();
         }
-        return imgList;
     }
-
 }
