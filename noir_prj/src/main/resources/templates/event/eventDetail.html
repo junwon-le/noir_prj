@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="title" content="HOTEL 28">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>HOTEL 28</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.css" rel="stylesheet">
+<!-- jQeury CDN 시작 -->
+<link rel="stylesheet" type="text/css" href="/common/css/homepage/base.css">
+<link rel="stylesheet" type="text/css" href="/common/css/homepage/style.css?v=0312">
+<link rel="stylesheet" type="text/css" href="/common/css/homepage/sub.css?v=0312">
+<!-- jQeury CDN 시작 -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
+
+<script src="/common/js/comm/jquery.bxslider.js"></script>
+<script src="/common/js/homepage/jquery.rwdImageMaps.min.js"></script>
+<script src="/common/js/homepage/jquery.accessibility.modal.js"></script>
+<script src="/common/js/comm/jquery.cookie.js"></script>
+<script src="/common/js/homepage/plugin.js"></script>
+<script src="/common/js/homepage/custom.js"></script>
+
+</head>
+<script>
+var CONTEXT = '';
+$(document).ready(function($) {
+    $('.open_modal').click(function(e) {    	
+        $("iframe").attr("src", $(this).attr('url')).show();        	
+        e.preventDefault();
+    });
+});
+
+$(document).on('click','.btn_pop_close',function(e){
+	$('#popIframe > iframe').attr('src','').hide();
+	e.preventDefault();
+})
+</script>
+
+
+<style>
+.wrapper{
+	background-color: white;
+}
+
+.subject
+{
+color:white;
+text-decoration: none;
+}
+
+
+.main-sub > ul > li > a {
+	text-decoration: none;
+}
+
+
+
+.footer_bot{
+padding:0px;
+}
+
+.title-box{
+ background-color: black;
+ height: 127px;
+}
+
+.maincontainer{
+min-height:1600px;
+background-color: #FFF;
+}
+.ffffff{
+	background-color: #fff;
+	height: 100px;
+	width: 100%;
+	
+}
+
+.pagetitle{
+  padding-top:30px;
+  padding-left:350px;
+  font-size: 50px;
+  font-weight: 800;
+  color: #000;
+}
+
+
+.eventbanner{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 배너 컨테이너 */
+.banner {
+  position: relative;
+  width: 100%;       /* 전체 너비 */
+  height: 500px;     /* 고정 높이 (원하는 대로 조절) */
+  overflow: hidden;  /* 이미지가 넘치면 잘라냄 */
+  background-color: #000; /* 이미지 로딩 전이나 없을 때 대비 */
+}
+
+/* 배너 내부 이미지 */
+.banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;    /* 비율을 유지하면서 영역을 꽉 채움 (중요!) */
+  object-position: center; /* 이미지의 중심을 기준으로 맞춤 */
+}
+
+/* 텍스트 영역이 이미지 위에 잘 보이도록 그림자 추가 (선택) */
+.banner-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: #fff;
+  z-index: 2;
+  padding: 0 20px;
+  text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7); /* 글자 가독성 향상 */
+}
+
+/* 제목 */
+.event-title{
+  font-size: 42px;
+  font-weight: 800;
+  margin-bottom: 14px;
+}
+
+/* 설명 */
+.event-desc{
+  font-size: 16px;
+  line-height: 1.6;
+  max-width: 700px;
+  margin: 0 auto;
+}
+.event-date-title{
+  padding:60px 300px;
+  background-color: #E5E5E5;
+  width:100%;
+  height: 150px;
+  
+  font-weight: 800;
+}
+.event-date{
+  font-weight: 400;
+}
+.event-thum-img {
+  display: flex;
+  align-items: flex-start; /* 위쪽 정렬 */
+  justify-content: center; /* 중앙 정렬 */
+  gap: 40px;               /* 이미지와 텍스트 사이 간격 */
+  margin: 0 auto;          /* 중앙 배치 */
+  padding: 40px 20px;      /* 양옆 여백은 작게, 위아래는 적당히 */
+}
+
+.thumimg {
+  width: 500px;
+  height: 400px;
+  object-fit: cover;
+  display: block;
+  
+  padding: 15px 15px 60px 15px;
+  background: #ffffff;
+  border: 1px solid #ddd;
+  
+  box-shadow: 
+    15px 15px 30px rgba(0, 0, 0, 0.1),
+    0 0 5px rgba(0, 0, 0, 0.05);
+    
+  transform: rotate(-2deg);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  
+  position: relative;
+  z-index: 1;
+}
+
+.thumimg::after {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Georgia', serif;
+  font-size: 14px;
+  color: #888;
+  letter-spacing: 2px;
+}
+
+.event-title-title{
+  padding:40px;
+  font-weight: 700;
+  font-size: 30px;
+}
+.event-title-desc{
+  padding:40px;
+  font-size: 14px;
+}
+.event-title-title,
+.event-title-desc{
+  display: block;
+}
+.event-text{
+  display: flex;
+  flex-direction: column;     /* 제목 위, 내용 아래 */
+}
+.line{
+  border: 0;
+  border-top: 2px solid #eee;
+  margin: 30px auto;
+  align-items: center;
+  width:1100px;
+  height: 30px;
+}
+
+hr{
+  border: 0;
+  border-top: 2px solid #9E9E9E;
+  margin: 30px auto;
+  align-items: center;
+  width:1200px;
+  height: 30px;
+}
+.notes{
+  border: 1px solid #eee;
+  padding: 20px 40px;
+  width:1200px;
+  
+  margin: 40px auto;
+  
+}
+
+.notes-title{
+  padding:20px 0;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.notes-desc{
+  font-size: 15px;
+  line-height: 1.8;
+}
+.inquiry{
+  margin-top:-40px;
+  font-size: 20px;
+
+}
+.inquirylink{
+  padding:0 20px;
+  color: #379AE6 !important;
+}
+
+.inquirylink:hover{
+  color: red;
+}
+
+.backlist{
+  padding:30px 0;
+  text-align: center;
+}
+
+#listbtn{
+  margin-top:20px;
+  padding: 12px 100px;
+
+}
+
+</style>
+
+
+<body>
+
+    <div id="popIframe" class="popup_rsvn">
+        <iframe name="popupIframe" id="popupIframe" src="" width="100%" height="100%" scrolling="no" visible="true" frameborder="0"></iframe>
+		<a href="#" class="btn_pop_close">X</a>
+    </div>
+
+<a href="#popIframe" class="open_modal" url="/view/roomReservationStep2.do" id="rsvnLayer" style="display:none;"></a>
+<header>
+<div th:replace="~{fragments/header :: header}"></div>
+</header>
+<div class="title-box">
+</div>
+<div class="maincontainer">
+<div class="banner">
+  <img th:src="@{/common/images/homepage/event/} + ${eventDetail.eventImg2}" alt="이벤트 이미지">
+	<div class="banner-text">
+	<div class="event-title" >
+	<span th:text="${eventDetail.eventTitle}"></span>&nbsp;[<span th:text="${eventDetail.eventSubTitle}"></span>]
+	</div>
+	
+	<div class="event-desc">
+	<span th:text="${eventDetail.eventMsg}">내용</span>
+	</div>
+	</div>
+	
+</div>
+	<div class="event-date-title">
+	이벤트기간
+	<div class="event-date">
+	<span th:text="${eventDetail.eventStartDate}">제목</span>&nbsp;~&nbsp;<span th:text="${eventDetail.eventEndDate}">제목</span>
+	</div>
+	</div>
+	
+	<hr>
+	
+	<div class="event-thum-img">
+	<img th:src="@{/common/images/homepage/event/} + ${eventDetail.eventImg1}" class="thumimg" alt="이벤트 이미지">
+	 <div class="event-text">
+    <div class="event-title-title"><span th:text="${eventDetail.eventTitle}"></span>&nbsp;[<span th:text="${eventDetail.eventSubTitle}"></span>]</div>
+    <span class="event-title-desc" th:text="${eventDetail.eventMsg}">
+      내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용
+    </span>
+  </div>
+	</div>
+	<hr>
+	<div class="notes">
+		<div class="notes-title">
+		유의사항
+		</div>	
+		<div class="notes-desc">
+		※ 본 프로모션 혜택은 예약 기간 내 사전 예약 시 제공됩니다.<br>
+		※ 본 프로모션은 회원 본인에 한해 예약 및 이용 가능하며, 레스토랑 이용 시 클럽조선 실물 또는 모바일 카드 제시 필수입니다.<br>
+		※ 본 프로모션은 타 프로모션 혜택, 기타 카드사 및 제휴사 혜택과 중복 적용 불가합니다.<br>
+		※ 본 프로모션은 각 레스토랑 통한 사전 예약 필수이며, 레스토랑 예약 상황에 따라 예약 마감될 수 있습니다.<br>
+		※ 본 프로모션은 호텔 사정에 따라 조기 마감될 수 있습니다.<br>
+		</div>
+		<hr class="line">
+		<div class="inquiry">
+		이벤트 문의
+			<a th:href="@{/writeInquiry}" class="inquirylink">문의하기</a>
+		</div>
+	</div>
+	
+	<div class="backlist">
+	  <button type="button" class="btn btn-outline-dark" id="listbtn" th:onclick="|location.href='@{/eventList}'|">목록</button>
+	</div>
+</div>
+
+	<div class="ffffff"></div>
+<footer>
+        <div th:replace="~{fragments/footer :: footer}"></div>
+    </footer>
+    
+    <div id="privacy-layer">
+        <div th:replace="~{fragments/privacy :: privacy}"></div>
+    </div>
+
+<!-- <script type="text/javascript" src="/Hotel28NewCMS_common/js/jquery.modalLayer.js"></script>
+<script type="text/javascript" src="/Hotel28NewCMS_common/js/common_dev.js"></script> -->
+<script type="text/javascript" src="${pageContext.request.contextPath}/common/js/comm/jquery.validate.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/common/js/comm/wings.core.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/common/js/comm/PAGING_HOMEPAGE.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/common/js/comm/kendo.web.min.js"></script>
+
+</body>
+</html>

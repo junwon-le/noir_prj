@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<link rel="shortcut icon" href="/common/images/favicon.ico">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="title" content="HOTEL 28">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="_csrf" th:content="${_csrf.token}"/>
+<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+<title>HOTEL 28</title>
+<link rel="stylesheet" type="text/css"
+	href="/common/css/homepage/base.css">
+<link rel="stylesheet" type="text/css"
+	href="/common/css/homepage/style.css?v=0312">
+<link rel="stylesheet" type="text/css"
+	href="/common/css/homepage/sub.css?v=0312">
+<!--  -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<!-- jQeury CDN 시작 -->
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="/common/js/comm/jquery.bxslider.js"></script>
+<script src="/common/js/homepage/jquery.rwdImageMaps.min.js"></script>
+<script src="/common/js/homepage/jquery.accessibility.modal.js"></script>
+<script src="/common/js/comm/jquery.cookie.js"></script>
+<script src="/common/js/homepage/plugin.js"></script>
+<script src="/common/js/homepage/custom.js"></script>
+<!-- Flatpickr 달력 CDN -->
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link rel="stylesheet" type="text/css"
+	href="https://npmcdn.com/flatpickr/dist/themes/Default.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://npmcdn.com/flatpickr/dist/l10n/ko.js"></script>
+
+</head>
+<div class="wrapper">
+	<div id="popIframe" class="popup_rsvn">
+		<iframe name="popupIframe" id="popupIframe" src="" width="100%"
+			height="100%" scrolling="no" visible="true" frameborder="0"></iframe>
+		<a href="#" class="btn_pop_close">X</a>
+	</div>
+</div>
+<a href="#popIframe" class="open_modal"
+	url="/view/roomReservationStep2.do" id="rsvnLayer"
+	style="display: none;"></a>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+	var CONTEXT = '';
+	$(document).ready(function($) {
+		$('.open_modal').click(function(e) {
+			$("iframe").attr("src", $(this).attr('url')).show();
+			e.preventDefault();
+		});
+	});
+
+	$(document).on('click', '.btn_pop_close', function(e) {
+		$('#popIframe > iframe').attr('src', '').hide();
+		e.preventDefault();
+	})
+</script>
+<style>
+.subject {
+	color: white;
+	text-decoration: none;
+}
+
+.main-sub>ul>li>a {
+	text-decoration: none;
+}
+
+.info>ul>li>a {
+	color: white;
+	text-decoration: none;
+}
+
+.info>ul>li {
+	list-style: none;
+}
+
+.footer_bot {
+	padding: 0px;
+}
+
+#container {
+	min-height: 700px;
+	padding-top: 220px;
+}
+
+.text-xl, .text-sm, #at {
+	color: white;
+}
+
+.hr {
+	margin-bottom: 40px;
+	width: 100%;
+}
+
+span {
+	color: black;
+}
+
+.personBtn {
+	border: solid 1px #8b7355;
+	width: 25px;
+	height: 40px;
+}
+
+</style>
+<script>
+var morningAdultPrice = [[${dinning[0].dinningAdultPrice}]]
+var morningKidPrice = [[${dinning[0].dinningKidPrice}]]
+var lunchAdultPrice = [[${dinning[1].dinningAdultPrice}]]
+var lunchKidPrice = [[${dinning[1].dinningKidPrice}]]
+var dinnerAdultPrice = [[${dinning[2].dinningAdultPrice}]]
+var dinnerKidPrice = [[${dinning[2].dinningKidPrice}]]
+var totalPrice =0 ;
+$(function(){
+	// 성인 수 설정
+	var adultCnt=1;
+	$("#adultUp").click(function(){
+		adultCnt+=1;
+		$("#showAdultCnt").text(adultCnt);
+		calPrice();
+	})
+	$("#adultDown").click(function(){
+		if(adultCnt > 1){ // 0보다 클 때만 감소
+			adultCnt--;
+		$("#showAdultCnt").text(adultCnt);
+		calPrice();
+	    }
+	})
+// 어린이 수 설정
+	var kidCnt=0;
+	$("#kidUp").click(function(){
+		kidCnt+=1;
+		$("#showKidCnt").text(kidCnt);
+		calPrice();
+	})
+	$("#kidDown").click(function(){
+		if(kidCnt > 0){ // 0보다 클 때만 감소
+	        kidCnt--;
+	        $("#showKidCnt").text(kidCnt);
+	    	calPrice();
+	    }
+	})
+	
+	$("#dinningType").change(function(){
+		if(!$("#reserveDate").val()){
+			alert("예약 날짜를 선택해 주세요.");
+			return;
+		}
+		var dinningType = $(this).val();
+		var dinningDate = $("#reserveDate").val();
+		$.ajax({
+			url : "/dinningRes/dinningTime/"+dinningType+"/"+dinningDate,
+			type : "GET",
+			dataType:"JSON",
+			error: function(xhr){
+				alert(xhr.status);
+			},
+			success : function(jsonArr){
+				var selTime = $("#dinningTime")[0];
+				selTime.length=1;
+				$.each(jsonArr, function(i, dinningTime){
+					selTime.options[i+1] =new Option(dinningTime.dinningTime+ " /(예약 가능 인원:"+dinningTime.remainingTable*4+"명)",dinningTime.dinningTime);
+				})//end each
+				calPrice();
+				
+			}
+		})//ajax
+	})//dinningType change
+	axios.defaults.headers.common['X-CSRF-TOKEN'] = $("meta[name='_csrf']").attr("content");
+	$("#reserve").click(function(){
+		if(!$("#reserveDate").val()){
+			alert("예약 날짜를 선택해 주세요.");
+			return;
+		}
+		if(!$("#dinningType").val()){
+			alert("예약 시간을 선택해 주세요.");
+			return;
+		}
+		$("#adultCnt").val(adultCnt)
+		$("#kidCnt").val(kidCnt)
+		$("#price").val(totalPrice)
+		var time=$("#time").text();
+		var dependingDinningDTO={
+				pendingPerson: adultCnt+kidCnt,
+				reserveDate: $("#reserveDate").val(),
+				reserveTime: $("#dinningTime").val()
+		}
+	 	axios.post('/dinningRes/depending', dependingDinningDTO)
+	    .then(response => {
+	        // 성공 시 로직\
+	        const frm = $("#reserveFrm");
+	        frm.attr("action", "/dinningRes/dinningReserve");
+	        frm.submit();
+	    })
+	    .catch(error => {
+	        // 실패 시 로직
+	        // 서버에서 보낸 에러 메시지 추출 (ResponseEntity.body에 담긴 내용)
+	    	const errorData = error.response ? error.response.data : "알 수 없는 오류";
+	        const errorMessage = typeof errorData === 'object' ? JSON.stringify(errorData) : errorData;
+	        
+	        alert(errorMessage);
+	        console.log(error.response.data);
+	        
+	    });//ajax 
+	    })//reserve
+	$("#nonReserve").click(function(){
+		if(!$("#reserveDate").val()){
+			alert("예약 날짜를 선택해 주세요.");
+			return;
+		}
+		if(!$("#dinningType").val()){
+			alert("예약 시간을 선택해 주세요.");
+			return;
+		}
+		$("#adultCnt").val(adultCnt)
+		$("#kidCnt").val(kidCnt)
+		$("#price").val(totalPrice)
+		var time=$("#time").text();
+		var dependingDinningDTO={
+				pendingPerson: adultCnt+kidCnt,
+				reserveDate: $("#reserveDate").val(),
+				reserveTime: $("#dinningTime").val()
+		}
+	 	axios.post('/dinningRes/depending', dependingDinningDTO)
+	    .then(response => {
+	        // 성공 시 로직\
+	        const frm = $("#reserveFrm");
+	        frm.attr("action", "/dinningRes/nonDinningReserve");
+	        frm.submit();
+	    })
+	    .catch(error => {
+	        // 실패 시 로직
+	        // 서버에서 보낸 에러 메시지 추출 (ResponseEntity.body에 담긴 내용)
+	    	const errorData = error.response ? error.response.data : "알 수 없는 오류";
+	        const errorMessage = typeof errorData === 'object' ? JSON.stringify(errorData) : errorData;
+	        
+	        alert(errorMessage);
+	        console.log(error.response.data);
+	        
+	    });//ajax 
+	    })//reserve
+	
+	
+	
+function calPrice(){
+	var dinningType = $("#dinningType").val();
+	if(dinningType=="조식"){
+		totalPrice = adultCnt*morningAdultPrice+kidCnt*morningKidPrice;
+		$("#totalPrice").text(totalPrice.toLocaleString()+"원");
+	}
+	if(dinningType=="중식"){
+		totalPrice = adultCnt*lunchAdultPrice+kidCnt*lunchKidPrice;
+		$("#totalPrice").text(totalPrice.toLocaleString()+"원");
+	}
+	if(dinningType=="석식"){
+		totalPrice = adultCnt*dinnerAdultPrice+kidCnt*dinnerKidPrice;
+		$("#totalPrice").text(totalPrice.toLocaleString()+"원");
+	}
+}
+});//ready
+
+</script>
+
+<body>
+	<header>
+		<div th:replace="~{fragments/header :: header}"></div>
+	</header>
+	<div id="container">
+		<div class="bg-[#111] min-h-screen text-white p-4 font-sans">
+			<div class="max-w-6xl mx-auto flex flex-col md:flex-row gap-8 py-10">
+				<div id="selectRoomDiv" style="width:750px;">
+				<div >
+				<img src="/common/images/homepage/다이닝5.jpg"/>
+				</div>
+				<div  class="flex-[2]">
+					<h2 class="text-xl font-bold  border-b border-gray-700 pb-2" style="margin-top:12px">조식</h2>
+					<img src="/common/images/res_img/hr.png" />
+					<div class="space-y-6" style="margin-top:10px;" th:text="${dinning[0].dinningMenuMain}">
+					오늘의 조식 메뉴
+					</div>
+				</div>
+				<div  class="flex-[2]" style="margin-top:10px;">
+					<h2 class="text-xl font-bold  border-b border-gray-700 pb-2">중식</h2>
+					<img src="/common/images/res_img/hr.png" />
+					<div class="space-y-6" style="margin-top:10px;" th:text="|메인: ${dinning[1].dinningMenuMain} / (${dinning[1].dinningMenuSub})|">
+					오늘의 중식 메뉴
+					</div>
+				</div>
+				<div  class="flex-[2]" style="margin-top:10px;">
+					<h2 class="text-xl font-bold  border-b border-gray-700 pb-2">석식</h2>
+					<img src="/common/images/res_img/hr.png" />
+					<div class="space-y-6" style="margin-top:10px;" th:text="${dinning[2].dinningMenuMain}">
+					오늘의 석식 메뉴
+					</div>
+				</div>
+				</div>
+				<div id="resInfoDiv" class="flex-1" >
+					<div class="sticky top-10 space-y-4">
+						<!-- 달력 -->
+						<form id="reserveFrm">
+						<div >
+							<div class="calendar-wrapper border rounded-lg overflow-hidden w-full">
+								<div  style="height:400px; display: flex; justify-content: center; background-color: white; padding-top: 30px; padding-bottom: 30px">
+								<div id="inline-calendar"></div>
+								</div>
+								<div class="p-3 border-t flex justify-between items-center text-sm bg-gray-50">
+									<span>방문일</span> <span id="time" class="font-bold">
+									날짜를 선택하세요</span>
+									<input type="hidden" name="reserveDate" id="reserveDate" />
+								</div>
+							</div>
+						</div>
+
+						<div class="bg-white text-black p-4 rounded-md shadow-md">
+							<div class="flex justify-between items-center mb-4">
+								<span class="font-bold">인원</span>
+							</div>
+							<div class="flex gap-2 text-[10px] " style="padding-left: 40px; padding-right: 40px;">
+								<div
+									class="flex-1 !border-2 border-solid !border-[#8b7355] p-2 p-2 text-center">
+									성인<br>
+									<div class="flex justify-between items-center ">
+										<button type="button" id="adultDown">
+											<img src="/common/images/res_img/downbtn.png"
+												class="personBtn" />
+										</button>
+										<span class="text-lg font-bold" id="showAdultCnt">1</span>
+										<input type="hidden" name="adultCnt" id="adultCnt" />
+										<button  type="button" id="adultUp">
+											<img src="/common/images/res_img/upbtn.png" class="personBtn" />
+										</button>
+									</div>
+								</div>
+								<div
+									class="flex-1 !border-2 border-solid !border-[#8b7355] p-2 p-2 text-center">
+									아동<br>
+									<div class="flex justify-between items-center ">
+										<button  type="button" id="kidDown">
+											<img src="/common/images/res_img/downbtn.png"
+												class="personBtn" />
+										</button>
+										<span class="text-lg font-bold" id="showKidCnt">0</span>
+										<input type="hidden" name="kidCnt" id="kidCnt" />
+										<button  type="button" id="kidUp">
+											<img src="/common/images/res_img/upbtn.png" class="personBtn" />
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="space-y-2">
+							<div class="  items-center rounded-sm">
+							</div>
+							<div class="flex justify-between">
+							<select style="color:#000; padding:5px; margin-bottom: 10px;" class="w-1/5 rounded-sm bg-gray-200 p-4" id="dinningType" name ="dinningType" >
+							<option value="N/A" disabled selected hidden>-선택-</option>
+							<option value="조식">조식</option>
+							<option value="중식">중식</option>
+							<option value="석식">석식</option>
+							</select >
+							<select name="dinningTime" style="color:#000; padding:5px;margin-bottom: 10px;" class="w-3/4 rounded-sm bg-gray-200 p-4" id="dinningTime">
+							<option value="N/A" disabled selected hidden> ← 타이닝 타입을 선택해주세요</option>
+							</select >
+							</div>
+						</div>
+						
+						<div class="space-y-2">
+							<div
+								class="bg-gray-200 p-3 flex justify-between items-center rounded-sm">
+								<span class="font-bold !text-black text-sm">총 금액</span> 
+								<span class="text-xl font-bold !text-black" id='totalPrice'>0 원</span>
+								<input type="hidden" name="price" id="price" />
+								
+							</div>
+							<div class="flex gap-2">
+							<th:block th:if="${session.memberId ne null}">
+								<button type="button"
+									class="flex-1 bg-[#8b7355] hover:bg-[#7a654a] py-4 font-bold text-sm" id="reserve">예약하기</button>
+							</th:block>
+							<th:block th:if="${session.memberId eq null}">
+							<button type="button"
+									class="flex-1 bg-[#8b7355] hover:bg-[#7a654a] py-4 font-bold text-sm" id="reserve">예약하기</button>
+								<button type="button" class="flex-1 bg-[#333] py-4 font-bold text-sm" id="nonReserve">비회원
+									예약 </button>
+							</th:block>
+							</div>
+						</div>
+						</form>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+	<footer>
+		<div th:replace="~{fragments/footer :: footer}"></div>
+	</footer>
+	<div th:replace="~{fragments/privacy :: privacy}"></div>
+	<!-- <script type="text/javascript" src="/Hotel28NewCMS_common/js/jquery.modalLayer.js"></script>
+<script type="text/javascript" src="/Hotel28NewCMS_common/js/common_dev.js"></script> -->
+	<script type="text/javascript" src="/common/js/comm/jquery.validate.js"></script>
+	<script type="text/javascript" src="/common/js/comm/wings.core.js"></script>
+	<script type="text/javascript" src="/common/js/comm/PAGING_HOMEPAGE.js"></script>
+	<script type="text/javascript" src="/common/js/comm/kendo.web.min.js"></script>
+	<script>
+	const date = new Date();
+	const endDate = new Date();
+	endDate.setMonth(date.getMonth()+1);
+		flatpickr( "#inline-calendar",
+				{
+					inline : true, // 페이지에 달력을 바로 보여줌
+					showMonths : 1, // 2달을 보여줌
+					locale : "ko",
+					minDate : "today",
+					dateFormat : "Y-m-d",
+				    enable: [
+				        {
+				            from: "2026-01-01",
+				            to: endDate
+				        }
+				    ],
+					onChange : function(selectedDates, dateStr, instance) {
+						if (selectedDates.length > 0) {
+							document.getElementById('time').innerText = instance
+									.formatDate(selectedDates[0], "Y-m-d (D)");
+							$("#reserveDate").val(instance.formatDate(selectedDates[0], "Y-m-d"))
+						}
+					}
+				});
+	</script>
+</body>
+</html>

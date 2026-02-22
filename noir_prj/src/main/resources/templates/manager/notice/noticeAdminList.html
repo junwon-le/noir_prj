@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<title>NOIR호텔 관리자 페이지</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Admin Common CSS -->
+<link
+	href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900"
+	rel="stylesheet">
+<link rel="stylesheet" href="/admin_common/css/bootstrap.min.css">
+<link rel="stylesheet" href="/admin_common/css/font-awesome.min.css">
+<link rel="stylesheet" href="/admin_common/css/nalika-icon.css">
+<link rel="stylesheet" href="/admin_common/css/owl.carousel.css">
+<link rel="stylesheet" href="/admin_common/css/owl.theme.css">
+<link rel="stylesheet" href="/admin_common/css/owl.transitions.css">
+<link rel="stylesheet" href="/admin_common/css/animate.css">
+<link rel="stylesheet" href="/admin_common/css/normalize.css">
+<link rel="stylesheet" href="/admin_common/css/meanmenu.min.css">
+<link rel="stylesheet" href="/admin_common/css/main.css">
+<link rel="stylesheet"
+	href="/admin_common/css/scrollbar/jquery.mCustomScrollbar.min.css">
+<link rel="stylesheet"
+	href="/admin_common/css/metisMenu/metisMenu.min.css">
+<link rel="stylesheet"
+	href="/admin_common/css/metisMenu/metisMenu-vertical.css">
+<link rel="stylesheet" href="/admin_common/style.css">
+<link rel="stylesheet" href="/admin_common/css/responsive.css">
+
+<!-- Admin Common JS -->
+<script src="/admin_common/js/vendor/jquery-1.12.4.min.js"></script>
+<script src="/admin_common/js/bootstrap.min.js"></script>
+<script src="/admin_common/js/wow.min.js"></script>
+<script src="/admin_common/js/jquery.meanmenu.js"></script>
+<script src="/admin_common/js/owl.carousel.min.js"></script>
+<script src="/admin_common/js/jquery.sticky.js"></script>
+<script
+	src="/admin_common/js/scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+<script src="/admin_common/js/scrollbar/mCustomScrollbar-active.js"></script>
+<script src="/admin_common/js/metisMenu/metisMenu.min.js"></script>
+<script src="/admin_common/js/metisMenu/metisMenu-active.js"></script>
+<script src="/admin_common/js/plugins.js"></script>
+<script src="/admin_common/js/main.js"></script>
+
+
+<!-- 페이지 전용 스타일 -->
+<style>
+.notice-search-bar {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 25px;
+}
+
+.notice-search-input {
+  width: 240px;
+  background: #ffffff;
+  border: 1px solid #e3e8f3;
+  color: #38599a;
+  padding: 8px 12px;
+  border-radius: 8px;
+  height: 30px;
+}
+
+.notice-search-input::placeholder {
+  color: #b1c1e2;
+  opacity: 0.8;
+}
+
+.notice-search-btn {
+  background: #5f739c;
+  color: #ffffff;
+  border: 1px solid #e3e8f3;
+  padding: 8px 18px;
+  font-weight: 600;
+  border-radius: 8px;
+  height: 30px;
+  line-height: 14px;
+}
+
+.notice-search-btn:hover {
+  background: #4f638a;
+}
+
+.notice-table-wrap {
+  background: #ffffff;
+  border: 1px solid #e3e8f3;
+  border-radius: 12px;
+  padding: 10px;
+}
+
+.notice-table {
+  margin-bottom: 0;
+  color: #38599a;
+}
+
+.notice-table thead th {
+  background: #f6f8fc;
+  color: #38599a;
+  font-weight: 600;
+  text-align: center;
+  border-bottom: 1px solid #e3e8f3;
+}
+
+.notice-table tbody td {
+  text-align: center;
+  vertical-align: middle;
+  border-top: 1px solid #e3e8f3;
+}
+
+.notice-table tbody td:nth-child(3) {
+  text-align: left;
+}
+
+.notice-table tbody tr:hover {
+  background: #f9fbff;
+}
+
+.notice-table-footer {
+  text-align: right;
+  margin-top: 12px;
+}
+
+.notice-write-btn {
+  background: linear-gradient(135deg, #3f5fa9, #2b4a87);
+  color: #ffffff;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.notice-write-btn:hover {
+  opacity: 0.9;
+}
+
+.notice-title-link {
+  color: #38599a;
+  font-weight: 600;
+}
+
+.notice-title-link:hover {
+  text-decoration: underline;
+}
+
+.notice-search-bar select {
+  min-width: 180px;
+  background: #ffffff;
+  color: #38599a;
+  border: 1px solid #e3e8f3;
+  border-radius: 8px;
+  padding: 4px 12px;
+  height: 30px;
+}
+
+.notice-search-bar select option {
+  color: #38599a;
+}
+</style>
+
+<!-- 페이지 전용 JS -->
+<script type="text/javascript">
+$(function () {
+
+  // 공지쓰기 버튼
+  $("#writeBtn").click(function () {
+    var currentPage = $("#currentPage").val() || "1";
+    location.href = "/notice/writeNoticeFrm?currentPage=" + encodeURIComponent(currentPage);
+  });
+
+  // 검색 버튼 클릭
+  $("#btnSearch").click(function (e) {
+    e.preventDefault();
+    searchNotice();
+  });
+
+  // 엔터 검색
+  $("#keyword").keyup(function (evt) {
+    if (evt.which === 13) {
+      evt.preventDefault();
+      searchNotice();
+    }
+  });
+
+});
+
+// 검색 실행
+function searchNotice() {
+  // 검색할 때는 보통 1페이지로 보내는 게 안전
+  $("#currentPage").val("1");
+  $("#searchFrm").submit();
+}
+</script>
+
+</head>
+
+<body>
+	<div th:replace="~{manager/fragments/sidebar :: sidebar}"></div>
+
+	<div class="all-content-wrapper">
+		<div class="header-advance-area">
+			<div class="breadcome-area">
+				<div class="container">
+					<div class="row">
+						<div class="col-lg-12">
+							<div class="breadcome-list">
+								<div class="breadcomb-wp"
+									style="color: #ffffff; font-size: 20px">
+									<h2>공지사항 관리</h2>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="container" style="color: white; min-height: 700px">
+			<div style="margin-bottom: 20px;">
+				<h3 style="font-weight: 600; margin-bottom: 20px;">공지사항 목록</h3>
+			</div>
+
+<!-- 검색바 -->
+<div class="notice-search-bar">
+  <form th:action="@{/notice/searchAllNotice}" id="searchFrm" method="get">
+    <select name="field" id="field">
+      <option value="1" th:selected="${range.field == '1'}">전체</option>
+      <option value="2" th:selected="${range.field == '2'}">일반공지</option>
+      <option value="3" th:selected="${range.field == '3'}">멤버십</option>
+      <option value="4" th:selected="${range.field == '4'}">약관개정</option>
+    </select>
+
+    <input type="text" name="keyword" id="keyword"
+           class="notice-search-input"
+           placeholder="검색어를 입력하세요"
+           th:value="${range.keyword}" />
+
+    <input type="hidden" name="currentPage" id="currentPage"
+           th:value="${range.currentPage}" />
+
+    <input type="submit" value="검색" id="btnSearch" class="notice-search-btn" />
+  </form>
+</div>
+
+
+      <!-- 테이블 -->
+      <div class="table-responsive notice-table-wrap">
+        <table class="table notice-table">
+          <thead>
+            <tr>
+              <th>카테고리</th>
+              <th>번호</th>
+              <th>제목</th>
+              <th>작성자</th>
+              <th>등록일</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <!-- 데이터 없을 때 -->
+            <tr th:if="${naList == null || #lists.isEmpty(naList)}">
+              <td colspan="5" style="text-align: center; padding: 40px 0; color: #b1c1e2;">
+                등록된 공지사항이 없습니다.
+              </td>
+            </tr>
+
+            <!-- 데이터 있을 때 -->
+            <tr th:each="notice : ${naList != null ? naList : {}}">
+              <td th:text="${notice.noticeCategory}">카테고리</td>
+              <td th:text="${notice.noticeNum}">1</td>
+              <td>
+				<a class="notice-title-link"
+				   th:href="@{/notice/searchDetailNotice(
+				      noticeNum=${notice.noticeNum},
+				      currentPage=${range.currentPage},
+				      field=${range.field},
+				      keyword=${range.keyword}
+				   )}"
+				   th:text="${notice.noticeTitle}">
+				  제목
+				</a>
+
+              </td>
+              <td th:text="${notice.adminNum}"></td>
+			<td th:text="${#temporals.format(notice.noticeDate,'yyyy.MM.dd')}"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="notice-table-footer">
+        <input type="button" value="공지쓰기" class="notice-write-btn" id="writeBtn" />
+      </div>
+
+      <!-- 페이징 -->
+      <div id="pagination" style="text-align: center; margin-top: 30px;"
+           th:utext="${pagination != null ? pagination : ''}">
+      </div>
+    </div>
+
+		<div th:replace="~{manager/fragments/footer :: footer}"></div>
+	</div>
+</body>
+</html>

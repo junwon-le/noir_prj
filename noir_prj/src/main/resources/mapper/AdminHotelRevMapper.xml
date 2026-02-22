@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.noir.adminHotelRevReserve.AdminHotelRevMapper">
+
+	
+	<select id="totalCount" resultType="int">
+			    SELECT COUNT(*)
+			    FROM reserve r, member m, pay p, pay_info pi
+			    WHERE m.member_num = r.member_num
+			      AND r.reserve_num = p.reserve_num
+			      AND p.pay_num = pi.pay_num
+			      AND r.member_num IS NOT NULL
+			      AND r.non_user_num IS NULL
+			      AND r.reserve_type = 'room'
+			    
+			     <if test="keyword != null and keyword != ''">
+					      <choose>
+					        <when test="field == 'userName'">
+					          AND (r.END_USER_LAST_NAME || r.END_USER_FIRST_NAME) LIKE '%' || #{keyword} || '%'
+					        </when>
+					        <when test="field == 'reserveNum'">
+					          AND r.reserve_num = #{keyword}
+					        </when>
+					        <when test="field == 'memberId'">
+					          AND m.member_id LIKE '%' || #{keyword} || '%'
+					        </when>
+					        <otherwise>
+					          AND 
+					           (
+							  (r.END_USER_LAST_NAME || r.END_USER_FIRST_NAME) LIKE '%' || #{keyword} || '%'
+							  OR m.member_id LIKE '%' || #{keyword} || '%'
+							  OR (REGEXP_LIKE(#{keyword}, '^[0-9]+$') AND r.reserve_num = TO_NUMBER(#{keyword}))
+
+							)
+
+					        </otherwise>
+					      </choose>
+  					  </if>
+			</select>
+	
+	
+	
+ 	<select id="adminHotelRevList" parameterType="adminRangeDTO" resultType="adminHotelSearchDomain">
+			          SELECT *
+FROM (
+  SELECT
+    ROW_NUMBER() OVER (
+      ORDER BY
+        r.reserve_status ASC,
+        CASE WHEN r.reserve_start_date >= TRUNC(SYSDATE) THEN 0 ELSE 1 END ASC,
+        r.reserve_start_date ASC,
+        r.reserve_time DESC
+    ) AS rnum,
+    r.reserve_num AS reserveNum,
+    r.end_user_last_name || r.end_user_first_name AS reserveName,
+    nvl(m.member_id,'탈퇴한 회원')AS memberId,
+    TO_CHAR(r.reserve_time,'YYYY-MM-DD') AS reserveTime,
+    p.pay_price AS totalPrice,
+    TO_CHAR(r.reserve_start_date,'YYYY-MM-DD') AS startDate,
+    TO_CHAR(r.reserve_end_date,'YYYY-MM-DD') AS endDate,
+    TO_CHAR(pi.input_date,'YYYY-MM-DD HH24:MI:SS') AS inputDate,
+    r.reserve_status AS reserveFlag
+  FROM reserve r, member m, pay p, pay_info pi
+  WHERE m.member_num = r.member_num
+    AND r.reserve_num = p.reserve_num
+    AND p.pay_num = pi.pay_num
+    AND r.member_num IS NOT NULL
+    AND r.non_user_num IS NULL
+    AND r.reserve_type = 'room'
+
+
+    <if test="keyword != null and keyword != ''">
+	      <choose>
+	        <when test="field == 'userName'">
+	          AND (r.END_USER_LAST_NAME || r.END_USER_FIRST_NAME) LIKE '%' || #{keyword} || '%'
+	        </when>
+	        <when test="field == 'reserveNum'">
+	          AND r.reserve_num = #{keyword}
+	        </when>
+	        <when test="field == 'memberId'">
+	          AND m.member_id LIKE '%' || #{keyword} || '%'
+	        </when>
+	        <otherwise>
+	               AND 
+					  (
+				(r.END_USER_LAST_NAME || r.END_USER_FIRST_NAME) LIKE '%' || #{keyword} || '%'
+				 OR m.member_id LIKE '%' || #{keyword} || '%'
+			  OR (REGEXP_LIKE(#{keyword}, '^[0-9]+$') AND r.reserve_num = TO_NUMBER(#{keyword}))
+
+				)
+	        </otherwise>
+	      </choose>
+			  </if>
+		)
+		WHERE rnum BETWEEN #{startNum} AND #{endNum}
+	
+	</select>
+	
+	
+		<select id="adminHotelRevDetail" parameterType="int" resultType="adminHotelRevDetailDomain">
+	  			  SELECT
+				    r.reserve_num AS reserveNum,
+				    r.end_user_last_name || r.end_user_first_name AS reserveName,
+				    m.member_id AS memberId,
+				    p.pay_price AS totalPrice,
+				    TO_CHAR(r.reserve_start_date,'YYYY-MM-DD') AS startDate,
+				    TO_CHAR(r.reserve_end_date,'YYYY-MM-DD') AS endDate,
+				    TO_CHAR(pi.input_date,'YYYY-MM-DD HH24:MI') AS payInfoInputDate,
+						pi.PAY_AGENCY as payAgency,
+						r.RESERVE_ADULT_COUNT as adultCount,
+						r.RESERVE_KID_COUNT as kidCount,
+						r.RESERVE_EMAIL as email,
+						r.RESERVE_TEL  as tel,
+						r.reserve_msg as reserveMsg,
+						ri.ROOM_CHECK_IN as checkIn,
+						ri.ROOM_CHECK_OUT as checkOut,
+						ri.room_img1 as roomImg,
+						pi.CARD_NUM as cardData,
+						ri.room_type as roomType,
+						(trunc(r.reserve_end_date)-trunc(r.reserve_start_date)) as stayCount,
+						r.reserve_status AS reserveFlag
+					  FROM reserve r, member m, pay p, pay_info pi,room_res rr, ROOM_INFO ri
+					  WHERE m.member_num = r.member_num
+					    AND r.reserve_num = p.reserve_num
+					    AND p.pay_num = pi.pay_num
+					    and r.reserve_num=rr.reserve_num
+					    and rr.room_type_num=ri.room_type_num
+					    AND r.member_num IS NOT NULL
+					    AND r.non_user_num IS NULL
+					    AND r.reserve_type = 'room'
+					    and r.reserve_num=#{reserveNum}
+	 	</select>
+	 	
+	 	
+	 	<update id="removeHotelReserve" parameterType="int" >
+		update reserve
+		set reserve_status='Y'
+		where reserve_num=#{reserveNum}
+	</update>
+	
+	<update id="removeRevPay" parameterType="int">
+		update pay 
+	    set pay_refund_state = 'Y', 
+	               pay_refund_time = sysdate 
+	    where reserve_num = #{reserveNum}
+        
+	</update> 
+ 
+	    
+</mapper>

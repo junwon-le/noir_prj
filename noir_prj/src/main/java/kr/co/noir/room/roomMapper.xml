@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.noir.room">
+
+
+	<resultMap type="roomDomain" id="roomSelect">
+		<result column="room_type_num" property="roomTypeNum"/>
+		<result column="room_type" property="roomType"/>	
+		<result column="room_detail" property="roomDetail"/>			
+		<result column="room_img1" property="roomImg1"/>	
+		<result column="room_img2" property="roomImg2"/>	
+		<result column="room_img3" property="roomImg3"/>	
+		<result column="room_img4" property="roomImg4"/>	
+		<result column="room_img5" property="roomImg5"/>	
+		<result column="room_area" property="roomArea"/>	
+		<result column="room_bad_type" property="roomBadType"/>	
+		<result column="room_max_person" property="roomMaxPerson"/>	
+		<result column="room_check_in" property="roomCheckIn"/>	
+		<result column="room_check_out" property="roomCheckOut"/>
+		<result column="room_service_1" property="roomService1"/>
+		<result column="room_service_2" property="roomService2"/>
+		<result column="room_service_3" property="roomService3"/>
+		<result column="room_service_4" property="roomService4"/>
+		<result column="room_service_5" property="roomService5"/>
+		<result column="room_service_6" property="roomService6"/>
+		<result column="room_service_7" property="roomService7"/>
+		<result column="room_service_8" property="roomService8"/>
+		<result column="room_service_9" property="roomService9"/>
+		<result column="room_service_10" property="roomService10"/>
+		<result column="room_amenity1" property="roomAmenity1"/>
+		<result column="room_amenity2" property="roomAmenity2"/>
+		<result column="room_amenity3" property="roomAmenity3"/>
+		<result column="room_amenity4" property="roomAmenity4"/>
+		<result column="room_amenity5" property="roomAmenity5"/>
+		
+					
+	</resultMap> 
+
+
+
+		<select id="roomSelect" parameterType="int" resultMap="roomSelect">
+		select room_type_num, room_type, room_img1, room_img2, room_img3, room_img4, room_img5, room_area, room_bad_type,
+		 room_max_person from room_info
+		where
+		<choose>
+			<when test="num eq 1">
+			room_type_num=1
+			</when>
+			<when test="num eq 2">
+			room_type_num=2
+			</when>
+			<when test="num eq 3">
+			room_type_num=3
+			</when>
+			<when test="num eq 4">
+			room_type_num=4
+			</when>
+			<otherwise>
+			room_type_num=5
+			</otherwise>		
+		</choose>
+		</select>	
+		
+		<select id="roomDetailSelect" parameterType="int" resultMap="roomSelect">
+		SELECT
+		    I.*,
+		    S.room_service_1, S.room_service_2, S.room_service_3, S.room_service_4, S.room_service_5,
+		    S.room_service_6, S.room_service_7, S.room_service_8, S.room_service_9, S.room_service_10,
+		    A.room_amenity1, A.room_amenity2, A.room_amenity3, A.room_amenity4, A.room_amenity5
+		FROM
+		    room_info I
+		LEFT JOIN
+		    room_service S ON I.room_type_num = S.room_type_num
+		LEFT JOIN
+		    room_amenity A ON I.room_type_num = A.room_type_num
+		WHERE
+		<choose>
+			<when test="num eq 1">
+			I.room_type_num=1
+			</when>
+			<when test="num eq 2">
+			I.room_type_num=2
+			</when>
+			<when test="num eq 3">
+			I.room_type_num=3
+			</when>
+			<when test="num eq 4">
+			I.room_type_num=4
+			</when>
+			<otherwise>
+			I.room_type_num=5
+			</otherwise>		
+		</choose>
+		</select>	
+		
+		<select id="roomList" resultMap="roomSelect">
+		select room_type_num,room_detail, room_type, room_img1, room_img2, room_img3, room_img4, room_img5, room_area, room_bad_type,
+		 room_max_person, room_check_in, room_check_out from room_info
+		</select>	
+		
+		<resultMap type="roomPriceDomain" id="roomPriceSelect">
+		<result column="room_type_num" property="roomTypeNum"/>
+		<result column="room_price" property="roomPrice"/>
+		<result column="room_date" property="roomPriceDate"/>
+		</resultMap>
+		
+		<select id="roomPriceTodayList" resultMap="roomPriceSelect">
+			select room_type_num, room_date, room_price
+			from room_price
+			where room_date=to_char(sysdate,'yyyy-mm-dd')
+		</select>	
+		
+		<select id="roomPriceList" parameterType="String" resultMap="roomPriceSelect">
+		select room_type_num, room_date, room_price
+		from room_price
+		where room_date= #{roomPriceDate}
+		</select>	
+		
+		
+		<select id="selectMonthRoom" parameterType="RoomPriceDTO" resultMap="roomPriceSelect">
+    	SELECT * FROM room_price 
+    	WHERE room_type_num=#{roomTypeNum} and INSTR(room_date, #{roomPriceDate}) = 1
+		</select>				
+		
+		<select id="selectCheckRoom" parameterType="RoomPriceDTO" resultMap="roomPriceSelect">
+    	SELECT * FROM room_price 
+    	WHERE room_type_num=#{roomTypeNum} and room_date = #{roomPriceDate}
+		</select>				
+		
+		
+		<update id="roomModify" parameterType="RoomDTO">
+		update room_info 
+    	<set>
+        <if test="roomImg1 != null">
+            room_img1 = #{roomImg1},
+        </if>
+        <if test="roomImg2 != null">
+            room_img2 = #{roomImg2},
+        </if>
+        <if test="roomImg3 != null">
+            room_img3 = #{roomImg3},
+        </if>
+        <if test="roomImg4 != null">
+            room_img4 = #{roomImg4},
+        </if>
+        <if test="roomImg5 != null">
+            room_img5 = #{roomImg5},
+        </if>
+        <if test="roomBadType != null">
+		room_bad_type=#{roomBadType},
+		</if>
+		<if test="roomDetail != null">
+		room_detail=#{roomDetail},
+		</if>
+        <if test="roomCheckIn != null">
+		room_check_in=#{roomCheckIn},
+		</if>
+        <if test="roomCheckOut != null">
+		room_check_out=#{roomCheckOut}
+		</if>
+		</set>								
+		where room_type_num=#{roomTypeNum}
+		</update>
+		
+		<update id="amenityModify" parameterType="RoomDTO">
+		update room_amenity
+		set room_amenity1=#{roomAmenity1},room_amenity2=#{roomAmenity2},room_amenity3=#{roomAmenity3},room_amenity4=#{roomAmenity4},room_amenity5=#{roomAmenity5}
+		where room_type_num=#{roomTypeNum} 
+		</update>
+		
+		<update id="roomServiceModify" parameterType="RoomDTO">
+		update room_service
+		set room_service_1=#{roomService1},room_service_2=#{roomService2},room_service_3=#{roomService3},room_service_4=#{roomService4},room_service_5=#{roomService5},
+		room_service_6=#{roomService6},room_service_7=#{roomService7},room_service_8=#{roomService8},room_service_9=#{roomService9},room_service_10=#{roomService10}
+		where room_type_num=#{roomTypeNum} 
+		</update>
+		
+		
+		<update id="roomPriceModify" parameterType="RoomPriceDTO">
+		update room_price
+		set room_price=#{roomPrice}
+		where room_date=#{roomPriceDate} and room_type_num=#{roomTypeNum}
+		</update>
+		
+		<insert id="roomPriceInsert" parameterType="RoomPriceDTO">
+		insert into room_price (room_date, room_type_num, room_price)
+		values( #{roomPriceDate} ,#{roomTypeNum} ,#{roomPrice})
+		</insert>
+		
+		
+		
+		
+		
+	
+</mapper>
+
+
+
+
