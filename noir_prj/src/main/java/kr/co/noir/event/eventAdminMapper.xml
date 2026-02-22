@@ -9,7 +9,7 @@
   <select id="selectEventTotalCnt"
           parameterType="kr.co.noir.event.EventRangeDTO"
           resultType="int">
-    SELECT COUNT(*)
+    SELECT COUNT(*) 
     FROM event
     WHERE event_del_flag = 'N'
     <if test="field != null and field != '' and keyword != null and keyword != ''">

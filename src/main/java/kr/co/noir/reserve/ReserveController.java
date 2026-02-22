@@ -180,7 +180,6 @@ public class ReserveController {
 		            rsd.setPeriod(period);
 		        }
 			}//end for
-			System.out.println(list);
 		return list;
 	}
 	
