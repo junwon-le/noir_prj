@@ -1,6 +1,5 @@
 package kr.co.noir.reserve;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import org.apache.ibatis.exceptions.PersistenceException;

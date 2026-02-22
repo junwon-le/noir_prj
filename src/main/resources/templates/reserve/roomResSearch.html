@@ -279,12 +279,12 @@ $(function(){
 	}
 	
 	function searchRoom(startDate, endDate ){
-		var param ={startDate : startDate, endDate : endDate};
+		var param ={startDate : startDate , endDate:endDate}
 		$.ajax({
-			url:"/reserve/RoomSearchProcess",
+			url : "/reserve/RoomSearchProcess",
 			type:"GET",
 			dataType: "JSON",
-			data : param,
+			data:param,
 			beforeSend: function() {
 	            // 1. 기존 목록을 지우고 로딩바(스켈레톤)를 보여줌
 	            $("#roomList").hide(); // 실제 리스트 숨김

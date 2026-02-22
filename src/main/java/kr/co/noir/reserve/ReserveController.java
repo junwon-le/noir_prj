@@ -158,11 +158,10 @@ public class ReserveController {
 			period = diffInMillies / (24 * 60 * 60 * 1000);
 		} catch (ParseException e) {
 			e.printStackTrace();
-		}
-		System.out.println("-----------------------------------------------------------------------------------------"+rsDTO.getStartDate()+"--");
-		System.out.println("-----------------------------------------------------------------------------------------"+rsDTO.getEndDate()+"--");
-		rsDTO.setStartDate(rsDTO.getStartDate().trim());
-		rsDTO.setEndDate(rsDTO.getEndDate().trim());
+		}  
+		System.out.println("524-------------------------------------------------------------------------------------------------");
+		//rsDTO.setStartDate("2026-02-19");
+	//	rsDTO.setEndDate("2026-02-25");
 		List<RoomSearchDomain> list = rrs.searchRoom(rsDTO);  
 		for(RoomSearchDomain rsd :list) {
 			rsd.setPeriod(period);
