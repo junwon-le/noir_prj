@@ -18,11 +18,14 @@
     WHERE member_id = #{memberId}
       AND member_pass = #{memberPass} and member_del_flag='N'
 </select>
-<select id="findIdByInfo" resultType="String">
-    SELECT member_id
+<select id="findMembersByName" resultType="kr.co.noir.login.MemberDTO">
+    SELECT 
+        member_id AS memberId, 
+        member_email AS memberEmail
     FROM member
-    WHERE TRIM(member_last_name) = #{memberLastName} AND TRIM(member_first_name) = #{memberFirstName}
-      AND member_email = #{memberEmail} and member_del_flag='N'
+    WHERE TRIM(member_last_name) = #{memberLastName} 
+      AND TRIM(member_first_name) = #{memberFirstName}
+      AND member_del_flag = 'N'
 </select>
 <select id="checkUserForReset" parameterType="map" resultType="kr.co.noir.login.MemberDTO">
    select member_id, member_email

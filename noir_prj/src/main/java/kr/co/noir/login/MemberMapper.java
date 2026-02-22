@@ -68,5 +68,8 @@ public interface MemberMapper {
     SnsTokenDTO selectSnsToken(@Param("memberId") String memberId, @Param("provider") String provider);
 
     void deleteSnsToken(@Param("memberId") String memberId, @Param("provider") String provider);
+
+    // ID 찾기에 사용할 성과 이름으로 정보 검색
+	List<MemberDTO> findMembersByName(String memberLastName, String memberFirstName);
     
 }

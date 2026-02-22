@@ -1,5 +1,7 @@
 package kr.co.noir.login;
 
+import java.util.List;
+
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,7 +26,7 @@ public class LoginService {
 	@Value("${user.crypto.salt}")
 	private String salt;	
 	
-	// BCrypt 객체는 하나만 생성해서 재사용하는 것이 성능상 유리합니다.
+	// BCrypt 객체는 하나만 생성해서 재사용하는 것이 성능상 유리함
     private final BCryptPasswordEncoder bce = new BCryptPasswordEncoder();
 
     public LoginMemberDomain searchOneMember(LoginDTO lDTO) {
@@ -76,10 +78,32 @@ public class LoginService {
 	
 	
 	
-	public String findIdByInfo(String memberLastName, String memberFirstName, String memberEmail) {
-		String foundId=null;
-		foundId=memberMapper.findIdByInfo(memberLastName, memberFirstName, memberEmail);
-		return foundId;
+    public String findIdByInfo(String memberLastName, String memberFirstName, String inputEmail) {
+        // 1. 성과 이름이 일치하는 모든 회원 목록을 가져옵니다. (동명이인 고려)
+        List<MemberDTO> members = memberMapper.findMembersByName(memberLastName, memberFirstName);
+        
+        if (members == null || members.isEmpty()) {
+            return null; 
+        }
+
+        TextEncryptor te = Encryptors.text(key, salt);
+
+        for (MemberDTO mDTO : members) {
+            try {
+                // 2. DB의 암호화된 이메일을 복호화합니다.
+                String dbDecEmail = te.decrypt(mDTO.getMemberEmail());
+                
+                // 3. 평문 이메일끼리 비교합니다.
+                if (inputEmail.equals(dbDecEmail)) {
+                    return mDTO.getMemberId(); // 일치하는 ID 반환
+                }
+            } catch (Exception e) {
+                // 복호화 실패(데이터 오염 등) 시 다음 데이터 확인
+                System.err.println("복호화 오류: " + e.getMessage());
+            }
+        }
+        
+        return null; // 일치하는 이메일 없음
 	}//findIdByInfo
 	
 	

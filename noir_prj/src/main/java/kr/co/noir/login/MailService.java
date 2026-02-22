@@ -2,23 +2,28 @@ package kr.co.noir.login;
 
 import java.util.Random;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 
 @Service
 public class MailService {
 
-    private final JavaMailSender javaMailSender;
+	private final JavaMailSender javaMailSender;
     private static final String SENDER_EMAIL = "sjdbreader5@gmail.com";
 
-    // 생성자 주입 (final 필드 사용 시 @Autowired 생략 가능)
-    public MailService(JavaMailSender javaMailSender) {
+    // @Qualifier("mailSender")를 사용하여 application-dev.properties의 
+    // spring.mail 설정을 따르는 기본 빈(Gmail)을 주입받음.
+    @Autowired
+    public MailService(@Qualifier("mailSender") JavaMailSender javaMailSender) {
         this.javaMailSender = javaMailSender;
-    }
+    }    
+    
     
     public String createNumber() {
         Random random = new Random();
@@ -31,8 +36,23 @@ public class MailService {
     
     public String sendMail(String mail) {
         String number = createNumber();
-        MimeMessage message = javaMailSender.createMimeMessage();
         
+        // 1. 현재 주입된 Sender의 설정을 강제로 점검
+        if (javaMailSender instanceof JavaMailSenderImpl) {
+            JavaMailSenderImpl impl = (JavaMailSenderImpl) javaMailSender;
+            
+            // 만약 여기서 host가 smtp.gmail.com이 아니라면 설정 파일이 무시된 것
+            System.out.println("현재 연결된 SMTP Host: " + impl.getHost()); 
+            System.out.println("현재 연결된 SMTP Port: " + impl.getPort());
+
+            // 코드에서 강제로 디버그와 프로퍼티를 다시 세팅
+            impl.getJavaMailProperties().put("mail.debug", "true");
+            impl.getJavaMailProperties().put("mail.smtp.auth", "true");
+            impl.getJavaMailProperties().put("mail.smtp.ssl.enable", "true");
+        }
+        
+        MimeMessage message = javaMailSender.createMimeMessage();
+          
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
             helper.setFrom(SENDER_EMAIL);
@@ -94,12 +114,16 @@ public class MailService {
                 + "</html>";
 
             helper.setText(content, true); // HTML 전송 설정
+            // 실제 전송 시도
             javaMailSender.send(message);
+            System.out.println("메일 전송 성공: " + mail);
 
-        } catch (MessagingException e) {
-            e.printStackTrace();
-            return null; // 실패 시 null 리턴
+        } catch (Exception e) { // MessagingException 대신 광범위한 Exception 사용
+        	System.err.println("메일 발송 중 오류 발생: " + e.getMessage());
+        	e.printStackTrace(); 
+        	return null; // 실패 시 확실하게 null을 반환하여 컨트롤러가 FAIL을 알게 함
         }
         return number;
     }
+    
 }
