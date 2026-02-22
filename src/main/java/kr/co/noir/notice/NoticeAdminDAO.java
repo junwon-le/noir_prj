@@ -12,50 +12,70 @@ import kr.co.noir.dao.MyBatisHandler;
 public class NoticeAdminDAO {
 
     public int selectNoticeTotalCnt(BoardRangeDTO rDTO) throws SQLException {
-        int totalCnt = 0;
         SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
-        totalCnt = ss.selectOne("kr.co.noir.noticeAdmin.selectNoticeTotalCnt", rDTO);
-        if (ss != null) ss.close();
-        return totalCnt;
+        try {
+            return ss.selectOne("kr.co.noir.noticeAdmin.selectNoticeTotalCnt", rDTO);
+        } finally {
+            if (ss != null) ss.close();
+        }
     }
 
     public List<NoticeAdminDomain> selectNoticeList(BoardRangeDTO rDTO) throws SQLException {
-        List<NoticeAdminDomain> list = null;
         SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
-        list = ss.selectList("kr.co.noir.noticeAdmin.selectNoticeList", rDTO);
-        if (ss != null) ss.close();
-        return list;
+        try {
+            return ss.selectList("kr.co.noir.noticeAdmin.selectNoticeList", rDTO);
+        } finally {
+            if (ss != null) ss.close();
+        }
     }
 
     public NoticeAdminDomain selectNoticeDetail(int noticeNum) throws SQLException {
-        NoticeAdminDomain nDomain = null;
         SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
-        nDomain = ss.selectOne("kr.co.noir.noticeAdmin.selectNoticeDetail", noticeNum);
-        if (ss != null) ss.close();
-        return nDomain;
+        try {
+            return ss.selectOne("kr.co.noir.noticeAdmin.selectNoticeDetail", noticeNum);
+        } finally {
+            if (ss != null) ss.close();
+        }
     }
 
     public int insertNotice(NoticeAdminDTO naDTO) throws SQLException {
-        int cnt = 0;
         SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
-        cnt = ss.insert("kr.co.noir.noticeAdmin.insertNotice", naDTO);
-        if (ss != null) ss.close();
-        return cnt;
+        try {
+            return ss.insert("kr.co.noir.noticeAdmin.insertNotice", naDTO);
+        } finally {
+            if (ss != null) ss.close();
+        }
     }
 
     public int updateNotice(NoticeAdminDTO naDTO) throws SQLException {
-        int cnt = 0;
         SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
-        cnt = ss.update("kr.co.noir.noticeAdmin.updateNotice", naDTO);
-        if (ss != null) ss.close();
-        return cnt;
+        try {
+            return ss.update("kr.co.noir.noticeAdmin.updateNotice", naDTO);
+        } finally {
+            if (ss != null) ss.close();
+        }
     }
 
     public int deleteNotice(int noticeNum) throws SQLException {
-        int cnt = 0;
         SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(true);
-        cnt = ss.update("kr.co.noir.noticeAdmin.deleteNotice", noticeNum);
-        if (ss != null) ss.close();
-        return cnt;
+        try {
+            return ss.update("kr.co.noir.noticeAdmin.deleteNotice", noticeNum);
+        } finally {
+            if (ss != null) ss.close();
+        }
+    }
+
+    /* =========================================================
+       ✅ 추가: adminId로 adminNum 조회 (세션 보정용)
+       - 컨트롤러/서비스에서 adminNum 세션이 비었을 때 사용
+       - mapper.xml에 selectAdminNumByAdminId가 반드시 있어야 함
+       ========================================================= */
+    public Integer selectAdminNumByAdminId(String adminId) throws SQLException {
+        SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
+        try {
+            return ss.selectOne("kr.co.noir.noticeAdmin.selectAdminNumByAdminId", adminId);
+        } finally {
+            if (ss != null) ss.close();
+        }
     }
 }

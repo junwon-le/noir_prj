@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="title" content="HOTEL 28">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>후기 삭제 처리</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.css" rel="stylesheet">
+<!-- jQeury CDN 시작 -->
+<link rel="stylesheet" type="text/css" href="/common/css/homepage/base.css">
+<link rel="stylesheet" type="text/css" href="/common/css/homepage/style.css?v=0312">
+<link rel="stylesheet" type="text/css" href="/common/css/homepage/sub.css?v=0312">
+<!-- jQeury CDN 시작 -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
+
+<script src="/common/js/comm/jquery.bxslider.js"></script>
+<script src="/common/js/homepage/jquery.rwdImageMaps.min.js"></script>
+<script src="/common/js/homepage/jquery.accessibility.modal.js"></script>
+<script src="/common/js/comm/jquery.cookie.js"></script>
+<script src="/common/js/homepage/plugin.js"></script>
+<script src="/common/js/homepage/custom.js"></script>
+
+
+
+<script>
+  window.addEventListener("DOMContentLoaded", function () {
+    const flag = String(document.getElementById("flag").value) === "true";
+    const currentPage = document.getElementById("currentPage").value || "1";
+    const roomTypeNum = document.getElementById("roomTypeNum").value || "0";
+
+    if (flag) {
+      alert("답변이 저장되었습니다.");
+    } else {
+      alert("답변 저장에 실패했습니다.");
+    }
+
+    // roomTypeNum==0 → 전체목록, else → 객실필터
+    if (roomTypeNum === "0") {
+    	  location.href = "/admin/review/list?currentPage=" + encodeURIComponent(currentPage);
+    	} else {
+    	  location.href = "/admin/review/adminRoomList?num=" + encodeURIComponent(roomTypeNum)
+    	                + "&currentPage=" + encodeURIComponent(currentPage);
+    	}
+
+  });
+</script>
+
+
+</head>
+
+<body>
+
+  <input type="hidden" id="flag" th:value="${flag}">
+  <input type="hidden" id="currentPage" th:value="${currentPage}">
+  <input type="hidden" id="roomTypeNum" th:value="${roomTypeNum}">">
+
+</body>
+
+</html>

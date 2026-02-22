@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration> 
+	<properties resource="properties/database.properties"/>
+	<typeAliases>
+		<typeAlias type="kr.co.noir.room.RoomDomain" alias="roomDomain"/>
+		<typeAlias type="kr.co.noir.room.RoomDTO" alias="roomDTO"/>
+		<typeAlias type="kr.co.noir.room.RoomPriceDomain" alias="roomPriceDomain"/>		
+		<typeAlias type="kr.co.noir.room.RoomPriceDTO" alias="roomPriceDTO"/>				
+		<typeAlias type="kr.co.noir.reserve.RoomSearchDomain" alias="roomSearchDomain"/>		
+		<typeAlias type="kr.co.noir.reserve.RoomSearchDTO" alias="roomSearchDTO"/>		
+		<typeAlias type="kr.co.noir.dinning.DinningDomain" alias="dinningDomain"/>
+		
+		<typeAlias type="kr.co.noir.dinning.DinningDomain" alias="dinningDomain"/>		
+		<typeAlias type="kr.co.noir.dinning.DinningDTO" alias="dinningDTO"/>		
+		
+		<!-- 박현욱 사용 -->		
+		<typeAlias type="kr.co.noir.event.EventDomain" alias="eventDomain"/>		
+		<typeAlias type="kr.co.noir.mypageInfo.PasswordDTO" alias="passwordDTO"/>		
+		<typeAlias type="kr.co.noir.mypageInfo.PasswordCheckDTO" alias="passwordCheckDTO"/>		
+		<typeAlias type="kr.co.noir.mypageInfo.MemberInfoDomain" alias="mInfoDomain"/>		
+     	 <typeAlias type="kr.co.noir.login.MemberDTO" alias="memberDTO"/>   
+     	 <typeAlias type="kr.co.noir.mypageReserve.HotelRevSearchDomain" alias="hotelRevSearchDomain"/>   
+     	 <typeAlias type="kr.co.noir.mypageReserve.ReserveSearchDTO" alias="reserveSearchDTO"/>   
+     	 <typeAlias type="kr.co.noir.mypageReserve.ReserveDetailDTO" alias="reserveDetailDTO"/>   
+     	 <typeAlias type="kr.co.noir.mypageReserve.HotelRevDetailDomain" alias="hotelRevDetailDomain"/>   
+     	 <typeAlias type="kr.co.noir.mypageReserve.DinningRevSearchDomain" alias="dinningRevSearchDomain"/>   
+     	 <typeAlias type="kr.co.noir.mypageReserve.DinningRevDetailDomain" alias="dinningRevDetailDomain"/>   
+	
+		<!-- 이준원 사용 -->
+		<typeAlias type="kr.co.noir.reserve.RoomSearchDomain" alias="roomSearchDomain"/><!-- 방 검색 -->		
+		<typeAlias type="kr.co.noir.reserve.RoomSearchDTO" alias="roomSearchDTO"/><!-- 방 검색 -->
+		<typeAlias type="kr.co.noir.reserve.MemberDomain" alias="memberDomain"/><!-- 회원 정보 채우기 -->
+		<typeAlias type="kr.co.noir.reserve.RoomDependingDTO" alias="roomDependingDTO"/><!--보류 객실 정보 채우기 -->
+		<typeAlias type="kr.co.noir.reserve.RoomReserveDTO" alias="roomReserveDTO"/><!-- 회원 정보 채우기 -->
+		<typeAlias type="kr.co.noir.reserve.PayInfoDTO" alias="payInfoDTO"/><!-- 결제 채우기 -->
+		<!-- 박진규 사용 -->
+        <typeAlias type="kr.co.noir.login.MemberDTO" alias="MemberDTO"/>
+        
+        
+        <!-- 조나영 사용 -->
+        <typeAlias type="kr.co.noir.event.EventAdminDomain" alias="eventAdminDomain"/>	
+        <typeAlias type="kr.co.noir.event.EventAdminDTO" alias="eventAdminDTO"/>	
+        <typeAlias type="kr.co.noir.notice.NoticeAdminDTO" alias="noticeAdminDTO"/>	
+        <typeAlias type="kr.co.noir.notice.NoticeAdminDomain" alias="noticeAdminDomain"/>	
+        <typeAlias type="kr.co.noir.inquiry.InquiryAdminDTO" alias="inquiryAdminDTO"/>	
+        <typeAlias type="kr.co.noir.inquiry.InquiryAdminDomain" alias="inquiryAdminDomain"/>	
+        <typeAlias type="kr.co.noir.inquiry.InquiryRangeDTO" alias="inquiryRangeDTO"/>	
+        <typeAlias type="kr.co.noir.review.ReviewAdminDTO" alias="reviewAdminDTO"/>	
+        <typeAlias type="kr.co.noir.review.ReviewAdminDomain" alias="reviewAdminDomain"/>	
+        
+        
+        
+        
+    </typeAliases>
+	
+  	<environments default="development">
+    	<environment id="development">
+      	<transactionManager type="JDBC"/>
+      	<dataSource type="POOLED">
+        <property name="driver" value="${driver}"/>
+        <property name="url" value="${url}"/>
+        <property name="username" value="${id}"/>
+        <property name="password" value="${pass}"/>  
+     	 </dataSource>
+    </environment>
+  </environments>
+  <mappers>
+    <mapper resource="kr/co/noir/room/roomMapper.xml"/> 
+    <mapper resource="kr/co/noir/reserve/reserveMapper.xml"/>
+    <mapper resource="kr/co/noir/mypageInfo/mypageInfoMapper.xml"></mapper>
+    <mapper resource="kr/co/noir/dinning/dinningMapper.xml"/>
+    <mapper resource="kr/co/noir/mypage/MypageMapper.xml"/> <!-- select 연습 -->
+    <mapper resource="kr/co/noir/mypageReserve/mypageRevMapper.xml"></mapper>
+	<mapper resource="mapper/LoginMapper.xml"/> 
+    <mapper resource="kr/co/noir/inquiry/inquiryMapper.xml"/>
+    <mapper resource="kr/co/noir/notice/noticeMapper.xml"/>
+    <mapper resource="kr/co/noir/event/eventMapper.xml"/>
+    <mapper resource="kr/co/noir/review/WriteReviewMapper.xml"/>
+    <mapper resource="kr/co/noir/review/ReviewMapper.xml"/>
+    <mapper resource="kr/co/noir/review/ReviewAdminMapper.xml"/>
+    <mapper resource="kr/co/noir/notice/noticeAdminMapper.xml"></mapper>
+    <mapper resource="mapper/AdminMapper.xml"/>
+    
+    <mapper resource="kr/co/noir/event/EventAdminMapper.xml"/>
+    <mapper resource="kr/co/noir/inquiry/InquiryAdminMapper.xml"/>
+    
+    
+  </mappers>
+</configuration>

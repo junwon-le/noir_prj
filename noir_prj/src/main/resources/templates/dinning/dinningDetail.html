@@ -1,0 +1,284 @@
+
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="title" content="NOIR">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>NOIR</title>
+
+<!-- <link rel="stylesheet" type="text/css" href="/Hotel28NewCMS_common/js/homepage/jquery.bxslider/jquery.bxslider.css"> -->
+<link rel="stylesheet" type="text/css" href="../common/css/homepage/base.css">
+<link rel="stylesheet" type="text/css" href="../common/css/homepage/style.css?v=0312">
+<link rel="stylesheet" type="text/css" href="../common/css/homepage/sub.css?v=0312">
+
+<script src="../common/js/comm/jquery-3.5.1.min.js"></script>
+<script src="../common/js/comm/jquery.bxslider.js"></script>
+<!-- <script src="/Hotel28NewCMS_common/js/homepage/jquery.mobile.custom.min.js"></script> -->
+<script src="../common/js/homepage/jquery.rwdImageMaps.min.js"></script>
+<script src="../common/js/homepage/jquery.accessibility.modal.js"></script>
+<script src="../common/js/comm/jquery.cookie.js"></script>
+<script src="../common/js/homepage/plugin.js"></script>
+<script type="text/javascript" src="../common/js/homepage/jquery.simpleWeather.js"></script>
+<script src="../common/js/homepage/custom.js"></script>
+
+<style>
+
+#detailBtn{
+width:150px;
+height:50px;
+position:absolute;
+top:690px;
+left:1230px;
+ background: rgba(50, 50, 50, 0.95);
+  border: 1px solid rgba(216, 203, 168, 0.25);
+  color: #CFC4A3;
+  letter-spacing: 0.08em;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+#detailBtn:hover{
+ background: rgba(30, 30, 30, 0.95);
+  border-color: rgba(216, 203, 168, 0.6);
+}
+
+#reserveBtn{
+width:150px;
+height:50px;
+position:absolute;
+top:1000px;
+left:1400px;
+ background: #8F8664;
+  border: 1px solid rgba(216, 203, 168, 0.25);
+  color: #FFFFFF;
+  letter-spacing: 0.08em;
+  font-size: 15px;
+  font-weight: bold;
+  z-index: 999;
+}
+
+#reserveBtn:hover{
+ background: #756D50;
+  border-color: #756D50;
+}
+
+.fullsizeImage >ul,
+.fullsizeImage> ul>li {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.fullsizeImage >ul> li {
+    background-size: cover;        /* div를 꽉 채움 */
+    background-position: center;   /* 가운데 정렬 */
+    background-repeat: no-repeat;
+}
+
+.btn_pop_close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+    background: yellow;
+    z-index: 99999;
+
+    /* 기존 텍스트 완전 무시 */
+    font-size: 0 !important;
+    text-indent: 0 !important;
+    overflow: visible !important;
+}
+
+.btn_pop_close::before {
+    content: '✕';          /* ← 강제 출력 */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
+    line-height: 1;
+    font-family: Arial, sans-serif;
+}
+
+.footer_bot{
+padding:0px;
+}
+
+
+
+</style>
+
+<body>
+
+<script>
+$(function(){
+	//$('header').load('../../incheader.html');
+
+	$('.fullsizeImage ul').myFunction();
+	
+	var CONTEXT = '';
+	$(document).ready(function($) {
+	    $('.open_modal').click(function(e) {    	
+	        $("iframe").attr("src", $(this).attr('url')).show();        	
+	        e.preventDefault();
+	    });
+	});
+
+	$(document).on('click','.btn_pop_close',function(e){
+		$('#popIframe > iframe').attr('src','').hide();
+		e.preventDefault();
+	})
+	
+	$("#reserveBtn").click(function(){
+		location.href="/dinnigRes"
+	});
+})
+</script>
+
+    
+	<div class="fullsizeImage" style="width:762px; height:490px; margin:0px auto; margin-top:250px; margin-left:300px">
+ 	<ul>
+    
+    <li th:style="'background-image: url(../common/images/homepage/' + ${dinning.dinningImg1} + ')'" ></li>
+    <li th:style="'background-image: url(../common/images/homepage/' + ${dinning.dinningImg2} + ')'" ></li>
+    <li th:style="'background-image: url(../common/images/homepage/' + ${dinning.dinningImg3} + ')'" ></li>
+    <li th:style="'background-image: url(../common/images/homepage/' + ${dinning.dinningImg4} + ')'" ></li>
+    <li th:style="'background-image: url(../common/images/homepage/' + ${dinning.dinningImg5} + ')'" ></li>
+    
+    
+    
+	</ul>
+	</div>	
+
+	
+
+
+
+
+
+
+<div class="movie-frame">
+	<div class="movie-frame-left"></div>
+	<div class="movie-frame-right"></div>
+</div>
+<header>
+	  <div th:replace="~{fragments/header :: header}"></div>
+</header>
+<div style="height:1000px">
+	<section>
+
+		<div class="bx-pager" style="margin-right:600px; margin-bottom:540px">
+		</div>
+		
+		<div>
+		<input type="button" id="reserveBtn" value="예약하기">
+		</div>
+		
+		<div style="position:relative; width:100%; height:129px; background-color: #241F20">
+		
+		</div>
+
+		<div class="frame frame-rooms" style="position:relative; top:471px; right:0px; left:900px; width:1000px;">
+			<nav class="frame-nav">
+				HOME / DINING / <span class="gold" th:text="${dinning.dinningName}">NOIR RESTAURANT</span>
+			</nav>
+			<h2 class="frame-title gold" >NOIR RESTAURANT</h2>	
+		</div>
+		
+		
+		<div style="color:#FFFFFF; margin-left:1100px; position:relative; bottom:50px">
+			DINNING DETAILS
+			<div style="width:500px; height:1px; background:#fff;"></div>
+			<div style="margin-top:15px; font-size: 20px; font-weight: bold; color: #C8BD9E; ">
+			N.O.R, 빛과 그림자가 완성하는 미식의 깊이<br>
+			</div>
+			<div style="line-height:1.4; margin-top:30px; width:420px" th:text="${dinning.dinningDetail}">
+			클래식한 서양 요리의 기법 위에
+			</div>
+
+
+			<div style="margin-top:40px; color: #C8BD9E; font-weight: bold">
+			상세정보
+			</div>
+			
+			<div style="margin-top:15px">
+			레스토랑명 : <span th:text=${dinning.dinningName}></span>
+			</div>
+			<div style="margin-top:5px">
+			다이닝 유형 : 클래식 프렌치 테크닉 기반의 컨템포러리 서양 요리
+			</div>
+			<div style="margin-top:5px">
+			좌석 수 : 총 <span th:text=${dinning.dinningMaxTable}>80</span>석 (개별 룸 포함)
+			</div>
+			<div style="margin-top:5px">
+			위치 : 호텔 1층 로비 옆
+			</div>
+			<div style="margin-top:5px">
+			드레스 코드 : 스마트 캐주얼 권장
+			</div>
+			
+			
+			  <div>
+			    <div style="margin-top:40px; color: #C8BD9E; font-weight: bold">
+			    운영 시간
+			    </div>
+			    <div style="margin-top:15px">
+			    조식 : <span th:text="${dinningList[0].dinningMorningStr}">07:00</span> - <span th:text="${dinningList[0].dinningMorningEnd}">10:00 (마지막 입장 09:30)</span>
+			    </div>
+			    <div style="margin-top:5px">
+			    중식 : <span th:text="${dinningList[0].dinningLunchStr}">07:00</span> - <span th:text="${dinningList[0].dinningLunchEnd}">10:00 (마지막 입장 09:30)</span>
+			    </div>
+			    <div style="margin-top:5px">
+			    석식 : <span th:text="${dinningList[0].dinningDinnerStr}">07:00</span> - <span th:text="${dinningList[0].dinningDinnerEnd}">10:00 (마지막 입장 09:30)</span>
+			    </div>
+			    <div style="margin-top:5px">
+			    ※ 조식 뷔페는 예약 없이 이용 가능하며, 현장 대기 시간이 발생할 수 있습니다.
+			    </div>
+			    <div style="margin-top:5px">
+			    ※ 주말 및 공휴일 조식 이용은 착석 후 1시간으로 제한됩니다.
+			    </div>
+			  </div>
+			
+			  <div>
+			    <div style="margin-top:40px; color: #C8BD9E; font-weight: bold">
+			    이용 안내
+			    </div>
+			    <div style="margin-top:15px">
+			    예약은 이용일 기준 1개월 전부터 가능하며, 보증금이 필요합니다.
+			    </div>
+			    <div style="margin-top:5px">
+			    와인 반입 시 병당 별도의 반입비가 부과됩니다.
+			    </div>
+			    <div style="margin-top:5px">
+			    외부 음식물 반입은 제한되오니 양해 부탁드립니다.
+			    </div>
+			    <div style="margin-top:5px">
+			    테이블 당 최대 1병(750ml) 와인 반입 가능하며, 반입비는 10만원입니다.
+			    </div>
+			    <div style="margin-top:5px">
+			    주차는 레스토랑 이용 시 3시간 무료이며, 주말 및 공휴일에는<br>    
+			    </div>
+			    <div style="margin-top:5px">
+			    주차장이 혼잡할 수 있으니 대중교통 이용을 권장합니다.			    
+			    </div>
+			    
+			  </div>
+			</div>
+						
+						
+						
+
+	</section>
+	
+</div>
+	
+<footer>
+<div th:replace="~{fragments/footer :: footer}"></div>
+</footer>
+<div th:replace="~{fragments/privacy :: privacy}"></div>

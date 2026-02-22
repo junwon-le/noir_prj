@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<link rel="shortcut icon"	href="/common/images/favicon.ico">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="title" content="HOTEL 28">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>HOTEL 28</title>
+
+<link rel="stylesheet" type="text/css" href="/common/css/homepage/base.css">
+<link rel="stylesheet" type="text/css" href="/common/css/homepage/style.css?v=0312">
+<link rel="stylesheet" type="text/css" href="/common/css/homepage/sub.css?v=0312">
+<!-- jQeury CDN 시작 -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="/common/js/comm/jquery.bxslider.js"></script>
+<script src="/common/js/homepage/jquery.rwdImageMaps.min.js"></script>
+<script src="/common/js/homepage/jquery.accessibility.modal.js"></script>
+<script src="/common/js/comm/jquery.cookie.js"></script>
+<script src="/common/js/homepage/plugin.js"></script>
+<script src="/common/js/homepage/custom.js"></script>
+
+</head>
+
+
+
+<script>
+var CONTEXT = '';
+$(document).ready(function($) {
+    $('.open_modal').click(function(e) {    	
+        $("iframe").attr("src", $(this).attr('url')).show();        	
+        e.preventDefault();
+    });
+});
+
+$(document).on('click','.btn_pop_close',function(e){
+	$('#popIframe > iframe').attr('src','').hide();
+	e.preventDefault();
+})
+</script>
+
+
+<style>
+
+.subject
+{
+color:white;
+text-decoration: none;
+}
+
+
+.main-sub > ul > li > a {
+	text-decoration: none;
+}
+
+
+.info > ul > li > a {
+	
+	color:white;
+	text-decoration: none;
+}
+.info > ul > li {
+	list-style:none;
+}
+
+.footer_bot{
+padding:0px;
+}
+
+#container{
+height:700px
+}
+
+.fullsizeImage > ul > li {
+    position: relative;
+    overflow: hidden;
+    filter: brightness(0.5);
+}
+
+
+.fullsizeImage {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: #000;
+}
+
+.fullsizeImage ul {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.fullsizeImage > ul > li {
+    position: absolute;     /* ⭐ 핵심 */
+    inset: 0;               /* ⭐ 핵심 */
+    width: 100%;
+    height: 100%;
+    background-size: cover; /* ⭐ 핵심 */
+    background-position: center;
+    background-repeat: no-repeat;
+
+    opacity: 0;
+    z-index: 0;            /* ⭐ 추가 */
+    filter: brightness(0.5);
+}
+.fullsizeImage > ul > li.active {
+    opacity: 1;
+    z-index: 2;            /* ⭐ 추가 */
+}
+.btn_pop_close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+    background: yellow;
+    z-index: 99999;
+
+    /* 기존 텍스트 완전 무시 */
+    font-size: 0 !important;
+    text-indent: 0 !important;
+    overflow: visible !important;
+}
+
+.btn_pop_close::before {
+    content: '✕';          /* ← 강제 출력 */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
+    line-height: 1;
+    font-family: Arial, sans-serif;
+}
+
+#eventPopup {
+  display: none;
+  position: fixed;
+  inset: 0; /* top:0; left:0; right:0; bottom:0; 와 동일 */
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  z-index: 9999;
+  overflow: hidden;
+}
+
+.popup-box {
+  position: relative;
+  left:400px;
+  width: 460px;
+  height: 550px;
+  background: black;
+  margin: 180px auto 10px auto;
+  padding: 25px;
+  border-radius: 8px;
+  text-align: center;
+  overflow: hidden;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  cursor: pointer;
+  font-size: 18px;
+  color:white;
+}
+
+.popup-footer {
+  width: 360px;
+  margin: 0 auto;
+  text-align: right;
+  color: #fff;
+  font-size: 14px;
+}
+
+#hideTodayText {
+  cursor: pointer;
+  position:absolute;
+  right:300px;
+}
+
+
+/* 이미지 하단 가리는 이벤트 정보 영역 */
+.event-info-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    /* 70% 지점까지는 완전 블랙, 위로는 투명하게 처리 */
+    background: linear-gradient(to top, 
+                rgba(0, 0, 0, 1) 0%, 
+                rgba(0, 0, 0, 0.95) 70%, 
+                rgba(0, 0, 0, 0) 100%);
+    padding: 25px 20px;
+    box-sizing: border-box;
+    color: #ffffff;
+    line-height: 1.6;
+    text-align: center;
+    z-index: 10;
+  }
+  .event-info-overlay .event-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #d4af37; /* 골드 */
+    margin-bottom: 5px;
+  }
+
+  .event-info-overlay .event-sub {
+    font-size: 12px;
+    opacity: 0.8;
+    margin-bottom: 15px;
+  }
+
+  .event-table {
+    width: 100%;
+    font-size: 13px;
+    border-top: 1px solid rgba(212, 175, 55, 0.3);
+    padding-top: 10px;
+  }
+
+  .event-table td {
+    padding: 3px 0;
+  }
+
+  .event-table .label {
+    color: #d4af37;
+    width: 60px;
+    font-weight: bold;
+    text-align: left;
+  }
+
+  .event-table .content {
+    text-align: left;
+    padding-left: 10px;
+  }
+
+
+</style>
+
+<div class="wrapper">
+    <div id="popIframe" class="popup_rsvn">
+		<a href="#popupIframe" class="btn_pop_close" style="color:black;"></a>
+        <iframe name="popupIframe" id="popupIframe" src="" width="100%" height="100%" scrolling="no" visible="true" frameborder="0"></iframe>
+    </div>
+</div>
+<a href="#popIframe" class="open_modal" url="/view/roomReservationStep2.do" id="rsvnLayer" style="display:none;"></a>
+
+<body>
+<header>
+ <div th:replace="~{fragments/header :: header}"></div>
+</header>
+
+<script>
+
+$(document).ready(function(){
+	var hotel28slider = $('.frame').bxSlider({
+	    mode : "fade",
+	    auto : true,
+	    pause : 10000,
+	    speed : 900,
+	    pager: false,
+	    infiniteLoop: true, // 무한 루프 사용 시
+	    controls : false,
+	    onSliderLoad : function(currentIndex){
+	        // 정확한 순서를 찾기 위해 .eq() 대신 filter 등을 활용하거나 인덱스 확인
+	        updateBg(currentIndex);
+	    },
+	    onSlideBefore : function($slideElement, oldIndex, newIndex){
+	        updateBg(newIndex);
+	    }
+	});
+
+	$(document).on('click','.pager a',function(){
+		var $index = $('.pager a').index($(this));
+		hotel28slider.stopAuto();
+		hotel28slider.goToSlide($index);
+		hotel28slider.startAuto();
+	})
+
+	$(document).on('click','.scroll-down',function(){
+		hotel28slider.goToNextSlide();
+	})
+	$(document).on('click', '.btn_pop_close', function (e) {
+	    e.preventDefault();
+	    $('#popIframe iframe').attr('src', '').hide();
+	});
+	
+	 	 function getCookie(name) {
+		    const value = "; " + document.cookie;
+		    const parts = value.split("; " + name + "=");
+		    if (parts.length === 2) 
+		    	return parts.pop().split(";").shift();
+		  }
+
+		  if (getCookie("hideEvent") !== "Y") {
+		    $("#eventPopup").fadeIn();
+		  }
+
+		  $(".close-btn").click(function() {
+		    $("#eventPopup").fadeOut();
+		  });
+
+		  $("#hideTodayText").click(function() {
+		    const d = new Date();
+		    d.setHours(23, 59, 59, 999);
+
+		    document.cookie =
+		      "hideEvent=Y; expires=" + d.toUTCString() + "; path=/";
+
+		    $("#eventPopup").fadeOut();
+		  });
+
+	
+
+});
+
+// 배경 변경 함수를 따로 분리하여 관리
+function updateBg(index) {
+    $('.fullsizeImage li').removeClass('active').css('opacity', 0); // 초기화
+    $('.fullsizeImage li').eq(index).addClass('active').css('opacity', 1); // 해당 인덱스 활성화
+    $('.pager a').eq(index).addClass('selected').siblings().removeClass('selected');
+}
+
+
+</script>
+	
+<!-- 	<div id="eventPopup" th:if="${eventActive}"> -->
+	<div id="eventPopup">
+	  <div class="popup-box">
+	    <span class="close-btn">✕</span>
+	    <a href="/eventDetail?eventNum=3"><img src="../common/images/homepage/chef.png" style="width:100%; display:block;"></a>
+	    <div class="event-info-overlay">
+        <div class="event-title">중식 대부 후덕죽, 전설의 귀환</div>
+        <div class="event-sub">50년 집념이 빚어낸 단 하나의 시그니처 테이스팅 코스</div>
+        
+        <table class="event-table">
+          <tr>
+            <td class="label">기간</td>
+            <td class="content">2026.02.01 - 03.31</td>
+          </tr>
+          <tr>
+            <td class="label">장소</td>
+            <td class="content">NOIR RESTAURANT</td>
+          </tr>
+          <tr>
+            <td class="label">가격</td>
+            <td class="content">₩150,000 (1인 기준)</td>
+          </tr>
+        </table>
+      </div>
+	    
+	    
+	  </div>
+	
+	  <div class="popup-footer">
+	    <span id="hideTodayText">오늘 하루 안 보기</span>
+	  </div>
+	</div>
+
+	<div class="fullsizeImage">
+		<ul>
+			<li style="background-image:url(../common/images/homepage/queen_1.jpg);"></li>
+			<li style="background-image:url(../common/images/homepage/다이닝1.jpg);"></li>	
+			<li style="background-image:url(../common/images/homepage/double_1.jpg);"></li>
+			<li style="background-image:url(../common/images/homepage/twin_1.jpg);"></li>
+		</ul>
+    </div>
+<div id="container">
+
+	<section id="main">
+		<div class="nav_area">
+			<div class="pager">
+				<a href="javascript:;" class="selected">1</a>
+				<a href="javascript:;">2</a>
+				<a href="javascript:;">3</a>
+				<a href="javascript:;">4</a>
+			</div>
+			<span class="scroll-down">
+				<img src="/common/images/homepage/scroll-down.png" alt="scroll-down">
+			</span>
+		</div>
+		<div class="frame_wrap" >
+		  <ul class="frame" style="background-color: transparent;">
+			<li class="area01" >
+				<!-- area01 section -->
+				<p class="fade01 fadeDiv">WELCOME TO</p>
+				<h3 class="fade02 fadeDiv">NOIR</h3>
+				<p class="fade03 fadeDiv">
+					Noir 호텔은 도심 속에서 만나는 품격 있는 휴식 공간입니다.<br>
+					세련된 인테리어와 세심한 맞춤 서비스로 특별한 하루를 완성하며,<br>
+					고요하고 안락한 객실과 감각적인 라운지에서 잊지 못할 경험을 선사합니다. 당신만의 프리미엄 휴식을 NOIR에서 누려보세요<br/>
+				</p>
+				<p class="fade04 fadeDiv">
+				
+				</p>
+				<p class="fade05 fadeDiv"><a href="/hotel/about">READ ABOUT</a></p>
+				<!-- area01 section END -->
+			</li>
+			<li class="area02">
+				<p class="fade01 fadeDiv">NOIR RESTAURANT</p> 
+				<h3 class="fade02 fadeDiv">DINING</h3>
+				<p class="fade03 fadeDiv">
+				빛과 그림자가 공존하는 미식의 무대, NOIR 레스토랑.<br>
+				NOIR는 클래식한 서양 요리의 기법을 기반으로,<br>
+				현대적인 감각과 섬세한 해석을 더한 컨템포러리 다이닝을 선보입니다.<br>
+				정제된 플레이팅과 균형 잡힌 풍미는<br>
+				한 접시마다 깊이 있는 인상을 남깁니다.<br>
+				</p>
+				<p class="fade04 fadeDiv">
+					<img src="/common/images/homepage/hotel28location.png" alt="hotel28">
+				</p>
+				<p class="fade05 fadeDiv"><a th:href="@{/dinning}">READ ABOUT</a></p>				
+			</li>
+			
+			<li class="area03">
+				<!-- area04 section -->
+				<p class="fade01 fadeDiv">ROOM</p>
+				<h3 class="fade02 fadeDiv">DELUXE DOUBLE</h3>
+				<p class="fade03 fadeDiv">
+					모던 인더스트리얼 컨셉에 최상급의 안락하고 포근한 침구류를 갖추어<br>
+					도심 속 편안한 휴식처를 제공 합니다.
+				</p>
+				<p class="fade04 fadeDiv">
+				</p>
+				<p class="fade05 fadeDiv"><a th:href="@{{url}(url='/roomDetailView', num=3)}">BOOK NOW</a></p>
+				<!-- area04 section END -->
+			</li>
+			<li class="area04">
+				<!-- area04 section -->
+				<p class="fade01 fadeDiv">ROOM</p>
+				<h3 class="fade02 fadeDiv">DELUXE TWIN</h3>
+				<p class="fade03 fadeDiv">
+					에르메스 가구와 어메니티로 모던함과 세련된 감성을<br>
+					 나타내는 NOIR 입니다.
+				</p> 
+				<p class="fade04 fadeDiv">
+					<img src="/common/images/homepage/hotel28room.png" alt="hotel28">
+				</p>
+				<p class="fade05 fadeDiv"><a th:href="@{{url}(url='/roomDetailView', num=4)}">BOOK NOW</a></p>
+				<!-- area04 section END -->
+			</li>
+			
+		  </ul>
+		</div>
+	</section>
+		
+
+</div>
+<footer>
+<div th:replace="~{fragments/footer :: footer}"></div>
+</footer>
+<div th:replace="~{fragments/privacy :: privacy}"></div>
+
+<!-- <script type="text/javascript" src="/Hotel28NewCMS_common/js/jquery.modalLayer.js"></script>
+<script type="text/javascript" src="/Hotel28NewCMS_common/js/common_dev.js"></script> -->
+<script type="text/javascript" src="/common/js/comm/jquery.validate.js"></script>
+<script type="text/javascript" src="/common/js/comm/wings.core.js"></script>
+<script type="text/javascript" src="/common/js/comm/PAGING_HOMEPAGE.js"></script>
+<script type="text/javascript" src="/common/js/comm/kendo.web.min.js"></script>
+
+
+
+
+</body>
+</html>
