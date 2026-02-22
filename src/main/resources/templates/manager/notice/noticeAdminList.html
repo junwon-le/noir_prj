@@ -39,6 +39,41 @@
 <script src="/admin_common/js/main.js"></script>
 
 <style>
+/* ===== 공지 페이지네이션(후기/이벤트 버튼형) ===== */
+#pagination{
+  margin:22px 0 16px;
+  text-align:center;
+}
+
+#pagination a,
+#pagination .currentPage{
+  border:0 !important;
+  background:#ffffff !important;
+  color:#38599a !important;
+  border-radius:10px !important;
+  min-width:38px;
+  height:38px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+  box-shadow:0 2px 6px rgba(0,0,0,0.08);
+  margin:0 3px;
+  text-decoration:none;
+}
+
+#pagination a:hover{ background:#f4f6fb !important; }
+
+#pagination .currentPage{
+  background:#bcd0ff !important;
+  color:#1f2d4d !important;
+}
+
+#pagination a.prevMark,
+#pagination a.nextMark{
+  background:#eef2fb !important;
+}
+
 .notice-search-bar {
   display: flex;
   justify-content: flex-start;
@@ -137,39 +172,22 @@
 .notice-search-bar select option { color: #38599a; }
 </style>
 
-<script type="text/javascript">
-$(function () {
+<script>
+/**
+ * ✅ 버튼 방식 검색 제출
+ * - select는 UI
+ * - name="field"는 hidden으로만 전송 (충돌/누락 방지)
+ */
+function submitNoticeSearch() {
+  // 1페이지로 고정
+  document.getElementById("currentPage").value = "1";
 
-  // ✅ 공지쓰기: currentPage/field/keyword 유지해서 작성폼 이동
-  $("#writeBtn").click(function () {
-    var currentPage = $("#currentPage").val() || "1";
-    var field = $("#field").val() || "1";
-    var keyword = $("#keyword").val() || "";
-    location.href = "/notice/writeNoticeFrm?currentPage=" + encodeURIComponent(currentPage)
-                  + "&field=" + encodeURIComponent(field)
-                  + "&keyword=" + encodeURIComponent(keyword);
-  });
+  // select 값 → hidden(name=field) 복사
+  var fieldValue = document.getElementById("field").value;
+  document.getElementById("fieldHidden").value = fieldValue;
 
-  // 검색 버튼 클릭
-  $("#btnSearch").click(function (e) {
-    e.preventDefault();
-    searchNotice();
-  });
-
-  // 엔터 검색
-  $("#keyword").keyup(function (evt) {
-    if (evt.which === 13) {
-      evt.preventDefault();
-      searchNotice();
-    }
-  });
-
-});
-
-// 검색 실행 (1페이지로)
-function searchNotice() {
-  $("#currentPage").val("1");
-  $("#searchFrm").submit();
+  // 폼 제출
+  document.getElementById("searchFrm").submit();
 }
 </script>
 
@@ -200,29 +218,35 @@ function searchNotice() {
         <h3 style="font-weight: 600; margin-bottom: 20px;">공지사항 목록</h3>
       </div>
 
-      <!-- 검색바 -->
+      <!-- ✅ 검색바 (최종) -->
       <div class="notice-search-bar">
         <form th:action="@{/notice/noticeAdminList}" id="searchFrm" method="get">
 
-          <select name="field" id="field">
+          <!-- select는 UI용 (name 제거) -->
+          <select id="field">
             <option value="1" th:selected="${rDTO.field == '1'}">전체</option>
             <option value="2" th:selected="${rDTO.field == '2'}">일반</option>
             <option value="3" th:selected="${rDTO.field == '3'}">멤버십</option>
             <option value="4" th:selected="${rDTO.field == '4'}">약관개정</option>
           </select>
 
+          <!-- ✅ 실제 전송은 hidden(name=field) -->
+          <input type="hidden" name="field" id="fieldHidden" th:value="${rDTO.field}" />
+
           <input type="text" name="keyword" id="keyword"
                  class="notice-search-input"
                  placeholder="검색어를 입력하세요"
                  th:value="${rDTO.keyword}" />
 
-          <!-- ✅ 목록/검색/페이징 모두 currentPage를 이 값으로 -->
           <input type="hidden" name="currentPage" id="currentPage"
                  th:value="${rDTO.currentPage}" />
 
-          <input type="submit" value="검색" id="btnSearch" class="notice-search-btn" />
+          <!-- submit -> button -->
+          <input type="button" value="검색" class="notice-search-btn"
+                 onclick="submitNoticeSearch()" />
         </form>
       </div>
+
 
       <!-- 테이블 -->
       <div class="table-responsive notice-table-wrap">
@@ -246,9 +270,9 @@ function searchNotice() {
             </tr>
 
             <!-- 데이터 있을 때 -->
-<tr th:each="notice : ${noticeList}"> 
+            <tr th:each="notice : ${noticeList}">
               <td th:text="${notice.noticeCategory}">카테고리</td>
-  <td th:text="${notice.noticeNum}">1</td>
+              <td th:text="${notice.noticeNum}">1</td>
               <td>
                 <a class="notice-title-link"
                    th:href="@{/notice/modifyNoticeFrm(
@@ -261,7 +285,6 @@ function searchNotice() {
                   제목
                 </a>
               </td>
-
               <td th:text="${notice.adminNum}">1</td>
               <td th:text="${#dates.format(notice.noticeDate,'yyyy.MM.dd')}">2026.02.20</td>
             </tr>
@@ -281,5 +304,24 @@ function searchNotice() {
 
     <div th:replace="~{manager/fragments/footer :: footer}"></div>
   </div>
+
+  <script>
+  // ✅ 공지쓰기: currentPage/field/keyword 유지해서 작성폼 이동 (버튼 방식에 맞춰 fieldHidden 기준)
+  document.addEventListener("DOMContentLoaded", function () {
+    var writeBtn = document.getElementById("writeBtn");
+    if (!writeBtn) return;
+
+    writeBtn.addEventListener("click", function () {
+      var currentPage = document.getElementById("currentPage").value || "1";
+      var field = document.getElementById("fieldHidden").value || "1";
+      var keyword = document.getElementById("keyword").value || "";
+
+      location.href = "/notice/writeNoticeFrm?currentPage=" + encodeURIComponent(currentPage)
+                    + "&field=" + encodeURIComponent(field)
+                    + "&keyword=" + encodeURIComponent(keyword);
+    });
+  });
+  </script>
+
 </body>
 </html>

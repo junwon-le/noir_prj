@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.servlet.http.HttpSession;
@@ -20,8 +19,32 @@ public class NoticeAdminController {
     @Autowired
     private NoticeAdminService nas;
 
+    /** =========================
+     * ✅ 세션 보정형 adminNum 조회
+     * ========================= */
     private Integer getAdminNum(HttpSession session) {
-        return (Integer) session.getAttribute("adminNum");
+
+        Object v = session.getAttribute("adminNum");
+        Integer adminNum = null;
+
+        if (v instanceof Integer) {
+            adminNum = (Integer) v;
+        } else if (v instanceof String) {
+            try { adminNum = Integer.parseInt((String) v); }
+            catch (NumberFormatException e) { adminNum = null; }
+        }
+
+        if (adminNum != null && adminNum > 0) return adminNum;
+
+        String adminId = (String) session.getAttribute("adminId");
+        if (adminId == null || adminId.trim().isEmpty()) return null;
+
+        Integer found = nas.findAdminNumByAdminId(adminId.trim());
+        if (found != null && found > 0) {
+            session.setAttribute("adminNum", found);
+            return found;
+        }
+        return null;
     }
 
     private String enc(String s) {
@@ -46,18 +69,25 @@ public class NoticeAdminController {
         if (rDTO.getField() == null || rDTO.getField().trim().isEmpty()) rDTO.setField("1");
         if (rDTO.getKeyword() == null) rDTO.setKeyword("");
 
+        // ✅ 디버그 로그 (필터/검색 파라미터 확인용)
+        System.out.println("[noticeAdminList] field=" + rDTO.getField()
+                + ", keyword=" + rDTO.getKeyword()
+                + ", currentPage=" + rDTO.getCurrentPage());
+
         // 3) totalCnt/pageScale/totalPage
         int totalCnt = nas.totalCnt(rDTO);
         int pageScale = nas.pageScale();
         int totalPage = nas.totalPage(totalCnt, pageScale);
 
-        // ✅ (추가) currentPage 보정: 검색/필터로 totalCnt가 줄면 currentPage가 튈 수 있음
-        if (totalPage == 0) {
+        if (totalPage <= 0) totalPage = 1;
+
+        // ✅ currentPage 보정 (초과하면 1페이지로)
+        if (currentPage > totalPage) {
             currentPage = 1;
-        } else if (currentPage > totalPage) {
-            currentPage = 1;
+            rDTO.setCurrentPage(1);
         }
-        rDTO.setCurrentPage(currentPage);
+
+        rDTO.setTotalPage(totalPage);
 
         // 4) start/end 계산
         int startNum = nas.startNum(currentPage, pageScale);
@@ -65,14 +95,13 @@ public class NoticeAdminController {
 
         rDTO.setStartNum(startNum);
         rDTO.setEndNum(endNum);
-        rDTO.setTotalPage(totalPage);
         rDTO.setUrl("/notice/noticeAdminList");
 
         // 5) 목록 조회 + 페이징
         List<NoticeAdminDomain> noticeList = nas.searchAdminNoticeList(rDTO);
         String pagination = nas.pagination2(rDTO, "center");
 
-        // ✅ (추가) 화면 번호(listNum) 안전 계산
+        // 화면 번호(listNum)
         int listNum = totalCnt - (currentPage - 1) * pageScale;
         if (listNum < 0) listNum = 0;
 
@@ -81,12 +110,12 @@ public class NoticeAdminController {
         model.addAttribute("pagination", pagination);
         model.addAttribute("rDTO", rDTO);
 
+        System.out.println("[" + rDTO.getField() + "]");
         return "manager/notice/noticeAdminList";
     }
 
     /* =========================
        2) 공지 상세 (선택)
-       - 상세에서 목록으로 돌아갈 때 필터 유지용 파라미터 포함
        ========================= */
     @GetMapping("/noticeDetailAdmin")
     public String noticeDetail(@RequestParam int noticeNum,
@@ -163,7 +192,7 @@ public class NoticeAdminController {
     }
 
     /* =========================
-       5) 공지 수정 폼 (작성 폼 재사용)
+       5) 공지 수정 폼
        ========================= */
     @GetMapping("/modifyNoticeFrm")
     public String modifyNoticeForm(@RequestParam int noticeNum,

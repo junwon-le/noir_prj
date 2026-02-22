@@ -22,22 +22,63 @@ public class EventAdminController {
     @Autowired
     private EventAdminService eas;
 
-    // 세션 체크
-    private Integer getAdminNum(HttpSession session) {
-        return (Integer) session.getAttribute("adminNum");
-    }
-
-    // ✅ 임시 업로드 경로 (나중에 확정되면 여기만 바꾸면 됨)
     private static final String UPLOAD_DIR = "C:/temp/event/";
 
+    // =========================
+    // ✅ 다이닝 스타일 세션 체크
+    // - adminId(String) 존재 여부로 1차 체크
+    // - 이벤트는 FK 때문에 adminNum(Integer)도 필요하므로 2차 체크
+    // =========================
+    private boolean isAdminLogin(HttpSession session) {
+        String id = (String) session.getAttribute("adminId");
+        return !(id == null || id.trim().isEmpty());
+    }
+
+    private Integer getAdminNum(HttpSession session) {
+        // 1) 세션에서 먼저 꺼내기
+        Object v = session.getAttribute("adminNum");
+        Integer adminNum = null;
+
+        if (v instanceof Integer) {
+            adminNum = (Integer) v;
+        } else if (v instanceof String) {
+            try { adminNum = Integer.parseInt((String) v); }
+            catch (NumberFormatException e) { adminNum = null; }
+        }
+
+        // 2) 없거나 0이면 adminId로 DB 조회해서 채우기
+        if (adminNum == null || adminNum <= 0) {
+            String adminId = (String) session.getAttribute("adminId");
+            if (adminId == null || adminId.trim().isEmpty()) return null;
+
+            // ✅ Service에 새 메서드 1개 추가 필요 (아래 2번)
+            adminNum = eas.findAdminNumByAdminId(adminId);
+
+            // 조회 성공하면 세션에 저장(캐싱)
+            if (adminNum != null && adminNum > 0) {
+                session.setAttribute("adminNum", adminNum);
+            } else {
+                return null;
+            }
+        }
+
+        return adminNum;
+    }
     /**
      * 이벤트 목록
      * GET /event/eventAdminList
      */
     @GetMapping("/eventAdminList")
     public String eventAdminList(EventRangeDTO erDTO, Model model, HttpSession session) {
-        Integer adminNum = getAdminNum(session);
-        if (adminNum == null) return "redirect:/admin/login";
+
+        // ✅ 다이닝처럼 adminId로 체크
+        if (!isAdminLogin(session)) return "redirect:/adminLogin";
+
+        // (화면에서 필요하면 adminId도 넘길 수 있음)
+        model.addAttribute("adminId", (String) session.getAttribute("adminId"));
+
+        // ✅ keyword null 방어
+        if (erDTO.getKeyword() == null) erDTO.setKeyword("");
 
         int currentPage = erDTO.getCurrentPage();
         if (currentPage <= 0) currentPage = 1;
@@ -64,7 +105,7 @@ public class EventAdminController {
         model.addAttribute("pagination", pagination);
         model.addAttribute("range", erDTO);
 
-        return "/manager/event/eventAdminList";
+        return "manager/event/eventAdminList";
     }
 
     /**
@@ -73,28 +114,28 @@ public class EventAdminController {
      */
     @GetMapping("/eventAdminDetail")
     public String eventAdminDetail(@RequestParam int eventNum, Model model, HttpSession session) {
-        Integer adminNum = getAdminNum(session);
-        if (adminNum == null) return "redirect:/admin/login";
+
+        if (!isAdminLogin(session)) return "redirect:/adminLogin";
+        model.addAttribute("adminId", (String) session.getAttribute("adminId"));
 
         EventAdminDomain eaDomain = eas.searchOneEvent(eventNum);
         model.addAttribute("eaDomain", eaDomain);
 
-        return "/manager/event/eventAdminDetail";
+        return "manager/event/eventAdminDetail";
     }
 
     /**
      * 이벤트 등록 폼
      * GET /event/addAdminEventFrm
-     * 템플릿: /templates/manager/event/eventAdminForm.html
      */
     @GetMapping("/addAdminEventFrm")
     public String addAdminEventForm(HttpSession session, Model model) {
-        Integer adminNum = getAdminNum(session);
-        if (adminNum == null) return "redirect:/admin/login";
 
-        model.addAttribute("adminNum", adminNum);
+        if (!isAdminLogin(session)) return "redirect:/adminLogin";
+        model.addAttribute("adminId", (String) session.getAttribute("adminId"));
+
         model.addAttribute("mode", "add");
-        return "/manager/event/eventAdminForm";
+        return "manager/event/eventAdminForm";
     }
 
     /**
@@ -110,8 +151,12 @@ public class EventAdminController {
             HttpSession session,
             Model model) {
 
+        if (!isAdminLogin(session)) return "redirect:/adminLogin";
+        model.addAttribute("adminId", (String) session.getAttribute("adminId"));
+
+        // ✅ 이벤트는 adminNum(FK) 필수
         Integer adminNum = getAdminNum(session);
-        if (adminNum == null) return "redirect:/admin/login";
+        if (adminNum == null || adminNum <= 0) return "redirect:/adminLogin";
 
         eaDTO.setAdminNum(adminNum);
 
@@ -124,7 +169,7 @@ public class EventAdminController {
                 model.addAttribute("flag", false);
                 model.addAttribute("msg", "이미지1 업로드 실패");
                 model.addAttribute("redirectUrl", "/event/eventAdminList?currentPage=" + currentPage);
-                return "/manager/event/eventResult";
+                return "manager/event/eventResult";
             }
             eaDTO.setEventImg1(saved1);
         }
@@ -136,40 +181,39 @@ public class EventAdminController {
                 model.addAttribute("flag", false);
                 model.addAttribute("msg", "이미지2 업로드 실패");
                 model.addAttribute("redirectUrl", "/event/eventAdminList?currentPage=" + currentPage);
-                return "/manager/event/eventResult";
+                return "manager/event/eventResult";
             }
             eaDTO.setEventImg2(saved2);
         }
-        
-        //DB에 저장
+
         boolean flag = eas.addEvent(eaDTO);
 
         model.addAttribute("flag", flag);
         model.addAttribute("msg", flag ? "이벤트 추가 완료" : "이벤트 추가 실패");
         model.addAttribute("redirectUrl", "/event/eventAdminList?currentPage=" + currentPage);
 
-        return "/manager/event/eventResult";
+        return "manager/event/eventResult";
     }
 
-
     /**
-     * 이벤트 수정 폼 (등록 폼 재사용)
+     * 이벤트 수정 폼
      * GET /event/modifyAdminEventFrm?eventNum=1
      */
     @GetMapping("/modifyAdminEventFrm")
     public String modifyAdminEventFrm(@RequestParam int eventNum, HttpSession session, Model model) {
-        Integer adminNum = getAdminNum(session);
-        if (adminNum == null) return "redirect:/admin/login";
+
+        if (!isAdminLogin(session)) return "redirect:/adminLogin";
+        model.addAttribute("adminId", (String) session.getAttribute("adminId"));
 
         EventAdminDomain eaDomain = eas.searchOneEvent(eventNum);
         model.addAttribute("eaDomain", eaDomain);
         model.addAttribute("mode", "edit");
 
-        return "/manager/event/eventAdminForm";
+        return "manager/event/eventAdminForm";
     }
 
     /**
-     * 이벤트 수정 처리 (이미지 업로드 포함)
+     * 이벤트 수정 처리
      * POST /event/modifyEventProcess
      */
     @PostMapping("/modifyEventProcess")
@@ -181,8 +225,11 @@ public class EventAdminController {
             HttpSession session,
             Model model) {
 
+        if (!isAdminLogin(session)) return "redirect:/adminLogin";
+        model.addAttribute("adminId", (String) session.getAttribute("adminId"));
+
         Integer adminNum = getAdminNum(session);
-        if (adminNum == null) return "redirect:/admin/login";
+        if (adminNum == null || adminNum <= 0) return "redirect:/adminLogin";
 
         eaDTO.setAdminNum(adminNum);
 
@@ -194,7 +241,7 @@ public class EventAdminController {
                 model.addAttribute("flag", false);
                 model.addAttribute("msg", "이미지1 업로드 실패");
                 model.addAttribute("redirectUrl", "/event/eventAdminList?currentPage=" + currentPage);
-                return "/manager/event/eventResult";
+                return "manager/event/eventResult";
             }
             eaDTO.setEventImg1(saved1);
         }
@@ -205,7 +252,7 @@ public class EventAdminController {
                 model.addAttribute("flag", false);
                 model.addAttribute("msg", "이미지2 업로드 실패");
                 model.addAttribute("redirectUrl", "/event/eventAdminList?currentPage=" + currentPage);
-                return "/manager/event/eventResult";
+                return "manager/event/eventResult";
             }
             eaDTO.setEventImg2(saved2);
         }
@@ -216,7 +263,7 @@ public class EventAdminController {
         model.addAttribute("msg", flag ? "이벤트 수정 성공" : "이벤트 수정 실패");
         model.addAttribute("redirectUrl", "/event/eventAdminList?currentPage=" + currentPage);
 
-        return "/manager/event/eventResult";
+        return "manager/event/eventResult";
     }
 
     /**
@@ -229,8 +276,11 @@ public class EventAdminController {
                               HttpSession session,
                               Model model) {
 
+        if (!isAdminLogin(session)) return "redirect:/adminLogin";
+        model.addAttribute("adminId", (String) session.getAttribute("adminId"));
+
         Integer adminNum = getAdminNum(session);
-        if (adminNum == null) return "redirect:/admin/login";
+        if (adminNum == null || adminNum <= 0) return "redirect:/adminLogin";
 
         EventAdminDTO dto = new EventAdminDTO();
         dto.setEventNum(eventNum);
@@ -242,7 +292,7 @@ public class EventAdminController {
         model.addAttribute("msg", flag ? "이벤트 삭제 성공" : "이벤트 삭제 실패");
         model.addAttribute("redirectUrl", "/event/eventAdminList?currentPage=" + currentPage);
 
-        return "/manager/event/eventResult";
+        return "manager/event/eventResult";
     }
 
     // =========================

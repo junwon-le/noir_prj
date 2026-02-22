@@ -10,7 +10,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class EventDomain {
-	private int eventNum;
+	private int eventNum, adminNum;
 	private String eventTitle, eventSubTitle, eventImg1, eventImg2, eventMsg, eventDelFlag;
-	private Date  eventStartDate, eventDate, eventEndDate;
+	private Date  eventStartDate, eventDate, eventEndDate, regDate;
 }
