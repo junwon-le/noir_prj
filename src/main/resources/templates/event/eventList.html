@@ -191,16 +191,44 @@ padding:0px;
   padding:14px 16px 16px;
 }
 
-.event-card__title{
-  font-size:25px;
-  font-weight:700;
-  color:#000;
-  margin-bottom:6px;
+/* 제목과 부제목을 감싸는 컨테이너에 flex 적용 */
+.event-card__title {
+  display: flex;
+  flex-direction: column; /* 세로로 배치 */
+  gap: 4px;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 12px;
 }
 
-.event-card__desc{
-  font-size:20px;
-  color:#666;
+/* 부제목 스타일: 작고 은은하게 */
+.event-subtitle {
+  order: -1; /* 제목보다 위로 보냄 */
+  font-size: 13px;
+  font-weight: 500;
+  color: #C47E27; /* 금색 계열 포인트 컬러 */
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* 대괄호 제거 후 본제목 스타일 */
+.event-main-title {
+  color: #111;
+  line-height: 1.2;
+}
+
+.event-card__desc {
+  font-size: 16px; 
+  color: #666;
+  margin-top: 8px;
+  
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1; 
+  overflow: hidden;
+  text-overflow: ellipsis;
+  
+  height: 1em; 
 }
 .event-card__date{
   font-size:12px;
@@ -312,8 +340,9 @@ padding:0px;
 </div>
     <div class="event-card__body">
       <div class="event-card__title">
-        <span th:text="${e.eventTitle}">제목</span> [<span th:text="${e.eventSubTitle}">제목</span>]
-      </div>
+  <span class="event-subtitle" th:text="${e.eventSubTitle}">SUBTITLE</span>
+  <span class="event-main-title" th:text="${e.eventTitle}">MAIN TITLE</span>
+</div>
       <div class="event-card__desc">
         <span th:text="${e.eventMsg}">내용</span>
       </div>
