@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.noir.mypage.MypageMapper">
+
+	<select id="memberName" parameterType="String" resultType="String">
+		 SELECT MEMBER_LAST_NAME || MEMBER_FIRST_NAME
+ 		 FROM member
+ 		 WHERE member_id = #{memberId}
+	</select>
+
+	<select id="hotelRevCnt" parameterType="String" resultType="int">
+		select count(*)
+		from member m, reserve r
+		where r.member_num=m.member_num
+		and r.RESERVE_TYPE='room'
+		and r.reserve_status='N'
+		<![CDATA[
+      		AND r.reserve_start_date >= TRUNC(SYSDATE)
+      		AND r.reserve_start_date < ADD_MONTHS(TRUNC(SYSDATE), 3)
+      	]]>
+      	and m.member_id=#{memberId}
+	</select>
+	
+	<select id="dinningRevCnt" parameterType="String" resultType="int">
+		SELECT COUNT(*)
+		FROM member m
+		JOIN reserve r ON m.member_num = r.member_num
+		JOIN dinning_res dr ON r.reserve_num = dr.reserve_num
+		WHERE m.member_id = #{memberId} and r.reserve_status='N'
+		<![CDATA[
+      		AND dr.dinning_visit_date >= TRUNC(SYSDATE)
+      		AND dr.dinning_visit_date < ADD_MONTHS(TRUNC(SYSDATE), 3)
+      	]]>
+	</select>
+	
+	<resultMap type="kr.co.noir.event.EventDomain" id="evtDomain">
+		<result column="event_num" property="eventNum"/>
+		<result column="event_title" property="eventTitle"/>
+		<result column="event_img1" property="eventImg1"/>
+		<result column="event_start_date" property="eventStartDate"/>
+		<result column="event_end_date" property="eventEndDate"/>
+	</resultMap>
+
+	<select id="eventList" resultMap="evtDomain">
+		select event_num, event_title, event_img1, event_start_date, event_end_date 
+		from event
+		where TRUNC(SYSDATE) BETWEEN TRUNC(event_start_date) AND TRUNC(event_end_date)
+		order by dbms_random.value()
+		fetch first 3 rows only
+	</select>
+
+    <select id="selectPasswordById" parameterType="String" resultType="String">
+        SELECT member_pass
+        FROM member 
+        WHERE member_id = #{memberId}
+    </select>
+
+    <update id="updateMemberDelFlag" parameterType="String">
+        UPDATE member
+        SET MEMBER_DEL_FLAG = 'Y'
+        WHERE MEMBER_ID = #{memberId}
+    </update>
+
+	<delete id="deleteSnsToken">
+	    DELETE FROM MEMBER_SNS_TOKEN 
+	    WHERE MEMBER_NUM = (SELECT MEMBER_NUM FROM MEMBER WHERE MEMBER_ID = #{memberId})
+	      AND PROVIDER = #{provider}
+	</delete>
+
+</mapper>

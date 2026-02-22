@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.noir.login.MemberMapper">
+<!-- 아이디에 해당하는 비밀번호를 검색. -->
+<select id="selectOneUserInfo" parameterType="String" resultType="kr.co.noir.login.LoginMemberDomain">
+    SELECT 
+        member_id as memberId, 
+        member_pass as memberPass, 
+        member_last_name as memberLastName, 
+        member_first_name as memberFirstname, 
+        member_ip as memberIp
+    FROM member
+    WHERE member_id = #{memberId} and member_del_flag='N'
+</select>
+<select id="login" resultType="kr.co.noir.login.MemberDTO">
+    SELECT member_id, member_last_name, member_first_name, member_pass
+    FROM member
+    WHERE member_id = #{memberId}
+      AND member_pass = #{memberPass} and member_del_flag='N'
+</select>
+<select id="findIdByInfo" resultType="String">
+    SELECT member_id
+    FROM member
+    WHERE TRIM(member_last_name) = #{memberLastName} AND TRIM(member_first_name) = #{memberFirstName}
+      AND member_email = #{memberEmail} and member_del_flag='N'
+</select>
+<select id="checkUserForReset" parameterType="map" resultType="kr.co.noir.login.MemberDTO">
+   select member_id, member_email
+   from member
+   where member_id = #{memberId}
+     and member_last_name = #{memberLastName}
+     and member_first_name = #{memberFirstName}
+     and member_del_flag = 'N' -- 탈퇴하지 않은 회원만 대상
+</select>    
+<update id="updatePassword">
+       UPDATE member
+       SET member_pass = #{newPw}
+       WHERE member_Id = #{memberId}
+</update>
+<select id="selectIdCount" parameterType="String" resultType="int">
+    SELECT COUNT(*)
+    FROM member
+    WHERE member_id = #{memberId}
+</select>
+<insert id="insertMember" parameterType="kr.co.noir.login.MemberDTO">
+INSERT INTO member (
+    MEMBER_NUM,
+    MEMBER_ID,
+    MEMBER_PASS,
+    MEMBER_LAST_NAME,
+    MEMBER_FIRST_NAME,
+    MEMBER_EMAIL,
+    MEMBER_TEL,
+    MEMBER_BIRTH,
+    MEMBER_DEL_FLAG,
+    MEMBER_INPUTDATE,
+    MEMBER_IP
+) VALUES (
+    member_seq.nextval,  #{memberId},
+    #{memberPass},
+    #{memberLastName},   #{memberFirstName},  #{memberEmail},
+    #{memberTel},
+    #{memberBirth},
+    'N',                 SYSDATE,             #{memberIp}          )
+</insert>	
+</mapper>

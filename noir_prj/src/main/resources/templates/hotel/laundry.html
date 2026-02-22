@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="title" content="NOIR - Laundry Service">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>NOIR - Laundry Service</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Noto+Sans+KR:wght@300;400&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" type="text/css" th:href="@{/common/css/homepage/base.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/common/css/homepage/style.css(v='0312')}">
+<link rel="stylesheet" type="text/css" th:href="@{/common/css/homepage/sub.css(v='0312')}">
+<link rel="stylesheet" type="text/css" th:href="@{/common/css/homepage/admin_style.css}">
+
+<script th:src="@{/common/js/comm/jquery-3.5.1.min.js}"></script>
+<script th:src="@{/common/js/homepage/custom.js}"></script>
+
+<style>
+    /* =========================================
+       1. 기본 레이아웃 (공통)
+       ========================================= */
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Noto Sans KR', sans-serif; }
+
+    html { height: auto !important; overflow-y: auto !important; overflow-x: hidden !important; }
+    
+    body {
+        background: #0f1218;
+        display: flex !important;
+        flex-direction: column !important;
+        min-height: 100vh !important;
+        height: auto !important;
+        position: relative !important;
+        color: #d6c6a5;
+        margin: 0 !important;
+    }
+
+    header { position: absolute; top: 0; left: 0; width: 100%; z-index: 100; }
+    
+    #main-wrapper { flex: 1 0 auto; width: 100%; position: relative; z-index: 10; display: block; }
+    
+    footer { flex-shrink: 0; position: relative; width: 100%; z-index: 100; background-color: #1a1a1a; }
+    
+    #privacy-layer { position: absolute; bottom: 0; width: 100%; z-index: 101; }
+
+    /* =========================================
+       2. Laundry Service 전용 스타일
+       ========================================= */
+    
+    /* [메인 비주얼] */
+    .laundry-visual {
+        height: 400px;
+        background: linear-gradient(
+            rgba(0,0,0,0.4),
+            rgba(0,0,0,0.7)
+        ),
+        /* [중요] laundry_bg.jpg 파일이 필요합니다 */
+        url('../common/images/homepage/laundry_bg.jpg') center center / cover no-repeat;
+        
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .laundry-visual h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: 56px;
+        letter-spacing: 4px;
+        color: #fff;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    }
+    
+    .laundry-visual p {
+        font-family: 'Playfair Display', serif;
+        font-size: 18px;
+        color: #e0e0e0;
+        margin-top: 20px;
+        letter-spacing: 1px;
+        font-style: italic;
+    }
+
+    /* [섹션 1] 소개 글 */
+    .laundry-intro {
+        max-width: 1200px;
+        margin: 80px auto;
+        display: grid;
+        grid-template-columns: 1fr 1.2fr;
+        gap: 80px;
+        padding: 0 20px;
+        align-items: start;
+    }
+
+    .laundry-intro h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: 42px;
+        line-height: 1.2;
+        margin-bottom: 30px;
+        color: #d6c6a5;
+    }
+    
+    .intro-desc h3 {
+        font-size: 20px;
+        font-weight: 500;
+        color: #fff;
+        margin-bottom: 20px;
+    }
+
+    .intro-desc p {
+        font-size: 15px;
+        color: #c9c2b8;
+        line-height: 1.8;
+        margin-bottom: 20px;
+        word-break: keep-all;
+    }
+
+    /* [섹션 2] 서비스 안내 */
+    .laundry-service {
+        background: #14171d;
+        padding: 70px 0;
+    }
+
+    .service-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+    
+    .section-title {
+        text-align: center;
+        font-family: 'Playfair Display', serif;
+        font-size: 32px;
+        color: #d6c6a5;
+        margin-bottom: 60px;
+    }
+
+    /* 3단 그리드 */
+    .service-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+    }
+
+    .service-card {
+        background: #0f1218;
+        border: 1px solid #333;
+        text-align: center;
+        transition: 0.3s;
+        overflow: hidden;
+    }
+
+    .service-card:hover {
+        border-color: #b89b6a;
+        transform: translateY(-5px);
+    }
+
+    .service-img-box {
+        width: 100%;
+        height: 250px;
+        overflow: hidden;
+        border-bottom: 1px solid #222;
+    }
+
+    .service-img-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.5s ease;
+    }
+
+    .service-card:hover .service-img-box img {
+        transform: scale(1.1);
+    }
+
+    .service-text-box {
+        padding: 30px 20px;
+    }
+
+    .service-text-box h4 {
+        font-size: 18px;
+        color: #fff;
+        margin-bottom: 15px;
+        font-family: 'Playfair Display', serif;
+        letter-spacing: 1px;
+    }
+
+    .service-text-box p {
+        font-size: 14px;
+        color: #999;
+        line-height: 1.6;
+        word-break: keep-all;
+    }
+
+    /* [섹션 3] 운영 안내 */
+    .laundry-info {
+        max-width: 1000px;
+        margin: 70px auto;
+        border-top: 1px solid #333;
+        border-bottom: 1px solid #333;
+        padding: 40px 0;
+        display: flex;
+        justify-content: space-around;
+        align-items: flex-start;
+        text-align: center;
+    }
+
+    .info-item {
+        flex: 1;
+        padding: 0 20px;
+        border-right: 1px solid #222;
+    }
+
+    .info-item:last-child {
+        border-right: none;
+    }
+
+    .info-item h5 {
+        font-size: 16px;
+        color: #b89b6a;
+        margin-bottom: 15px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-weight: 600;
+    }
+
+    .info-item p {
+        font-size: 16px;
+        color: #fff;
+        font-weight: 300;
+        line-height: 1.6;
+    }
+    
+    .contact-mail {
+        font-size: 14px;
+        color: #888;
+        margin-top: 5px;
+        display: block;
+    }
+
+    /* 반응형 */
+    @media (max-width: 768px) {
+        .laundry-visual { height: 350px; }
+        .laundry-visual h1 { font-size: 36px; }
+        .laundry-intro { grid-template-columns: 1fr; gap: 40px; margin: 80px auto; }
+        
+        .service-grid { grid-template-columns: 1fr; }
+        
+        .laundry-info { flex-direction: column; gap: 40px; padding: 40px 20px; }
+        .info-item { border-right: none; border-bottom: 1px solid #222; padding-bottom: 30px; width: 100%; }
+        .info-item:last-child { border-bottom: none; padding-bottom: 0; }
+    }
+
+</style>
+</head>
+
+<body>
+
+    <header>
+        <div th:replace="~{fragments/header :: header}"></div>
+    </header>
+
+    <div id="main-wrapper">
+        
+        <div class="laundry-visual">
+            <div>
+                <h1>LAUNDRY SERVICE</h1>
+                <p>Impeccable Care for Your Style</p>
+            </div>
+        </div>
+
+        <section class="laundry-intro">
+            <div>
+                <h2>Professional Care<br>& Eco-friendly</h2>
+            </div>
+            <div class="intro-desc">
+                <h3>"옷감 본연의 가치를 지키는 프리미엄 케어 서비스"</h3>
+                <p>
+                    NOIR Hotel의 런드리 서비스는 고객님의 소중한 의류를 위해
+                    최고급 친환경 세제와 섬세한 핸드 피니싱 기술을 사용합니다.
+                    숙련된 전문가가 소재의 특성을 파악하여 오염을 제거하고,
+                    옷감 손상을 최소화하는 맞춤형 세탁 솔루션을 제공합니다.
+                </p>
+                <p>
+                    비즈니스 수트부터 섬세한 드레스까지, 언제나 새 옷을 입은 듯한
+                    쾌적함과 품격을 약속드립니다. 급한 일정에 맞춘 익스프레스 서비스도 이용 가능합니다.
+                </p>
+            </div>
+        </section>
+
+        <section class="laundry-service">
+            <div class="service-container">
+                <h3 class="section-title">Service Menu</h3>
+                
+                <div class="service-grid">
+                    <div class="service-card">
+                        <div class="service-img-box">
+                            <img src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35" alt="Dry Cleaning">
+                        </div>
+                        <div class="service-text-box">
+                            <h4>Premium Dry Cleaning</h4>
+                            <p>수트, 실크, 울 등 고급 의류를 위한<br>전문 드라이 클리닝</p>
+                        </div>
+                    </div>
+
+                    <div class="service-card">
+                        <div class="service-img-box">
+                            <img src="../common/images/homepage/laundry_delivery.jpg" alt="Pressing Service">
+                        </div>
+                        <div class="service-text-box">
+                            <h4>Pressing & Valet</h4>
+                            <p>당일 4시간 이내 픽업 및 딜리버리<br>완벽한 셔츠 프레싱 서비스</p>
+                        </div>
+                    </div>
+
+                    <div class="service-card">
+                        <div class="service-img-box">
+                            <img src="https://images.unsplash.com/photo-1449505278894-297fdb3edbc1" alt="Shoe Care">
+                        </div>
+                        <div class="service-text-box">
+                            <h4>Shoe Care & Repair</h4>
+                            <p>전문 슈케어 서비스 및<br>간단한 의류 수선 서비스</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="laundry-info">
+            <div class="info-item">
+                <h5>Request</h5>
+                <p>Room Service (Ext. 0)</p>
+            </div>
+            <div class="info-item">
+                <h5>Service Hours</h5>
+                <p>08:00 - 20:00</p>
+            </div>
+            <div class="info-item">
+                <h5>Inquiries</h5>
+                <p>+82-2-777-7779</p>
+                <span class="contact-mail">laundry@noir.co.kr</span>
+            </div>
+        </section>
+
+    </div>
+
+    <footer>
+        <div th:replace="~{fragments/footer :: footer}"></div>
+    </footer>
+    
+    <div id="privacy-layer">
+        <div th:replace="~{fragments/privacy :: privacy}"></div>
+    </div>
+
+</body>
+</html>
