@@ -12,6 +12,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jakarta.servlet.http.HttpSession;
 import kr.co.noir.mypageReserve.DinningRevDetailDomain;
 import kr.co.noir.mypageReserve.HotelRevDetailDomain;
+import kr.co.noir.mypageReserve.MypageReserveService;
 import kr.co.noir.mypageReserve.ReserveDetailDTO;
 import kr.co.noir.mypageReserve.ReserveEmailService;
 
@@ -21,6 +22,9 @@ public class NonMemberRevController {
 	
 	@Autowired
 	private NonMemberRevService nmrs;
+	
+	@Autowired
+	MypageReserveService mrs;
 	
 	@Autowired
 	private ReserveEmailService emailService;
@@ -69,6 +73,44 @@ public class NonMemberRevController {
 		return 	uri;
 		
 	}//reserveCheck
+	
+	 @PostMapping("/cancelHotelReserve")
+	  public String cancelHotelReserve(HttpSession session,int reserveNum,Model model) {
+		  String uri="mypage/memberHotelRevDetail";
+		  //System.out.println("예약번호--------"+reserveNum);
+		  int cnt = mrs.removeHotelReserve(reserveNum);
+		  if(cnt<2) {
+			 model.addAttribute("cancelFlag",true); 
+			  
+			  
+		  }else {
+			  
+			  model.addAttribute("msg","예약취소가 완료되었습니다.");
+			  uri="mypage/successPage";
+			  
+		  }//end else
+		  
+		  return uri;
+	  }//cancelHotelReserve
+	 
+	 @PostMapping("/cancelDinningReserve")
+	  public String cancelDinningReserve(HttpSession session,int reserveNum,Model model) {
+		  String uri="/mypage/memberHotelRevDetail";
+		  System.out.println("예약번호--------"+reserveNum);
+		  boolean flag = mrs.removeDinningReserve(reserveNum);
+		  if(flag!=true) {
+			 model.addAttribute("cancelFlag",true); 
+			  
+			  
+		  }else {
+			  
+			  model.addAttribute("msg","예약취소가 완료되었습니다.");
+			  uri="/mypage/successPage";
+			  
+		  }//end else
+		  
+		  return uri;
+	  }//cancelDinningReserve
 	
 	
 	@PostMapping("/sendReserveEmail")

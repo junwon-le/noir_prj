@@ -30,18 +30,25 @@ public class NonMemberRevService {
 	
 	public boolean NonReserveCheck(NonMemberRevDTO rmrDTO) {
 		boolean flag=false;
+		boolean passwordFlag=false;
 		NonReserveCheckDomain nrcDomain=null;
 		BCryptPasswordEncoder bpe = new BCryptPasswordEncoder();
 		TextEncryptor te = Encryptors.text(key, salt);
 		try {
 			nrcDomain=nmrm.nonMemberRevCheck(rmrDTO);
-			System.out.println("이ㅏ럼니"+nrcDomain);
+		
 			String password=nrcDomain.getPassword();
 			String nowPassword= rmrDTO.getPassword();
 			String email = rmrDTO.getEmail();
 			String nowEmail =te.decrypt(nrcDomain.getEmail());
-					
-			boolean passwordFlag=bpe.matches(nowPassword, password);
+			if("dinning".equals(rmrDTO.getReserveType())) {
+				passwordFlag=password.equals(nowPassword);
+				
+			}else {				
+				passwordFlag=bpe.matches(nowPassword, password);
+			}
+			
+			
 			boolean emailFlag=email.equals(nowEmail);
 			flag=passwordFlag&&emailFlag;
 		}catch (PersistenceException pe) {
