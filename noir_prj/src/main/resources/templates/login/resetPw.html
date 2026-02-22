@@ -5,6 +5,25 @@
 <title>Hotel Management - Reset Password</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<meta name="_csrf" th:content="${_csrf.token}"/>
+<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+<script>
+$(document).ready(function() {
+    // Ajax 전역 설정: 모든 요청에 CSRF 토큰을 자동으로 포함
+    let token = $("meta[name='_csrf']").attr("content");
+    let header = $("meta[name='_csrf_header']").attr("content");
+
+    $.ajaxSetup({
+        beforeSend: function(xhr) {
+            xhr.setRequestHeader(header, token);
+        }
+    });
+
+    // ... 기존 코드 ...
+});
+</script>
+
 <style>
 /* 전역 설정 */
 * {

@@ -12,9 +12,10 @@
                     <when test="searchType == 'name'"> 
                         AND (MEMBER_LAST_NAME || MEMBER_FIRST_NAME) LIKE '%' || #{keyword} || '%' 
                     </when>
-                    <when test="searchType == 'tel'"> 
-                        AND (MEMBER_TEL = #{encryptedKeyword} OR MEMBER_TEL = #{keyword}) 
-                    </when>
+					<when test="searchType == 'tel'">
+					    AND (UPPER(TRIM(MEMBER_TEL)) = UPPER(#{encryptedKeyword}) 
+					         OR UPPER(TRIM(MEMBER_TEL)) = UPPER(#{keyword}))
+					</when>                	
                 </choose>
             </if>
         </where>
@@ -34,11 +35,12 @@
                             <when test="searchType == 'id'"> AND MEMBER_ID LIKE '%' || #{keyword} || '%' </when>
                             <when test="searchType == 'name'"> 
                                 AND (MEMBER_LAST_NAME || MEMBER_FIRST_NAME) LIKE '%' || #{keyword} || '%' 
-                            </when>
-                            <when test="searchType == 'tel'">
-                                AND (MEMBER_TEL = #{encryptedKeyword} OR MEMBER_TEL = #{keyword})
-                            </when>
-                        </choose>
+                             </when>
+							<when test="searchType == 'tel'">
+							    AND (UPPER(TRIM(MEMBER_TEL)) = UPPER(#{encryptedKeyword}) 
+							         OR UPPER(TRIM(MEMBER_TEL)) = UPPER(#{keyword}))
+							</when>
+						</choose>
                     </if>
                 </where>
                 ORDER BY MEMBER_NUM DESC
