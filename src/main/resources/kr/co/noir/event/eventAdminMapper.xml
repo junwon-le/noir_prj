@@ -5,96 +5,93 @@
 
 <mapper namespace="kr.co.noir.eventAdmin">
 
-
-  <!-- 1) 총 개수 -->
+  <!-- ========================================= -->
+  <!-- 1. 총 개수 -->
+  <!-- ========================================= -->
   <select id="selectEventTotalCnt"
           parameterType="kr.co.noir.event.EventRangeDTO"
           resultType="int">
+
     SELECT COUNT(*)
     FROM event
     WHERE event_del_flag = 'N'
-    <if test="field != null and field != '' and keyword != null and keyword != ''">
-      <choose>
-        <!-- field 값은 너 EventRangeDTO/화면 셀렉트 값에 맞춰서 조정 -->
-        <when test="field == '1'">
-          AND event_title LIKE '%' || #{keyword} || '%'
-        </when>
-        <when test="field == '2'">
-          AND event_msg LIKE '%' || #{keyword} || '%'
-        </when>
-        <when test="field == '3'">
-          AND event_sub_title LIKE '%' || #{keyword} || '%'
-        </when>
-      </choose>
+
+    <if test="keyword != null and keyword != ''">
+      AND event_title LIKE '%' || #{keyword} || '%'
     </if>
+
   </select>
 
 
-  <!-- 2) 목록 (Oracle ROW_NUMBER 페이징) -->
+  <!-- ========================================= -->
+  <!-- 2. 목록 (페이징) -->
+  <!-- reg_date 컬럼 없음 → 제거 -->
+  <!-- ========================================= -->
   <select id="selectEventList"
           parameterType="kr.co.noir.event.EventRangeDTO"
           resultType="kr.co.noir.event.EventAdminDomain">
+
     SELECT
-      event_num,
-      admin_num,
-      event_title,
-      event_sub_title,
-      event_img1,
-      event_img2,
-      event_msg,
-      event_start_date,
-      event_end_date,
-      event_date,
-      event_del_flag
+      event_num                       AS eventNum,
+      admin_num                       AS adminNum,
+      event_title                     AS eventTitle,
+      event_sub_title                 AS eventSubTitle,
+      event_img1                      AS eventImg1,
+      event_img2                      AS eventImg2,
+      event_msg                       AS eventMsg,
+      CAST(event_start_date AS DATE)  AS eventStartDate,
+      CAST(event_end_date   AS DATE)  AS eventEndDate,
+      CAST(event_date       AS DATE)  AS eventDate,
+      event_del_flag                  AS eventDelFlag
     FROM (
       SELECT
         ROW_NUMBER() OVER (ORDER BY event_num DESC) rn,
         e.*
       FROM event e
       WHERE e.event_del_flag = 'N'
-      <if test="field != null and field != '' and keyword != null and keyword != ''">
-        <choose>
-          <when test="field == '1'">
-            AND e.event_title LIKE '%' || #{keyword} || '%'
-          </when>
-          <when test="field == '2'">
-            AND e.event_msg LIKE '%' || #{keyword} || '%'
-          </when>
-          <when test="field == '3'">
-            AND e.event_sub_title LIKE '%' || #{keyword} || '%'
-          </when>
-        </choose>
+      <if test="keyword != null and keyword != ''">
+        AND e.event_title LIKE '%' || #{keyword} || '%'
       </if>
-    )
-    WHERE rn BETWEEN #{startNum} AND #{endNum}
+    ) t
+    WHERE t.rn BETWEEN #{startNum} AND #{endNum}
+
   </select>
 
 
-  <!-- 3) 상세 -->
+  <!-- ========================================= -->
+  <!-- 3. 상세 -->
+  <!-- reg_date 컬럼 없음 → 제거 -->
+  <!-- ========================================= -->
   <select id="selectEventDetail"
           parameterType="int"
           resultType="kr.co.noir.event.EventAdminDomain">
+
     SELECT
-      event_num,
-      admin_num,
-      event_title,
-      event_sub_title,
-      event_img1,
-      event_img2,
-      event_msg,
-      event_start_date,
-      event_end_date,
-      event_date,
-      event_del_flag
+      event_num                       AS eventNum,
+      admin_num                       AS adminNum,
+      event_title                     AS eventTitle,
+      event_sub_title                 AS eventSubTitle,
+      event_img1                      AS eventImg1,
+      event_img2                      AS eventImg2,
+      event_msg                       AS eventMsg,
+      CAST(event_start_date AS DATE)  AS eventStartDate,
+      CAST(event_end_date   AS DATE)  AS eventEndDate,
+      CAST(event_date       AS DATE)  AS eventDate,
+      event_del_flag                  AS eventDelFlag
     FROM event
-    WHERE event_num = #{eventNum}
+    WHERE event_num = #{value}
       AND event_del_flag = 'N'
+
   </select>
 
 
-  <!-- 4) 등록 -->
+  <!-- ========================================= -->
+  <!-- 4. 등록 -->
+  <!-- reg_date 컬럼 없음 → INSERT에서 제거 -->
+  <!-- ========================================= -->
   <insert id="insertEvent"
           parameterType="kr.co.noir.event.EventAdminDTO">
+
     INSERT INTO event (
       event_num,
       admin_num,
@@ -120,36 +117,64 @@
       SYSDATE,
       'N'
     )
+
   </insert>
 
 
-  <!-- 5) 수정 (IP 안 씀 / adminNum으로 갱신) -->
+  <!-- ========================================= -->
+  <!-- 5. 수정 -->
+  <!-- ========================================= -->
   <update id="updateEvent"
           parameterType="kr.co.noir.event.EventAdminDTO">
+
     UPDATE event
-    SET
+    <set>
       admin_num = #{adminNum},
       event_title = #{eventTitle},
       event_sub_title = #{eventSubTitle},
-      event_img1 = #{eventImg1},
-      event_img2 = #{eventImg2},
+
+      <if test="eventImg1 != null and eventImg1 != ''">
+        event_img1 = #{eventImg1},
+      </if>
+
+      <if test="eventImg2 != null and eventImg2 != ''">
+        event_img2 = #{eventImg2},
+      </if>
+
       event_msg = #{eventMsg},
       event_start_date = #{eventStartDate},
       event_end_date = #{eventEndDate}
+    </set>
     WHERE event_num = #{eventNum}
       AND event_del_flag = 'N'
+
   </update>
 
 
-  <!-- 6) 삭제 (소프트 삭제) -->
+  <!-- ========================================= -->
+  <!-- 6. 삭제 (소프트 삭제) -->
+  <!-- ========================================= -->
   <update id="deleteEvent"
           parameterType="kr.co.noir.event.EventAdminDTO">
+
     UPDATE event
-    SET
-      event_del_flag = 'Y',
-      admin_num = #{adminNum}
+    SET event_del_flag = 'Y',
+        admin_num = #{adminNum}
     WHERE event_num = #{eventNum}
       AND event_del_flag = 'N'
+
   </update>
+
+
+  <!-- ========================================= -->
+  <!-- 7. adminId로 adminNum 조회 (세션 보정용) -->
+  <!-- ========================================= -->
+  <select id="selectAdminNumByAdminId"
+          parameterType="string"
+          resultType="int">
+    SELECT admin_num
+    FROM admin
+    WHERE admin_id = #{value}
+  </select>
 
 </mapper>

@@ -185,7 +185,27 @@ $(function(){
               </td>
             </tr>
 
-           
+            <tr th:each="event : ${eventList}">
+              <td th:text="${event.eventNum}">1</td>
+
+              <td>
+                <a class="event-title-link"
+                   th:href="@{/event/modifyAdminEventFrm(eventNum=${event.eventNum},
+                                                        currentPage=${range != null ? range.currentPage : 1},
+                                                        keyword=${range != null ? range.keyword : ''})}"
+                   th:text="${event.eventTitle}">
+                </a>
+              </td>
+
+              <td th:text="${event.eventStartDate != null and event.eventEndDate != null
+                  ? (#dates.format(event.eventStartDate,'yyyy.MM.dd') + ' ~ ' + #dates.format(event.eventEndDate,'yyyy.MM.dd'))
+                  : ''}">
+              </td>
+
+              <td th:text="${event.adminNum}">1</td>
+
+              <td th:text="${event.eventDate != null ? #dates.format(event.eventDate,'yy.MM.dd') : ''}">26.03.23</td>
+            </tr>
           </tbody>
         </table>
       </div>
