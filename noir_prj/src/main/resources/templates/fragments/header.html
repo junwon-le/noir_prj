@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+ <div th:fragment="header">
+    
+
+ <div id="header_wrap">
+<nav class="top_nav" style="height:50px">
+    <ul>
+        <th:block th:if="${session.memberId == null}">
+            <li><a th:href="@{/login/memberLogin}">LOGIN</a></li>
+            <li><a th:href="@{/login/join}">JOIN</a></li>
+        </th:block>
+        
+        <th:block th:if="${session.memberId != null}">
+            <li>
+                <span th:text="${session.memberName != null ? session.memberName + '님 환영합니다' : session.memberId + '님'}" 
+                      style="color: #C4A16F; margin-right: 15px; font-size: 13px;"></span>
+                <a th:href="@{/login/logout}">LOGOUT</a>
+            </li>
+            <li>
+                <a th:href="@{/mypage/}">MYPAGE</a>
+            </li>
+        </th:block>
+        
+        </ul>
+</nav>
+		<div>
+		<h1 id="logo"><a href="/main"><img src="/common/images/homepage/logo.png" style="width:90px;position:relative; bottom:47px;"></a></h1>
+		</div>
+		<nav class="main_nav">
+			<ul>
+				<li>
+					<a href="#"  class="subject">HOTEL</a>
+					<div class="main-sub">
+						<ul>
+							<!-- <li><a href="/view/viewLink.do?page=homepage/KOR/hotel/greeting"><span>GREETING</span></a></li> -->
+							<li><a href="/hotel/about">ABOUT HOTEL</a>
+							<!-- <li><a href="/view/viewLink.do?page=homepage/KOR/hotel/design"><span>HOTEL DESIGN</span></a></li> -->
+							<li><a href="/hotel/location"><span>LOCATION</span></a></li>
+							<li><a href="/eventList"><span>EVENT</span></a></li>
+							<li><a href="/noticeList"><span>NOTICE</span></a></li>
+							
+						</ul>
+					</div>
+				</li>
+				<li>
+					<a href="#"  class="subject">ROOMS</a>
+					<div class="main-sub">
+						<ul>
+							<li><a th:href="@{{url}(url='/roomView', num=1)}"><span>STANDARD<br>QUEEN</span></a></li>
+							<li><a th:href="@{{url}(url='/roomView', num=2)}"><span>SEMI-DELUXE<br>DOUBLE</span></a></li>
+							<li><a th:href="@{{url}(url='/roomView', num=3)}"><span>DELUXE<br>DOUBLE</span></a></li>
+							<li><a th:href="@{{url}(url='/roomView', num=4)}"><span>DELUXE<br>TWIN</span></a></li>
+							<li><a th:href="@{{url}(url='/roomView', num=5)}"><span>FAMILY<br>TWIN</span></a></li>
+						</ul>
+					</div>
+				</li>
+				<li>
+					<a href="#"  style="color:white; text-decoration: none">DINING</a>
+					<div class="main-sub">
+						<ul>
+
+							<li><a href="/dinning"><span>NOIR RESTAURANT</span></a></li>
+							
+
+						</ul>
+					</div>
+				</li>
+				<li>
+					<a href="#"   class="subject">FACILITIES</a>
+					<div class="main-sub">
+						<ul>
+						
+							<li><a href="/hotel/library">LIBRARY</a></li>		
+							<li><a href="/hotel/gym">GYM</a></li>
+							<li><a href="/hotel/laundry">LAUNDRY</a></li>
+						</ul>
+					</div>
+				</li>
+				<li>
+					<a href="#"   class="subject">NEIGHBORS</a>
+					<div class="main-sub">
+						<ul>
+							<!-- <li><a href="/view/viewLink.do?page=homepage/KOR/neighbous/sight"><span>SIGHTS</span></a></li> -->
+							<li><a href="/tourAttraction"><span>TOURIST ATTRACTION</span></a></li>
+							<li><a href="/shopping"><span>SHOPPING</span></a></li>
+							<li><a href="/culture"><span>CULTURE</span></a></li>
+						</ul>
+					</div>
+				</li>
+				
+				
+				<li>
+					<a href="#"   class="subject">BOOK</a>
+					<div class="main-sub">
+						<ul>
+							<li><a href="/reserve/roomResSearch"><span>Book</span></a></li>
+							<th:block th:if="${session.memberId == null}">
+							<li><a th:href="@{/login/memberLogin}"><span>Cancel</span></a></li>
+        					</th:block>
+        					<th:block th:if="${session.memberId != null}">
+            				<li><a th:href="@{/mypage/}">Cancel</a></li>
+            				</th:block>
+						</ul>
+					</div> 
+				</li>
+			</ul>
+		</nav>
+	  </div>
+	  </div>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+ <div th:fragment="sidebar">
+<div class="left-sidebar-pro">
+        <nav id="sidebar" class="">
+            <div class="sidebar-header">
+                <a href="index.html"><img class="main-logo" src="img/logo/logo.png" alt="" /></a>
+            </div>
+			
+            <div class="left-custom-menu-adp-wrap comment-scrollbar">
+                <nav class="sidebar-nav left-sidebar-menu-pro">
+                    <ul class="metismenu" id="menu1">
+                        <li class="active">
+                            <a th:href="@{/admin/dashBoard}">
+							   <i class="icon nalika-pie-chart icon-wrap"></i>
+							   <span>대시보드</span>
+							</a>
+                        </li>
+                        <li>
+                            <a th:href="@{/admin/members}">
+                            <i class="icon nalika-user icon-wrap"></i> <span>회원 관리</span></a>
+                        </li>
+                        <li>
+                            <a th:href="@{/admin/nonMembers}">                            
+                            <i class="icon nalika-user icon-wrap"></i> <span>비회원 관리</span></a>
+                        </li>
+                        <li>
+                            <a th:href="@{/admin/roomMgr(date=${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')})}" aria-expanded="false">
+							    <i class="icon nalika-settings icon-wrap"></i><span> 객실 관리</span>
+							</a>	                            
+                        </li>
+                        <li>
+                            <a th:href="@{/admin/hotelMember/}" aria-expanded="false"><i class="icon nalika-settings icon-wrap"></i>
+                            <span>객실 예약관리(회원)</span></a>
+                            
+                        </li>
+                        <li>
+                            <a th:href="@{/admin/nonRoomReserve}" aria-expanded="false"><i class="icon nalika-settings icon-wrap"></i>
+                            <span>객실 예약관리(비회원)</span></a>
+                            
+                        </li>
+                        
+                        <hr style="height: 0.5px;  background-color: #ccc;  width: 80%; margin: 5px auto;    ">
+                        <li>
+                            <a th:href="@{/admin/dinningMgr}" aria-expanded="false"><i class="icon nalika-search icon-wrap"></i> 
+                            <span>다이닝 관리</span></a>
+                        </li>
+                        <li>
+                            <a th:href="@{/admin/dinningMember/}" aria-expanded="false"><i class="icon nalika-team icon-wrap"></i>
+                            <span>다이닝 예약 관리 (회원)</span></a>
+                            
+                        </li>
+                        <li>
+                            <a th:href="@{/admin/nonDinningReserve}" aria-expanded="false"><i class="icon nalika-team icon-wrap"></i>
+                            <span>다이닝 예약 관리 (비회원)</span></a>
+                            
+                        </li>
+                        
+                        <hr style="height: 0.5px;  background-color: #ccc;  width: 80%; margin: 5px auto;    ">
+                        <li>
+                            <a href="mailbox.html" aria-expanded="false"><i class="icon nalika-table icon-wrap"></i> 
+                            <span class="mini-click-non">공지사항 관리</span></a>
+                          
+                        </li>
+                        <li>
+                            <a href="mailbox.html" aria-expanded="false"><i class="icon nalika-mail icon-wrap"></i> 
+                            <span class="mini-click-non">문의사항 관리</span></a>
+                            
+                        </li>
+                        <li>
+                            <a href="mailbox.html" aria-expanded="false"><i class="icon nalika-smartphone-call icon-wrap"></i>
+                            <span class="mini-click-non">후기 관리</span></a>
+                           
+                        </li>
+						<li>
+						    <a th:href="@{/adminLogout}" aria-expanded="false">
+						        <i class="icon nalika-unlocked icon-wrap"></i>
+						        <span class="mini-click-non">로그아웃</span>
+						    </a>
+						</li>
+                    </ul>
+                </nav>
+            </div>
+        </nav>
+    </div>
+    </div>

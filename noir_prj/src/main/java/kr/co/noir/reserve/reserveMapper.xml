@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="kr.co.sist.reserve">
+  	<!-- 선택된 날짜에 남은 객실 검색 보류 중인 방 제외 -->
+  	<select id="selectRoom" parameterType="roomSearchDTO" resultType="roomSearchDomain">
+  	<![CDATA[
+SELECT 
+    ri.room_type_num,
+    ri.room_type,
+    ri.room_detail,
+    ri.room_img1,
+    ri.room_max_person,
+    -- 1. 시작일(체크인)의 가격
+    MIN(CASE WHEN rp.room_date = TO_DATE(#{startDate}, 'yyyy-MM-dd') THEN rp.room_price END) AS start_date_price,
+    -- 2. 전체 숙박 기간의 총 요금 합계
+    SUM(rp.room_price) AS total_sum_price,
+    -- 3. 확정 예약된 방 개수
+    NVL(ra.cnt, 0) AS reserved_count,
+    -- 4. 결제 진행(보류) 중인 방 개수
+    NVL(rd.pending_cnt, 0) AS pending_count,
+    -- 5. 실제 남은 방 개수 (전체 - 예약 - 보류)
+    (ri.room_count - NVL(ra.cnt, 0) - NVL(rd.pending_cnt, 0)) AS available_count
+FROM 
+    room_info ri
+JOIN 
+    room_price rp ON ri.room_type_num = rp.room_type_num
+LEFT JOIN (
+    -- [서브쿼리 1] 확정된 예약 수량 계산 (날짜 중첩 확인)
+    SELECT 
+        rr.room_type_num, 
+        COUNT(*) AS cnt
+    FROM 
+        room_res rr
+    JOIN 
+        reserve r ON rr.reserve_num = r.reserve_num
+    WHERE 
+        r.reserve_status = 'N' -- 정상 예약
+        AND r.reserve_start_date < TO_DATE(#{endDate}, 'yyyy-MM-dd')
+        AND r.reserve_end_date > TO_DATE(#{startDate}, 'yyyy-MM-dd')
+    GROUP BY 
+        rr.room_type_num
+) ra ON ri.room_type_num = ra.room_type_num
+LEFT JOIN (
+    -- [서브쿼리 2] 10분 이내의 유효한 보류 수량 계산 (날짜 중첩 확인)
+    -- ※ room_depending 테이블에 시작/종료일 컬럼이 추가되었다고 가정함
+    SELECT 
+        room_type_num, 
+        SUM(room_cnt) AS pending_cnt
+    FROM 
+        room_depending
+    WHERE 
+        depending_time > SYSTIMESTAMP - INTERVAL '1' MINUTE -- 10분 타임아웃
+        AND room_res_start_date < TO_DATE(#{endDate}, 'yyyy-MM-dd')
+        AND room_res_end_date > TO_DATE(#{startDate}, 'yyyy-MM-dd')
+    GROUP BY 
+        room_type_num
+) rd ON ri.room_type_num = rd.room_type_num
+WHERE 
+    -- 조회 기간에 해당하는 가격만 집계
+    rp.room_date >= TO_DATE(#{startDate}, 'yyyy-MM-dd')
+    AND rp.room_date < TO_DATE(#{endDate}, 'yyyy-MM-dd')
+GROUP BY 
+    ri.room_type_num, 
+    ri.room_type, 
+    ri.room_detail, 
+    ri.room_img1, 
+    ri.room_max_person,
+    ri.room_count,
+    ra.cnt,
+    rd.pending_cnt
+HAVING 
+    -- 최종적으로 방이 남아있는 객실만 조회
+    (ri.room_count - NVL(ra.cnt, 0) - NVL(rd.pending_cnt, 0)) > 0
+ORDER BY 
+    room_type_num ASC
+  	]]>
+  	</select>
+  	<!-- 서버에서 해당 날짜에 남은 객실 조회하여 검증  -->
+  	<select id="selectRoomServer" parameterType="roomSearchDTO" resultType="roomSearchDomain">
+  	<![CDATA[
+SELECT 
+    ri.room_type_num,
+    ri.room_type,
+    ri.room_detail,
+    ri.room_img1,
+    ri.room_max_person,
+    -- 첫날 가격
+    MIN(CASE WHEN rp.room_date = TO_DATE(#{startDate}, 'yyyy-MM-dd') THEN rp.room_price END) AS start_date_price,
+    -- 총 요금 (NULL인 경우 0으로 표시)
+    NVL(SUM(rp.room_price), 0) AS total_sum_price,
+    -- 예약된 방 개수
+    NVL(ra.cnt, 0) AS reserved_count,
+    -- 잔여 방 개수 (결과가 0이어도 표시됨)
+    (ri.room_count - NVL(ra.cnt, 0)) AS available_count
+FROM 
+    room_info ri
+-- 가격 정보가 없어도 방 목록은 나와야 하므로 LEFT JOIN으로 변경
+LEFT JOIN 
+    room_price rp ON ri.room_type_num = rp.room_type_num
+    AND rp.room_date >= TO_DATE(#{startDate}, 'yyyy-MM-dd')
+    AND rp.room_date < TO_DATE(#{endDate}, 'yyyy-MM-dd')
+LEFT JOIN (
+    SELECT 
+        rr.room_type_num, 
+        COUNT(*) AS cnt
+    FROM 
+        room_res rr
+    JOIN 
+        reserve r ON rr.reserve_num = r.reserve_num
+    WHERE 
+        r.reserve_status = 'N'
+        AND r.reserve_start_date < TO_DATE(#{endDate}, 'yyyy-MM-dd')
+        AND r.reserve_end_date > TO_DATE(#{startDate}, 'yyyy-MM-dd')
+    GROUP BY 
+        rr.room_type_num
+) ra ON ri.room_type_num = ra.room_type_num
+WHERE 
+    1=1
+GROUP BY 
+    ri.room_type_num, 
+    ri.room_type, 
+    ri.room_detail, 
+    ri.room_img1, 
+    ri.room_max_person,
+    ri.room_count,
+    ra.cnt
+-- HAVING 절의 (ri.room_count - NVL(ra.cnt, 0)) > 0 조건을 제거함
+ORDER BY 
+    room_type_num ASC
+  	]]>
+  	</select>
+  	
+  	<select id="selectMember" parameterType="String" resultType="memberDomain">
+  		select 	member_num, member_id, member_last_name, member_pass, member_first_name, member_email, member_tel, member_birth, member_del_flag, 
+  				member_inputdate, member_ip, member_provider, member_provider_id, num 
+  		from 	member where member_id=#{member_id}
+  	</select>
+  	
+  	<insert id="insertRoomPending" parameterType="roomDependingDTO">
+  		insert into room_depending (session_id, room_type_num, room_res_start_date, room_res_end_date, depending_time, room_cnt)
+		values (#{id},#{room_type_num},#{room_res_start_date},#{room_res_end_date},systimestamp,#{room_cnt})
+	</insert>
+	
+	<!-- 예약 테이블에 추가 -->
+  	<insert id="insertRoomReserve" parameterType="roomReserveDTO">
+  		<selectKey keyProperty="reserve_num" resultType="int" order="BEFORE">
+	        select reserve_seq.nextval from dual
+	    </selectKey>
+  		insert into reserve (reserve_num, member_num, end_user_last_name, end_user_first_name, reserve_adult_count, reserve_kid_count,
+ 		reserve_msg, reserve_start_date, reserve_end_date, reserve_time, reserve_ip, reserve_type,reserve_tel,reserve_email)
+		values(#{reserve_num}, #{user_num},#{user_last_name},#{user_first_name},#{reserve_adult_count},#{reserve_kid_count},
+		#{reserve_msg},#{room_res_startDate},#{room_res_endDate},sysdate,#{reserve_ip},#{reserve_type},#{reserve_tel},#{email})
+	</insert>
+	
+	<!-- 객실 예약 테이블에 추가 -->
+	<insert id="insertParlor" parameterType="roomReserveDTO">
+		insert into room_res
+		values( room_res_seq.nextval, #{temp_room_type} ,#{reserve_num})		
+	</insert>
+	<!-- 결제 테이블에 추가 -->
+	<insert id="insertPay" parameterType="payInfoDTO">
+		<selectKey keyProperty="pay_num" resultType="int" order="BEFORE">
+	        select pay_seq.nextval from dual
+	    </selectKey>
+		insert into pay (pay_num, reserve_num, pay_price) 
+		values( #{pay_num} , #{reserve_num},#{pay_price} )		
+	</insert>
+	<!-- 결제 정보 테이블에 추가 -->
+	<insert id="insertPayInfo" parameterType="payInfoDTO">
+		insert into pay_info (payinfo_num, pay_num, pay_agency, billing_key, card_num, pg_provider, input_date,merchant_uid)
+		values(pay_info_seq.nextval, #{pay_num},#{agency},#{billing_key},#{card_number},#{pg_provider},systimestamp,#{merchant_uid})		
+	</insert>
+	
+	<delete id="deletePending" parameterType="String">
+		delete
+		from room_depending
+		where session_id= #{session_id}
+	</delete>
+	<!-- 비회원 테이블에 추가 -->
+	<insert id="insertNonMember" parameterType="roomReserveDTO">
+		<selectKey keyProperty="non_user_num" resultType="int" order="BEFORE">
+	        select non_member_seq.nextval from dual
+	    </selectKey>
+	    	insert into non_member (non_user_num, non_user_res_last_name, non_user_res_first_name, non_user_email, non_user_tel, non_user_pass, non_user_ip)
+			values (#{non_user_num}, #{user_first_name}, #{user_first_name},#{email},#{reserve_tel},#{non_user_pass},#{reserve_ip})
+	</insert>
+	<!-- 예약 테이블에 비회원 추가 -->
+  	<insert id="insertNonRoomReserve" parameterType="roomReserveDTO">
+  		<selectKey keyProperty="reserve_num" resultType="int" order="BEFORE">
+	        select reserve_seq.nextval from dual
+	    </selectKey>
+  		insert into reserve (reserve_num, non_user_num , end_user_last_name, end_user_first_name, reserve_adult_count, reserve_kid_count,
+ 		reserve_msg, reserve_start_date, reserve_end_date, reserve_time, reserve_ip, reserve_type,reserve_tel,reserve_email)
+		values(#{reserve_num}, #{non_user_num},#{user_last_name},#{user_first_name},#{reserve_adult_count},#{reserve_kid_count},
+		#{reserve_msg},#{room_res_startDate},#{room_res_endDate},sysdate,#{reserve_ip},#{reserve_type},#{reserve_tel},#{email})
+	</insert>
+	<!-- 객실 보류 테이블 지난 데이터 삭제 -->
+  	<delete id="deleteNonRoomReserve">
+  	<![CDATA[
+  		DELETE FROM DINNING_DEPENDING
+  	 	 WHERE  -- 결제가 완료된 건은 삭제하면 안 됨
+    	 DEPENDING_TIME < SYSDATE - (1/144)  -- 1/144은 약 10분 (1440분 중 10분) 
+  	]]>
+	</delete>
+  	<delete id="deleteNonDinningReserve">
+  	<![CDATA[
+  		DELETE FROM ROOM_DEPENDING
+  	 	 WHERE  -- 결제가 완료된 건은 삭제하면 안 됨
+    	 DEPENDING_TIME < SYSDATE - (1/144)  -- 1/144은 약 10분 (1440분 중 10분) 
+  	]]>
+	</delete>
+	
+	
+  </mapper>
