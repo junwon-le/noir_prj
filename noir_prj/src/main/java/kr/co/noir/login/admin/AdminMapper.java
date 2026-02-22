@@ -7,4 +7,5 @@ import org.apache.ibatis.annotations.Param;
 public interface AdminMapper { 
 	// 아이디와 비밀번호로 관리자 조회
 	AdminDomain adminLogin(@Param("adminId") String adminId);
+	AdminDomain selectAdmin(@Param("adminId") String adminId);
 }

@@ -7,6 +7,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @SpringBootApplication
 public class NoirPrjApplication {
+
 	
 	public static void main(String[] args) {
 		// 1. .env 로드 로직 (기존 코드 유지)
@@ -22,6 +23,8 @@ public class NoirPrjApplication {
 		System.setProperty("spring.application.admin.enabled", "false");
 		
 		app.run(args);
+		
 	}
 
 }
+

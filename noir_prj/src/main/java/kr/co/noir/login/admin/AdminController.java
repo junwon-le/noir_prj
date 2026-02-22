@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,49 +19,111 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import kr.co.noir.dashboard.DashboardDTO;
+import kr.co.noir.dashboard.DashboardService;
 import kr.co.noir.login.MemberService;
 
 @Controller
 public class AdminController {
 
-    @Autowired
-    private AdminService adminService;
+	@Autowired
+    private DashboardService dashboardService;
 
 
     @GetMapping("/dashboard")
-    public String dashboard() {
+    public String dashboard(Model model) {
+    	DashboardDTO dashData = dashboardService.getDashboardData(); 
+        
+        // 2. HTML에서 사용하고 있는 "dash"라는 이름으로 모델에 추가합니다.
+        model.addAttribute("dash", dashData); 
+        
         return "manager/dashboard/dashBoard";
+
     }
 
+    @Autowired
+    private AdminMapper adminMapper; // MyBatis 사용 가정
+
+    @Autowired
+    private PasswordEncoder passwordEncoder; // SecurityConfig에 Bean 등록 필요    
+    
+    
     @PostMapping("/adminLogin")
-    public String loginProcess(AdminDTO aDTO, HttpServletRequest request, HttpSession session, Model model) {
+    public String adminLogin(AdminDTO aDTO, HttpServletRequest request, HttpSession session, Model model) {
         
-        // 1. 접속 IP 설정
-        aDTO.setIp(request.getRemoteAddr());
-        
-        // 2. 서비스 호출 (비밀번호 비교 및 결과 메시지 세팅 로직 포함)
-        AdminDomain ad = adminService.adminLogin(aDTO);
-        
-        // 3. 로그인 결과 처리
-        if ("S".equals(aDTO.getResult())) {
-            // 관리자 로그인 성공하면 기존 세션을 무효화 함
-        		session.invalidate(); 
-            
-            // 새로운 세션을 생성합니다 (true를 주면 새 세션을 만듦)
-            HttpSession newSession = request.getSession(true);
-            // 새로운 세션 생성
-            newSession.setAttribute("adminId", aDTO.getAdminId());            
-            newSession.setAttribute("adminNum", aDTO.getAdminNum());            
- 
-            return "redirect:/admin/dashBoard"; 
-        }
-        
-        // [실패] 서비스에서 담아온 메시지를 그대로 화면에 전달
-        model.addAttribute("errFlag", true);
-        model.addAttribute("errMsg", ad.getResultMsg());
-        
-        return "adminLogin"; // 다시 로그인 페이지로
-    }
+    		aDTO.setIp(request.getRemoteAddr());
+
+    		// 1. DB에서 아이디로 관리자 정보 조회
+            AdminDomain admin = adminMapper.selectAdmin(aDTO.getAdminId());
+
+            System.out.println(admin);
+            if (admin != null) {
+            	
+                // 2. 암호화된 비번 비교 (입력된 평문, DB의 암호문)
+                if ((passwordEncoder.matches(aDTO.getAdminPass().trim(), admin.getAdminPass().trim()))) {
+                    aDTO.setResult("S"); // 성공
+                    aDTO.setAdminNum(admin.getAdminNum());
+                    session.invalidate(); // 기존 세션 무효화 (보안)
+
+                    HttpSession newSession = request.getSession(true);
+                    newSession.setAttribute("adminId", admin.getAdminId());
+                    newSession.setAttribute("adminNum", admin.getAdminNum());
+
+                    // [중요] 뷰 이름을 리턴하는 게 아니라, 대시보드 URL로 '리다이렉트' 해야 함
+                    return "redirect:/dashboard";
+                    
+                } else {
+                    aDTO.setResult("F");
+                    admin.setResultMsg("비밀번호가 일치하지 않습니다.");
+                }
+            } else {
+                aDTO.setResult("F");
+                admin = new AdminDomain(); // NPE 방지
+                admin.setResultMsg("존재하지 않는 관리자 계정입니다.");
+            }
+    		return "login/adminLogin"; 
+        }    		
+    		
+    		
+//    		// 암호화 비교 로직이 적용된 서비스 호출
+//    		AdminDomain ad = adminService.adminLogin(aDTO);
+//    		
+//    		if ("S".equals(aDTO.getResult())) {
+//    			session.invalidate(); 
+//    			HttpSession newSession = request.getSession(true);
+//    			
+//    			// 서비스에서 채워준 정보를 세션에 저장
+//    			newSession.setAttribute("adminId", aDTO.getAdminId());            
+//    			newSession.setAttribute("adminNum", aDTO.getAdminNum());            
+//    			
+//    			return "redirect:/admin/dashBoard"; 
+//    		}
+//    		
+//    		model.addAttribute("errFlag", true);
+//    		model.addAttribute("errMsg", ad.getResultMsg());
+//    		return "login/adminLogin"; 
+//    	}    
+
+    	/*
+	 * // 1. 접속 IP 설정 aDTO.setIp(request.getRemoteAddr());
+	 * 
+	 * // 2. 서비스 호출 (비밀번호 비교 및 결과 메시지 세팅 로직 포함) AdminDomain ad =
+	 * adminService.adminLogin(aDTO);
+	 * 
+	 * // 3. 로그인 결과 처리 if ("S".equals(aDTO.getResult())) { // 관리자 로그인 성공하면 기존 세션을
+	 * 무효화 함 session.invalidate();
+	 * 
+	 * // 새로운 세션을 생성합니다 (true를 주면 새 세션을 만듦) HttpSession newSession =
+	 * request.getSession(true); // 새로운 세션 생성 newSession.setAttribute("adminId",
+	 * aDTO.getAdminId()); newSession.setAttribute("adminNum", aDTO.getAdminNum());
+	 * 
+	 * return "redirect:/admin/dashBoard"; }
+	 * 
+	 * // [실패] 서비스에서 담아온 메시지를 그대로 화면에 전달 model.addAttribute("errFlag", true);
+	 * model.addAttribute("errMsg", ad.getResultMsg());
+	 * 
+	 * return "adminLogin"; // 다시 로그인 페이지로 }
+	 */    
     
     // 로그아웃 기능 
     @GetMapping("/logout")
