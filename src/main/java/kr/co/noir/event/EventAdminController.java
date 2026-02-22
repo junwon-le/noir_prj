@@ -94,7 +94,7 @@ public class EventAdminController {
         erDTO.setStartNum(startNum);
         erDTO.setEndNum(endNum);
         erDTO.setTotalPage(totalPage);
-        erDTO.setUrl("/event/eventAdminList");
+        erDTO.setUrl("event/eventAdminList");
 
         List<EventAdminDomain> list = eas.searchEventList(erDTO);
         String pagination = eas.pagination(erDTO);

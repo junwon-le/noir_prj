@@ -103,7 +103,6 @@
 
             <div class="main-content-card">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-                    <button type="button" class="btn-delete-selected" onclick="deleteChecked()">선택 비회원 삭제</button>
                     
                     <form th:action="@{/admin/nonMembers}" method="get" style="display: flex; gap: 10px;" id="searchForm" onsubmit="return validateSearch()">
                         <select name="searchType" id="searchType" class="form-select">

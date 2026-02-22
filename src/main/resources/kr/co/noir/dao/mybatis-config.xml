@@ -38,6 +38,22 @@
 		<typeAlias type="kr.co.noir.reserve.PayInfoDTO" alias="payInfoDTO"/><!-- 결제 채우기 -->
 		<!-- 박진규 사용 -->
         <typeAlias type="kr.co.noir.login.MemberDTO" alias="MemberDTO"/>
+        
+        
+        <!-- 조나영 사용 -->
+        <typeAlias type="kr.co.noir.event.EventAdminDomain" alias="eventAdminDomain"/>	
+        <typeAlias type="kr.co.noir.event.EventAdminDTO" alias="eventAdminDTO"/>	
+        <typeAlias type="kr.co.noir.notice.NoticeAdminDTO" alias="noticeAdminDTO"/>	
+        <typeAlias type="kr.co.noir.notice.NoticeAdminDomain" alias="noticeAdminDomain"/>	
+        <typeAlias type="kr.co.noir.inquiry.InquiryAdminDTO" alias="inquiryAdminDTO"/>	
+        <typeAlias type="kr.co.noir.inquiry.InquiryAdminDomain" alias="inquiryAdminDomain"/>	
+        <typeAlias type="kr.co.noir.inquiry.InquiryRangeDTO" alias="inquiryRangeDTO"/>	
+        <typeAlias type="kr.co.noir.review.ReviewAdminDTO" alias="reviewAdminDTO"/>	
+        <typeAlias type="kr.co.noir.review.ReviewAdminDomain" alias="reviewAdminDomain"/>	
+        
+        
+        
+        
     </typeAliases>
 	
   	<environments default="development">
@@ -64,7 +80,13 @@
     <mapper resource="kr/co/noir/event/eventMapper.xml"/>
     <mapper resource="kr/co/noir/review/WriteReviewMapper.xml"/>
     <mapper resource="kr/co/noir/review/ReviewMapper.xml"/>
+    <mapper resource="kr/co/noir/review/ReviewAdminMapper.xml"/>
     <mapper resource="kr/co/noir/notice/noticeAdminMapper.xml"></mapper>
     <mapper resource="mapper/AdminMapper.xml"/>
+    
+    <mapper resource="kr/co/noir/event/eventAdminMapper.xml"/>
+    <mapper resource="kr/co/noir/inquiry/InquiryAdminMapper.xml"/>
+    
+    
   </mappers>
 </configuration>

@@ -58,14 +58,14 @@ public class ReserveController {
 	        if(flag) {
 	        	return ResponseEntity.ok("success"); 
 	        }else {
-	        	return ResponseEntity.badRequest().body("이미 예약된 객실이 포함되어 있습니다.");
+	        	return ResponseEntity.badRequest().body("이미 예약 중인 객실이 있습니다.");
 	        }//end else	        	
 	        // 2. 성공 응답 보내기 (HTTP 200)
 	        
 	    } catch (Exception e) {
 	        // 3. 실패 응답 보내기 (HTTP 400 또는 500)
 	        // 이렇게 보내면 axios의 .catch() 블록이 실행됩니다.
-	    	return ResponseEntity.badRequest().body("이미 예약된 객실이 포함되어 있습니다.");
+	    	return ResponseEntity.badRequest().body("이미 예약 중인 객실이 있습니다.");
 	    }
 	}
 	
@@ -76,6 +76,12 @@ public class ReserveController {
 	
 	@GetMapping("/roomResSearch")
 	public String roomResSearch() {
+		return "reserve/roomResSearch";
+	}
+	@GetMapping("/roomResSearchBack")
+	public String roomResSearchBack(HttpSession session) {
+		String id = String.valueOf(session.getAttribute("memberId")) ;
+		rrs.deleteDepending(id);
 		return "reserve/roomResSearch";
 	}
 	
@@ -166,8 +172,6 @@ public class ReserveController {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		System.out.println("-----------------------------------------------------------------------------------------"+rsDTO.getStartDate()+"--");
-		System.out.println("-----------------------------------------------------------------------------------------"+rsDTO.getEndDate()+"--");
 		rsDTO.setStartDate(rsDTO.getStartDate().trim());
 		rsDTO.setEndDate(rsDTO.getEndDate().trim());
 		List<RoomSearchDomain1> list = rrs1.searchRoom1(rsDTO);
@@ -176,7 +180,6 @@ public class ReserveController {
 		            rsd.setPeriod(period);
 		        }
 			}//end for
-			System.out.println(list);
 		return list;
 	}
 	

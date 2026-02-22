@@ -5,19 +5,22 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.encrypt.Encryptors;
 import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.siot.IamportRestClient.IamportClient;
-
+import kr.co.noir.interceptor.UserInterceptorConfig;
 import kr.co.noir.reserve.MemberDomain;
 import kr.co.noir.reserve.PayInfoDTO;
 import kr.co.noir.reserve.RoomReserveService;
 
 @Service
 public class DinningReserveService {
+
+    private final UserInterceptorConfig userInterceptorConfig;
 
 	
 	@Value("${user.crypto.key}")
@@ -34,6 +37,10 @@ public class DinningReserveService {
 	
 	@Autowired
 	private IamportClient client;
+
+    DinningReserveService(UserInterceptorConfig userInterceptorConfig) {
+        this.userInterceptorConfig = userInterceptorConfig;
+    }
 	
 	public List<DinningMenuDomain> SearchDinning(){
 		
@@ -69,7 +76,8 @@ public class DinningReserveService {
 		drDTO.setEmail(te.encrypt(drDTO.getEmailId()+"@"+drDTO.getEmailDomain()));
 		drDTO.setReserve_tel(te.encrypt(drDTO.getReserve_tel()));
 		drDTO.setVisite_date(LocalDate.parse(drDTO.getStr_visite_date()));
-		
+		BCryptPasswordEncoder bpe=new BCryptPasswordEncoder(10);
+		drDTO.setNon_user_pass(bpe.encode(drDTO.getNon_user_pass()));
 		//결제 정보 서버에서 가져오기
 		//예약 시간에 해당하는 다이닝 타입 조회 - 서버
 		String dinningType = drm.selectDinningtype(drDTO.getDinning_time());
@@ -115,11 +123,12 @@ public class DinningReserveService {
 		//예약 테이블 데이터 처리 - 서버에서 다시 db조회하여 실제 데이터를 가져옴
 		TextEncryptor te = Encryptors.text(key,salt);
 
-		drDTO.setEmail(te.encrypt(drDTO.getEmailId()+"@"+drDTO.getEmailDomain()));
+		drDTO.setEmail(te.encrypt(drDTO.getEmailId()));
 		drDTO.setReserve_tel(te.encrypt(drDTO.getReserve_tel()));
 
 		drDTO.setVisite_date(LocalDate.parse(drDTO.getStr_visite_date()));
-		
+		BCryptPasswordEncoder bpe=new BCryptPasswordEncoder(10);
+		drDTO.setNon_user_pass(bpe.encode(drDTO.getNon_user_pass()));
 		//결제 정보 서버에서 가져오기
 		//예약 시간에 해당하는 다이닝 타입 조회 - 서버
 		String dinningType = drm.selectDinningtype(drDTO.getDinning_time());

@@ -11,8 +11,12 @@
   <select id="selectEventTotalCnt"
           parameterType="kr.co.noir.event.EventRangeDTO"
           resultType="int">
+<<<<<<< HEAD
+    SELECT COUNT(*) 
+=======
 
     SELECT COUNT(*)
+>>>>>>> main
     FROM event
     WHERE event_del_flag = 'N'
 

@@ -1,7 +1,5 @@
 package kr.co.noir.login;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,12 +9,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.codec.Hex;
-import org.springframework.security.crypto.encrypt.AesBytesEncryptor;
-import org.springframework.security.crypto.encrypt.BytesEncryptor;
 import org.springframework.security.crypto.encrypt.Encryptors;
 import org.springframework.security.crypto.encrypt.TextEncryptor;
-import org.springframework.security.crypto.keygen.KeyGenerators;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -24,7 +18,7 @@ import org.springframework.web.client.RestTemplate;
 import kr.co.noir.login.sns.SnsTokenDTO;
 
 @Service
-public class MemberService {
+public class MemberService2 {
     @Autowired
     private MemberMapper memberMapper;
     
@@ -42,6 +36,7 @@ public class MemberService {
     @Value("${spring.security.oauth2.client.registration.naver.client-secret}")
     private String naverClientSecret;
   
+    
     public Map<String, Object> getMemberPage(int page, String searchType, String keyword) {
         int pageSize = 10;
         int start = (page - 1) * pageSize + 1;
@@ -51,50 +46,37 @@ public class MemberService {
         params.put("start", start);
         params.put("end", end);
         params.put("searchType", searchType);
+        params.put("keyword", keyword); // 기본적으로 평문 키워드 저장
 
-        // [전화번호 검색 로직 수정: AES -> SHA-256]
+        // 전화번호 검색일 경우 암호화된 경우라면 키워드도 별도로 담기
         if ("tel".equals(searchType) && keyword != null && !keyword.isEmpty()) {
-        	// 1. SHA-256 해시 생성 (2926dd58... 방식)
-            String hashedKeyword = encryptSHA256(keyword);
-
-            // [중요] 매퍼 XML의 #{encryptedKeyword}와 #{keyword}에 각각 전달
-            params.put("keyword", hashedKeyword); 
-            params.put("encryptedKeyword", hashedKeyword);
-            
-            System.out.println("검색어(평문): " + keyword);
-            System.out.println("검색어(해시): " + hashedKeyword);
-
-        } else {
-            params.put("keyword", keyword);
+            TextEncryptor te = Encryptors.text(key, salt);
+            String encryptedKeyword = te.encrypt(keyword);
+            params.put("encryptedKeyword", encryptedKeyword); // 암호화된 버전 추가
         }
-        
+
         List<MemberDTO> list = memberMapper.selectMemberList(params);
         int totalCount = memberMapper.selectTotalCount(params);
         int totalPage = (int) Math.ceil((double) totalCount / pageSize);
 
-        // [복호화 및 이름 합치기 로직은 그대로 유지]
+        // [복호화 및 이름 합치기 시작]
         if (list != null) {
             TextEncryptor te = Encryptors.text(key, salt);
+
             for (MemberDTO member : list) {
+                // 1. 이름 합치기 (성 + 이름)
+                // LastName이나 FirstName이 null일 경우를 대비해 방어 코드를 넣는 것이 좋습니다.
                 String lastName = (member.getMemberLastName() != null) ? member.getMemberLastName() : "";
                 String firstName = (member.getMemberFirstName() != null) ? member.getMemberFirstName() : "";
+                
+                // 합쳐진 이름을 MemberName에 
                 member.setMemberName(lastName + firstName);
                 
+                // 2. 이메일 복호화 처리
                 member.setMemberEmail(processDecrypt(te, member.getMemberEmail()));
                 
-                // 주의: DB에 해시(SHA-256)만 들어있다면 복호화(원본보기)는 실패합니다.
-                // 리스트에 번호가 안 나온다면 DB에 복호화용 별도 컬럼이 있는지 확인해야 합니다.
-                try {
-                    // 복호화 시도
-                    String decryptedTel = processDecrypt(te, member.getMemberTel());
-                    member.setMemberTel(formatTel(decryptedTel));
-                } catch (Exception e) {
-                    // 복호화 실패 시 (해시값인 경우) 그냥 원본(해시)을 보여주거나 마스킹 처리
-                    // member.setMemberTel("복호화 불가 데이터"); 
-                    System.out.println("전화번호 복호화 실패: 해시 데이터일 가능성 높음");
-                }
-                
-                
+                // 3. 전화번호 복호화 및 포맷팅 처리
+                member.setMemberTel(formatTel(processDecrypt(te, member.getMemberTel())));
             }
         }
         
@@ -102,7 +84,6 @@ public class MemberService {
         result.put("memberList", list);
         result.put("totalPage", totalPage);
         return result;
-
     }//getMemberPage
     
     
@@ -223,34 +204,6 @@ public class MemberService {
         String url = "https://oauth2.googleapis.com/revoke?token=" + token;
         return restTemplate.postForEntity(url, null, String.class).getStatusCode() == HttpStatus.OK;
     }
-    
- // SHA-256 암호화 유틸리티 메서드
-    private String encryptSHA256(String str) {
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] hash = digest.digest(str.getBytes("UTF-8"));
-            StringBuilder hexString = new StringBuilder();
-            for (byte b : hash) {
-                String hex = Integer.toHexString(0xff & b);
-                if (hex.length() == 1) hexString.append('0');
-                hexString.append(hex);
-            }
-            return hexString.toString();
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-    }    
-
- // AES 고정 IV 암호화 (검색용)
-    private String encryptAESDeterministic(String plainText) {
-        try {
-            BytesEncryptor be = new AesBytesEncryptor(key, salt, KeyGenerators.shared(16));
-            byte[] encrypted = be.encrypt(plainText.getBytes(StandardCharsets.UTF_8));
-            return new String(Hex.encode(encrypted));
-        } catch (Exception e) {
-            return plainText;
-        }
-    }    
     
     
 }//class

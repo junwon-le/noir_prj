@@ -32,7 +32,7 @@ public class NonMemberRevService {
 		boolean flag=false;
 		boolean passwordFlag=false;
 		NonReserveCheckDomain nrcDomain=null;
-		BCryptPasswordEncoder bpe = new BCryptPasswordEncoder();
+		BCryptPasswordEncoder bpe = new BCryptPasswordEncoder(10);
 		TextEncryptor te = Encryptors.text(key, salt);
 		try {
 			nrcDomain=nmrm.nonMemberRevCheck(rmrDTO);

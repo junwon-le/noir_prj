@@ -84,7 +84,7 @@
     <mapper resource="kr/co/noir/notice/noticeAdminMapper.xml"></mapper>
     <mapper resource="mapper/AdminMapper.xml"/>
     
-    <mapper resource="kr/co/noir/event/EventAdminMapper.xml"/>
+    <mapper resource="kr/co/noir/event/eventAdminMapper.xml"/>
     <mapper resource="kr/co/noir/inquiry/InquiryAdminMapper.xml"/>
     
     

@@ -112,7 +112,7 @@ public class AdminController {
 
         // 3. 로그아웃 후 관리자 로그인 페이지로 리다이렉트한다.
         // 뒤에 ?logout 쿼리 파라미터를 붙여 로그인 페이지에서 "로그아웃 되었습니다" 메시지를 띄울 수 있음.
-        return "redirect:/login/adminLogin?logout";
+        return "login/adminLogin";
     }
     
     
