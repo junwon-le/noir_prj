@@ -305,7 +305,7 @@ padding:0px;
 <div class="event-card-grid">
 
   <!-- 카드 1 -->
-
+<th:block th:unless="${EventList eq null}">
   <div class="event-card"  th:each="e : ${EventList}">
     <div class="event-card__thumb">
   <img th:src="@{/common/images/homepage/event/} + ${e.eventImg1}" alt="이벤트 이미지">
@@ -325,6 +325,7 @@ padding:0px;
       </div>
     </div>
   </div>
+</th:block>
 
 
 </div>
