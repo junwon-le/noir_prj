@@ -1,0 +1,98 @@
+package kr.co.noir.mypageReserve;
+
+import java.sql.Date;
+
+import lombok.Setter;
+import lombok.ToString;
+
+@Setter
+@ToString
+public class ReserveDetailDomain {
+
+	/*같은거
+	 * reserveNum,reserveName,reserveDate,reserveEmail,reserveTel,adultCnt,kidCnt
+	 * payAgency,cardNum,payInputDate,reserveStatus,reserveMsg
+	 */
+	
+	/*다른거
+	 * roomType,startDate,endDate,checkInTime,checkOutTime
+	 * 
+	 * 
+	 * */
+	
+	
+	private int reserveNum,adultCount,childCount,
+	price,tax,priceTotal;
+	private String reserveName,email,tel,reserveMsg,reserveFlag,
+	payAgency,cardData,reserveDate,cancelFee;
+	private String payInputDate;
+	private boolean checkInToday;
+	
+//	public int getRoomPrice() {
+//		price = (int)(priceTotal / 1.1);
+//	    return price;
+//	}
+//	public int getRoomTax() {
+//		tax = priceTotal - (int)(priceTotal / 1.1);
+//	    return tax;
+//	}
+	
+	public int getRoomPrice() {
+	    // totalPrice * 0.9는 roomPrice 계산에 사용
+		price = (int) (priceTotal * 0.9);
+	    return price;
+	}
+
+	public int getRoomTax() {
+	    // totalPrice * 0.1은 roomTax 계산에 사용
+		tax = (int) (priceTotal * 0.1);
+	    return tax;
+	}
+	public int getRoomPriceTotal() {
+		return priceTotal;
+	}
+	public int getReserveNum() {
+		return reserveNum;
+	}
+	public int getAdultCount() {
+		return adultCount;
+	}
+	public int getChildCount() {
+		return childCount;
+	}
+	public String getCancelFee() {
+		
+		
+		return cancelFee;
+	}
+	public String getReserveName() {
+		return reserveName;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public String getTel() {
+		return tel;
+	}
+	public String getReserveMsg() {
+		return reserveMsg;
+	}
+	public String getReserveFlag() {
+		return reserveFlag;
+	}
+	public String getPayAgency() {
+		return payAgency;
+	}
+	public String getCardData() {
+		return cardData;
+	}
+	public String getPayInputDate() {
+		return payInputDate;
+	}
+	public String getReserveDate() {
+		return reserveDate;
+	}
+	public boolean isCheckInToday() {
+		return checkInToday;
+	}
+}

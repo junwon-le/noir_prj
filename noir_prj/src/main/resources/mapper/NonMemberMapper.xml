@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.noir.login.NonMemberMapper">
+<select id="selectNonMemberList" resultType="kr.co.noir.login.NonMemberDTO">
+        SELECT * FROM (
+            SELECT a.*, ROWNUM rnum FROM (
+                SELECT 
+                    NON_USER_NUM, NON_USER_EMAIL, NON_USER_TEL, NON_USER_IP,
+                    NON_USER_INPUTDATE, NUM,
+                    NON_USER_RES_LAST_NAME || NON_USER_RES_FIRST_NAME as nonMemberName
+                FROM NON_MEMBER
+                <where>
+                    <if test="keyword != null and keyword != ''">
+                        <choose>
+                            <when test="searchType == 'num'"> AND NON_USER_NUM = #{keyword} </when>
+                            <when test="searchType == 'name'"> 
+                                AND (NON_USER_RES_LAST_NAME || NON_USER_RES_FIRST_NAME) LIKE '%' || #{keyword} || '%' 
+                            </when>
+                            <when test="searchType == 'tel'"> 
+                                AND (NON_USER_TEL = #{encryptedKeyword} OR NON_USER_TEL = #{keyword}) 
+                            </when>
+                        </choose>
+                    </if>
+                </where>
+                ORDER BY NON_USER_NUM DESC
+            ) a
+        ) WHERE rnum BETWEEN #{start} AND #{end}
+    </select>
+
+    <select id="selectTotalCount" resultType="int">
+        SELECT COUNT(*) FROM NON_MEMBER
+        <where>
+            <if test="keyword != null and keyword != ''">
+                <choose>
+                    <when test="searchType == 'num'"> AND NON_USER_NUM = #{keyword} </when>
+                    <when test="searchType == 'name'"> AND (NON_USER_RES_LAST_NAME || NON_USER_RES_FIRST_NAME) LIKE '%' || #{keyword} || '%' </when>
+                    <when test="searchType == 'tel'"> AND (NON_USER_TEL = #{encryptedKeyword} OR NON_USER_TEL = #{keyword}) </when>
+                </choose>
+            </if>
+        </where>
+    </select>
+
+    <delete id="deleteNonMembers">
+        DELETE FROM NON_MEMBER WHERE NON_USER_NUM IN
+        <foreach item="id" collection="list" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

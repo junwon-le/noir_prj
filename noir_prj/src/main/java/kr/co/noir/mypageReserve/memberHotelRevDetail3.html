@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+<link rel="stylesheet" type="text/css" href="/common/css/homepage/base.css">
+<link rel="stylesheet" type="text/css" href="/common/css/homepage/style.css?v=0312">
+<link rel="stylesheet" type="text/css" href="/common/css/homepage/sub.css?v=0312">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="/common/js/comm/jquery.bxslider.js"></script>
+<script src="/common/js/homepage/jquery.rwdImageMaps.min.js"></script>
+<script src="/common/js/homepage/jquery.accessibility.modal.js"></script>
+<script src="/common/js/comm/jquery.cookie.js"></script>
+<script src="/common/js/homepage/plugin.js"></script>
+<script src="/common/js/homepage/custom.js"></script>
+
+
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<style>
+   /* -----------------------------------------------------------
+   [기존 스타일 유지]
+----------------------------------------------------------- */
+html { background-color: #181818; }
+body {
+    background-color: #181818;
+    color: #ffffff;
+    font-family: 'Pretendard', sans-serif;
+    padding: 60px 0;
+}
+.subject { color:white; text-decoration: none; }
+.main-sub > ul > li > a { text-decoration: none; }
+.info > ul > li > a { color:white; text-decoration: none; }
+.info > ul > li { list-style:none; }
+.footer_bot { padding:0px; }
+.container { margin-top :160px; height:auto; }
+
+/* 레이아웃 구조 */
+.equal-height-row { display: flex; align-items: stretch; }
+.sidebar {
+    background-color: #000000;
+    padding: 25px;
+    border-radius: 10px;
+    border: 1px solid #2a2a2a;
+    height: auto;
+}
+.main-content-wrapper { display: flex; flex-direction: column; gap: 25px; height: auto; width: 100%; }
+
+/* 사이드바 UI */
+.mypage-title { border: 1px solid #c5a47e; padding: 20px; margin-bottom: 35px; text-align: center; }
+.mypage-title h2 { font-size: 1.1rem; letter-spacing: 2px; margin: 0; }
+.mypage-title p { font-size: 1.2rem; margin-top: 10px; font-weight: bold; }
+.menu-group { margin-bottom: 25px; }
+.menu-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.header-content { display: flex; align-items: center; font-size: 0.95rem; font-weight: 500; line-height: 1; }
+.icon-wrapper { width: 22px; height: 22px; margin-right: 8px; display: flex; align-items: center; justify-content: center; }
+.icon-wrapper svg { stroke: #c5a47e; }
+.menu-group>.menu-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; color: #888; text-decoration: none; font-size: 0.85rem; border-bottom: 1px solid #151515; }
+.menu-item:hover { color: #c5a47e; }
+.menu-item.now_page { color:#FFFFFF; }
+.badge-outline { border: 1px solid #c5a47e; color: #c5a47e; padding: 1px 8px; font-size: 0.65rem; border-radius: 12px; }
+.badge-outline.now_page_icon { color: black; background-color: #c5a47e; font-weight: bold; }
+
+/* -----------------------------------------------------------
+   [NOIR HOTEL 상세 페이지 전용 CSS - 이식 완료]
+----------------------------------------------------------- */
+.reservation-detail-container {
+/*     background: #151515; */
+    background: black; 
+    position: relative;
+    border: 1px solid #2a2a2a;
+    padding: 50px;
+    border-radius: 10px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+
+.reservation-detail-container::before {
+    content: '';
+    position: absolute;
+    top: 15px; left: 15px; right: 15px; bottom: 15px;
+    border: 1px solid #c5a47e;
+    opacity: 0.1;
+    pointer-events: none;
+}
+
+.res-header {
+    text-align: center;
+    margin-bottom: 3.5rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.res-status-badge {
+    background-color: #c5a47e;
+    color: #000;
+    padding: 6px 20px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    letter-spacing: 2px;
+}
+
+.res-id-number {
+    color: #c5a47e;
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+    margin-top: 0.8rem;
+    font-weight: 300;
+}
+
+.res-info-label {
+    color: #777;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.res-info-label i { margin-right: 10px; color: #c5a47e; }
+
+.res-info-value {
+	font-family: 'Nanum Myeongjo', serif;
+    font-size: 1.05rem;
+    color: #efefef;
+    margin-bottom: 2rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-weight: 300;
+}
+
+.res-payment-box {
+    background: #1d1d1d;
+    padding: 1.8rem;
+    border-radius: 4px;
+    border: 1px solid #2a2a2a;
+}
+
+.res-total-label {
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #c5a47e;
+    letter-spacing: 1.5px;
+    font-size: 0.85rem;
+}
+
+.res-total-price {
+    font-size: 1.8rem;
+    color: #c5a47e;
+    font-weight: bold;
+}
+
+.res-policy-box {
+    background-color: #0f0f0f;
+    border-left: 3px solid #c5a47e;
+    padding: 1.8rem;
+    margin-top: 3rem;
+}
+
+.res-policy-list {
+    font-size: 0.85rem;
+    color: #888;
+    line-height: 2;
+    list-style-type: none;
+    padding-left: 0;
+    margin-top: 1.2rem;
+}
+
+.res-policy-list li::before { content: "- "; margin-right: 5px; }
+
+.noir-modal-content {
+    background-color: #1a1a1a !important;
+    color: #fff !important;
+    border: 1px solid #c5a47e !important;
+    border-radius: 0 !important;
+}
+
+.btn-noir-cancel {
+    border: 1px solid #444;
+    color: #888;
+    background: transparent;
+    padding: 12px 30px;
+    font-size: 0.8rem;
+    letter-spacing: 1.5px;
+    transition: 0.3s;
+}
+
+.btn-noir-cancel:hover {
+    border-color: #dc3545;
+    color: #dc3545;
+}
+
+
+/* ============================================================
+   [WEB] 예약 상세 섹션 디자인 (마이페이지 이식용)
+   ============================================================ */
+.reservation-detail-container {
+    background: #151515;
+    position: relative;
+    border: 1px solid #2a2a2a;
+    padding: 50px;
+    border-radius: 10px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    font-family: 'Nanum Myeongjo', serif !important;
+}
+
+/* 시네마틱 골드 라인 */
+.reservation-detail-container::before {
+    content: '';
+    position: absolute;
+    top: 15px; left: 15px; right: 15px; bottom: 15px;
+    border: 1px solid #c5a47e;
+    opacity: 0.1;
+    pointer-events: none;
+}
+
+/* 헤더 & 상태창 */
+.res-header {
+    text-align: center;
+    margin-bottom: 3.5rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.res-status-badge {
+    background-color: #c5a47e;
+    color: #000;
+    padding: 6px 20px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    letter-spacing: 2px;
+}
+
+/* 정보 라벨 및 값 */
+.info-label-noir {
+    color: #777;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+.info-label-noir i { color: #c5a47e; margin-right: 10px; }
+
+.info-value-noir {
+font-family: 'Nanum Myeongjo', serif;
+    font-size: 1.05rem;
+    color: #efefef;
+    margin-bottom: 2rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-weight: 300;
+}
+
+/* 결제 요약 박스 */
+.payment-summary-noir {
+    background: #1d1d1d;
+    padding: 1.8rem;
+    border-radius: 4px;
+    border: 1px solid #2a2a2a;
+}
+.total-price-gold {
+    font-size: 1.8rem;
+    color: #c5a47e;
+    font-weight: bold;
+}
+
+/* 규정 박스 */
+.policy-box-noir {
+    background-color: #0f0f0f;
+    border-left: 3px solid #c5a47e;
+    padding: 1.8rem;
+    margin-top: 3rem;
+}
+.res-policy-list {
+    font-size: 0.85rem;
+    color: #888;
+    line-height: 2;
+    list-style-type: none;
+    padding-left: 0;
+}
+
+
+.btn-action {
+            border: 1px solid #c5a47e;
+            color: #c5a47e;
+            background: transparent;
+            border-radius:5px;
+            padding: 12px 25px;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            transition: 0.3s;
+        }
+
+  .btn-action:hover {
+  			background-color:#c5a47e;
+            color: #000;
+        }
+
+/* ============================================================
+   [PRINT] A4 한 페이지 딱 맞게 채우기 설정
+   ============================================================ */
+@media print {
+    /* 브라우저 기본 여백 제거 */
+    @page {
+        size: A4;
+        margin: 0;
+    }
+
+    /* 인쇄 시 불필요한 요소 제거 (사이드바, 헤더, 푸터 등) */
+    header, footer, .sidebar, .btn-noir-cancel, .btn-link, .mypage-title, .text-center.mt-4 {
+        display: none !important;
+    }
+
+    body {
+        background: white !important;
+        color: black !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        -webkit-print-color-adjust: exact;
+    }
+    
+
+    /* 컨테이너를 A4 크기로 강제 확장 */
+    .container {
+        width: 210mm !important;
+        height: 297mm !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .col-lg-9 {
+        width: 100% !important;
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+    }
+ 
+
+    /* 카드를 A4 전체 배경으로 반전 및 꽉 채우기 */
+    .reservation-detail-container {
+        background: white !important;
+        border: none !important;
+        width: 210mm !important;
+        height: 297mm !important;
+        padding: 20mm !important; /* 인쇄 시 내부 여백 */
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        color: black !important;
+    }
+
+    /* 인쇄 시 텍스트 가독성 조정 */
+    .info-value-noir, .res-id-number, .total-price-gold {
+        color: black !important;
+        border-bottom: 1px solid #eee !important;
+    }
+
+    .payment-summary-noir {
+        background: #f8f8f8 !important;
+        border: 1px solid #ddd !important;
+    }
+
+    .policy-box-noir {
+        background: #fafafa !important;
+        border-left: 3px solid #000 !important;
+    }
+}
+
+.main-content-wrapper, 
+.reservation-detail-container, 
+.reservation-detail-container *, 
+.noir-modal-content, 
+.noir-modal-content * {
+    font-family: 'Nanum Myeongjo', serif !important;
+}
+
+
+/* 마우스 올렸을 때 (Hover) */
+.backBtn:hover {
+    color: #fff !important; /* 골드 색상으로 변경 */
+}
+
+.short-divider{
+    max-height:265px;
+}
+
+	a{
+		text-decoration: none;
+	
+	}
+</style>
+<script type="text/javascript">
+$(function(){
+	var cancelFlag=[[${cancelFlag==true}]];
+	
+	if(cancelFlag){
+		alert("예약취소가 실패되었습니다. \n 잠시후 다시 시도해주세요");
+		
+	}//end if
+	
+	
+});
+
+
+
+
+</script>
+</head>
+
+<body>
+<header>
+    <th:block th:replace="~{fragments/header :: header}"></th:block>
+</header>
+
+<div class="container">
+    <div class="row equal-height-row g-4">
+        
+        <th:block th:replace="~{fragments/myPageSideBar :: myPageSideBar}"></th:block>
+
+        <div class="col-lg-9">
+            <div class="main-content-wrapper">
+    <div class="reservation-detail-container" th:object="${hotelRevDetail}">
+        
+        <div class="res-header">
+            <div class="res-status-badge">RESERVATION CONFIRMED</div>
+            <h2 class="fw-bold text-white mb-2" style="font-family: 'Nanum Myeongjo', serif; letter-spacing: 2px;">YOUR STAY AT NOIR HOTEL</h2>
+            <p class="res-id-number" style="font-family: 'Nanum Myeongjo', serif;" ><span th:text="|No.*{reserveNum}|">No.1</span> <span class="text-secondary mx-2">|</span><span th:text="|*{reserveName} 님|"> 박현욱 님 </span></p>
+        </div>
+
+        <div class="row">
+    <div class="col-md-12">
+        <div class="res-info-label"><i class="bi bi-door-open me-2"></i>Room Type</div>
+        <div class="res-info-value text-uppercase" th:text="*{roomType}" >SUITE ROOM</div>
+    </div>
+
+    <div class="col-md-12">
+        <div class="res-info-label"><i class="bi bi-calendar-range me-2"></i>Stay Period (Check-in & Check-out)</div>
+        <div class="res-info-value d-flex align-items-center flex-wrap">
+           <span th:text="*{checkIn}">2026-01-07</span>
+            <small class="text-secondary ms-2">15:00 PM</small>
+            
+            <i class="bi bi-arrow-right mx-3" style="color: #c5a47e; opacity: 0.5;"></i>
+            
+            <span th:text="*{checkOut}" >2026-01-10</span>
+            <small class="text-secondary ms-2">12:00 AM</small>
+        </div>
+    </div>
+
+    <div class="col-md-6 mt-3">
+        <div class="res-info-label"><i class="bi bi-clock-history me-2"></i>Reservation Date</div>
+        <div class="res-info-value" th:text="*{reserveDate}">2026-01-01</div>
+        
+        <div class="info-label-noir"><i class="bi bi-people me-2"></i>Guest Count</div>
+        <div class="info-value-noir" th:text="|성인 *{adultCount} / 아동 *{kidCount}|">성인 1 / 아동 2</div>
+    </div>
+
+    <div class="col-md-6 mt-3 border-start border-secondary short-divider" style="--bs-border-opacity: .2;">
+        <div class="info-label-noir"><i class="bi bi-envelope me-2"></i>Contact</div>
+        <div class="info-value-noir" th:text="*{email}">mellifluous53@gmail.com</div>
+
+		<div class="info-label-noir"><i class="bi bi-telephone me-2"></i>TEL</div>
+        <div class="info-value-noir" th:text="*{tel}">01012345678</div>
+    </div>
+        <div class="info-label-noir"><i class="bi bi-chat-left-text me-2"></i>Special Request</div>
+        <div class="info-value-noir text-secondary small">
+        	<th:block th:if="*{reserveMsg eq null}">
+			    No special requests.
+			</th:block>
+			
+			<th:block th:unless="*{reserveMsg eq null}">
+			    <span th:text="*{reserveMsg}"></span>
+			</th:block>
+        </div>
+</div>
+
+        <div class="row mt-4 pt-4 border-top border-secondary" style="--bs-border-opacity: .2;">
+            
+            
+            <div class="col-md-12">
+                <div class="payment-summary-noir">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="small text-secondary">Room Rate (Total)</span>
+                        <span class="small text-white" th:text="|KRW *{#numbers.formatInteger(roomPrice,3,'COMMA')}|">KRW 1,200,000</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span class="small text-secondary">Tax & Service Charge (10%)</span>
+                        <span class="small text-info" th:text="*{#numbers.formatInteger(roomTax,3,'COMMA')}">Included</span>
+                    </div>
+			        <div class="d-flex justify-content-between mb-3">
+			        <span class="small text-danger">Current Cancellation Fee</span>
+			        <span class="small text-danger fw-bold">KRW 0 (Free)</span> 
+			        </div>
+                    <div class="d-flex justify-content-between align-items-end pt-2 border-top border-secondary" style="--bs-border-opacity: .1;">
+                        <span class="res-total-label">Total Amount</span>
+                        <th:block th:if="*{reserveFlag eq 'Y'}"> 
+						    <span class="res-total-price" style="text-decoration: line-through;" th:text="|KRW *{#numbers.formatInteger(roomPriceTotal, 3, 'COMMA')}|">KRW -1,200,000</span>
+						</th:block>
+						
+						<th:block th:unless="*{reserveFlag eq 'Y'}">
+						    <span class="res-total-price" th:text="|KRW *{#numbers.formatInteger(roomPriceTotal, 3, 'COMMA')}|">KRW 1,200,000</span>
+						</th:block>
+                   		
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="res-policy-box">
+            <h6 class="res-info-label" style="color: #c5a47e;">Hotel Policy & Cancellation</h6>
+            <ul class="res-policy-list">
+                <li>체크인 시 본인 확인을 위해 신분증과 예약 번호 제시가 필요합니다.</li>
+                <li>예약 취소는 체크인 48시간 전까지 수수료 없이 가능하며, 이후 취소 시 첫날 밤 요금의 100%가 부과됩니다.</li>
+                <li>무단 노쇼(No-show) 발생 시 환불이 불가합니다.</li>
+            </ul>
+        </div>
+
+        <div class="mt-5 pt-4 border-top border-secondary" style="--bs-border-opacity: .2;">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <button class="btn btn-action me-2" onclick="window.print()">
+                        <i class="bi bi-printer me-2"></i>출력
+                    </button>
+                    <th:block th:if="*{reserveFlag eq 'N'}">
+                    <button class="btn btn-noir-cancel" data-bs-toggle="modal" data-bs-target="#cancelModal">
+                       예약취소
+                    </button>
+                    </th:block>
+                </div>
+                <button class="btn btn-link text-secondary text-decoration-none small backBtn" onclick="history.back()">뒤로가기</button>
+            </div>
+        </div>
+    </div>
+    
+  	
+</div>
+<!-- 
+<div class="modal fade" id="cancelModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content noir-modal-content p-3">
+            <div class="modal-header noir-modal-header border-0">
+                <h5 class="modal-title fw-bold" style="color: #c5a47e; letter-spacing: 1px;">CANCELLATION CONFIRM</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body py-4 text-center">
+                <p class="mb-2">정말로 예약을 취소하시겠습니까?</p>
+                <p class="small text-danger mb-0">* 규정에 따라 체크인 2일 전부터는 취소 수수료가 발생합니다.</p>
+            </div>
+            <div class="modal-footer noir-modal-footer border-0">
+                <button type="button" class="btn btn-secondary btn-sm rounded-0 px-4" data-bs-dismiss="modal">아니오</button>
+                <form action="cancelReservation.do" method="post" style="display: inline;">
+                    <input type="hidden" name="reserveNum" value="${hotelRevDetail.reserveNum}">
+                    <button type="submit" class="btn btn-danger btn-sm rounded-0 px-4">네, 취소합니다</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div> -->
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="cancelModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content noir-modal-content p-3">
+            <div class="modal-header border-0">
+                <h5 class="modal-title fw-bold" style="color:#c5a47e;">취소 확인</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body py-4 text-center">
+                <p>정말로 예약을 취소하시겠습니까?</p>
+                <p class="small text-danger mb-0">* 규정에 따라 체크인 2일 전부터는 취소 수수료가 발생합니다.</p>
+            </div>
+            <div class="modal-footer border-0 justify-content-center">
+                <button type="button" class="btn btn-secondary btn-sm rounded-0 px-4" data-bs-dismiss="modal">아니오</button>
+                <form th:action="@{/mypage/reserve/cancelHotelReserve}" method="post" style="display:inline;">
+                    <input type="hidden" name="reserveNum" th:value="${hotelRevDetail.reserveNum}">
+                    <button type="submit" class="btn btn-danger btn-sm rounded-0 px-4">네, 취소합니다</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <th:block th:replace="~{fragments/footer :: footer}"></th:block>
+</footer>
+   <div id="privacy-layer">
+        <div th:replace="~{fragments/privacy :: privacy}"></div>
+    </div>
+<script type="text/javascript" src="/common/js/comm/jquery.validate.js"></script>
+<script type="text/javascript" src="/common/js/comm/wings.core.js"></script>
+<script type="text/javascript" src="/common/js/comm/PAGING_HOMEPAGE.js"></script>
+<script type="text/javascript" src="/common/js/comm/kendo.web.min.js"></script>
+
+</body>
+</html>
