@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.noir.review.admin.ReviewAdminMapper">
+
+  <!-- ✅ 관리자용 ResultMap -->
+  <resultMap id="ReviewAdminMap" type="kr.co.noir.review.ReviewAdminDomain">
+    <id property="reviewNum" column="reviewNum"/>
+    <result property="reviewTitle" column="reviewTitle"/>
+    <result property="reviewMsg" column="reviewMsg"/>
+    <result property="reviewStar" column="reviewStar"/>
+    <result property="reviewDate" column="reviewDate"/>
+    <result property="reviewReturn" column="reviewReturn"/>
+    <result property="memberLastName" column="memberLastName"/>
+    <result property="reserveStartDate" column="reserveStartDate"/>
+    <result property="roomType" column="roomType"/>
+  </resultMap>
+
+  <!-- 1) 전체 총 개수 -->
+  <select id="selectReviewTotalCnt"
+          parameterType="kr.co.noir.review.ReviewRangeDTO"
+          resultType="int">
+    select count(*)
+    from review r
+    where r.review_del_flag = 'N'
+  </select>
+
+  <!-- 2) 객실 타입 필터 총 개수 -->
+  <select id="selectRoomReviewCnt"
+          parameterType="kr.co.noir.review.ReviewRangeDTO"
+          resultType="int">
+    select count(*)
+    from review r
+    join room_res res on r.room_res_num = res.room_res_num
+    where r.review_del_flag = 'N'
+      and res.room_type_num = #{roomTypeNum}
+  </select>
+
+  <!-- 3) 관리자 전체 목록(페이징) -->
+  <select id="selectReviewList"
+          parameterType="kr.co.noir.review.ReviewRangeDTO"
+          resultMap="ReviewAdminMap">
+    select *
+    from (
+      select
+        r.review_num as reviewNum,
+        r.review_title as reviewTitle,
+        r.review_msg as reviewMsg,
+        r.review_star as reviewStar,
+        r.review_date as reviewDate,
+        r.review_return as reviewReturn,
+        m.member_last_name as memberLastName,
+        rv.reserve_start_date as reserveStartDate,
+        i.room_type as roomType,
+        dense_rank() over(order by r.review_date desc, r.review_num desc) as rnum
+      from review r
+      inner join member m on r.member_num = m.member_num
+      inner join room_res res on r.room_res_num = res.room_res_num
+      inner join reserve rv on res.reserve_num = rv.reserve_num
+      inner join room_info i on res.room_type_num = i.room_type_num
+      where r.review_del_flag = 'N'
+    )
+    where rnum between #{startNum} and #{endNum}
+  </select>
+
+  <!-- 4) 객실 타입 목록(페이징) -->
+  <select id="selectReviewByRoom"
+          parameterType="kr.co.noir.review.ReviewRangeDTO"
+          resultMap="ReviewAdminMap">
+    select *
+    from (
+      select
+        r.review_num as reviewNum,
+        r.review_title as reviewTitle,
+        r.review_msg as reviewMsg,
+        r.review_star as reviewStar,
+        r.review_date as reviewDate,
+        r.review_return as reviewReturn,
+        m.member_last_name as memberLastName,
+        rv.reserve_start_date as reserveStartDate,
+        i.room_type as roomType,
+        dense_rank() over(order by r.review_date desc, r.review_num desc) as rnum
+      from review r
+      inner join member m on r.member_num = m.member_num
+      inner join room_res res on r.room_res_num = res.room_res_num
+      inner join reserve rv on res.reserve_num = rv.reserve_num
+      inner join room_info i on res.room_type_num = i.room_type_num
+      where r.review_del_flag = 'N'
+        and res.room_type_num = #{roomTypeNum}
+    )
+    where rnum between #{startNum} and #{endNum}
+  </select>
+
+  <!-- 5) 리뷰 1건 상세 -->
+  <select id="selectReviewDetail"
+          parameterType="int"
+          resultMap="ReviewAdminMap">
+    select
+      r.review_num as reviewNum,
+      r.review_title as reviewTitle,
+      r.review_msg as reviewMsg,
+      r.review_star as reviewStar,
+      r.review_date as reviewDate,
+      r.review_return as reviewReturn,
+      m.member_last_name as memberLastName,
+      rv.reserve_start_date as reserveStartDate,
+      i.room_type as roomType
+    from review r
+    inner join member m on r.member_num = m.member_num
+    inner join room_res res on r.room_res_num = res.room_res_num
+    inner join reserve rv on res.reserve_num = rv.reserve_num
+    inner join room_info i on res.room_type_num = i.room_type_num
+    where r.review_num = #{value}
+  </select>
+
+  <!-- 6) 리뷰 이미지 리스트 -->
+  <select id="selectReviewImgList"
+          parameterType="int"
+          resultType="string">
+    select review_img1
+    from review_img
+    where review_num = #{value}
+      and review_img1 is not null
+  </select>
+
+  <!-- 7) 답변 등록/수정 -->
+  <update id="updateReplyReview"
+          parameterType="kr.co.noir.review.ReviewAdminDTO">
+    update review
+    set review_return = #{reviewReturn}
+    where review_num = #{reviewNum}
+  </update>
+
+  <!-- 8) 리뷰 soft delete -->
+  <update id="deleteAdminReview" parameterType="int">
+    update review
+    set review_del_flag = 'Y'
+    where review_num = #{value}
+  </update>
+
+  <!-- 9) 답변만 삭제 -->
+  <update id="deleteOnlyReply" parameterType="int">
+    update review
+    set review_return = null
+    where review_num = #{value}
+  </update>
+
+</mapper>
