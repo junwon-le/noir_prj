@@ -81,7 +81,7 @@ public class DinningResController {
 	}//reserveComplete
 	@PostMapping("/nonComplete")
 	public String reserveNonComplete(DinningReserveDTO drDTO ,PayInfoDTO pDTO, HttpSession session, HttpServletRequest request, Model model) {
-		String url ="main";
+		String url ="reserve/dinningComplete";
 		//session id 가져오기
 		String id = session.getId() ;
 		String ip= request.getRemoteAddr();

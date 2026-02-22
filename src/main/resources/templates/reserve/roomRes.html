@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="title" content="HOTEL 28">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>HOTEL 28</title>
+<title>NOIR</title>
 <link rel="stylesheet" type="text/css" href="/common/css/homepage/base.css">
 <link rel="stylesheet" type="text/css" href="/common/css/homepage/style.css?v=0312">
 <link rel="stylesheet" type="text/css" href="/common/css/homepage/sub.css?v=0312">
@@ -39,6 +39,9 @@
         	$("#merchant_uid").val(rsp.merchant_uid);
         	alert($("#billing_key").val()) */
         	$("#cardInfo").val("true");
+            $("#cardCh").text("카드가 등록되었습니다.")
+            $("#cardCh").css("color","white")
+
       }else {
           // 실패 시 왜 안 넘어오는지 이유를 알려줍니다.
           alert("실패 사유: " + rsp.error_msg);
@@ -66,6 +69,7 @@
 <script>
 var CONTEXT = '';
 $(document).ready(function($) {
+	
     $('.open_modal').click(function(e) {    	
         $("iframe").attr("src", $(this).attr('url')).show();        	
         e.preventDefault();
@@ -137,6 +141,9 @@ function reserve(){
 			return;
 		}
 	$("#reserveFrm").submit();
+}//reserve
+function back(){
+location.href="/reserve/roomResSearchBack"
 }
 function formatPhone(target) {
     // 숫자만 남기기
@@ -264,6 +271,7 @@ margin-top: 10px;
                     <input type="hidden" id="cardInfo"/>
                     <img src="/common/images/res_img/hr.png" class="hr"/>
                     <button type="button" class="w-1/4 bg-[#1e293b] text-white py-3 rounded font-bold hover:bg-black transition" onclick="registerCard()">카드 등록</button>
+                    <span id="cardCh" style="color:red; font-size:13px; margin-left:10px;"> 카드를 등록해주세요</span>
                     
                 </div>
                <!--     
@@ -378,6 +386,7 @@ margin-top: 10px;
                 </div>
                 
                 <button type="button" class="w-full bg-[#1e293b] text-white py-3 rounded font-bold hover:bg-black transition" onclick="reserve()">예약 하기</button>
+                <button type="button" style="margin-top: 10px" class="w-full bg-[#1e293b] text-white py-3 rounded font-bold hover:bg-black transition" onclick="back()">이전</button>
             </div>
         </div>
       	 </form>

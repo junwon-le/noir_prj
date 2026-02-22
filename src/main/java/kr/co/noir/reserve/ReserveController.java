@@ -78,6 +78,12 @@ public class ReserveController {
 	public String roomResSearch() {
 		return "reserve/roomResSearch";
 	}
+	@GetMapping("/roomResSearchBack")
+	public String roomResSearchBack(HttpSession session) {
+		String id = String.valueOf(session.getAttribute("memberId")) ;
+		rrs.deleteDepending(id);
+		return "reserve/roomResSearch";
+	}
 	
 	@GetMapping("/dinningResSearch")
 	public String dinningResSearch() {
@@ -166,8 +172,6 @@ public class ReserveController {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		System.out.println("-----------------------------------------------------------------------------------------"+rsDTO.getStartDate()+"--");
-		System.out.println("-----------------------------------------------------------------------------------------"+rsDTO.getEndDate()+"--");
 		rsDTO.setStartDate(rsDTO.getStartDate().trim());
 		rsDTO.setEndDate(rsDTO.getEndDate().trim());
 		List<RoomSearchDomain1> list = rrs1.searchRoom1(rsDTO);
