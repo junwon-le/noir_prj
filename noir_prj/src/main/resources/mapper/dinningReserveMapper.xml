@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.noir.dinningReserve.DinningReserveMapper">
+<select id="selectDinning" resultType="dinningMenuDomain" >
+  	select dm.dinning_menu_type, dinning_menu_main, dinning_menu_sub, dinning_adult_price, dinning_kid_price
+	from dinning_menu dm, dinning_price dp
+	where dm.dinning_menu_type=dp.dinning_menu_type
+</select>
+
+<select id="selectDinningTime" parameterType="String" resultType="dinningTimeSearchDomain" >
+ select dining_schedule_num,	dinning_type,	dinning_detail_time
+  from dinning_time_schedule
+  where dinning_type=#{type}
+  order by dinning_detail_time
+</select>
+
+<insert id="insertDepending" parameterType="dinningDependingDTO">
+	insert into dinning_depending (session_id, pending_person, depending_time, reserve_date, reserve_time, dinning_menu_num)
+	values(#{sessionId},#{pendingPerson},systimestamp,#{reserveDate},#{reserveTime},1)
+</insert>
+
+<select id="selectDinningSearch" parameterType="dinningSearchDTO" resultType="dinningSearchDomain" >
+<![CDATA[
+SELECT
+    ts.dinning_detail_time AS dinning_time,
+    di.dinning_max_table AS total_table,
+    NVL(res.used_table, 0) AS used_table,
+    (di.dinning_max_table - NVL(res.used_table, 0)) AS remaining_table
+FROM dinning_time_schedule ts
+CROSS JOIN dinning_info di  -- 특정 다이닝 정보와 시간대 목록을 결합
+LEFT JOIN (
+    -- 확정 예약 + 10분 내 보류 데이터를 합산하는 서브쿼리
+    SELECT
+        combined.dinning_menu_num,
+        combined.reserve_date,
+        combined.reserve_time,
+        CEIL(SUM(combined.person_count) / 4) AS used_table
+    FROM (
+        -- A: 확정된 예약 인원
+        SELECT
+            dr.dinning_menu_num,
+            dr.dinning_visit_date AS reserve_date,
+            dr.dinning_res_detail_time AS reserve_time,
+            (r.reserve_adult_count + r.reserve_kid_count) AS person_count
+        FROM dinning_res dr
+        JOIN reserve r ON dr.reserve_num = r.reserve_num
+        WHERE r.reserve_status = 'Y'
+          AND r.reserve_type = 'dinning'
+
+        UNION ALL
+
+        -- B: 10분 이내의 보류 인원
+        SELECT
+            dd.dinning_menu_num,
+            TO_DATE(dd.reserve_date, 'YYYY-MM-DD') AS reserve_date,
+            dd.reserve_time,
+            dd.pending_person AS person_count
+        FROM dinning_depending dd
+        WHERE dd.depending_time >= SYSTIMESTAMP - INTERVAL '10' MINUTE
+    ) combined
+    GROUP BY combined.dinning_menu_num, combined.reserve_date, combined.reserve_time
+) res ON di.dinning_menu_num = res.dinning_menu_num
+     AND ts.dinning_detail_time = res.reserve_time
+     AND res.reserve_date = TO_DATE(#{dinningDate}, 'YYYY-MM-DD') -- 조회하고 싶은 날짜 	
+WHERE di.dinning_menu_num = 1 -- 특정 다이닝 번호
+  AND ts.dinning_type = #{dinningType} -- (선택사항) 조식/중식/석식별로 필터링할 경우
+ORDER BY ts.dinning_detail_time ASC
+]]>
+</select>
+
+<delete id="deleteDepending" parameterType="String">
+	delete
+	from dinning_depending
+	where session_id= #{session_id}
+</delete>
+
+<!-- 예약 테이블에 추가 -->
+  	<insert id="insertDinningReserve" parameterType="dinningReserveDTO">
+  		<selectKey keyProperty="reserve_num" resultType="int" order="BEFORE">
+	        select reserve_seq.nextval from dual
+	    </selectKey>
+  		insert into reserve (reserve_num, member_num, end_user_last_name, end_user_first_name, reserve_adult_count, reserve_kid_count,
+ 		reserve_msg, reserve_time, reserve_ip, reserve_type,reserve_tel,reserve_email)
+		values(#{reserve_num}, #{user_num},#{user_last_name},#{user_first_name},#{reserve_adult_count},#{reserve_kid_count},
+		#{reserve_msg},sysdate,#{reserve_ip},#{reserve_type},#{reserve_tel},#{email})
+	</insert>
+
+<!-- 다이닝 예약 테이블에 추가 -->
+	<insert id="insertDinningDetail" parameterType="dinningReserveDTO"> 
+	insert into dinning_res (dinning_res_num, dinning_menu_num, dinning_visit_date, dinning_res_type, dinning_res_detail_time, reserve_num)
+    values(dinning_res_num_seq.nextval, 1,#{visite_date},#{dinning_type},#{dinning_time},#{reserve_num})
+	</insert>
+<!-- 결제 테이블에 추가 -->
+	<insert id="insertDinningPay" parameterType="payInfoDTO">
+		<selectKey keyProperty="pay_num" resultType="int" order="BEFORE">
+	        select pay_seq.nextval from dual
+	    </selectKey>
+		insert into pay (pay_num, reserve_num, pay_price) 
+		values( #{pay_num} , #{reserve_num},#{pay_price} )		
+	</insert>
+	
+<!-- 결제 정보 테이블에 추가 -->
+	<insert id="insertDinningPayInfo" parameterType="payInfoDTO">
+		insert into pay_info (payinfo_num, pay_num, pay_agency, billing_key, card_num, pg_provider, input_date,merchant_uid)
+		values(pay_info_seq.nextval, #{pay_num},#{agency},#{billing_key},#{card_number},#{pg_provider},systimestamp,#{merchant_uid})		
+	</insert>
+	
+<!-- 예약 시간에 해당하는 다이닝 타입 가져오기 서버검증 -->
+	<select id="selectDinningtype" parameterType="String" resultType="String">
+		select dinning_type
+		from dinning_time_schedule
+		where dinning_detail_time =#{dinning_detail_time}
+	</select>
+	
+<!-- 비회원 테이블 추가 -->
+	<insert id="insertNonMember" parameterType="dinningReserveDTO">
+		<selectKey keyProperty="non_user_num" resultType="int" order="BEFORE">
+	        select non_member_seq.nextval from dual
+	    </selectKey>
+	    	insert into non_member (non_user_num, non_user_res_last_name, non_user_res_first_name, non_user_email, non_user_tel, non_user_pass, non_user_ip)
+			values (#{non_user_num}, #{user_first_name}, #{user_first_name},#{email},#{reserve_tel},#{non_user_pass},#{reserve_ip})
+	</insert>
+		<!-- 예약 테이블에 비회원 추가 -->
+  	<insert id="insertNonDinningReserve" parameterType="dinningReserveDTO">
+  		<selectKey keyProperty="reserve_num" resultType="int" order="BEFORE">
+	        select reserve_seq.nextval from dual
+	    </selectKey>
+  		insert into reserve (reserve_num, non_user_num , end_user_last_name, end_user_first_name, reserve_adult_count, reserve_kid_count,
+ 		reserve_msg, reserve_time, reserve_ip, reserve_type,reserve_tel,reserve_email)
+		values(#{reserve_num}, #{non_user_num},#{user_last_name},#{user_first_name},#{reserve_adult_count},#{reserve_kid_count},
+		#{reserve_msg},sysdate,#{reserve_ip},#{reserve_type},#{reserve_tel},#{email})
+	</insert>
+</mapper>

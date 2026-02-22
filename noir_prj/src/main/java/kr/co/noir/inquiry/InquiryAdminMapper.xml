@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.noir.inquiry">
+
+  <!-- 1) 총 개수 -->
+  <select id="selectInquiryTotalCnt"
+          parameterType="kr.co.noir.inquiry.InquiryRangeDTO"
+          resultType="int">
+    SELECT COUNT(*)
+    FROM inquiry i
+    LEFT JOIN member m ON m.member_num = i.member_num
+    WHERE i.inquiry_del_flag = 'N'
+
+    <if test="keyword != null and keyword != ''">
+      <choose>
+        <when test="field == '1'">
+          AND i.inquiry_title LIKE '%' || #{keyword} || '%'
+        </when>
+        <when test="field == '2'">
+          AND i.inquiry_msg LIKE '%' || #{keyword} || '%'
+        </when>
+        <when test="field == '3'">
+          AND m.member_email LIKE '%' || #{keyword} || '%'
+        </when>
+      </choose>
+    </if>
+  </select>
+
+  <!-- 2) 목록 (페이징) -->
+  <select id="selectInquiryList"
+          parameterType="kr.co.noir.inquiry.InquiryRangeDTO"
+          resultType="kr.co.noir.inquiry.InquiryAdminDomain">
+    SELECT *
+    FROM (
+      SELECT
+        i.inquiry_num    AS inquiryNum,
+        i.member_num     AS memberNum,
+        i.inquiry_title  AS inquiryTitle,
+        i.inquiry_date   AS inquiryDate,
+        m.member_email   AS memberEmail,
+        m.member_id      AS memberId,
+        ROW_NUMBER() OVER (ORDER BY i.inquiry_num DESC) rnum
+      FROM inquiry i
+      LEFT JOIN member m ON m.member_num = i.member_num
+      WHERE i.inquiry_del_flag = 'N'
+
+      <if test="keyword != null and keyword != ''">
+        <choose>
+          <when test="field == '1'">
+            AND i.inquiry_title LIKE '%' || #{keyword} || '%'
+          </when>
+          <when test="field == '2'">
+            AND i.inquiry_msg LIKE '%' || #{keyword} || '%'
+          </when>
+          <when test="field == '3'">
+            AND m.member_email LIKE '%' || #{keyword} || '%'
+          </when>
+        </choose>
+      </if>
+    )
+    WHERE rnum BETWEEN #{startNum} AND #{endNum}
+  </select>
+
+  <!-- 3) 상세 (AJAX) -->
+  <select id="selectInquiryDetail"
+          parameterType="int"
+          resultType="kr.co.noir.inquiry.InquiryAdminDomain">
+    SELECT
+      i.inquiry_num     AS inquiryNum,
+      i.member_num      AS memberNum,
+      i.admin_num       AS adminNum,
+      i.inquiry_title   AS inquiryTitle,
+      i.inquiry_msg     AS inquiryMsg,
+      i.inquiry_return  AS inquiryReturn,
+      i.inquiry_date    AS inquiryDate,
+      m.member_email    AS memberEmail,
+      m.member_id       AS memberId
+    FROM inquiry i
+    LEFT JOIN member m ON m.member_num = i.member_num
+    WHERE i.inquiry_num = #{value}
+      AND i.inquiry_del_flag = 'N'
+  </select>
+
+  <!-- 4) 답변 등록/수정 -->
+  <update id="updateInquiryReturn"
+          parameterType="kr.co.noir.inquiry.InquiryAdminDTO">
+    UPDATE inquiry
+    SET
+      inquiry_return = #{inquiryReturn},
+      admin_num      = #{adminNum}
+    WHERE inquiry_num = #{inquiryNum}
+      AND inquiry_del_flag = 'N'
+  </update>
+
+  <!-- 5) 삭제(논리삭제) -->
+  <update id="updateInquiryDelFlag"
+          parameterType="int">
+    UPDATE inquiry
+    SET inquiry_del_flag = 'Y'
+    WHERE inquiry_num = #{value}
+  </update>
+
+</mapper>

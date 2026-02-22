@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<!-- jQeury CDN 시작 -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <style>
+        body {
+            background-color: #1a1c2e; /* 다크 네이비 배경 */
+            color: #333;
+            font-family: 'Malgun Gothic', sans-serif;
+            display: flex;
+            justify-content: center;
+            padding: 50px;
+        }
+
+        .container {
+            width: 900px;
+        }
+
+        /* 상단 검색영역 */
+        .search-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .dropdown, .search-input {
+            padding: 8px 12px;
+            border-radius: 4px;
+            border: none;
+            outline: none;
+        }
+
+        .dropdown {
+            background-color: white;
+            color : #000;
+            width: 120px;
+        }
+
+        .search-wrapper {
+            background-color: white;
+            display: flex;
+            align-items: center;
+            border-radius: 4px;
+            padding-right: 5px;
+        }
+
+        .search-input {
+            width: 150px;
+            color: #ccc;
+        }
+
+        .search-btn {
+            background-color: #5c7cfa;
+            color: white;
+            border: none;
+            padding: 5px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* 테이블 영역 */
+        .table-wrapper {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid #e0e6ed;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f8faff;
+            color: #5c7cfa;
+            padding: 15px;
+            border-bottom: 1px solid #e0e6ed;
+            border-right: 1px solid #e0e6ed;
+            font-size: 14px;
+            /* 중앙 정렬을 위한 핵심 코드 */
+    text-align: center !important; 
+    vertical-align: middle !important;
+        }
+
+        td {
+            padding: 20px 15px;
+            border-bottom: 1px solid #f0f0f0;
+            border-right: 1px solid #f0f0f0;
+            font-size: 14px;
+            color: #444;
+        }
+
+        th:last-child, td:last-child {
+            border-right: none;
+        }
+
+        /* 환불 버튼 */
+        .refund-btn {
+            background-color: #8faadc;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+    /* 페이지네이션 영역 수정 */
+.pagination {
+ display: flex !important;       /* 다른 라이브러리 간섭 방지 */
+    flex-direction: row !important; /* 가로 방향 유지 */
+    justify-content: center !important;    /* 중앙 정렬 */
+    align-items: center;        /* 세로축 중앙 정렬 */
+    margin-top: 30px;
+    gap: 8px;                  /* 요소 사이 간격 */
+    width: 100%;               /* 부모 너비 전체 사용 */
+}
+
+.page-num {
+    display: inline-flex;      /* 내부 텍스트 정렬을 위해 inline-flex 사용 */
+    width: 35px;
+    height: 35px;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff;
+    color: #5c7cfa;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 14px;
+    flex-shrink: 0;            /* 너비가 줄어들지 않도록 고정 */
+}
+
+.arrow {
+    color: white;
+    text-decoration: none;
+    padding: 0 10px;
+    font-size: 18px;
+    line-height: 1;
+}
+.page-num.active {
+            background-color: #8faadc;
+            color: white;
+}
+tr{
+height: 50px;
+}
+    </style>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>NOIR호텔 관리자 페이지</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Google Fonts
+		============================================ -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900" rel="stylesheet">
+    <!-- Bootstrap CSS
+		============================================ -->
+    <link rel="stylesheet" href="/admin_common/css/bootstrap.min.css">
+    <!-- Bootstrap CSS
+		============================================ -->
+    <link rel="stylesheet" href="/admin_common/css/font-awesome.min.css">
+	<!-- nalika Icon CSS
+		============================================ -->
+    <link rel="stylesheet" href="/admin_common/css/nalika-icon.css">
+    <!-- owl.carousel CSS
+		============================================ -->
+    <link rel="stylesheet" href="/admin_common/css/owl.carousel.css">
+    <link rel="stylesheet" href="/admin_common/css/owl.theme.css">
+    <link rel="stylesheet" href="/admin_common/css/owl.transitions.css">
+    <!-- animate CSS
+		============================================ -->
+    <link rel="stylesheet" href="/admin_common/css/animate.css">
+    <!-- normalize CSS
+		============================================ -->
+    <link rel="stylesheet" href="/admin_common/css/normalize.css">
+    <!-- meanmenu icon CSS
+		============================================ -->
+    <link rel="stylesheet" href="/admin_common/css/meanmenu.min.css">
+    <!-- main CSS
+		============================================ -->
+    <link rel="stylesheet" href="/admin_common/css/main.css">
+    <!-- morrisjs CSS
+		============================================ -->
+    <link rel="stylesheet" href="/admin_common/css/morrisjs/morris.css">
+    <!-- mCustomScrollbar CSS
+		============================================ -->
+    <link rel="stylesheet" href="/admin_common/css/scrollbar/jquery.mCustomScrollbar.min.css">
+    <!-- metisMenu CSS
+		============================================ -->
+    <link rel="stylesheet" href="/admin_common/css/metisMenu/metisMenu.min.css">
+    <link rel="stylesheet" href="/admin_common/css/metisMenu/metisMenu-vertical.css">
+    <!-- calendar CSS
+		============================================ -->
+    <link rel="stylesheet" href="/admin_common/css/calendar/fullcalendar.min.css">
+    <link rel="stylesheet" href="/admin_common/css/calendar/fullcalendar.print.min.css">
+    <!-- style CSS
+		============================================ -->
+    <link rel="stylesheet" href="/admin_common/style.css">
+    <!-- responsive CSS
+		============================================ -->
+    <link rel="stylesheet" href="css/responsive.css">
+    <!-- modernizr JS
+		============================================ -->
+    <script src="js/vendor/modernizr-2.8.3.min.js"></script>
+    <script>
+$(function() {
+    // #table 안에 있는 tbody를 감시하다가, 그 안의 tr이 클릭되면 실행합니다.
+    $("#table").on("click", "tbody tr", function(e) {
+    	var resNum = $(this).find(".resNum").text();
+    	if ($(e.target).closest("button").length > 0) {
+    		refund(resNum);
+            return; 
+        }
+        location.href="/admin/nonDinningResDetail?resNum="+resNum
+        // 클릭한 행의 데이터를 가져오는 팁
+    });
+    
+    
+});//ready
+    function refund(resNum){
+		if(confirm("정말 환불을 진행하시겠습니까?")){
+    	location.href="/admin/nonDinningRefund?resNum="+resNum
+		}
+    }
+</script>
+</head>
+
+<body>
+    <!--[if lt IE 8]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+<div th:replace="~{/manager/fragments/sidebar :: sidebar}"></div>    <!-- Start Welcome area -->
+    <div class="all-content-wrapper">
+        <div class="header-advance-area">
+            <div class="breadcome-area">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="breadcome-list">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                        <div class="breadcomb-wp" style="color:#ffffff; font-size: 20px">
+											다이닝 예약관리(비회원)
+										</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container" style="height:700px; color:#ffffff">
+        
+          <form id="searchFrm" action="/admin/nonRoomReserve">
+          <div class="search-container">
+        <select class="dropdown">
+            <option value="전체" selected>전체</option>
+            <option value="예약번호" th:selected="${#strings.equals(param.field, '예약번호')}">예약번호</option>
+            <option value="성명" th:selected="${#strings.equals(param.field, '성명')}" >성명</option>
+            <option value="아이디" th:selected="${#strings.equals(param.field, '아이디')}" >아이디</option>
+        </select>
+        <div class="search-wrapper">
+            <input type="text" class="search-input" placeholder="제목 검색">
+            <button class="search-btn" id="search">🔍</button>
+        </div>
+    </div>
+	</form>
+    <div class="table-wrapper">
+        <table id="table">
+            <thead>
+                <tr>
+                    <th>예약 번호</th>
+                    <th>성명</th>
+                    <th>E-mail</th>
+                    <th>인원</th>
+                    <th>금액</th>
+                    <th>방문일</th>
+                    <th>상태</th>
+                </tr>
+            </thead>
+            <tbody>
+            <tr th:each="reserve, i : ${list}" th:object="${reserve}">
+                    <td th:text="*{reserveNum}" class="resNum ">1</td>
+                    <td th:text="*{resName}" >박이소</td>
+                    <td th:text="*{reserveEmail}">ADMIN0001</td>
+                    <td th:text="|성인 *{reserveAdultCount} / 아동 *{reserveKidCount}|">1</td>
+                    <td th:text="*{payPrice}">150,000</td>
+                    <td th:text="|*{dinningVisitDate}|">25.05.23:00:00</td>
+                    <td th:if="*{reserveStatus eq 'N'}">
+                    <button class="refund-btn">환불</button>
+                    </td>
+                    <td th:if="*{reserveStatus eq 'Y'}">
+                    <button disabled="disabled" class="refund-btn" style="background-color: #e97433;">환불완료</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="pagination">
+    	<th:block th:utext="${pagination}">
+    	</th:block>
+    </div>
+        </div>        
+       
+	<div th:replace="~{/manager/fragments/footer :: footer}"></div>        
+    </div>
+</body>
+
+</html>

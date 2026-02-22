@@ -17,6 +17,6 @@ public class EventAdminDomain {
 	
 	  private int eventNum, adminNum;
 	  private Date eventStartDate, eventDate, eventEndDate ;
-	  private String eventTitle, eventSubTitle, eventImg1, eventImg2, eventMsg;
+	  private String eventTitle, eventSubTitle, eventImg1, eventImg2, eventMsg, eventDelFlag;
 
 }

@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>마이페이지</title>
+
+
+<link rel="stylesheet" type="text/css" href="/common/css/homepage/base.css">
+<link rel="stylesheet" type="text/css" href="/common/css/homepage/style.css?v=0312">
+<link rel="stylesheet" type="text/css" href="/common/css/homepage/sub.css?v=0312">
+<!-- jQeury CDN 시작 -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="/common/js/comm/jquery.bxslider.js"></script>
+<script src="/common/js/homepage/jquery.rwdImageMaps.min.js"></script>
+<script src="/common/js/homepage/jquery.accessibility.modal.js"></script>
+<script src="/common/js/comm/jquery.cookie.js"></script>
+<script src="/common/js/homepage/plugin.js"></script>
+<script src="/common/js/homepage/custom.js"></script>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<style type="text/css">
+    html{
+	background-color: #181818;
+
+}
+
+  body {
+            background-color: #181818;
+            color: #ffffff;
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+            padding: 95px 0;
+        }
+.subject
+{
+color:white;
+text-decoration: none;
+}
+
+
+.main-sub > ul > li > a {
+	text-decoration: none;
+}
+
+
+.info > ul > li > a {
+	
+	color:white;
+	text-decoration: none;
+}
+.info > ul > li {
+	list-style:none;
+}
+
+.footer_bot{
+padding:0px;
+}
+
+.container{
+margin-top :160px;
+height:auto;
+
+}
+
+  body {
+            background-color: #181818;
+            color: #ffffff;
+            font-family: 'Pretendard', sans-serif;
+            padding: 60px 0;
+        }
+
+        /* [핵심] 왼쪽/오른쪽 전체 높이를 통일시키는 컨테이너 */
+        .equal-height-row {
+            display: flex;
+            align-items: stretch; 
+        }
+
+        /* 사이드바 스타일 (하단까지 꽉 차게) */
+        .sidebar {
+            background-color: #000000;
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid #2a2a2a;
+            height: auto; 
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 컨텐츠 래퍼 (오른쪽 섹션들 묶음) */
+        .main-content-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            height: 100%;
+        }
+
+        .content-section {
+            background: #111111;
+            border: 1px solid #2a2a2a;
+            padding: 35px;
+            border-radius: 10px;
+        }
+
+        /* 마지막 섹션이 남은 공간을 채워 하단 라인을 맞춤 */
+        .flex-fill-section {
+            flex-grow: 1;
+        }
+
+        /* 사이드바 내부 UI */
+        .mypage-title { border: 1px solid #c5a47e; padding: 20px; margin-bottom: 35px; text-align: center; }
+        .mypage-title h2 { font-size: 1.1rem; letter-spacing: 2px; margin: 0; }
+        .mypage-title p { font-size: 1.2rem; margin-top: 10px; font-weight: bold; }
+
+        .menu-group { margin-bottom: 25px; }
+        .menu-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .header-content { display: flex; align-items: center; font-size: 0.95rem; font-weight: 500; line-height: 1; }
+        .icon-wrapper { width: 22px; height: 22px; margin-right: 8px; display: flex; align-items: center; justify-content: center; }
+        .icon-wrapper svg { stroke: #c5a47e; }
+
+        .menu-group>.menu-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; color: #888; text-decoration: none; font-size: 0.85rem; border-bottom: 1px solid #151515; }
+        .menu-item:hover { color: #c5a47e; }
+        .badge-outline { border: 1px solid #c5a47e; color: #c5a47e; padding: 1px 8px; font-size: 0.65rem; border-radius: 12px; }
+
+        /* 카드 및 이벤트 UI */
+        .summary-card { background: #1a1a1a; border: 1px solid #2a2a2a; padding: 22px; display: flex; align-items: center; justify-content: space-between; text-decoration: none; color: #fff; border-radius: 4px; }
+        .icon-circle { width: 48px; height: 48px; background: #000; color: #c5a47e; border: 1px solid #2a2a2a; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 18px; }
+        
+        .event-card img { width: 100%; height: 180px; object-fit: cover; border-radius: 4px; margin-bottom: 15px; border: 1px solid #2a2a2a; }
+        .event-card h6 { font-weight: bold; color: #fff; margin-bottom: 5px; }
+        .event-period { font-size: 0.75rem; color: #666; }
+        
+   /* 다크 톤 맞춤형 스타일 */
+    .thumb-img-wrapper {
+        position: relative;
+        height: 80px; /* 크기를 작게 조절 */
+        border-radius: 2px;
+        overflow: hidden;
+        border: 1px solid #2a2a2a;
+        background: #000;
+    }
+    
+    .thumb-img-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0.4; /* 이미지를 어둡게 처리하여 톤 유지 */
+        transition: 0.4s;
+    }
+
+    .thumb-overlay {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .thumb-overlay span {
+        color: #fff;
+        font-size: 0.65rem;
+        font-weight: bold;
+        letter-spacing: 1px;
+        border-bottom: 1px solid #c5a47e;
+        padding-bottom: 2px;
+    }
+
+    /* 호버 시 톤 변화 */
+    .facility-thumb-card:hover img {
+        opacity: 0.7;
+        transform: scale(1.1);
+    }
+    .facility-thumb-card:hover .thumb-img-wrapper {
+        border-color: #c5a47e;
+    }
+    
+    .summary-card:hover{
+    	 border-color: #c5a47e;
+    
+    }
+    
+    
+    .siteBorder>event-card:hover{
+    	 border-color: #c5a47e;
+    
+    }
+    
+    .siteBorder{
+    	text-decoration: none;
+    
+    }
+    .menu-item.menuCilck{
+    	
+    	color: #c5a47e;
+    
+    }
+    .footer-title{
+    
+    	margin-top: 5px;
+    }
+    
+    a{
+    	text-decoration: none;	
+    
+    }
+
+
+</style>
+
+<script>
+var CONTEXT = '';
+$(document).ready(function($) {
+    $('.open_modal').click(function(e) {    	
+        $("iframe").attr("src", $(this).attr('url')).show();        	
+        e.preventDefault();
+    });
+});
+
+$(document).on('click','.btn_pop_close',function(e){
+	$('#popIframe > iframe').attr('src','').hide();
+	e.preventDefault();
+})
+
+
+$(function(){
+	
+	//현재 날짜 구하는것 (파라미터로 넘기기 위함)
+	   var date= new Date();
+	   var y =  date.getFullYear();
+	   var m = String(date.getMonth()+1).padStart(2,'0');
+	   var d = String(date.getDate()).padStart(2,'0');
+	   
+	   var today=y+"-"+m+"-"+d;
+	   
+	   
+	//3개월 날짜 구하는것 (파라미터로 넘기기 위함)
+	   date.setMonth(date.getMonth() + 3);
+	   var ey =  date.getFullYear();
+	   var em = String(date.getMonth()+1).padStart(2,'0');
+	   var ed = String(date.getDate()).padStart(2,'0');
+	   
+	   var endDay=ey+"-"+em+"-"+ed;
+	   	   
+	   
+	   $("#hotelRevBtn").attr("href","/mypage/reserve/memberHotelList?startDate="+today+"&endDate="+endDay+"&period=3개월");
+	   $("#dinningRevBtn").attr("href","/mypage/reserve/memberDinningList?startDate="+today+"&endDate="+endDay+"&period=3개월");
+	   
+	   
+	   
+
+	
+});
+</script>
+
+</head>
+
+<body>
+<header>
+    <th:block th:replace="~{fragments/header :: header}"></th:block>
+</header>
+
+<div class="container">
+    <div class="row equal-height-row g-4">
+        <th:block th:replace="~{fragments/myPageSideBar :: myPageSideBar}"></th:block>
+
+        <div class="col-lg-9">
+            <div class="main-content-wrapper">
+                <div class="content-section">
+                    <h5 class="mb-4 fw-bold">나의 예약</h5>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <a href="#" class="summary-card" id="hotelRevBtn">
+                                <div class="d-flex align-items-center">
+                                    <div class="icon-circle">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c5a47e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"></path><path d="M9 21V9a3 3 0 0 1 3-3v0a3 3 0 0 1 3 3v12"></path><path d="M19 21V5a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v16"></path></svg>
+                                    </div>
+                                    <div><small class="text-secondary">객실 예약</small><h6 class="mb-0 fw-bold" th:text="|투숙 예정 ${hotelRevCnt}건|">투숙 예정 0건</h6></div>
+                                </div>
+                                <svg viewBox="0 0 24 24" width="24" height="24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="#" class="summary-card dinning" id="dinningRevBtn">
+                                <div class="d-flex align-items-center">
+                                    <div class="icon-circle">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c5a47e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>
+                                    </div>
+                                    <div><small class="text-secondary">다이닝 예약</small><h6 class="mb-0 fw-bold" th:text="|방문 예정 ${dinningRevcnt}건|">방문 예정 0건</h6></div>
+                                </div>
+                                <svg viewBox="0 0 24 24" width="24" height="24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-section flex-fill-section">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="mb-0 fw-bold" th:text="|${session.memberName}님을 위한 이벤트|">님을 위한 이벤트</h5>
+                        <a th:href="@{/eventList}" class="text-secondary text-decoration-none small">전체보기 <i class="bi bi-arrow-right"></i></a>
+                    </div>
+                    <div class="row g-4" style="margin-top: 40px;">
+            
+                        <div class="col-md-4 " th:each="eList : ${eventList}" th:object="${eList}">
+                            <a th:href="@{{url}(url='/eventDetail',eventNum=*{eventNum})}" class="siteBorder">
+                               
+                                <div class="event-card">
+                                    <img th:src="@{/common/images/homepage/event/{name}(name=*{eventImg1})}" alt="Event" th:id="*{eventNum}">
+                                    <h6 th:text="*{eventTitle}">Flash Deals</h6>
+                                    <p class="event-period" th:text="|*{eventStartDate} ~ *{eventEndDate} |">2026.01.05 ~ 2026.01.09</p>
+                                </div>
+                            </a>
+                        </div>
+                      
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <th:block th:replace="~{fragments/footer :: footer}"></th:block>
+</footer>
+   <div id="privacy-layer">
+        <div th:replace="~{fragments/privacy :: privacy}"></div>
+    </div>
+<script type="text/javascript" src="/common/js/comm/jquery.validate.js"></script>
+<script type="text/javascript" src="/common/js/comm/wings.core.js"></script>
+<script type="text/javascript" src="/common/js/comm/PAGING_HOMEPAGE.js"></script>
+<script type="text/javascript" src="/common/js/comm/kendo.web.min.js"></script>
+
+</body>
+</html>

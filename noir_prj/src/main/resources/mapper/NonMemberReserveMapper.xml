@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.noir.nonMemberReserve.NonMemberRevMapper">
+
+
+	<select id="nonMemberRevCheck" parameterType="nonMemberRevDTO" resultType="nonReserveCheckDomain">
+		select non_user_pass as password, RESERVE_EMAIL as email
+from (
+    select
+        rownum rum, 
+        r.reserve_num, 
+        r.RESERVE_TYPE, 
+        nm.NON_USER_PASS, 
+        r.RESERVE_EMAIL, 
+        r.RESERVE_STATUS
+    from RESERVE r, NON_MEMBER nm
+    <if test="reserveType == 'dinning'">
+        , dinning_res dr
+    </if>
+    where r.NON_USER_NUM = nm.NON_user_num
+    <if test="reserveType == 'dinning'">
+        and r.reserve_num = dr.reserve_num
+    </if>
+    and r.reserve_num = #{reserveNum}
+    and r.RESERVE_TYPE = #{reserveType}
+    and r.RESERVE_STATUS = 'N'
+    
+    <if test="reserveType == 'dinning'">
+        and dr.DINNING_VISIT_DATE >= trunc(sysdate)
+    </if>
+    <if test="reserveType != 'dinning'">
+        and r.RESERVE_START_DATE >= trunc(sysdate)
+    </if>
+)
+where rum = 1
+	</select>
+	
+	
+	<resultMap type="hotelRevDetailDomain" id="hrdDomain">
+	<result column="reserve_num" property="reserveNum"></result>
+	<result column="room_type" property="roomType"></result>
+	<result column="reserveName" property="reserveName"></result>
+	<result column="reserve_start_date" property="startDate"></result>
+	<result column="reserve_end_date" property="endDate"></result>
+	<result column="checkInTime" property="checkInTime"></result>
+	<result column="checkOutTime" property="checkOutTime"></result>
+	<result column="reserveDate" property="reserveDate"></result>
+	<result column="reserve_email" property="email"></result>
+	<result column="reserve_tel" property="tel"></result>
+	<result column="reserve_adult_count" property="adultCount"></result>
+	<result column="reserve_kid_count" property="childCount"></result>
+	<result column="pay_agency" property="payAgency"></result>
+	<result column="card_num" property="cardData"></result>
+	<result column="reserve_msg" property="reserveMsg"></result>
+	<result column="reserve_status" property="reserveFlag"></result>
+	<result column="pay_price" property="priceTotal"></result>
+	<result column="payInputDate" property="payInputDate"></result>
+</resultMap>
+	
+	  
+	<select id="selectOneHotelDetail" parameterType="nonMemberRevDTO" resultMap="hrdDomain">
+		select r.reserve_num,ri.room_type,r.END_USER_LAST_NAME||r.END_USER_FIRST_NAME as reserveName,
+	r.reserve_start_date,r.reserve_end_date
+	,to_char(to_date(ri.room_check_in,'HH24:MI') ,'HH24:MI AM','NLS_DATE_LANGUAGE=AMERICAN') as checkInTime
+	,to_char(to_date(ri.room_check_out,'HH24:MI') ,'HH24:MI AM','NLS_DATE_LANGUAGE=AMERICAN') as checkOutTime
+	,to_char(r.reserve_time,'yyyy-MM-dd')as reserveDate
+	,r.reserve_email
+	,r.reserve_tel
+	,r.reserve_adult_count
+	,r.reserve_kid_count
+	,pi.pay_agency
+	,pi.card_num
+	,to_char(pi.input_date,'yyyy-MM-dd AM HH24:MI') as payInputDate
+	,r.reserve_msg
+	,p.pay_price
+	,r.reserve_status
+	from  reserve r,room_res rr,room_info ri,pay p,pay_info pi
+	where r.reserve_num=rr.reserve_num
+		and rr.room_type_num=ri.room_type_num
+		and p.reserve_num=r.reserve_num
+		and p.pay_num=pi.pay_num
+		and r.reserve_num=#{reserveNum}
+		and r.RESERVE_TYPE=#{reserveType}
+
+	</select> 
+	
+	
+	
+	<select id="selectOnedinningDetail" parameterType="nonMemberRevDTO" resultType="dinningRevDetailDomain">
+		 select 
+		 		r.reserve_num as reserveNum,
+		 		r.END_USER_LAST_NAME||END_USER_FIRST_NAME as reserveName,
+		 		r.RESERVE_ADULT_COUNT as adultCount,
+		 		r.RESERVE_KID_COUNT as childCount,
+		 		r.RESERVE_TEL as tel,
+		 		r.RESERVE_EMAIL as email,
+		 		r.RESERVE_MSG as reserveMsg,
+		 		r.RESERVE_STATUS as reserveFlag,
+		 		to_char(r.reserve_time,'yyyy-MM-dd')as reserveDate,
+		 		dr.DINNING_VISIT_DATE as visitDate,
+		 		dr.DINNING_RES_TYPE as dinningType,
+		 		dr.DINNING_RES_DETAIL_TIME as visitTime,
+		 		p.pay_price as priceTotal,
+		 		pi.PAY_AGENCY as payAgency,
+		 		pi.CARD_NUM as cardData,
+		 		to_char(pi.input_date,'yyyy-MM-dd AM HH24:MI') as payInputDate,
+		 		di.dinning_name as dinningName
+    	 from  reserve r,DINNING_RES dr,pay p,pay_info pi,dinning_info di
+     	where r.reserve_num=dr.reserve_num
+     		and r.reserve_num=p.reserve_num
+     		and p.pay_num=pi.pay_num
+     		and dr.dinning_menu_num=di.dinning_menu_num
+		   	and r.reserve_num=#{reserveNum}
+			and r.RESERVE_TYPE=#{reserveType}
+
+	</select>
+	 
+	    
+</mapper>

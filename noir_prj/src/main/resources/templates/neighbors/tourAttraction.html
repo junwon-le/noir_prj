@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>NOIR HOTEL</title>
+
+<!-- <link rel="stylesheet" type="text/css" href="/Hotel28NewCMS_common/js/homepage/jquery.bxslider/jquery.bxslider.css"> -->
+<link rel="stylesheet" type="text/css" href="../common/css/homepage/base.css">
+<link rel="stylesheet" type="text/css" href="../common/css/homepage/style.css?v=0312">
+<link rel="stylesheet" type="text/css" href="../common/css/homepage/sub.css?v=0312">
+
+<script src="../common/js/comm/jquery-3.5.1.min.js"></script>
+<script src="../common/js/comm/jquery.bxslider.js"></script>
+<!-- <script src="/Hotel28NewCMS_common/js/homepage/jquery.mobile.custom.min.js"></script> -->
+<script src="../common/js/homepage/jquery.rwdImageMaps.min.js"></script>
+<script src="../common/js/homepage/jquery.accessibility.modal.js"></script>
+<script src="../common/js/comm/jquery.cookie.js"></script>
+<script src="../common/js/homepage/plugin.js"></script>
+<script type="text/javascript" src="../common/js/homepage/jquery.simpleWeather.js"></script>
+<script src="../common/js/homepage/custom.js"></script>
+
+<style>
+
+#detailBtn{
+width:150px;
+height:50px;
+position:absolute;
+top:690px;
+left:1230px;
+ background: rgba(50, 50, 50, 0.95);
+  border: 1px solid rgba(216, 203, 168, 0.25);
+  color: #CFC4A3;
+  letter-spacing: 0.08em;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+#detailBtn:hover{
+ background: rgba(30, 30, 30, 0.95);
+  border-color: rgba(216, 203, 168, 0.6);
+}
+
+#reserveBtn{
+width:150px;
+height:50px;
+position:absolute;
+top:690px;
+left:1400px;
+ background: rgba(50, 50, 50, 0.95);
+  border: 1px solid rgba(216, 203, 168, 0.25);
+  color: #CFC4A3;
+  letter-spacing: 0.08em;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+#reserveBtn:hover{
+ background: rgba(30, 30, 30, 0.95);
+  border-color: rgba(216, 203, 168, 0.6);
+}
+
+.fullsizeImage>ul>li::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at center,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.12) 25%,
+    rgba(0, 0, 0, 0.35) 50%,
+    rgba(0, 0, 0, 0.6) 75%,
+    rgba(0, 0, 0, 0.75) 100%
+  );
+  pointer-events: none;
+}
+
+
+.btn_pop_close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+    background: yellow;
+    z-index: 99999;
+
+    /* 기존 텍스트 완전 무시 */
+    font-size: 0 !important;
+    text-indent: 0 !important;
+    overflow: visible !important;
+}
+
+.btn_pop_close::before {
+    content: '✕';          /* ← 강제 출력 */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
+    line-height: 1;
+    font-family: Arial, sans-serif;
+}
+
+.footer_bot{
+padding:0px;
+}
+
+</style>
+
+<body>
+
+<script>
+$(function(){
+	//$('header').load('../../incheader.html');
+
+	$('.fullsizeImage ul').myFunction();
+	
+	var num=$("#typeNum").val();
+	$("#reserveBtn").click(function(){
+		location.href="/reserve/roomResSearch";
+	});
+	
+	$("#detailBtn").click(function(){
+		location.href="/roomDetailView?num="+num;
+	});
+	
+	
+	
+	
+})
+
+var CONTEXT = '';
+$(document).ready(function($) {
+    $('.open_modal').click(function(e) {    	
+        $("iframe").attr("src", $(this).attr('url')).show();        	
+        e.preventDefault();
+    });
+});
+
+$(document).on('click','.btn_pop_close',function(e){
+	$('#popIframe > iframe').attr('src','').hide();
+	e.preventDefault();
+})
+
+
+
+</script>
+
+
+
+    
+	<div class="fullsizeImage">
+ 	<ul>
+    
+    <li th:style="'background-image: url(../common/images/homepage/tour.jpg)'"></li>
+    
+    
+	</ul>
+	</div>	
+
+	
+
+
+
+
+
+
+<div class="movie-frame">
+	<div class="movie-frame-left"></div>
+	<div class="movie-frame-right"></div>
+</div>
+<header>
+	  <div th:replace="~{fragments/header :: header}"></div>
+</header>
+	<section id="rooms">
+
+		
+		<div class="frame frame-rooms">
+			<nav class="frame-nav">
+				HOTEL / NEIGHBORS / <span class="gold">TOUR ATTRACTION</span>
+			</nav>
+			<h2 class="frame-title gold">TOUR ATTRACTION</h2>
+		</div>
+	</section>
+	<section id="hotel-detail">
+		<div class="detail_wrap offers">
+			<ul class="board" id="list_view">
+				<li class="col2">
+				    <div class="img">
+				    	<img src="../common/images/homepage/tourimg01.jpg" alt="TOURIST ATTRACTION">
+				    </div>
+                    <div class="con">
+						<p class="rtitle">덕수궁</p>
+						<p class="rtxt">서울특별시 중구 정동에 위치한 조선시대 궁궐. 경운궁이라고도 하며 <br>
+						처음은 임시 거처로 사용한 왕족 개인의 궁궐이었으나, 고종 이후 '고종의 <br>
+						장수'를 빈다는 의미에서 덕수궁이라 지었다. 일제강점기 이후 고종의 <br>
+						재위 기간 동안 궁 내에 서양식 건물들을 여럿 지어, 조선시대 전통적인 <br>
+						궁궐 양식에서 벗어난 형태를 지닌 것이 특징이다. </p>
+						<div class="info">
+							<div class="addr">서울 중구 세종대로 99</div>
+							<div class="tel">TEL 02 771 9951</div>
+						</div>
+					</div>			
+				</li>
+				<li class="col2">
+                    <div class="img">
+						<img src="../common/images/homepage/tourimg02.jpg" alt="TOURIST ATTRACTION">
+					</div>
+					<div class="con">
+						<p class="rtitle">창덕궁</p>
+						<p class="rtxt">건축과 조경이 잘 조화되면서 한국적인 미까지 지닌 조선시대 궁궐이다. <br>
+						동아시아 궁중 건축사에 있어 비정형적 미를 간직한 대표적인 궁이며 <br>
+						주변 자연환경과 완벽한 조화로 유네스코 세계 문화유산으로 <br>
+						선정되었다. 건축사에 있어 조선시대 궁궐 전형을 보여주며, 비원으로 <br>
+						잘 알려진 후원은 우리나라 대표적인 왕실 정원으로 가치가 높다.</p>
+						<div class="info">
+							<div class="addr">서울 종로구 율곡로 99</div>
+							<div class="tel">TEL 02 3668 2300</div>
+						</div>
+					</div>
+				</li>
+				<li class="col2">
+                    <div class="img">
+						<img src="../common/images/homepage/tourimg03.jpg" alt="TOURIST ATTRACTION">
+					</div>
+					<div class="con">
+						<p class="rtitle">경복궁</p>
+						<p class="rtxt">조선 왕조의 건립에 따라 창건된 법궁 (임금이 사는 궁궐)이다. '새 왕조가 <br>
+						큰 복을 누려 번영할 것'이라는 뜻의 경복궁은 조선시대 대표적 건축물인 <br>
+						경회루와 항원정, 근정전 등으로 구성되어 있다. 5대 궁궐 가운데 가장 큰 <br>
+						규모와 건축미를 지녔으며, 각종 즉위식을 거행했던 왕실의 <br>
+						행사장이기도 하다. 일제감정기에 훼손되었다가, 다시 복원되어 정문의 <br>
+						광화문과 함께 서울의 중심 역할을 하고 있다.</p>
+						<div class="info">
+							<div class="addr">서울 종로구 사직로 161</div>
+							<div class="tel">TEL 02 3700 3900</div>
+						</div>
+					</div>
+				</li>
+				<li class="col2">
+                    <div class="img">
+						<img src="../common/images/homepage/tourimg04.jpg" alt="TOURIST ATTRACTION">
+					</div>
+					<div class="con">
+						<p class="rtitle">북촌 한옥마을</p>
+						<p class="rtxt">경복궁과 창덕궁, 종묘 사이에 위치한 전통 한옥마을이 밀집한 <br>
+						거주지이다. 청계천과 종로의 윗동네라는 뜻을 가진 북촌 한옥마을은 <br>
+						조선시대의 상류층이 지내온 공간이며 지금까지도 사용되고 있다. 조선 <br>
+						600년 역사의 골목길을 그대로 보존하고 있어 한국의 옛 모습을 알 수 <br>
+						있으며, 요즘에는 레트로 감성의 유행으로 다시 인기를 끌고 있다.</p>
+						<div class="info">
+							<div class="addr">서울 종로구 계동길 37</div>
+							<div class="tel">TEL 02 2133 1372</div>
+						</div>
+					</div>
+				</li>
+				<li class="col2">
+                    <div class="img">
+						<img src="../common/images/homepage/tourimg05.jpg" alt="TOURIST ATTRACTION">
+					</div>
+					<div class="con">
+						<p class="rtitle">남산골 한옥 마을</p>
+						<p class="rtxt">충무로 근처에 있는 남산골 한옥마을은 한옥 5종과 전통 조경이 잘 <br>
+						되살려져 있는 곳이다. 순수한 전통 가옥을 복원하여 북촌에 비해 집안 <br>
+						내부를 속속이 들여다볼 수 있는 장점이 매력이다. 전통 조경양식으로 <br>
+						조성된 계곡과, 한국 전통 문화를 소재로 한 다양한 체험 프로그램을 <br>
+						접할 수 있다. 공예, 민속놀이 등 다양한 프로그램이 운영되며, 또한 <br>
+						주말에는 전통 혼례 체험도 진행하고 있다.</p>
+						<div class="info">
+							<div class="addr">서울 중구 퇴계로34길 28</div>
+							<div class="tel">TEL 02 2261 0517</div>
+						</div>
+					</div>
+				</li>
+				<li class="col2">
+                    <div class="img">
+						<img src="../common/images/homepage/tourimg06.jpg" alt="TOURIST ATTRACTION">
+					</div>
+					<div class="con">
+						<p class="rtitle">명동성당</p>
+						<p class="rtxt">서울 대교구 주교좌 명동 대성당은 한국 가톨릭 교회 공동체가 처음으로 <br>
+						탄생한 곳으로 천주교 역사의 상징이며, 민주화 운동의 상징이기도 <br>
+						하다. 군사정권 시절 민주화 운동을 하던 인사와 학생들을 보호한 <br>
+						치외법권 공간이었다. 또한 우리나라 최초의 고딕 양식 건축물로, <br>
+						종교적, 건축적 가치와 함께 시대사적 의미를 담고 있다.</p>
+						<div class="info">
+							<div class="addr">서울 중구 명동길 74</div>
+							<div class="tel">TEL 02 774 1784</div>
+						</div>
+					</div>
+				</li>
+				<li class="col2">
+                    <div class="img">
+						<img src="../common/images/homepage/tourimg07.jpg" alt="TOURIST ATTRACTION">
+					</div>
+					<div class="con">
+						<p class="rtitle">청계천 (청계 광장)</p>
+						<p class="rtxt">종로구와 중구 사이를 가르는 하천으로 세종로 시작점부터 10.34km까<br>
+						지 되는 길이의 하천이다. 청계천을 가로지르는 22개의 다리와 아름다운 <br>
+						경관을 연출하는 분수 및 폭포, 청계천 미니어처, 탐방로 등으로 꾸며져 <br>
+						있다. 청계광장을 중심으로 각종 문화 행사가 열려 휴식과 함께 문화 <br>
+						공간으로도 거듭나고 있다.</p>
+						<div class="info">
+							<div class="addr">서울시 종로구 서린동 14-1</div>
+							<div class="tel">TEL 02 2290 7111</div>
+						</div>
+					</div>
+				</li>
+				<li class="col2">
+                    <div class="img">
+						<img src="../common/images/homepage/tourimg08.jpg" alt="TOURIST ATTRACTION">
+					</div>
+					<div class="con">
+						<p class="rtitle">N 서울 타워</p>
+						<p class="rtxt">남산 꼭대기에 위치한 한국 최초의 타워형 관광 명소이다. 해발고도 262<br>
+						미터 위치에 있어 전망대에서 서울시 전체를 한 눈에 볼 수 있다. 메세지 <br>
+						적은 자물쇠를 걸면 영원히 헤어지지 않는다는 설을 지닌 자물쇠 <br>
+						테라스와 360도로 사방이 열려있는 회전식 레스토랑이 인기 있다.</p>
+						<div class="info">
+							<div class="addr">서울 중구 소파로 83</div>
+							<div class="tel">TEL 02 3455 9277 </div>
+						</div>
+					</div>
+				</li>
+				<li class="col2">
+                    <div class="img">
+						<img src="../common/images/homepage/tourimg09.jpg" alt="TOURIST ATTRACTION">
+					</div>
+					<div class="con">
+						<p class="rtitle">인사동</p>
+						<p class="rtxt">인사동은 전통과 현대가 어우러지는 서울의 대표 거리이다. 큰 대로를 <br>
+						중심으로 작은 골목길들에 크고 작은 갤러리 화랑, 전통 공예점, 전통 <br>
+						찻집, 전통 음식점, 카페 등이 밀집되어 있어 저마다의 특색으로 <br>
+						볼거리를 제공한다. 또한 주말에는 차 없는 거리로 지정되어 다양한 공연 <br>
+						및 전시가 열리고 있다.</p>
+						<div class="info">
+							<div class="addr">서울 종로구 인사동길 44</div>
+							<div class="tel">TEL 02 737 7890</div>
+						</div>
+					</div>
+				</li>
+			</ul>
+
+		</div>
+	</section>
+<footer>
+<div th:replace="~{fragments/footer :: footer}"></div>
+</footer>
+<div th:replace="~{fragments/privacy :: privacy}"></div>
+
+<!-- <script type="text/javascript" src="/Hotel28NewCMS_common/js/jquery.modalLayer.js"></script>
+<script type="text/javascript" src="/Hotel28NewCMS_common/js/common_dev.js"></script> -->
+<script type="text/javascript" src="${pageContext.request.contextPath}/common/js/comm/jquery.validate.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/common/js/comm/wings.core.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/common/js/comm/PAGING_HOMEPAGE.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/common/js/comm/kendo.web.min.js"></script>
+
+
+</body>
+</html>

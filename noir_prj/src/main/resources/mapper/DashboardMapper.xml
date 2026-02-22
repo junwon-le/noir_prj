@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.noir.dashboard.DashboardMapper">
+
+    <select id="selectDashboardKPI" resultType="kr.co.noir.dashboard.DashboardDTO">
+        SELECT
+            /* 1. 객실 점유율 (현재 사용중 객실 / 전체 객실 수 * 100) */
+            ROUND((
+                (SELECT COUNT(*) FROM ROOM_RES RR 
+                 JOIN RESERVE R ON RR.RESERVE_NUM = R.RESERVE_NUM 
+                 WHERE SYSDATE BETWEEN R.RESERVE_START_DATE AND R.RESERVE_END_DATE 
+                 AND R.RESERVE_STATUS = 'N') 
+                / 
+                (SELECT SUM(ROOM_COUNT) FROM ROOM_INFO)
+            ) * 100, 1) AS occupancyRate,
+
+            /* 2. ADR (평균 객실 요금): 최근 30일 매출 / 예약 건수 */
+            NVL(ROUND(
+                (SELECT SUM(P.PAY_PRICE) 
+                 FROM PAY P 
+                 JOIN RESERVE R ON P.RESERVE_NUM = R.RESERVE_NUM
+                 WHERE R.RESERVE_TYPE = 'room' 
+                 AND R.RESERVE_TIME >= SYSDATE - 30)
+                / NULLIF((SELECT COUNT(*) FROM RESERVE WHERE RESERVE_TYPE = 'room' AND RESERVE_TIME >= SYSDATE - 30), 0)
+            ), 0) AS adr,
+
+            /* 3. 평균 리드 타임 (체크인 날짜 - 예약 날짜 의 평균) */
+            NVL(ROUND(
+                (SELECT AVG(R.RESERVE_START_DATE - CAST(R.RESERVE_TIME AS DATE))
+                 FROM RESERVE R
+                 WHERE R.RESERVE_TYPE = 'room'
+                 AND R.RESERVE_TIME >= SYSDATE - 90) -- 최근 3달 기준
+            , 1), 0) AS avgLeadTime,
+
+            /* 4. 고객 만족도 (리뷰 평점 평균) */
+            NVL(ROUND((SELECT AVG(REVIEW_STAR) FROM REVIEW), 1), 0.0) AS satisfactionScore,
+
+            /* 5. 다이닝 매출 (이번 달) */
+            NVL((SELECT SUM(P.PAY_PRICE)
+                 FROM PAY P
+                 JOIN RESERVE R ON P.RESERVE_NUM = R.RESERVE_NUM
+                 WHERE R.RESERVE_TYPE = 'dinning'
+                 AND TO_CHAR(P.PAY_REFUND_TIME) IS NULL -- 환불 안 된 건
+                 AND TO_CHAR(R.RESERVE_TIME, 'YYYYMM') = TO_CHAR(SYSDATE, 'YYYYMM')
+            ), 0) AS diningRevenue,
+
+            /* 6. 예약 취소율 (취소 건수 / 전체 건수 * 100) */
+            NVL(ROUND((
+                (SELECT COUNT(*) FROM RESERVE WHERE RESERVE_STATUS = 'Y') 
+                / NULLIF((SELECT COUNT(*) FROM RESERVE), 0)
+            ) * 100, 1), 0) AS cancelRate,
+            
+            /* 7. 현재 투숙객 수 (성인+어린이) */
+            NVL((SELECT SUM(RESERVE_ADULT_COUNT + RESERVE_KID_COUNT)
+                 FROM RESERVE
+                 WHERE RESERVE_TYPE = 'room'
+                 AND RESERVE_STATUS = 'N'
+                 AND SYSDATE BETWEEN RESERVE_START_DATE AND RESERVE_END_DATE
+            ), 0) AS currentGuests,
+
+            /* 8. 오늘 체크인 / 체크아웃 */
+            (SELECT COUNT(*) FROM RESERVE WHERE TRUNC(RESERVE_START_DATE) = TRUNC(SYSDATE)) AS checkInCount,
+            (SELECT COUNT(*) FROM RESERVE WHERE TRUNC(RESERVE_END_DATE) = TRUNC(SYSDATE)) AS checkOutCount,
+
+            /* 9. 객실 가용 현황 */
+            (SELECT COUNT(*) FROM ROOM_RES RR JOIN RESERVE R ON RR.RESERVE_NUM = R.RESERVE_NUM 
+             WHERE SYSDATE BETWEEN R.RESERVE_START_DATE AND R.RESERVE_END_DATE AND R.RESERVE_STATUS = 'N') AS occupiedRooms,
+            ((SELECT SUM(ROOM_COUNT) FROM ROOM_INFO) - 
+             (SELECT COUNT(*) FROM ROOM_RES RR JOIN RESERVE R ON RR.RESERVE_NUM = R.RESERVE_NUM 
+              WHERE SYSDATE BETWEEN R.RESERVE_START_DATE AND R.RESERVE_END_DATE AND R.RESERVE_STATUS = 'N')) AS availableRooms
+
+        FROM DUAL
+    </select>
+
+    <select id="selectWeeklyReservationStats" resultType="int">
+        SELECT COUNT(R.RESERVE_NUM)
+        FROM (
+            SELECT TRUNC(SYSDATE, 'IW') + LEVEL - 1 AS DT -- 이번 주 월요일부터 일요일까지 날짜 생성
+            FROM DUAL CONNECT BY LEVEL &lt;= 7
+        ) D
+        LEFT JOIN RESERVE R 
+          ON TRUNC(R.RESERVE_TIME) = D.DT
+        GROUP BY D.DT
+        ORDER BY D.DT ASC
+    </select>
+
+    <select id="selectAgeDemographics" resultType="int">
+        SELECT COUNT(M.MEMBER_NUM)
+        FROM (
+            SELECT 20 AS AGE_G FROM DUAL UNION ALL
+            SELECT 30 FROM DUAL UNION ALL
+            SELECT 40 FROM DUAL UNION ALL
+            SELECT 50 FROM DUAL UNION ALL
+            SELECT 60 FROM DUAL
+        ) G
+        LEFT JOIN MEMBER M
+          ON TRUNC((EXTRACT(YEAR FROM SYSDATE) - TO_NUMBER(SUBSTR(M.MEMBER_BIRTH, 1, 4))) / 10) * 10 = G.AGE_G
+          OR (G.AGE_G = 60 AND (EXTRACT(YEAR FROM SYSDATE) - TO_NUMBER(SUBSTR(M.MEMBER_BIRTH, 1, 4))) >= 60)
+        LEFT JOIN RESERVE R ON M.MEMBER_NUM = R.MEMBER_NUM -- 실제 예약한 회원만 카운트
+        GROUP BY G.AGE_G
+        ORDER BY G.AGE_G ASC
+    </select>
+</mapper>

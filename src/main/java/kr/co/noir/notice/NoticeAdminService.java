@@ -1,245 +1,209 @@
 package kr.co.noir.notice;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.List;
 
-import org.apache.ibatis.exceptions.PersistenceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import kr.co.noir.inquiry.InquiryDomain;
 
 @Service
 public class NoticeAdminService {
 
-	@Autowired
-	private NoticeAdminDAO naDAO;
+    @Autowired
+    private NoticeAdminDAO naDAO;
 
-	/**
-	 * 총 게시물의 수
-	 * @param rDTO
-	 * @return
-	 */
-	public int totalCnt(BoardRangeDTO rDTO) {
-		int totalCnt=0;
-		try {
-			totalCnt=naDAO.selectNoticeTotalCnt(rDTO);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}//end catch
-		
-		return totalCnt;
-	}//totalCnt
-	
-	/**
-	 * 한 화면에 보여줄 페이지의 수
-	 * @return
-	 */
-	public int pageScale() {
-		return 10;
-	}//pageScale
-	
-	/**
-	 * 총 페이지 수
-	 * @param totalCount - 전체 게시물의 수
-	 * @param pageScale - 한 화면에 보여줄 게시물의 수
-	 * @return
-	 */
-	public int totalPage(int totalCount, int pageScale) {
-		return (int)Math.ceil((double)totalCount/pageScale);
-	}//totalPage
-	
-	/**
-	 * 페이지의 시작번호 구하기
-	 * @param currentPage - 현재페이지
-	 * @param pageScale - 한 화면에 보여줄 게시물의 수
-	 * @return
-	 */
-	public int startNum(int currentPage, int pageScale) {
-		return currentPage * pageScale-pageScale+1;
-	}//startNum
-	
-	/**
-	 * 페이지의 끝 번호 구하기
-	 * @param startNum - 시작번호
-	 * @param pageScale - 한 화면에 보여줄 게시물의 수
-	 * @return
-	 */
-	public int endNum(int startNum, int pageScale) {
-		return startNum+pageScale-1;
-	}//endNum
-	 
-	/**
-	 * 시작번호, 끝 번호, 검색 필드, 검색 키워드를 사용한 게시글 검색
-	 * @param rDTO
-	 * @return
-	 */
-	public List<NoticeAdminDomain> searchAdminNoticeList(BoardRangeDTO rDTO){
-		List<NoticeAdminDomain> list=null; 
-		try {
-			list=naDAO.selectNoticeList(rDTO);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}//end catch
-		
-		return list;
-	}//searchBoardList
-	
-	/**
-	 * 제목이 20자를 초과하면 19자까지 보여주고 ...을 붙이는 일 
-	 * @param list
-	 */
-	public void titleSubStr(List<InquiryDomain> boardList) {
-		String title="";
-		for(InquiryDomain bDTO:boardList){
-			title=bDTO.getInquiryTitle();
-			if(title !=null && title.length() > 19){
-				bDTO.setInquiryTitle(title.substring(0,20)+"...");
-			}//end if
-		}//end for
-	}
+    /** 총 게시물 수 */
+    public int totalCnt(BoardRangeDTO rDTO) {
+        try {
+            return naDAO.selectNoticeTotalCnt(rDTO);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
 
-	   public String pagination2( BoardRangeDTO rDTO, String justify ) {
-	         StringBuilder pagination=new StringBuilder();
-	         //1. 한 화면에 보여줄 pagination의 수.
-	         int pageNumber=3;
-	         //2. 화면에 보여줄 시작페이지 번호. 1,2,3 => 1로 시작 , 4,5,6=> 4, 7,8,9=>7
-	         int startPage= ((rDTO.getCurrentPage()-1)/pageNumber)*pageNumber+1;
-	         //3. 화면에 보여줄 마지막 페이지 번호 1,2,3 =>3
-	         int endPage= (((startPage-1)+pageNumber)/pageNumber)*pageNumber;
-	         //4. 총페이지수가 연산된 마지막 페이지수보다 작다면 총페이지 수가 마지막 페이지수로 설정
-	         //456 인경우 > 4로 설정
-	         if( rDTO.getTotalPage() <= endPage) {
-	            endPage=rDTO.getTotalPage();
-	         }//end if
-	         //5.첫페이지가 인덱스 화면 (1페이지) 가 아닌 경우
-	         int movePage=0;
-	         StringBuilder prevMark=new StringBuilder();
-	         prevMark.append("<li class='page-item prev disabled'>");
-	         prevMark.append("<a class='page-link'>이전</a>");
-	         prevMark.append("</li>");
-	         //prevMark.append("<li class='page-item'><a class='page-link' href='#'>Previous</a></li>");
-	         if(rDTO.getCurrentPage() > pageNumber) {// 시작페이지 번호가 3보다 크면 
-	            movePage=startPage-1;// 4,5,6->3 ->1 , 7 ,8 ,9 -> 6 -> 4
-	            prevMark.delete(0, prevMark.length());// 이전에 링크가 없는 [<<] 삭제
-	            prevMark.append("<li class='page-item prev'><a class='page-link' href='").append(rDTO.getUrl())
-	            .append("?currentPage=").append(movePage);
-	            //검색 키워드가 있다면 검색 키워드를 붙인다.
-	            if( rDTO.getCategory() != null && !rDTO.getCategory().isEmpty() ) {
-	            	  prevMark.append("&category=").append(rDTO.getCategory());
-	            	}
-	            	if( rDTO.getKeyword() != null && !rDTO.getKeyword().isEmpty() ) {
-	            	  prevMark.append("&keyword=").append(rDTO.getKeyword());
-	            	}
+    /** 한 화면에 보여줄 게시물 수 */
+    public int pageScale() {
+        return 10;
+    }
 
-	            prevMark.append("'>이전</a></li>");
-	         }//end if
-	         
-	         //6.시작페이지 번호부터 끝 번호까지 화면에 출력
-	         StringBuilder pageLink=new StringBuilder();
-	         movePage=startPage;
-	         
-	         while( movePage <= endPage ) {
-	            if( movePage == rDTO.getCurrentPage()) { //현재 페이지 : 링크 x
-	               pageLink.append("<li class='page-item active page-link'>") 
-	               .append(movePage).append("</li>");
-	            }else {//현재페이지가 아닌 다른 페이지 : 링크 O
-	               pageLink.append("<li class='page-item'><a class='page-link' href='")
-	               .append(rDTO.getUrl()).append("?currentPage=").append(movePage);
-	               //검색 키워드가 있다면 검색 키워드를 붙인다.
-	               if( rDTO.getCategory() != null && !rDTO.getCategory().isEmpty() ) {
-	            	   pageLink.append("&category=").append(rDTO.getCategory());
-		            	}
-		            	if( rDTO.getKeyword() != null && !rDTO.getKeyword().isEmpty() ) {
-		            		pageLink.append("&keyword=").append(rDTO.getKeyword());
-		            	}
-	               pageLink.append("'>").append(movePage).append("</a>");
-	               
-	            }//else
-	            
-	            movePage++;
-	         }//end while
-	         
-	         //7. 뒤에 페이지가 더 있는 경우
-	         StringBuilder nextMark=new StringBuilder("<li class='page-item next disabled'><span class='page-link'>다음</span></li>");
+    /** 총 페이지 수 (✅ 최소 1 보장) */
+    public int totalPage(int totalCount, int pageScale) {
+        int tp = (int) Math.ceil((double) totalCount / pageScale);
+        return (tp <= 0) ? 1 : tp;
+    }
 
-	         if( rDTO.getTotalPage() > endPage) { // 뒤에 페이지가 더 있음.
-	            movePage= endPage+1;
-	            nextMark.delete(0, nextMark.length());
-	            nextMark.append("<li class='page-item next'><a class='page-link' href='")
-	            .append(rDTO.getUrl()).append("?currentPage=").append(movePage);
-	            if( rDTO.getCategory() != null && !rDTO.getCategory().isEmpty() ) {
-	            	nextMark.append("&category=").append(rDTO.getCategory());
-		            	}
-		            	if( rDTO.getKeyword() != null && !rDTO.getKeyword().isEmpty() ) {
-		            		nextMark.append("&keyword=").append(rDTO.getKeyword());
-		            	}
-	            
-	            nextMark.append("'>다음</a></li>");
-	            
-	         }//end if
-	         
-	         if(!("center".equals(justify) || "left".equals(justify))) {
-	            justify="left";
-	         }
-	         pagination.append("<nav aria-label='...'>")
-	         .append("  <ul class='pagination d-flex justify-content-")
-	         .append(justify)
-	         .append("'>");
-	         pagination.append(prevMark).append(pageLink).append(nextMark);
-	         pagination.append("</ul>")
-	         .append("  </nav>");
-	         
-	         return pagination.toString();
-	      }//pagination2
-	   
-	
-    /** 관리자 공지사항 상세 */
+    /** 시작번호 */
+    public int startNum(int currentPage, int pageScale) {
+        return currentPage * pageScale - pageScale + 1;
+    }
+
+    /** 끝번호 */
+    public int endNum(int startNum, int pageScale) {
+        return startNum + pageScale - 1;
+    }
+
+    /** 목록 조회 */
+    public List<NoticeAdminDomain> searchAdminNoticeList(BoardRangeDTO rDTO) {
+        try {
+            return naDAO.selectNoticeList(rDTO);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /** (선택) 제목이 길면 ... 처리 */
+    public void titleSubStr(List<NoticeAdminDomain> noticeList) {
+        if (noticeList == null) return;
+
+        for (NoticeAdminDomain n : noticeList) {
+            if (n == null) continue;
+            String title = n.getNoticeTitle();
+            if (title != null && title.length() > 20) {
+                n.setNoticeTitle(title.substring(0, 20) + "...");
+            }
+        }
+    }
+
+    /**
+     * ✅ 버튼형 페이지네이션 (field + keyword 유지)
+     * - rDTO.url 은 컨트롤러에서 "/notice/noticeAdminList" 형태로 세팅되어 있어야 함
+     */
+    public String pagination2(BoardRangeDTO rDTO, String justify) {
+
+        // 방어
+        if (rDTO == null) return "";
+
+        StringBuilder sb = new StringBuilder();
+
+        int pageNumber = 3;
+
+        int currentPage = rDTO.getCurrentPage();
+        if (currentPage <= 0) currentPage = 1;
+
+        int totalPage = rDTO.getTotalPage();
+        if (totalPage <= 0) totalPage = 1;
+
+        int startPage = ((currentPage - 1) / pageNumber) * pageNumber + 1;
+        int endPage = startPage + pageNumber - 1;
+        if (endPage > totalPage) endPage = totalPage;
+
+        // ✅ 파라미터 유지
+        String field = (rDTO.getField() == null || rDTO.getField().trim().isEmpty()) ? "1" : rDTO.getField().trim();
+        String keyword = (rDTO.getKeyword() == null) ? "" : rDTO.getKeyword().trim();
+        String encKeyword = keyword.isEmpty() ? "" : URLEncoder.encode(keyword, StandardCharsets.UTF_8);
+
+        String baseUrl = rDTO.getUrl();
+        if (baseUrl == null || baseUrl.isBlank()) baseUrl = "/notice/noticeAdminList";
+
+        // justify 보정
+        if (!("center".equals(justify) || "left".equals(justify) || "right".equals(justify))) {
+            justify = "center";
+        }
+
+        // ✅ 공통 QS
+        StringBuilder qs = new StringBuilder();
+        qs.append("&field=").append(field);
+        if (!keyword.isEmpty()) {
+            qs.append("&keyword=").append(encKeyword);
+        }
+
+        // wrapper
+        sb.append("<div style='text-align:").append(justify).append(";'>");
+
+        // ===== 이전 =====
+        if (currentPage > pageNumber) {
+            int movePage = startPage - 1;
+            sb.append("<a class='prevMark' href='")
+              .append(baseUrl).append("?currentPage=").append(movePage)
+              .append(qs)
+              .append("'>&lt;&lt;</a>");
+        } else {
+            sb.append("<span class='currentPage' style='opacity:.35'>&lt;&lt;</span>");
+        }
+
+        // ===== 페이지 =====
+        for (int p = startPage; p <= endPage; p++) {
+            if (p == currentPage) {
+                sb.append("<span class='currentPage'>").append(p).append("</span>");
+            } else {
+                sb.append("<a class='notCurrentPage' href='")
+                  .append(baseUrl).append("?currentPage=").append(p)
+                  .append(qs)
+                  .append("'>").append(p).append("</a>");
+            }
+        }
+
+        // ===== 다음 =====
+        if (totalPage > endPage) {
+            int movePage = endPage + 1;
+            sb.append("<a class='nextMark' href='")
+              .append(baseUrl).append("?currentPage=").append(movePage)
+              .append(qs)
+              .append("'>&gt;&gt;</a>");
+        } else {
+            sb.append("<span class='currentPage' style='opacity:.35'>&gt;&gt;</span>");
+        }
+
+        sb.append("</div>");
+        return sb.toString();
+    }
+
+    /** 상세 */
     public NoticeAdminDomain searchOneNotice(int noticeNum) {
-        NoticeAdminDomain naDomain = null;
         try {
-        	naDomain = naDAO.selectNoticeDetail(noticeNum);
+            return naDAO.selectNoticeDetail(noticeNum);
         } catch (SQLException e) {
             e.printStackTrace();
+            return null;
         }
-        return naDomain;
     }
 
-    /** 관리자 공지사항 등록 */
+    /** 등록 */
     public int addAdminNotice(NoticeAdminDTO naDTO) {
-        int cnt = 0;
         try {
-            naDAO.insertNotice(naDTO);
-            cnt = 1;
-        } catch (PersistenceException pe) {
-            pe.printStackTrace();
-        }
-        return cnt;
-    }
-
-    //관리자 공지사항 수정
-	public int modifyNotice(NoticeAdminDTO naDTO) {
-		int cnt = 0;
-
-		try {
-			cnt = naDAO.updateNotice(naDTO);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} // end catch
-
-		return cnt;
-	}// modifyBoard
-    
-    /** 관리자 공지사항 삭제 */
-    public int removeAdminNotice(int noticeNum) {
-        int cnt = 0;
-        try {
-            cnt = naDAO.deleteNotice(noticeNum);
+            return naDAO.insertNotice(naDTO);
         } catch (SQLException e) {
             e.printStackTrace();
+            return 0;
         }
-        return cnt;
     }
 
+    /** 수정 */
+    public int modifyNotice(NoticeAdminDTO naDTO) {
+        try {
+            return naDAO.updateNotice(naDTO);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
 
+    /** 삭제(soft delete) */
+    public int removeAdminNotice(int noticeNum) {
+        try {
+            return naDAO.deleteNotice(noticeNum);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    /* =========================================================
+       ✅ 추가: adminId로 adminNum 조회 (세션 보정용)
+       - 컨트롤러에서 adminNum이 비었을 때 DB로 찾아 채우기 위함
+       ========================================================= */
+    public Integer findAdminNumByAdminId(String adminId) {
+        if (adminId == null || adminId.trim().isEmpty()) return null;
+
+        try {
+            return naDAO.selectAdminNumByAdminId(adminId.trim());
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

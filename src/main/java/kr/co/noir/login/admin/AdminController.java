@@ -50,7 +50,7 @@ public class AdminController {
             HttpSession newSession = request.getSession(true);
             // 새로운 세션 생성
             newSession.setAttribute("adminId", aDTO.getAdminId());            
-            // 성공 시 관리자 메인(대시보드)으로 리다이렉트 -- 나중에 작업
+            newSession.setAttribute("adminNum", aDTO.getAdminNum());            
  
             return "redirect:/admin/dashBoard"; 
         }
@@ -112,8 +112,11 @@ public class AdminController {
 
         // 3. 로그아웃 후 관리자 로그인 페이지로 리다이렉트한다.
         // 뒤에 ?logout 쿼리 파라미터를 붙여 로그인 페이지에서 "로그아웃 되었습니다" 메시지를 띄울 수 있음.
-        return "redirect:/login/adminLogin?logout";
+        return "login/adminLogin";
     }
+    
+    
+
     
     
 }//AdminController

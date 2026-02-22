@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.noir.dinning">
+
+
+	<resultMap type="dinningDomain" id="dinningSelect">
+		<result column="dinning_name" property="dinningName"/>
+		<result column="dinning_ex" property="dinningEx"/>	
+		<result column="dinning_detail" property="dinningDetail"/>			
+		<result column="dinning_img1" property="dinningImg1"/>	
+		<result column="dinning_img2" property="dinningImg2"/>	
+		<result column="dinning_img3" property="dinningImg3"/>	
+		<result column="dinning_img4" property="dinningImg4"/>	
+		<result column="dinning_img5" property="dinningImg5"/>	
+		<result column="dinning_time" property="dinningTime"/>	
+		<result column="dinning_adult_price" property="adultPrice"/>	
+		<result column="dinning_kid_price" property="kidPrice"/>	
+		<result column="dinning_morning_str" property="dinningMorningStr"/>	
+		<result column="dinning_morning_end" property="dinningMorningEnd"/>	
+		<result column="dinning_lunch_str" property="dinningLunchStr"/>	
+		<result column="dinning_lunch_end" property="dinningLunchEnd"/>	
+		<result column="dinning_dinner_str" property="dinningDinnerStr"/>	
+		<result column="dinning_dinner_end" property="dinningDinnerEnd"/>
+		<result column="dinning_menu_type" property="dinningMenuType"/>
+		<result column="dinning_menu_main" property="dinningMenuMain"/>
+		<result column="dinning_menu_sub" property="dinningMenuSub"/>
+		<result column="dinning_max_table" property="dinningMaxTable"/>
+	</resultMap> 
+
+
+
+		<select id="dinningSelect" resultMap="dinningSelect">
+		select dinning_img1, dinning_img2, dinning_img3, dinning_img4,dinning_img5, dinning_name, dinning_ex from dinning_info
+		</select>	
+		
+		<select id="dinningDetailSelect" resultMap="dinningSelect">
+		select I.dinning_menu_num,
+		    I.dinning_img1, I.dinning_img2, I.dinning_img3, I.dinning_img4, I.dinning_img5,
+		    I.dinning_name,
+		    I.dinning_ex,
+		    I.dinning_detail,
+		    I.dinning_time,
+		    I.dinning_max_table,
+		    I.dining_schedule_num,
+
+		    P.dinning_adult_price,
+		    P.dinning_kid_price,
+
+		    T.dinning_morning_str, T.dinning_morning_end,
+		    T.dinning_lunch_str, T.dinning_lunch_end,
+		    T.dinning_dinner_str, T.dinning_dinner_end,
+
+		    M.dinning_menu_type,
+		    M.dinning_menu_main,
+		    M.dinning_menu_sub from dinning_info I
+			left join dinning_price P ON I.dinning_menu_num = P.dinning_menu_num
+			LEFT JOIN dinning_type_time T ON I.dinning_menu_num = T.dinning_menu_num
+			LEFT JOIN dinning_menu M ON P.dinning_menu_type = M.dinning_menu_type
+
+		</select>	
+		
+		
+	<update id="infoUpdate" parameterType="DinningDTO">
+		update dinning_info
+		set dinning_ex = #{dinningEx}, dinning_detail=#{dinningDetail}, dinning_img1=#{dinningImg1},
+		dinning_img2=#{dinningImg2}, dinning_img3=#{dinningImg3},dinning_img4=#{dinningImg4}, dinning_img5=#{dinningImg5}   
+		where dinning_menu_num = 1
+	</update>
+	
+	
+	<update id="morningMenuUpdate" parameterType="DinningDTO">
+		update dinning_menu
+		set dinning_menu_main=#{morningMain}, dinning_menu_sub=#{morningSub}
+		where dinning_menu_type = '조식'  							
+	</update>
+	
+	
+	<update id="lunchMenuUpdate" parameterType="DinningDTO">
+		update dinning_menu
+		set dinning_menu_main=#{lunchMain}, dinning_menu_sub=#{lunchSub}
+		where dinning_menu_type = '중식'  							
+	</update>
+	
+	
+	<update id="dinnerMenuUpdate"  parameterType="DinningDTO">
+		update dinning_menu
+		set dinning_menu_main=#{dinnerMain}, dinning_menu_sub=#{dinnerSub}
+		where dinning_menu_type = '석식'  							
+	</update>
+	
+	<!-- <resultMap type="dinningDTO" id="dinningTimeUpdate">
+		<result column="dinning_morning_str" property="morningStr"/>	
+		<result column="dinning_morning_end" property="morningEnd"/>	
+		<result column="dinning_lunch_str" property="lunchStr"/>	
+		<result column="dinning_lunch_end" property="lunchEnd"/>	
+		<result column="dinning_dinner_str" property="dinnerStr"/>	
+		<result column="dinning_dinner_end" property="dinnerEnd"/>	
+	</resultMap>  
+	
+	 -->
+	<update id="timeUpdate"  parameterType="DinningDTO">
+	 	update dinning_type_time
+	 	set dinning_morning_str=#{morningStr}, dinning_morning_end=#{morningEnd},
+	 	dinning_lunch_str=#{lunchStr}, dinning_lunch_end=#{lunchEnd},
+	 	dinning_dinner_str=#{dinnerStr}, dinning_dinner_end=#{dinnerEnd}
+	 	where dinning_menu_num=1
+	</update>
+	
+	<update id="morningMenuPrice" parameterType="DinningDTO">
+		update dinning_price
+		set dinning_adult_price=#{morningAdult}, dinning_kid_price=#{morningKid}
+		where dinning_menu_type = '조식'  							
+	</update>
+	
+	
+	<update id="lunchMenuPrice" parameterType="DinningDTO">
+		update dinning_price
+		set dinning_adult_price=#{lunchAdult}, dinning_kid_price=#{lunchKid}
+		where dinning_menu_type = '중식'  							
+	</update>
+	
+	
+	<update id="dinnerMenuPrice"  parameterType="DinningDTO">
+		update dinning_price
+		set dinning_adult_price=#{dinnerAdult}, dinning_kid_price=#{dinnerKid}
+		where dinning_menu_type = '석식'  							
+	</update>
+	
+	
+	
+	
+	
+</mapper>
+
+
+
+

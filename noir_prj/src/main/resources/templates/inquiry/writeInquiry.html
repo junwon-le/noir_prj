@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="title" content="HOTEL 28">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>HOTEL 28</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.css" rel="stylesheet">
+<!-- jQeury CDN 시작 -->
+<link rel="stylesheet" type="text/css" href="/common/css/homepage/base.css">
+<link rel="stylesheet" type="text/css" href="/common/css/homepage/style.css?v=0312">
+<link rel="stylesheet" type="text/css" href="/common/css/homepage/sub.css?v=0312">
+<!-- jQeury CDN 시작 -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
+
+<script src="/common/js/comm/jquery.bxslider.js"></script>
+<script src="/common/js/homepage/jquery.rwdImageMaps.min.js"></script>
+<script src="/common/js/homepage/jquery.accessibility.modal.js"></script>
+<script src="/common/js/comm/jquery.cookie.js"></script>
+<script src="/common/js/homepage/plugin.js"></script>
+<script src="/common/js/homepage/custom.js"></script>
+
+</head>
+
+
+<script>
+$(function() {
+
+  $("#submitBtn").on("click", function(e) {
+    if ($("#title").val().trim() === "") {
+      alert("제목을 입력해주세요.");
+      return;
+    }
+    
+    if ($('#summernote').summernote('isEmpty')) {
+        alert("문의 내용을 입력해주세요.");
+        return;
+    }
+
+    if (!$("#check").is(":checked")) {
+      alert("문의하시려면 약관에 동의해주세요.");
+      return;
+    }
+
+    if (confirm("작성하신 문의내용을 접수하시겠습니까?")) {
+        $("#frm").submit();
+    }
+  });
+
+  $(document).on("click", ".agreement-item", function(e) {
+    if ($(e.target).closest(".toggle-btn").length) return;
+
+    const $detail = $(this).next(".agreement-detail");
+    $detail.toggleClass("is-open");
+    $(this).find(".detail-arrow").toggleClass("rotated");
+  });
+
+  $(document).on("click", ".toggle-btn", function(e) {
+    e.stopPropagation();
+
+    const $item = $(this).closest(".agreement-item");
+    const $detail = $item.next(".agreement-detail");
+
+    $detail.toggleClass("is-open");
+    $(this).toggleClass("rotated");
+  });
+
+});
+</script>
+<script>
+$(function(){
+  
+
+  $(".summernote").summernote({
+    height: 180,
+    toolbar: [
+      
+      ["fontsize", ["fontsize"]],
+      ["color", ["color"]],
+      
+      ["height", ["height"]],
+      ["insert", ["picture"]]
+    ]
+  });
+});
+</script>
+<script>
+var CONTEXT = '';
+$(document).ready(function($) {
+    $('.open_modal').click(function(e) {    	
+        $("iframe").attr("src", $(this).attr('url')).show();        	
+        e.preventDefault();
+    });
+});
+
+$(document).on('click','.btn_pop_close',function(e){
+	$('#popIframe > iframe').attr('src','').hide();
+	e.preventDefault();
+})
+</script>
+
+
+<style>
+.wrapper{
+	background-color: white;
+}
+
+.subject
+{
+color:white;
+text-decoration: none;
+}
+
+
+.main-sub > ul > li > a {
+	text-decoration: none;
+}
+
+
+.info > ul > li > a {
+	
+	color:white;
+	text-decoration: none;
+}
+.info > ul > li {
+	list-style:none;
+}
+
+.footer_bot{
+padding:0px;
+}
+
+
+.maincontainer{
+margin-left:100px;
+margin-top:60px;
+height:1000px;
+background-color: #FFF;
+}
+
+.input-container {
+	/* 부모 컨테이너 역할 */
+	width: 100%;
+	max-width: 1200px; /* 입력 필드의 최대 너비 설정 */
+	margin: 30px auto; /* 중앙 정렬 */
+}
+
+
+
+.input-container input {
+	/* 실제 입력 필드 스타일 */
+	width: 100%;
+	height: 50px; /* 높이 고정 (padding에 따라 조절 가능) */
+	padding: 10px 25px; /* 내부 여백 */
+	font-size: 1.1em; /* 폰트 크기 */
+	/* 모양 구현 */
+	border: 1px solid #ddd; /* 옅은 테두리 */
+	border-radius: 5px; /* 둥근 모서리 */
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); /* 은은한 그림자 (선택 사항) */
+	/* 포커스 시 테두리 스타일 변경 */
+	transition: border-color 0.3s; /* 부드러운 전환 효과 */
+	outline: none; /* 기본 포커스 테두리 제거 */
+}
+
+.input-container input:focus {
+	border-color: #000; /* 포커스 시 파란색 테두리 */
+}
+
+/* 이미지에 보이는 "제목" 텍스트 스타일 */
+.input-container input::placeholder {
+	color: #888;
+	font-size: 0.9em;
+}
+
+.cleanForm{
+  max-width: 520px;
+}
+
+/* 한 항목 */
+.field{
+  margin-bottom: 28px;
+}
+
+/* 라벨 */
+.field-label{
+  display: block;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin-bottom: 10px;
+  color: #111;
+}
+
+.req{
+  font-weight: 800;
+}
+
+/* 밑줄 input */
+.cleanForm input{
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid #cfcfcf;
+  border-radius: 0;
+  background: transparent;
+
+  padding: 10px 2px;
+  font-size: 15px;
+  color: #111;
+
+  outline: none;
+  box-shadow: none;
+}
+
+
+
+/* 포커스 시만 살짝 진해지게 */
+.cleanForm input:focus{
+  border-bottom-color: #111;
+}
+
+
+.agreement-detail {
+	/* 기본적으로 숨기기 */
+	max-height: 0;
+	overflow: hidden;
+	transition: max-height 0.3s ease-out; /* 부드러운 애니메이션 효과 */
+}
+
+/* 상세 내용이 보일 때 */
+.agreement-detail.is-open {
+	/* 실제 내용 높이에 맞춰 적절히 크게 설정 */
+	max-height: 300px;
+	transition: max-height 0.3s ease-in;
+}
+
+/* 상세 내용 박스 스타일 */
+.detail-box {
+	background-color: #f7f7f7;
+	border: 1px solid #eee;
+	padding: 15px;
+	margin: 10px 0;
+	border-radius: 5px;
+}
+
+.detail-box h4 {
+	margin-top: 0;
+	font-size: 1em;
+	color: #333;
+	border-bottom: 1px solid #ddd;
+	padding-bottom: 5px;
+	margin-bottom: 10px;
+}
+
+.detail-box p {
+	margin: 3px 0;
+	font-size: 0.95em;
+	color: #555;
+}
+
+/* 화살표 아이콘 스타일 */
+.detail-arrow {
+	font-size: 1.2em;
+	color: #aaa;
+	margin-left: 10px;
+	cursor: pointer;
+	/* 화살표 회전을 위한 전환 효과 */
+	transition: transform 0.3s;
+}
+
+/* 화살표가 아래로 돌아가도록 설정 (내용이 열렸을 때) */
+.detail-arrow.rotated {
+	transform: rotate(90deg);
+}
+
+/* 항목 전체를 클릭했을 때 커서 변경 */
+.agreement-item {
+	cursor: pointer;
+}
+.title-box{
+ 	background-color: black;
+ 	height: 127px;
+}
+
+.section-title{
+	font-size:30px;
+	font-weight: 800;
+	margin-bottom: 20px;
+	margin-top: 20px;
+}
+
+.info-title{
+	font-size:14px;
+	font-weight: 600;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+#submitBtn{
+	margin-top:-50px;
+	margin-bottom:40px;
+	padding: 20px 80px;
+	font-size: 18px;
+	font-weight: 600;
+}
+.minimenu{
+	padding: 15px 0 0 0;
+	position: fixed;
+	left: 100px;  
+	top: 200px;
+	height: 200px;
+	width: 150px;
+	background-color: #F1F4FA;
+	z-index: 3;
+}
+.minimenu a{
+	display: block;          /* 줄 전체 클릭 가능 */
+	padding: 15px 30px;
+	color: black;
+	text-decoration: none;
+	font-size:15px;
+	font-weight: 400;
+}
+
+.minimenu a:hover{
+	color:#414141;
+	font-weight: 600;
+}
+
+#qna{
+	font-weight: 800;
+}
+
+</style>
+
+
+<body>
+<div class="wrapper">
+    <div id="popIframe" class="popup_rsvn">
+        <iframe name="popupIframe" id="popupIframe" src="" width="100%" height="100%" scrolling="no" visible="true" frameborder="0"></iframe>
+		<a href="#" class="btn_pop_close">X</a>
+    </div>
+
+<a href="#popIframe" class="open_modal" url="/view/roomReservationStep2.do" id="rsvnLayer" style="display:none;"></a>
+<header>
+<div th:replace="~{fragments/header :: header}"></div>
+</header>
+<div class="title-box">
+</div>
+	<form th:action="@{/writeInquiry}" method="post" id="frm">
+		<div class="maincontainer">
+				
+				<div class="minimenu">
+				<a th:href="@{/writeInquiry}" id="qna">문의 하기</a><br>
+				<a th:href="@{/inquiryList}" id="qnaList">문의 내역</a><br>
+				<a th:href="@{/noticeList}" id="notice">공지 사항</a>
+				</div>
+				
+					
+				<div style="max-width: 1000px; margin: 0px auto; ">
+					<div class="input-container">                
+						
+						<h2 class="section-title">문의 하기</h2>
+						<input type="text" name="inquiryTitle" id="title" placeholder="제목" maxlength="30">
+				</div>
+				<div style="min-height: 250px; max-width: 1000px; margin: 0px auto;">
+					<textarea id="summernote" name="inquiryMsg" class="summernote"></textarea>
+				</div>
+				
+				<div class="infoContainer">
+
+				 <div class="cleanForm">
+    <input type="hidden" name="memberNum" th:value="${member?.memberNum}">
+
+<div class="field">
+    <label class="field-label">작성자명</label>
+    <input type="text" name="name" id="name" 
+           th:value="${member?.memberLastName != null ? (member.memberLastName + member.memberFirstName) : ''}" readonly>
+</div>
+
+<div class="field">
+    <label class="field-label">핸드폰번호</label>
+    <input type="text" name="memberTel" id="tel" 
+           th:value="${member?.memberTel}" readonly>
+</div>
+
+<div class="field">
+    <label class="field-label">이메일</label>
+    <div class="emailRow">
+        <input type="text" name="emailId" id="emailId" 
+               th:value="${member?.memberEmail}" readonly>
+    </div>
+</div>
+</div>
+
+				
+				</div>
+
+			
+			<div class="agreement-section"
+				style="max-width: 1000px; margin: 0px auto;">
+				<h4 class="section-title">약관 동의</h4>
+
+
+				<div class="agreement-item" id="agreementItem1"
+					style="border-top: 1px solid #333; border-bottom: 1px solid #333; padding: 10px;">
+					<label class="agreement-label">
+					 <input	type="checkbox" name="privacy_agree" required id="check"> <span
+						class="agreement-text" style="font-size: 20px;" > <span
+							class="required-tag">[필수]</span> 개인 정보 수집 및 이용 동의
+					</span>
+					</label> <span class="detail-arrow toggle-btn">&gt;</span>
+				</div>
+
+				<div class="agreement-detail" id="detailContent1">
+					<div class="detail-box">
+						<h4>개인정보 수집 및 이용 동의 상세 내용</h4>
+						<p>1. 수집 목적: 서비스 이용자 식별 및 회원 관리</p>
+						<p>2. 수집 항목: 이름, 연락처, 이메일 주소</p>
+						<p>3. 보유 및 이용 기간: 회원 탈퇴 시 또는 법정 보존 기한까지</p>
+						<p style="margin-top: 10px; font-size: 0.9em; color: #888;">
+							**[주의]** 위 사항에 동의하지 않을 경우, 서비스 이용이 제한될 수 있습니다.</p>
+					</div>
+				</div>
+					</div>
+			</div>
+		</div>
+					<div style="text-align: center;">
+				<button type="button" class="btn btn-dark" id="submitBtn">문의 접수</button>
+					</div>
+	</form>
+<footer>
+        <div th:replace="~{fragments/footer :: footer}"></div>
+    </footer>
+    
+    <div id="privacy-layer">
+        <div th:replace="~{fragments/privacy :: privacy}"></div>
+    </div>
+
+<script type="text/javascript" th:src="@{/common/js/comm/jquery.validate.js}"></script>
+<script type="text/javascript" th:src="@{/common/js/comm/wings.core.js}"></script>
+<script type="text/javascript" th:src="@{/common/js/comm/PAGING_HOMEPAGE.js}"></script>
+<script type="text/javascript" th:src="@{/common/js/comm/kendo.web.min.js}"></script>
+
+
+
+</div>
+</body>
+</html>

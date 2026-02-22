@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="kr.co.noir.reserve.RoomReserveMapper">
+  	<!-- 선택된 날짜에 남은 객실 검색 보류 중인 방 제외 -->
+  	<select id="selectRoom1" parameterType="roomSearchDTO1" resultType="roomSearchDomain1">
+  	<![CDATA[
+SELECT 
+    ri.room_type_num,
+    ri.room_type,
+    ri.room_detail,
+    ri.room_img1,
+    ri.room_max_person,
+    -- 1. 시작일(체크인)의 가격
+    MIN(CASE WHEN rp.room_date = TO_DATE(#{startDate}, 'yyyy-MM-dd') THEN rp.room_price END) AS start_date_price,
+    -- 2. 전체 숙박 기간의 총 요금 합계
+    SUM(rp.room_price) AS total_sum_price,
+    -- 3. 확정 예약된 방 개수
+    NVL(ra.cnt, 0) AS reserved_count,
+    -- 4. 결제 진행(보류) 중인 방 개수
+    NVL(rd.pending_cnt, 0) AS pending_count,
+    -- 5. 실제 남은 방 개수 (전체 - 예약 - 보류)
+    (ri.room_count - NVL(ra.cnt, 0) - NVL(rd.pending_cnt, 0)) AS available_count
+FROM 
+    room_info ri
+JOIN 
+    room_price rp ON ri.room_type_num = rp.room_type_num
+LEFT JOIN (
+    -- [서브쿼리 1] 확정된 예약 수량 계산 (날짜 중첩 확인)
+    SELECT 
+        rr.room_type_num, 
+        COUNT(*) AS cnt
+    FROM 
+        room_res rr
+    JOIN 
+        reserve r ON rr.reserve_num = r.reserve_num
+    WHERE 
+        r.reserve_status = 'N' -- 정상 예약
+        AND r.reserve_start_date < TO_DATE(#{endDate}, 'yyyy-MM-dd')
+        AND r.reserve_end_date > TO_DATE(#{startDate}, 'yyyy-MM-dd')
+    GROUP BY 
+        rr.room_type_num
+) ra ON ri.room_type_num = ra.room_type_num
+LEFT JOIN (
+    -- [서브쿼리 2] 10분 이내의 유효한 보류 수량 계산 (날짜 중첩 확인)
+    -- ※ room_depending 테이블에 시작/종료일 컬럼이 추가되었다고 가정함
+    SELECT 
+        room_type_num, 
+        SUM(room_cnt) AS pending_cnt
+    FROM 
+        room_depending
+    WHERE 
+        depending_time > SYSTIMESTAMP - INTERVAL '1' MINUTE -- 10분 타임아웃
+        AND room_res_start_date < TO_DATE(#{endDate}, 'yyyy-MM-dd')
+        AND room_res_end_date > TO_DATE(#{startDate}, 'yyyy-MM-dd')
+    GROUP BY 
+        room_type_num
+) rd ON ri.room_type_num = rd.room_type_num
+WHERE 
+    -- 조회 기간에 해당하는 가격만 집계
+    rp.room_date >= TO_DATE(#{startDate}, 'yyyy-MM-dd')
+    AND rp.room_date < TO_DATE(#{endDate}, 'yyyy-MM-dd')
+GROUP BY 
+    ri.room_type_num, 
+    ri.room_type, 
+    ri.room_detail, 
+    ri.room_img1, 
+    ri.room_max_person,
+    ri.room_count,
+    ra.cnt,
+    rd.pending_cnt
+HAVING 
+    -- 최종적으로 방이 남아있는 객실만 조회
+    (ri.room_count - NVL(ra.cnt, 0) - NVL(rd.pending_cnt, 0)) > 0
+ORDER BY 
+    room_type_num ASC
+  	]]>
+  	</select>
+  
+	
+  </mapper>

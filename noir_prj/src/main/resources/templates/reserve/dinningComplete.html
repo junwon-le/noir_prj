@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<link rel="shortcut icon" href="/common/images/favicon.ico">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="title" content="HOTEL 28">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>HOTEL 28</title>
+<link rel="stylesheet" type="text/css" href="/common/css/homepage/base.css">
+<link rel="stylesheet" type="text/css" href="/common/css/homepage/style.css?v=0312">
+<link rel="stylesheet" type="text/css" href="/common/css/homepage/sub.css?v=0312">
+<!-- jQeury CDN 시작 -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="/common/js/comm/jquery.bxslider.js"></script>
+<script src="/common/js/homepage/jquery.rwdImageMaps.min.js"></script>
+<script src="/common/js/homepage/jquery.accessibility.modal.js"></script>
+<script src="/common/js/comm/jquery.cookie.js"></script>
+<script src="/common/js/homepage/plugin.js"></script>
+<script src="/common/js/homepage/custom.js"></script>
+</head> 
+<div class="wrapper">
+    <div id="popIframe" class="popup_rsvn">
+        <iframe name="popupIframe" id="popupIframe" src="" width="100%" height="100%" scrolling="no" visible="true" frameborder="0"></iframe>
+		<a href="#" class="btn_pop_close">X</a>
+    </div>
+</div>
+<a href="#popIframe" class="open_modal" url="/view/roomReservationStep2.do" id="rsvnLayer" style="display:none;"></a>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+.subject
+{
+color:white;
+text-decoration: none;
+}
+
+
+.main-sub > ul > li > a {
+	text-decoration: none;
+}
+
+
+.info > ul > li > a {
+	
+	color:white;
+	text-decoration: none;
+}
+.info > ul > li {
+	list-style:none;
+}
+
+.footer_bot{
+padding:0px;
+}
+
+#container{
+min-height:700px;
+padding-top: 220px;
+}
+.text-xl, .text-sm, #at{
+color:white;
+}
+.hr{
+margin-bottom: 40px;
+width:100%;
+}
+
+
+
+</style>
+<style>
+        /* 배경 세로 패턴 구현 */
+       #reserveInfo{
+            background-color: #1a1a1a;
+            background-image: linear-gradient(90deg, transparent 50%, rgba(255,255,255,.02) 50%);
+            background-size: 4px 100%;
+            color: #fff;
+            font-family: 'serif', 'Noto Serif KR', serif;
+            height: 100vh;
+            margin: 0 auto;
+            max-width:1000px;
+            max-height:700px;
+            padding:50px;
+            
+        }
+        /* 상단 금색 체크 아이콘 */
+        .check-icon {
+            font-size: 50px;
+            color: #d4af37;
+            margin-bottom: 20px;
+        }
+        .icon-circle {
+            border: 2px solid #d4af37;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        /* 월계수 느낌의 장식 (간소화) */
+        .icon-circle::before, .icon-circle::after {
+            content: '🌿'; /* 실제 아이콘 대신 이모지로 대체 가능 */
+            position: absolute;
+            font-size: 20px;
+            bottom: -5px;
+        }
+
+        h1 {
+            font-weight: 400;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            color: #e0c097;
+        }
+
+        .subtitle {
+            font-size: 0.8rem;
+            color: #aaa;
+            margin-bottom: 40px;
+        }
+
+        /* 예약 상세 박스 */
+        .reservation-card {
+            border: 1px solid #8e734b;
+            background-color: rgba(20, 24, 35, 0.8);
+            padding: 40px;
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .res-no {
+            font-size: 1.2rem;
+            border-bottom: 1px solid #333;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+        }
+
+        .details {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            text-align: left;
+        }
+
+        .info-label {
+            color: #8e734b;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 0.9rem;
+        }
+
+        .info-row {
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+
+        .price-area {
+            text-align: right;
+        }
+
+        .total-price {
+            font-size: 1.8rem;
+            color: #e0c097;
+            display: block;
+        }
+
+        .payment-status {
+            font-size: 0.75rem;
+            color: #888;
+        }
+
+        /* 버튼 스타일 */
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .btn {
+            text-decoration: none;
+            font-size: 0.85rem;
+            border: 1px solid #8e734b;
+            transition: 0.3s;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .btn-manage {
+            background-color: #1e2533;
+            color: #fff;
+        }
+
+        .btn-main {
+            background-color: transparent;
+            color: #fff;
+        }
+
+        .btn:hover {
+            background-color: #8e734b;
+            color: #000;
+        }
+
+        .footer-note {
+            margin-top: 20px;
+            font-size: 0.75rem;
+            color: #666;
+        }
+    </style>
+
+<body>
+<header>
+<div th:replace="~{fragments/header :: header}"></div>
+</header>
+<div id="container">
+<div id="reserveInfo">
+		<div class="icon-circle">
+        <span class="check-icon">✓</span>
+    </div>
+    
+    <h1>THANK YOU FOR YOUR RESERVATION</h1>
+    <p class="subtitle">Your booking confirmed. A detailed email sent to your inbox.</p>
+
+    <div class="reservation-card">
+        <div class="res-no">RESERVATION NO. <span th:text="${reserve_num}">2026.013-A001</span></div>
+        
+        <div class="details" th:object="${reserve}">
+            <div class="info-text">
+                <div class="info-row">
+                    <span class="info-label">GUEST:</span> <span th:text="|*{user_last_name} *{user_first_name}|">예약자명</span>
+                </div>
+                <div class="info-row" style="margin-left: 60px; color: #ccc;">
+                    <span th:text="|*{dinning_type} / *{dinning_time}|">다이닝 시간 이름</span>
+                </div>
+                <div class="info-row">
+                </div>
+            </div>
+            
+            <div class="price-area">
+                <span class="total-price" th:text="|${#numbers.formatInteger(pay.pay_price,3,'COMMA')}원|">가격</span>
+                <span class="payment-status">Payment due upon check-in</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="button-group">
+        <a href="/mypage/reserve/memberDinningList " class="btn btn-manage">View  Booking</a>
+        <a href="/main" class="btn btn-main">Back to Main</a>
+    </div>
+
+    <p class="footer-note">Online reservations not include payment. Please present valid ID at check-in.</p>
+</div>
+
+</div>
+<footer>
+ <div th:replace="~{fragments/footer :: footer}"></div>
+</footer>
+ <div th:replace="~{fragments/privacy :: privacy}"></div>
+
+<!-- <script type="text/javascript" src="/Hotel28NewCMS_common/js/jquery.modalLayer.js"></script>
+<script type="text/javascript" src="/Hotel28NewCMS_common/js/common_dev.js"></script> -->
+<script type="text/javascript" src="/common/js/comm/jquery.validate.js"></script>
+<script type="text/javascript" src="/common/js/comm/wings.core.js"></script>
+<script type="text/javascript" src="/common/js/comm/PAGING_HOMEPAGE.js"></script>
+<script type="text/javascript" src="/common/js/comm/kendo.web.min.js"></script>
+
+</body>
+</html>

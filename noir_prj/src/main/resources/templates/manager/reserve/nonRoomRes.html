@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>NOIR호텔 관리자 페이지</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900" rel="stylesheet">
+    
+    <link rel="stylesheet" href="/admin_common/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/admin_common/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/admin_common/css/nalika-icon.css">
+    <link rel="stylesheet" href="/admin_common/css/owl.carousel.css">
+    <link rel="stylesheet" href="/admin_common/css/owl.theme.css">
+    <link rel="stylesheet" href="/admin_common/css/owl.transitions.css">
+    <link rel="stylesheet" href="/admin_common/css/animate.css">
+    <link rel="stylesheet" href="/admin_common/css/normalize.css">
+    <link rel="stylesheet" href="/admin_common/css/meanmenu.min.css">
+    <link rel="stylesheet" href="/admin_common/css/main.css">
+    <link rel="stylesheet" href="/admin_common/css/morrisjs/morris.css">
+    <link rel="stylesheet" href="/admin_common/css/scrollbar/jquery.mCustomScrollbar.min.css">
+    <link rel="stylesheet" href="/admin_common/css/metisMenu/metisMenu.min.css">
+    <link rel="stylesheet" href="/admin_common/css/metisMenu/metisMenu-vertical.css">
+    <link rel="stylesheet" href="/admin_common/css/calendar/fullcalendar.min.css">
+    <link rel="stylesheet" href="/admin_common/css/calendar/fullcalendar.print.min.css">
+    <link rel="stylesheet" href="/admin_common/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <script src="js/vendor/modernizr-2.8.3.min.js"></script>
+    <!-- jQeury CDN 시작 -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script th:inline="javascript">
+$(function() {
+    // #table 안에 있는 tbody를 감시하다가, 그 안의 tr이 클릭되면 실행합니다.
+    $("#table").on("click", "tbody tr", function(e) {
+    		 $("#detailRevNum").val($(this).find(".resNum").text());
+    	if ($(e.target).is("button, button *")) {
+            return;
+        }
+    	//alert($("#keyword").val());//삭제
+        location.href="/admin/nonRoomResDetail?resNum="+$(this).find(".resNum").text()+"&field="+$("#field").val()+"&keyword="+$("#keyword").val()+"&currentPage="
+        		+$("#currentPage").val()
+        // 클릭한 행의 데이터를 가져오는 팁
+    });
+    
+    var flag = /*[[${flag}]]*/ false;
+    if (flag==true) {
+           // 성공 모달 띄우기
+           $('#resultModal').modal('show');
+       }//end if
+});//ready
+function cancel(){
+	$("#hiddenFrm").prop("action","/admin/nonRoomRefund");
+	$("#hiddenFrm").submit();
+	
+}//cancel
+</script>
+    <style>
+        /* 페이지네이션 영역 수정 */
+.pagination {
+ display: flex !important;       /* 다른 라이브러리 간섭 방지 */
+    flex-direction: row !important; /* 가로 방향 유지 */
+    justify-content: center !important;    /* 중앙 정렬 */
+    align-items: center;        /* 세로축 중앙 정렬 */
+    margin-top: 30px;
+    gap: 8px;                  /* 요소 사이 간격 */
+    width: 100%;               /* 부모 너비 전체 사용 */
+}
+
+.page-num {
+    display: inline-flex;      /* 내부 텍스트 정렬을 위해 inline-flex 사용 */
+    width: 35px;
+    height: 35px;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff;
+    color: #5c7cfa;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 14px;
+    flex-shrink: 0;            /* 너비가 줄어들지 않도록 고정 */
+}
+
+.arrow {
+    color: white;
+    text-decoration: none;
+    padding: 0 10px;
+    font-size: 18px;
+    line-height: 1;
+}
+.page-num.active {
+            background-color: #8faadc;
+            color: white;
+}
+        /* 테이블 헤더(th) 및 데이터(td) 가운데 정렬 */
+        .table thead th, .table tbody td {
+            text-align: center !important;
+            vertical-align: middle !important;
+            border: none !important;
+        }
+
+        /* 테이블 행 스타일 */
+        .table-row {
+            background-color: #ffffff;
+            transition: background-color 0.2s;
+            border-bottom: 1px solid #f0f2f5 !important;
+        }
+        .table-row:hover {
+            background-color: #f8faff !important;
+        }
+
+        /* 뱃지 및 버튼 스타일 */
+        .badge-status {
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #fff;
+            display: inline-block;
+            border: none; /* input 버튼용 테두리 제거 */
+            cursor: default;
+        }
+        
+        /* 예약취소 버튼 스타일 (클릭 가능) */
+        .btn-cancel {
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .btn-cancel:hover {
+            opacity: 0.8;
+        }
+
+        .status-refund { background-color: #f19b9b; }
+        .status-complete { background-color: #8994bc; }
+
+        .page-btn {
+            border: none; background: #344463; color: #fff;
+            width: 38px; height: 38px; border-radius: 8px;
+            transition: 0.3s; cursor: pointer;
+        }
+        .page-btn.active { background: #8994bc; }
+        
+        .form-control.select_style{
+            color:black; 
+            text-align: center; 
+            text-align-last: center; 
+            width: 140px; 
+            background: #fff; 
+            border-radius: 8px; 
+            height: 42px; 
+            border: 1px solid #e0e6ed; 
+            font-weight: 500;
+            padding: 0;
+        }
+        
+        /* 모달을 화면 정중앙으로 배치 */
+.modal {
+    text-align: center;
+    padding: 0 !important;
+}
+
+.modal:before {
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    margin-right: -4px;
+}
+
+.modal-dialog {
+    display: inline-block;
+    text-align: left;
+    vertical-align: middle;
+}
+
+tr{
+	cursor: pointer;
+
+}
+    </style>
+</head>
+
+<body>
+<div th:replace="~{manager/fragments/sidebar :: sidebar}"></div>    
+<div class="all-content-wrapper">
+<div class="modal fade" id="resultModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 350px;">
+                <div class="modal-content" style="background: #1b2a47; color: #fff; border-radius: 12px; border: 1px solid #344463;">
+                    <div class="modal-body" style="padding: 30px; text-align: center;">
+                        <h4 style="margin-bottom: 20px; font-weight: 600;" id="resultText">예약을 취소되었습니다.</h4>
+                        <div style="display: flex; gap: 10px; justify-content: center;">
+                            <input type="button" value="확인" class="btn" data-dismiss="modal" style="background: #344463; color: #fff; width: 100px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="header-advance-area">
+            <div class="breadcome-area">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                           <div class="breadcome-list" style="margin-left:40px; width:95%; border-radius: 20px;">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                        <div class="breadcomb-wp" style="color:#ffffff; font-size: 20px">
+                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                      <path d="M2 21H22" stroke="#2C3E50" stroke-width="2" stroke-linecap="round"></path>
+                                      
+                                      <path d="M5 21V5C5 3.89543 5.89543 3 7 3H17C18.1046 3 19 3.89543 19 5V21" stroke="#2C3E50" stroke-width="2"></path>
+                                      
+                                      <path d="M9 7V11M15 7V11M9 9H15" stroke="#3498DB" stroke-width="1.5" stroke-linecap="round"></path>
+                                      
+                                      <path d="M10 21V18C10 16.8954 10.8954 16 12 16C13.1046 16 14 16.8954 14 18V21" stroke="#2C3E50" stroke-width="1.5"></path>
+                                    </svg> <span style="text-align: center;"> &nbsp; 호텔 예약 관리(비회원)</span>
+                              </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container" style="min-height:670px; width:100%; color:#ffffff">
+            <div class="row" style="padding: 30px;">
+                <div class="col-lg-12">
+                <form id="searchFrm" action="/admin/nonRoomReserve">
+                    <div class="d-flex" style="display: flex; gap: 10px; margin-bottom: 25px; align-items: center;">
+                        <select class="form-control select_style" name="field" id="field">
+                        	<option value="전체" selected>전체</option> 
+                            <option value="예약번호" th:selected="${#strings.equals(param.field, '예약번호')}">예약번호</option>
+            				<option value="성명" th:selected="${#strings.equals(param.field, '성명')}" >성명</option>
+            				<option value="아이디" th:selected="${#strings.equals(param.field, '아이디')}" >아이디</option>
+                        </select>
+                        <div style="position: relative; flex-grow: 1; max-width: 350px;">
+                            <input type="text" name="keyword" id="keyword" th:value="${param.keyword}" class="form-control" placeholder="검색어를 입력하세요" style="background: white; border-radius: 8px; height: 42px; color:black; padding-right: 45px; border: 1px solid #e0e6ed;">
+                            <button style="position: absolute; right: 6px; top: 6px; border: none; background: #8e99bc; color: #fff; border-radius: 6px; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                          </form>
+
+                    <div class="table-responsive" style="background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.08);">
+                        <table class="table mb-0" style="width: 100%; border-collapse: collapse; " id="table">
+                            <thead style="background: #f9fbff; color: #5a6a85;">
+                                <tr>
+                                    <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600; width: 90px;">예약번호</th>
+                                    <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600;">성명</th>
+                                    <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600;">E-m</th>
+                                    <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600;">숙박일</th>
+                                    <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600;">금액</th>
+                                    <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600;">결제일시</th>
+                                    <th style="padding: 18px; border-bottom: 1px solid #ebf1f6; font-weight: 600; width: 140px;">예약상태</th>
+                                </tr>
+                            </thead>
+                            <tbody style="color: #2a3547; vertical-align: middle; text-align: center;">
+                            <tr th:each="reserve, i : ${list}" th:object="${reserve}">
+                                    <td style="padding: 20px; font-family: 'Roboto';" th:text="*{reserveNum}" class="resNum">1</td>
+                                    <td style="font-weight: 500;" th:text="*{resName}">박OO</td>
+                                    <td style="color: #5d87ff;"th:text="*{reserveEmail}">jonajona</td>
+                                    <td style="font-family: 'Roboto'; color: #7c8fac;" th:text="|*{reserveStartDate}~*{reserveEndDate}|">2026-01-15 ~ 2026-01-20</td>
+                                    <td style="font-family: 'Roboto'; font-weight: 600;" th:text="|*{#numbers.formatInteger(payPrice,3,'COMMA')}KRW|">150,000</td>
+                                    <td th:text="*{reserveTime}">SUITE ROOM</td>
+                                     <td th:if="*{reserveStatus eq 'N'}">
+                                     <button type="button" value="예약취소" class="badge-status status-complete btn-cancel" data-toggle="modal" data-target="#statusModal">예약취소</button>
+        				            </td>
+                   					 <td th:if="*{reserveStatus eq 'Y'}">
+                    					 <span class="badge-status status-refund">환불처리</span>
+                    				</td>
+                                </tr>
+                               
+                            </tbody>
+                        </table>
+                    </div>
+
+                   <div class="pagination">
+    	<th:block th:utext="${pagination}">
+    	</th:block>
+    </div>
+                </div>
+            </div>
+        </div>
+          
+           <form th:action="@{/admin/dinningMember/dinningDetail}" method="get" id="hiddenFrm">
+	        	<input type="hidden" name="currentPage" id="currentPage" th:value="${param.currentPage eq null || param.currentPage==''?1 :param.currentPage}"/>
+	        	<input type="hidden" name="field"   th:value="${param.field==''?reserveNum : param.field}"/>
+	        	<input type="hidden" name="keyword"  th:value="${param.keyword}"/>
+	        	<input type="hidden" name="resNum"  id="detailRevNum" />
+        	</form>
+        
+        <div class="modal fade" id="statusModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 350px;">
+                <div class="modal-content" style="background: #1b2a47; color: #fff; border-radius: 12px; border: 1px solid #344463;">
+                    <div class="modal-body" style="padding: 30px; text-align: center;">
+                        <h4 style="margin-bottom: 20px; font-weight: 600;">예약을 취소할까요?</h4>
+                        <div style="display: flex; gap: 10px; justify-content: center;">
+                            <input type="button" value="아니오" class="btn" data-dismiss="modal" style="background: #344463; color: #fff; width: 100px;">
+                            <input type="button" id="revCancelBtn" value="취소하기"  th:onclick="cancel()" class="btn" style="background: #f19b9b; color: #fff; width: 100px; font-weight: bold;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:replace="~{manager/fragments/footer :: footer}"></div>
+    </div>
+
+    <script src="/admin_common/js/vendor/jquery-1.12.4.min.js"></script>
+    <script src="/admin_common/js/bootstrap.min.js"></script>
+    <script src="/admin_common/js/wow.min.js"></script>
+    <script src="/admin_common/js/jquery-price-slider.js"></script>
+    <script src="/admin_common/js/jquery.meanmenu.js"></script>
+    <script src="/admin_common/js/owl.carousel.min.js"></script>
+    <script src="/admin_common/js/jquery.sticky.js"></script>
+    <script src="/admin_common/js/jquery.scrollUp.min.js"></script>
+    <script src="/admin_common/js/scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="/admin_common/js/scrollbar/mCustomScrollbar-active.js"></script>
+    <script src="/admin_common/js/metisMenu/metisMenu.min.js"></script>
+    <script src="/admin_common/js/metisMenu/metisMenu-active.js"></script>
+    <script src="/admin_common/js/sparkline/jquery.sparkline.min.js"></script>
+    <script src="/admin_common/js/sparkline/jquery.charts-sparkline.js"></script>
+    <script src="/admin_common/js/calendar/moment.min.js"></script>
+    <script src="/admin_common/js/calendar/fullcalendar.min.js"></script>
+    <script src="/admin_common/js/calendar/fullcalendar-active.js"></script>
+    <script src="/admin_common/js/flot/jquery.flot.js"></script>
+    <script src="/admin_common/js/flot/jquery.flot.resize.js"></script>
+    <script src="/admin_common/js/flot/curvedLines.js"></script>
+    <script src="/admin_common/js/flot/flot-active.js"></script>
+    <script src="/admin_common/js/plugins.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

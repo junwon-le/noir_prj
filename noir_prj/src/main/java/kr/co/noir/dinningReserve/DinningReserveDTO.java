@@ -1,0 +1,24 @@
+package kr.co.noir.dinningReserve;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import org.apache.ibatis.type.Alias;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Alias("dinningReserveDTO")
+
+@Setter
+@Getter
+@ToString
+public class DinningReserveDTO {
+	private String user_last_name,user_first_name,reserve_msg,
+	user_id,reserve_type,reserve_ip,emailId,emailDomain,email,
+	reserve_tel,non_user_pass,str_visite_date,dinning_type,dinning_time;
+	private int reserve_adult_count, reserve_kid_count,user_num ,reserve_num,  non_user_num;
+	private LocalDate visite_date;	
+
+}

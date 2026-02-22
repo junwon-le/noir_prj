@@ -153,11 +153,12 @@ background-color: #FFF;
 }
 .event-thum-img {
   display: flex;
-  align-items: flex-start; /* 위쪽 정렬 */
-  justify-content: center; /* 중앙 정렬 */
-  gap: 40px;               /* 이미지와 텍스트 사이 간격 */
-  margin: 0 auto;          /* 중앙 배치 */
-  padding: 40px 20px;      /* 양옆 여백은 작게, 위아래는 적당히 */
+  align-items: center;
+  justify-content: center;
+  gap: 100px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 80px 20px;
 }
 
 .thumimg {
@@ -192,22 +193,45 @@ background-color: #FFF;
   letter-spacing: 2px;
 }
 
-.event-title-title{
-  padding:40px;
-  font-weight: 700;
-  font-size: 30px;
+.event-title-title {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; 
+  padding: 0 0 30px 0;
+  border-bottom: 2px solid #222;
 }
-.event-title-desc{
-  padding:40px;
-  font-size: 14px;
+
+.event-title-title .sub-t {
+  margin-top: 20px; 
+  font-size: 17px;
+  font-weight: 600;
+  color: #C47E27;
+  letter-spacing: 3px;
+  display: block;
+}
+
+.event-title-title .main-t {
+  font-size: 40px; 
+  font-weight: 800;
+  color: #111;
+  line-height: 1.2;
+}
+.event-title-desc {
+  padding: 25px 0 0 0;
+  font-size: 16px;
+  line-height: 1.8;
+  color: #555;
+  word-break: keep-all;
 }
 .event-title-title,
 .event-title-desc{
   display: block;
 }
-.event-text{
+.event-text {
+  flex: 1;
   display: flex;
-  flex-direction: column;     /* 제목 위, 내용 아래 */
+  flex-direction: column;
+  max-width: 650px;
 }
 .line{
   border: 0;
@@ -270,6 +294,28 @@ hr{
 
 }
 
+.event-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* 중앙 정렬 */
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.event-title .main-t {
+  font-size: 48px;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
+.event-title .sub-t {
+  font-size: 18px;
+  font-weight: 400;
+  color: #E0C763; /* 눈송이와 맞춘 골드톤 */
+  letter-spacing: 4px;
+  text-transform: uppercase;
+}
+
 </style>
 
 
@@ -290,9 +336,10 @@ hr{
 <div class="banner">
   <img th:src="@{/common/images/homepage/event/} + ${eventDetail.eventImg2}" alt="이벤트 이미지">
 	<div class="banner-text">
-	<div class="event-title" >
-	<span th:text="${eventDetail.eventTitle}"></span>&nbsp;[<span th:text="${eventDetail.eventSubTitle}"></span>]
-	</div>
+	<div class="event-title">
+  <span class="sub-t" th:text="${eventDetail.eventSubTitle}">SUBTITLE</span>
+  <span class="main-t" th:text="${eventDetail.eventTitle}">MAIN TITLE</span>
+</div>
 	
 	<div class="event-desc">
 	<span th:text="${eventDetail.eventMsg}">내용</span>
@@ -312,7 +359,10 @@ hr{
 	<div class="event-thum-img">
 	<img th:src="@{/common/images/homepage/event/} + ${eventDetail.eventImg1}" class="thumimg" alt="이벤트 이미지">
 	 <div class="event-text">
-    <div class="event-title-title"><span th:text="${eventDetail.eventTitle}"></span>&nbsp;[<span th:text="${eventDetail.eventSubTitle}"></span>]</div>
+    <div class="event-title-title">
+  <span class="main-t" th:text="${eventDetail.eventTitle}">MAIN TITLE</span><br>
+  <span class="sub-t" th:text="${eventDetail.eventSubTitle}">SUBTITLE</span>
+</div>
     <span class="event-title-desc" th:text="${eventDetail.eventMsg}">
       내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용
     </span>

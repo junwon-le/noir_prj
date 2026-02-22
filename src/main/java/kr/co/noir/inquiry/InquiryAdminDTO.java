@@ -13,7 +13,8 @@ import lombok.ToString;
 public class InquiryAdminDTO {
 	 
     private int inquiryNum;
-    private Integer memberNum;
+    private Integer memberNum ;
+    private Integer adminNum ;
 
     private String inquiryTitle;
     private String inquiryMsg;
@@ -22,4 +23,6 @@ public class InquiryAdminDTO {
 
     private Date inquiryDate;
 
-}
+		
+	}
+

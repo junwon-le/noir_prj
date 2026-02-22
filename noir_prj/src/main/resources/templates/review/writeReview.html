@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="title" content="HOTEL 28">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>HOTEL 28</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.css" rel="stylesheet">
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
+<!-- jQeury CDN 시작 -->
+<link rel="stylesheet" type="text/css" href="/common/css/homepage/base.css">
+<link rel="stylesheet" type="text/css" href="/common/css/homepage/style.css?v=0312">
+<link rel="stylesheet" type="text/css" href="/common/css/homepage/sub.css?v=0312">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<!-- jQeury CDN 시작 -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="/common/js/comm/jquery.bxslider.js"></script>
+<script src="/common/js/homepage/jquery.rwdImageMaps.min.js"></script>
+<script src="/common/js/homepage/jquery.accessibility.modal.js"></script>
+<script src="/common/js/comm/jquery.cookie.js"></script>
+<script src="/common/js/homepage/plugin.js"></script>
+<script src="/common/js/homepage/custom.js"></script>
+
+</head>
+
+<script>
+$(document).ready(function () {
+
+  const stars = document.querySelectorAll('#starRating i');
+  const ratingInput = document.getElementById('rating');
+  const ratingText = document.getElementById('ratingText');
+
+  stars.forEach((star, index) => {
+    star.addEventListener('click', () => {
+      const value = star.dataset.value;
+      ratingInput.value = value;
+      ratingText.textContent = value+" /\ 5";
+      updateStars(index);
+    });
+  });
+
+  function updateStars(index) {
+	  stars.forEach((star, i) => {
+	    if (i <= index) {
+	      star.classList.add('active');
+	      star.classList.remove('bi-star');      // 빈 별 클래스 제거
+	      star.classList.add('bi-star-fill');    // 채워진 별 클래스 추가
+	    } else {
+	      star.classList.remove('active');
+	      star.classList.remove('bi-star-fill'); // 채워진 별 제거
+	      star.classList.add('bi-star');         // 빈 별 추가
+	    }
+	  });
+	}
+});
+
+	
+</script>
+
+<script>
+var CONTEXT = '';
+$(document).ready(function($) {
+    $('.open_modal').click(function(e) {    	
+        $("iframe").attr("src", $(this).attr('url')).show();        	
+        e.preventDefault();
+    });
+});
+
+$(document).on('click','.btn_pop_close',function(e){
+	$('#popIframe > iframe').attr('src','').hide();
+	e.preventDefault();
+})
+</script>
+
+<script>
+$(function () {
+  const MAX_FILES = 3;
+
+  const input = document.getElementById('photoInput');
+  const preview = document.getElementById('photoPreview');
+  const hint = document.getElementById('photoHint');
+
+  if (!input || !preview) return; // 요소 없으면 종료
+
+  let selectedFiles = [];
+
+  function syncInputFiles() {
+    const dt = new DataTransfer();
+    selectedFiles.forEach(f => dt.items.add(f));
+    input.files = dt.files;
+  }
+
+  function render() {
+    preview.innerHTML = '';
+
+    selectedFiles.forEach((file, idx) => {
+      const item = document.createElement('div');
+      item.className = 'photo-item';
+
+      const img = document.createElement('img');
+      const removeBtn = document.createElement('button');
+      removeBtn.type = 'button';
+      removeBtn.className = 'photo-remove';
+      removeBtn.textContent = '×';
+
+      removeBtn.addEventListener('click', () => {
+        selectedFiles.splice(idx, 1);
+        syncInputFiles();
+        render();
+      });
+
+      const reader = new FileReader();
+      reader.onload = (e) => (img.src = e.target.result);
+      reader.readAsDataURL(file);
+
+      item.appendChild(img);
+      item.appendChild(removeBtn);
+      preview.appendChild(item);
+    });
+
+    const uploadBox = document.querySelector('.photo-upload-box');
+    if (uploadBox) uploadBox.style.display = selectedFiles.length >= MAX_FILES ? 'none' : 'flex';
+    if (hint) hint.textContent = `최대 3장까지 첨부할 수 있어요. `;
+  }
+
+  input.addEventListener('change', () => {
+    const incoming = Array.from(input.files);
+    const space = MAX_FILES - selectedFiles.length;
+
+    if (space <= 0) {
+      alert(`사진은 최대 ${MAX_FILES}장까지만 첨부할 수 있어요.`);
+      input.value = '';
+      return;
+    }
+
+    if (incoming.length > space) {
+      alert(`사진은 최대 ${MAX_FILES}장까지만 첨부할 수 있어요. (${space}장만 추가됩니다)`);
+    }
+
+    selectedFiles = selectedFiles.concat(incoming.slice(0, space));
+    syncInputFiles();
+    render();
+  });
+
+  render();
+});
+</script>
+<script>
+	$(document).ready(function() {
+		$("#submitbtn").click(function(e) {
+			if ($("#rating").val() == "0") {
+	            alert("별점을 선택해주세요.");
+	            $('html, body').animate({
+	                scrollTop: $("#starRating").offset().top - 400
+	            }, 10);
+	            return;
+	        }
+			if ($("#roomType").val() == "") {
+	            alert("리뷰 작성할 객실을 선택해주세요.");
+	            $("#roomType").focus();
+	            return;
+	        }
+			
+			if ($("#rtitle").val()=="") {
+				alert("제목을 입력해주세요.");
+				return
+			}
+			if ($("#rmsg").val()=="") {
+				alert("리뷰 내용을 입력해주세요.");
+				return
+			}
+			if (!$('#check').is(':checked')) {
+				alert("필수 약관에 동의해주세요.");
+				return
+			}
+			$("#frm").submit();
+		});
+		
+		
+		// 1. 항목 전체를 클릭하면 상세 내용 토글
+		$("#agreementItem1").click(function(e) {
+			// 체크박스 클릭 이벤트는 제외하고 상세 내용 토글
+			if (!$(e.target).is('input[type="checkbox"]')) {
+				// 상세 내용 div와 화살표를 선택
+				var $detail = $("#detailContent1");
+				var $arrow = $(this).find('.detail-arrow');
+
+				// 내용 토글
+				$detail.toggleClass('is-open');
+				// 화살표 회전 토글
+				$arrow.toggleClass('rotated');
+			}
+		});
+
+		// 2. 화살표 버튼만 클릭해도 상세 내용 토글 (선택 사항)
+		$(".toggle-btn").click(function(e) {
+			e.stopPropagation(); // 중복 이벤트 방지
+			var $item = $(this).closest('.agreement-item');
+			var itemId = $item.attr('id');
+
+			var $detail = $("#" + itemId.replace("Item", "Content"));
+			var $arrow = $(this);
+
+			// 내용 토글
+			$detail.toggleClass('is-open');
+			// 화살표 회전 토글
+			$arrow.toggleClass('rotated');
+		});
+	});
+</script>
+<script th:inline="javascript">
+    $(document).ready(function() {
+        /*<![CDATA[*/
+        // 타임리프로부터 리스트를 받아옵니다 (없으면 빈 배열)
+        const list = /*[[${unreviewedList}]]*/ [];
+        
+        if (!list || list.length === 0) {
+            alert("리뷰를 작성할 수 있는 이용 내역이 없습니다.");
+            history.back();
+        }
+        /*]]>*/
+    });
+</script>
+
+<style>
+.wrapper{
+	background-color: white;
+}
+
+.subject
+{
+color:white;
+text-decoration: none;
+}
+
+
+.main-sub > ul > li > a {
+	text-decoration: none;
+}
+
+
+
+.footer_bot{
+padding:0px;
+}
+
+
+.maincontainer{
+margin-top:60px;
+height:1100px;
+background-color: #FFF;
+}
+
+.input-container {
+	width: 100%;
+	max-width: 1200px; /* 입력 필드의 최대 너비 설정 */
+	margin: 30px auto; /* 중앙 정렬 */
+}
+
+.info-title{
+	font-size:14px;
+	font-weight: 600;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+.input-container input {
+	/* 실제 입력 필드 스타일 */
+	width: 100%;
+	height: 50px; /* 높이 고정 (padding에 따라 조절 가능) */
+	padding: 10px 25px; /* 내부 여백 */
+	font-size: 1.1em; /* 폰트 크기 */
+	/* 모양 구현 */
+	border: 1px solid #ddd; /* 옅은 테두리 */
+	border-radius: 5px; /* 둥근 모서리 */
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); /* 은은한 그림자 (선택 사항) */
+	/* 포커스 시 테두리 스타일 변경 */
+	transition: border-color 0.3s; /* 부드러운 전환 효과 */
+	outline: none; /* 기본 포커스 테두리 제거 */
+}
+
+.input-container input:focus {
+	border-color: #000;
+}
+
+.title-box{
+ 	background-color: black;
+ 	height: 127px;
+}
+
+.section-title{
+	font-size:30px;
+	font-weight: 800;
+	margin-bottom: 20px;
+	margin-top: 20px;
+}
+.section-desc{
+	font-size:20px;
+	font-weight: 400;
+	margin-bottom: 20px;
+	margin-top: 20px;
+}
+#logoimg{
+	height:280px;
+	width:200px;
+
+}
+
+#rmsg {
+  width: 100%;
+  min-height: 140px;
+  padding: 10px 25px;
+  box-sizing: border-box;
+  font-size: 1.1em;
+  line-height: 1.6;
+  font-family: inherit;
+  color: #222;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* 포커스 시 */
+#rmsg:focus {
+  border-color: #000;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.15);
+}
+
+/* placeholder 스타일 */
+#rmsg::placeholder {
+  color: #aaa;
+  font-size: 1.1em;
+}
+#rtitle::placeholder {
+  color: #aaa;
+  font-size: 1.1em;
+}
+
+/* 비활성화 상태 */
+#rmsg:disabled {
+  background-color: #f5f5f5;
+  color: #999;
+  cursor: not-allowed;
+}
+
+.rating-wrap {
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+  gap: 12px;
+}
+
+.rating {
+  display: flex;
+  gap: 6px;
+  font-size: 34px;
+}
+
+.rating i {
+  cursor: pointer;
+  color: #ccc;
+  transition: color 0.2s ease, transform 0.15s ease;
+}
+
+.rating i:hover {
+  transform: scale(1.1);
+}
+
+.rating i.active {
+  color: #000; 
+}
+
+.rating-text {
+  font-weight:700;
+  font-size: 30px;
+  color: #000;
+}
+
+/* select 공통 스타일 */
+#roomType {
+  width: 100%;
+  height: 50px;
+  padding: 10px 25px;
+
+  font-size: 1.1em;
+  color: #222;
+  font-family: inherit;
+
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #fff;
+
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  outline: none;
+
+  cursor: pointer;
+  transition: border-color 0.3s;
+}
+
+#roomType:focus {
+  border-color: #000;
+}
+
+.photo-upload-wrap {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 10px;
+}
+
+/* + 업로드 박스 */
+.photo-upload-box {
+  width: 120px;
+  height: 90px;
+  border: 1px dashed #ccc;
+  border-radius: 8px;
+  background-color: #fafafa;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.photo-upload-box:hover {
+  border-color: #000;
+  background-color: #f5f5f5;
+}
+
+.photo-upload-box .plus {
+  font-size: 32px;
+  color: #999;
+}
+
+/* 미리보기 영역 */
+.photo-preview {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* 사진 카드 */
+.photo-item {
+  position: relative;
+  width: 160px;
+  height: 90px;
+}
+
+.photo-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+/* 삭제 버튼(X) */
+.photo-remove {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+
+  width: 24px;
+  height: 24px;
+  border: 0;
+  border-radius: 50%;
+
+  background: rgba(0,0,0,0.75);
+  color: #fff;
+  font-size: 14px;
+  line-height: 24px;
+  text-align: center;
+
+  cursor: pointer;
+}
+
+.photo-remove:hover {
+  background: rgba(0,0,0,0.9);
+}
+
+.photo-hint {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #777;
+}
+
+#submitbtn{
+	margin-top:200px;
+	margin-bottom:40px;
+	padding: 20px 80px;
+	font-size: 18px;
+	font-weight: 600;
+}
+
+.agreement-detail {
+	/* 기본적으로 숨기기 */
+	max-height: 0;
+	overflow: hidden;
+	transition: max-height 0.3s ease-out; /* 부드러운 애니메이션 효과 */
+}
+
+/* 상세 내용이 보일 때 */
+.agreement-detail.is-open {
+	/* 실제 내용 높이에 맞춰 적절히 크게 설정 */
+	max-height: 300px;
+	transition: max-height 0.3s ease-in;
+}
+
+/* 상세 내용 박스 스타일 */
+.detail-box {
+	background-color: #f7f7f7;
+	border: 1px solid #eee;
+	padding: 15px;
+	margin: 10px 0;
+	border-radius: 5px;
+}
+
+.detail-box h4 {
+	margin-top: 0;
+	font-size: 1em;
+	color: #333;
+	border-bottom: 1px solid #ddd;
+	padding-bottom: 5px;
+	margin-bottom: 10px;
+}
+
+.detail-box p {
+	margin: 3px 0;
+	font-size: 0.95em;
+	color: #555;
+}
+
+/* 화살표 아이콘 스타일 */
+.detail-arrow {
+	font-size: 1.2em;
+	color: #aaa;
+	margin-left: 10px;
+	cursor: pointer;
+	/* 화살표 회전을 위한 전환 효과 */
+	transition: transform 0.3s;
+}
+
+/* 화살표가 아래로 돌아가도록 설정 (내용이 열렸을 때) */
+.detail-arrow.rotated {
+	transform: rotate(90deg);
+}
+
+/* 항목 전체를 클릭했을 때 커서 변경 */
+.agreement-item {
+	cursor: pointer;
+}
+
+/* 별 기본 스타일 */
+.rating i {
+  cursor: pointer;
+  color: #ccc; 
+  font-size: 34px;
+  display: inline-block;
+}
+
+/* 별이 채워졌을 때 스타일 */
+.rating i.active {
+  color: #f39c12 !important; 
+}
+
+</style>
+
+
+<body>
+<div class="wrapper">
+    <div id="popIframe" class="popup_rsvn">
+        <iframe name="popupIframe" id="popupIframe" src="" width="100%" height="100%" scrolling="no" visible="true" frameborder="0"></iframe>
+		<a href="#" class="btn_pop_close">X</a>
+    </div>
+
+<a href="#popIframe" class="open_modal" url="/view/roomReservationStep2.do" id="rsvnLayer" style="display:none;"></a>
+<header>
+<div th:replace="~{fragments/header :: header}"></div>
+</header>
+<div class="title-box">
+</div>
+		<div class="maincontainer">
+		<form id="frm" th:action="@{/writeReview}" method="post" enctype="multipart/form-data">
+		<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+		<input type="hidden" name="reviewStar" id="rating" value="0">
+				
+					
+				<div style="max-width: 1000px; margin: 0px auto; ">
+					<div class="input-container">  
+					
+					<div style="text-align: center; align-items: center;">
+						<img src="../common/images/homepage/logoo2.png" id="logoimg">
+						<h2 class="section-title">리뷰 작성하기</h2>
+						<h2 class="section-desc">NOIR에서의 시간은 만족스러우셨나요?</h2>
+						<div class="rating-wrap" >
+						  <div class="rating" id="starRating">
+						    <i class="bi bi-star" data-value="1"></i>
+						    <i class="bi bi-star" data-value="2"></i>
+						    <i class="bi bi-star" data-value="3"></i>
+						    <i class="bi bi-star" data-value="4"></i>
+						    <i class="bi bi-star" data-value="5"></i>
+						  </div>
+						
+						  <span class="rating-text" id="ratingText">0 / 5</span>
+						  <input type="hidden" name="rating" id="rating" value="0">
+						</div>
+
+						
+		</div>
+		<div class="infoContainer">           
+		
+		
+		<h2 class="info-title">객실 선택</h2>
+		<select name="roomResNum" id="roomType">
+    <option value="">객실을 선택해주세요</option>
+    <option th:each="rev : ${unreviewedList}" 
+            th:value="${rev.roomResNum}" 
+            th:text="${rev.roomType}">
+    </option>
+</select>
+
+						<h2 class="info-title">후기 제목</h2>
+						<input type="text" name="reviewTitle" id="rtitle" placeholder="후기 제목을 입력해주세요." maxlength="30">
+						<h2 class="info-title">후기 내용</h2>
+						<textarea name="reviewMsg" id="rmsg" placeholder="후기 내용을 입력해주세요." maxlength="100"></textarea> 
+						<h2 class="info-title">사진 첨부</h2>
+
+						<div class="photo-upload-wrap">
+						  <label class="photo-upload-box" for="photoInput">
+						    <input type="file" id="photoInput" name="photos" accept="image/*" multiple hidden>
+						    <span class="plus">+</span>
+						  </label>
+						
+						  <div class="photo-preview" id="photoPreview"></div>
+						</div>
+						
+						<div class="photo-hint" id="photoHint">최대 3장까지 첨부할 수 있어요.</div>
+
+						
+						</div>
+						
+						
+					</div>              
+						<div class="agreement-section"
+				style="max-width: 1000px; margin: 0px auto;">
+				<h4 class="section-title">약관 동의</h4>
+
+
+				<div class="agreement-item" id="agreementItem1"
+					style="border-top: 1px solid #333; border-bottom: 1px solid #333; padding: 10px;">
+					<label class="agreement-label">
+					 <input	type="checkbox" name="privacy_agree" required id="check"> <span
+						class="agreement-text" style="font-size: 20px;" > <span
+							class="required-tag">[필수]</span> 개인 정보 수집 및 이용 동의
+					</span>
+					</label> <span class="detail-arrow toggle-btn">&gt;</span>
+				</div>
+
+				<div class="agreement-detail" id="detailContent1">
+					<div class="detail-box">
+						<h4>개인정보 수집 및 이용 동의 상세 내용</h4>
+						<p>1. 수집 목적: 서비스 이용자 식별 및 회원 관리</p>
+						<p>2. 수집 항목: 이름, 연락처, 이메일 주소</p>
+						<p>3. 보유 및 이용 기간: 회원 탈퇴 시 또는 법정 보존 기한까지</p>
+						<p style="margin-top: 10px; font-size: 0.9em; color: #888;">
+							**[주의]** 위 사항에 동의하지 않을 경우, 서비스 이용이 제한될 수 있습니다.</p>
+					</div>
+				</div>
+					</div>
+				</div>
+				</form>
+				</div>
+				<div style="text-align: center;">
+				<button type="button" class="btn btn-dark" name="submitbtn" id="submitbtn">후기 제출하기</button>
+					</div>
+			
+					
+<footer>
+<div th:replace="~{fragments/footer :: footer}"></div>
+</footer>
+<div id="privacy-layer">
+        <div th:replace="~{fragments/privacy :: privacy}"></div>
+    </div>
+
+<script type="text/javascript" th:src="@{/common/js/comm/jquery.validate.js}"></script>
+<script type="text/javascript" th:src="@{/common/js/comm/wings.core.js}"></script>
+<script type="text/javascript" th:src="@{/common/js/comm/PAGING_HOMEPAGE.js}"></script>
+<script type="text/javascript" th:src="@{/common/js/comm/kendo.web.min.js}"></script>
+
+
+		</div>
+
+</body>
+</html>
