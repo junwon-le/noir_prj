@@ -1,28 +1,29 @@
-package kr.co.noir.mypageReserve;
+package kr.co.noir.login.config; // 패키지 분리 권장
 
 import java.util.Properties;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
-
 @Configuration
-public class BrevoMailConfg {
+public class GmailMailConfig {
 
-    @Value("${brevo.mail.host}")
+    @Value("${spring.mail.host}")
     private String host;
-    @Value("${brevo.mail.port}")
+    @Value("${spring.mail.port}")
     private int port;
-    @Value("${brevo.mail.username}")
+    @Value("${spring.mail.username}")
     private String username;
-    @Value("${brevo.mail.password}")
+    @Value("${spring.mail.password}")
     private String password;
 
-    @Bean(name = "brevoMailSender") // 빈 이름을 명시적으로 지정
-    public JavaMailSender brevoMailSender() {
+    @Primary
+    @Bean(name = "mailSender")
+    public JavaMailSender gmailMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost(host);
         mailSender.setPort(port);
@@ -31,9 +32,9 @@ public class BrevoMailConfg {
 
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.smtp.auth", "true");
-        // 중요: Brevo(587포트)는 STARTTLS를 사용하며, SSL 강제 옵션이 꺼져야 합니다.
-        props.put("mail.smtp.starttls.enable", "true"); 
-        props.put("mail.smtp.ssl.enable", "false"); 
+        props.put("mail.smtp.ssl.enable", "true");
+        props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+        props.put("mail.debug", "true");
         
         return mailSender;
     }

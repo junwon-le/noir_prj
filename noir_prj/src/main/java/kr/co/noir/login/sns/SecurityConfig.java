@@ -19,6 +19,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+	// 수동 생성자 삭제: @RequiredArgsConstructor가 아래 필드들을 인자로 받는 생성자를 대신 만듭니다.
+    private final CustomOAuth2UserService customOAuth2UserService;
+    private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
+
+    
 	@Bean
 	public RestTemplate restTemplate() {
 		return new RestTemplate();
@@ -29,8 +34,6 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 	
-    private final CustomOAuth2UserService customOAuth2UserService;
-    private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
 
 
     @Bean
@@ -41,8 +44,10 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.ALWAYS) 
             ) // 
             .csrf(csrf -> csrf
-                // [핵심] /reserve/ 하위의 POST 요청에 대해 CSRF 검사를 생략합니다.
+                // /reserve/, /login/ 하위의 POST 요청에 대해 CSRF 검사를 생략합니다.
                 .ignoringRequestMatchers("/reserve/**", "/loginProcess", "/dinning/**")
+          	    .ignoringRequestMatchers("/login/sendAuthCode", "/login/verifyAuthCode")
+
             )
             // 2. 인가 설정: 허용할 경로를 구체적으로 지정
             .authorizeHttpRequests(auth -> auth
@@ -84,5 +89,6 @@ public class SecurityConfig {
         return (web) -> web.ignoring()
             .requestMatchers(PathRequest.toStaticResources().atCommonLocations()) 
             .requestMatchers("/favicon.ico", "/resources/**", "/error"); 
+
     }
 }
