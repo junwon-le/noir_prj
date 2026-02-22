@@ -1,113 +1,249 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title th:text="${mode == 'edit' ? '이벤트 수정' : '이벤트 추가'}">이벤트 추가</title>
-<!-- “등록/수정 공용 + 삭제는 별도 form(중첩 제거) + 관리자 URL 통일”까지 반영 -->
+
+<!-- ✅ Admin Common CSS (list와 동일) -->
+<link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900" rel="stylesheet" />
+<link rel="stylesheet" href="/admin_common/css/bootstrap.min.css" />
+<link rel="stylesheet" href="/admin_common/css/font-awesome.min.css" />
+<link rel="stylesheet" href="/admin_common/css/nalika-icon.css" />
+<link rel="stylesheet" href="/admin_common/css/owl.carousel.css" />
+<link rel="stylesheet" href="/admin_common/css/owl.theme.css" />
+<link rel="stylesheet" href="/admin_common/css/owl.transitions.css" />
+<link rel="stylesheet" href="/admin_common/css/animate.css" />
+<link rel="stylesheet" href="/admin_common/css/normalize.css" />
+<link rel="stylesheet" href="/admin_common/css/meanmenu.min.css" />
+<link rel="stylesheet" href="/admin_common/css/main.css" />
+<link rel="stylesheet" href="/admin_common/css/scrollbar/jquery.mCustomScrollbar.min.css" />
+<link rel="stylesheet" href="/admin_common/css/metisMenu/metisMenu.min.css" />
+<link rel="stylesheet" href="/admin_common/css/metisMenu/metisMenu-vertical.css" />
+<link rel="stylesheet" href="/admin_common/style.css" />
+<link rel="stylesheet" href="/admin_common/css/responsive.css" />
+
+<!-- ✅ Admin Common JS (list와 동일, jQuery 1개만) -->
+<script src="/admin_common/js/vendor/jquery-1.12.4.min.js"></script>
+<script src="/admin_common/js/bootstrap.min.js"></script>
+<script src="/admin_common/js/wow.min.js"></script>
+<script src="/admin_common/js/jquery.meanmenu.js"></script>
+<script src="/admin_common/js/owl.carousel.min.js"></script>
+<script src="/admin_common/js/jquery.sticky.js"></script>
+<script src="/admin_common/js/scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+<script src="/admin_common/js/scrollbar/mCustomScrollbar-active.js"></script>
+<script src="/admin_common/js/metisMenu/metisMenu.min.js"></script>
+<script src="/admin_common/js/metisMenu/metisMenu-active.js"></script>
+<script src="/admin_common/js/plugins.js"></script>
+<script src="/admin_common/js/main.js"></script>
+
 <style>
-  body { margin:0; background:#0f1b2d; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:#e8eefb; }
-  .all-content-wrapper { display:flex; min-height:100vh; }
-  .content-area { flex:1; padding:28px 24px; }
+/* ✅ Bootstrap/테마 충돌 방지: 전용 클래스만 사용 */
 
-  .panel {
-    background: rgba(24, 40, 64, 0.85);
-    border-radius: 18px;
-    padding: 18px;
-    box-shadow: 0 8px 20px rgba(0,0,0,.22);
-  }
-  .panel-title { font-size:18px; font-weight:700; margin: 4px 6px 14px; }
+/* 패널 */
+.event-panel {
+  background: rgba(24, 40, 64, 0.85);
+  border-radius: 18px;
+  padding: 22px; /* ✅ 여유 증가 */
+  box-shadow: 0 8px 20px rgba(0,0,0,.22);
+  border: 1px solid rgba(232,238,251,.14);
+}
 
-  .grid { display:grid; grid-template-columns: 320px 1fr; gap: 18px; }
+/* 타이틀 */
+.event-panel-title{
+  font-weight: 700;
+  margin-bottom: 14px;
+  color:#e8eefb;
+  letter-spacing:.2px;
+}
 
-  .img-box {
-    background: rgba(255,255,255,.10);
-    border: 1px solid rgba(232,238,251,.18);
-    border-radius: 10px;
-    padding: 10px;
-    margin-bottom: 12px;
-  }
-  .img-preview {
-    width:100%;
-    height: 170px;
-    border-radius: 8px;
-    object-fit: cover;
-    background: rgba(0,0,0,.15);
-    display:block;
-  }
-  .img-actions { display:flex; justify-content:center; margin-top: 8px; }
-  .btn-mini {
-    border-radius: 6px;
-    border: 1px solid rgba(232,238,251,.35);
-    background: rgba(255,255,255,.12);
-    color:#e8eefb;
-    padding: 6px 10px;
-    cursor:pointer;
-    font-size: 12px;
-    text-align:center;
-    line-height: 1.2;
-  }
-  input[type="file"]{ display:none; }
+/* 레이아웃 */
+.ev-grid{
+  display:grid;
+  grid-template-columns: 280px 1fr;
+  gap: 24px; /* ✅ 간격 여유 */
+}
 
-  .form { padding: 6px 8px; }
-  .row { display:grid; grid-template-columns: 70px 1fr; align-items:center; gap: 10px; margin-bottom: 10px; }
-  .label {
-    background: rgba(90, 146, 255, .55);
-    border-radius: 6px;
-    padding: 7px 8px;
-    text-align:center;
-    font-weight:700;
-    font-size: 12px;
-  }
-  .input, .textarea {
-    border-radius: 6px;
-    border: 1px solid rgba(232,238,251,.28);
-    background: rgba(255,255,255,.92);
-    color:#0f1b2d;
-    padding: 8px 10px;
-    font-size: 12px;
-    outline:none;
-  }
-  .dates { display:flex; align-items:center; gap: 10px; }
-  .dates input { width: 160px; }
-  .textarea { min-height: 140px; resize: vertical; }
+/* 이미지 영역 */
+.ev-img-box {
+  background: rgba(255,255,255,.10);
+  border: 1px solid rgba(232,238,251,.18);
+  border-radius: 10px;
+  padding: 12px; /* ✅ 여유 */
+  margin-bottom: 14px;
+}
 
-  .actions { display:flex; gap: 10px; justify-content:flex-end; margin-top: 10px; }
-  .btn-cancel {
-    border-radius: 6px;
-    border: 1px solid rgba(232,238,251,.35);
-    background: rgba(255,255,255,.10);
-    color:#e8eefb;
-    padding: 8px 16px;
-    cursor:pointer;
-    font-size: 12px;
-    text-decoration:none;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-  }
-  .btn-submit {
-    border-radius: 6px;
-    border: 1px solid rgba(232,238,251,.35);
-    background: rgba(255,255,255,.92);
-    color:#0f1b2d;
-    padding: 8px 16px;
-    cursor:pointer;
-    font-weight:800;
-    font-size: 12px;
-  }
+.ev-img-preview {
+  width:100%;
+  height: 190px; /* ✅ 미리보기 조금 더 크게 */
+  border-radius: 8px;
+  object-fit: cover;
+  background: rgba(0,0,0,.15);
+  display:block;
+  border: 1px solid rgba(232,238,251,.10);
+}
+
+/* ✅ 파일 업로드 UI */
+.ev-file{
+  position:absolute;
+  width:1px; height:1px;
+  padding:0; margin:-1px;
+  overflow:hidden; clip:rect(0,0,0,0);
+  border:0;
+}
+
+.ev-upload-bar{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-top: 10px;
+}
+
+.ev-upload-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width: 130px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1px solid rgba(232,238,251,.35);
+  background: rgba(255,255,255,.14);
+  color:#e8eefb;
+  cursor:pointer;
+  font-size: 12px;
+  font-weight: 800;
+  user-select:none;
+}
+.ev-upload-btn:hover{ background: rgba(255,255,255,.20); }
+
+.ev-file-name{
+  flex:1;
+  border-radius: 8px;
+  border: 1px solid rgba(232,238,251,.18);
+  background: rgba(0,0,0,.12);
+  color: rgba(232,238,251,.90);
+  padding: 8px 10px;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow:hidden;
+  text-overflow: ellipsis;
+}
+
+/* 폼 */
+.ev-form { padding: 10px 12px; }
+
+/* ✅ Bootstrap .row 충돌 제거: ev-row */
+.ev-row{
+  display:grid;
+  grid-template-columns: 86px 1fr; /* ✅ 라벨폭 살짝 증가 */
+  align-items:center;
+  gap: 14px;                       /* ✅ 간격 */
+  margin-bottom: 14px;             /* ✅ 행 간격 */
+}
+
+.ev-label{
+  background: rgba(90, 146, 255, .55);
+  border-radius: 6px;
+  padding: 10px 10px;  /* ✅ 높이 여유 */
+  text-align:center;
+  font-weight:700;
+  font-size: 13px;
+  color:#e8eefb;
+}
+
+.ev-input, .ev-textarea{
+  border-radius: 6px;
+  border: 1px solid rgba(232,238,251,.28);
+  background: rgba(255,255,255,.92);
+  color:#0f1b2d;
+  padding: 10px 12px; /* ✅ 여유 */
+  font-size: 13px;
+  outline:none;
+  width: 100%;
+}
+
+.ev-input:focus, .ev-textarea:focus{
+  border-color: rgba(90, 146, 255, .85);
+  box-shadow: 0 0 0 3px rgba(90,146,255,.18);
+}
+
+.ev-textarea{
+  min-height: 190px; /* ✅ 설명칸 여유 */
+  resize: vertical;
+  line-height: 1.5;
+}
+
+/* 날짜 */
+.ev-dates{
+  display:flex;
+  align-items:center;
+  gap: 12px;
+  color:#e8eefb;
+  flex-wrap: wrap;
+}
+.ev-dates .ev-input{
+  width: 200px;     /* ✅ 날짜 input 넓게 */
+  max-width: 100%;
+}
+
+/* 액션 */
+.ev-actions{
+  display:flex;
+  gap: 10px;
+  justify-content:flex-end;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+
+.ev-btn-cancel{
+  border-radius: 6px;
+  border: 1px solid rgba(232,238,251,.35);
+  background: rgba(255,255,255,.10);
+  color:#e8eefb;
+  padding: 9px 18px;
+  cursor:pointer;
+  font-size: 12px;
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+.ev-btn-cancel:hover{ background: rgba(255,255,255,.16); }
+
+.ev-btn-submit{
+  border-radius: 6px;
+  border: 1px solid rgba(232,238,251,.35);
+  background: rgba(255,255,255,.92);
+  color:#0f1b2d;
+  padding: 9px 18px;
+  cursor:pointer;
+  font-weight:900;
+  font-size: 12px;
+}
+.ev-btn-submit:hover{ filter: brightness(0.98); }
+
+/* ✅ 반응형 */
+@media (max-width: 992px){
+  .ev-grid{ grid-template-columns: 1fr; }
+}
 </style>
 
 <script>
-  function bindPreview(fileInputId, imgId){
+  function bindPreview(fileInputId, imgId, fileNameId){
     const input = document.getElementById(fileInputId);
     const img = document.getElementById(imgId);
+    const nameBox = document.getElementById(fileNameId);
     if(!input || !img) return;
 
     input.addEventListener('change', function(){
-      if(!input.files || input.files.length === 0) return;
+      if(!input.files || input.files.length === 0){
+        if(nameBox) nameBox.textContent = "선택된 파일 없음";
+        return;
+      }
       const file = input.files[0];
-      const url = URL.createObjectURL(file);
-      img.src = url;
+      img.src = URL.createObjectURL(file);
+      if(nameBox) nameBox.textContent = file.name;
     });
   }
 
@@ -116,21 +252,10 @@
     const end = document.getElementById('eventEndDate');
     if (!start || !end) return;
 
-    const today = new Date();
-    const yyyy = today.getFullYear();
-    const mm = String(today.getMonth() + 1).padStart(2, '0');
-    const dd = String(today.getDate()).padStart(2, '0');
-    const todayStr = `${yyyy}-${mm}-${dd}`;
-
-    start.min = todayStr;
-    end.min = todayStr;
-
     start.addEventListener('change', function () {
       if (start.value) {
         end.min = start.value;
         if (end.value && end.value < start.value) end.value = start.value;
-      } else {
-        end.min = todayStr;
       }
     });
 
@@ -145,110 +270,126 @@
   }
 
   window.addEventListener('DOMContentLoaded', function(){
-    bindPreview('img1', 'preview1');
-    bindPreview('img2', 'preview2');
+    bindPreview('img1', 'preview1', 'fileName1');
+    bindPreview('img2', 'preview2', 'fileName2');
     setDateRules();
   });
 </script>
 </head>
 
 <body>
-  <div class="all-content-wrapper">
+  <!-- ✅ sidebar: list와 동일 위치 -->
   <div th:replace="~{manager/fragments/sidebar :: sidebar}"></div>
-    <div class="content-area">
-      <div class="panel">
-        <div class="panel-title" th:text="${mode == 'edit' ? '이벤트 수정' : '이벤트 추가'}">이벤트 추가</div>
 
-        <!-- ✅ 등록/수정 공용 폼 (중첩 form 금지) -->
+  <div class="all-content-wrapper">
+    <div class="container event-form-wrapper" style="color:white;">
+      <div style="margin-bottom:20px;">
+        <h3 style="font-weight:600; margin-bottom:20px;"
+            th:text="${mode == 'edit' ? '이벤트 수정' : '이벤트 추가'}">이벤트 추가</h3>
+      </div>
+
+      <div class="event-panel">
+        <div class="event-panel-title"
+             th:text="${mode == 'edit' ? '이벤트 수정' : '이벤트 추가'}">이벤트 추가</div>
+
+        <!-- ✅ 등록/수정 공용 -->
         <form id="mainForm"
-              th:action="${mode == 'edit'} ? @{/admin/event/update} : @{/admin/event/insert}"
+              th:action="${mode == 'edit'} ? @{/event/modifyEventProcess} : @{/event/addAdminEventProcess}"
               method="post"
               enctype="multipart/form-data">
 
-          <!-- 수정일 때만 eventNum 필요 -->
-          <input type="hidden" name="eventNum" th:if="${mode == 'edit'}" th:value="${eaDomain.eventNum}"/>
+          <!-- ✅ 페이징/검색값 유지 -->
+          <input type="hidden" name="currentPage" th:value="${param.currentPage != null ? param.currentPage : 1}" />
+          <input type="hidden" name="keyword" th:value="${param.keyword != null ? param.keyword : ''}" />
 
-          <div class="grid">
+          <!-- ✅ 수정일 때만 eventNum -->
+          <input type="hidden" name="eventNum"
+                 th:if="${mode == 'edit' and eaDomain != null}"
+                 th:value="${eaDomain.eventNum}" />
 
-            <!-- 좌측: 이미지 2개 -->
+          <div class="ev-grid">
+
+            <!-- 좌측: 이미지 -->
             <div>
-              <div class="img-box">
-                <img id="preview1" class="img-preview"
-                     th:src="${eaDomain != null and eaDomain.eventImg1 != null and eaDomain.eventImg1 != ''} 
-                              ? @{|/upload/event/${eaDomain.eventImg1}|} 
+              <div class="ev-img-box">
+                <img id="preview1" class="ev-img-preview"
+                     th:src="${eaDomain != null and eaDomain.eventImg1 != null and eaDomain.eventImg1 != ''}
+                              ? @{|/upload/event/${eaDomain.eventImg1}|}
                               : @{/common/images/no-image.png}"
                      alt="event img1" />
-                <div class="img-actions">
-                  <label class="btn-mini" for="img1">1번 이미지<br/>새로 업로드</label>
-                  <input type="file" id="img1" name="img1" accept="image/*" />
+
+                <!-- ✅ 버튼 + 파일명 표시 -->
+                <div class="ev-upload-bar">
+                  <label class="ev-upload-btn" for="img1">1번 이미지 업로드</label>
+                  <div id="fileName1" class="ev-file-name">선택된 파일 없음</div>
+                  <input type="file" class="ev-file" id="img1" name="img1" accept="image/*" />
                 </div>
               </div>
 
-              <div class="img-box" style="margin-bottom:0;">
-                <img id="preview2" class="img-preview"
-                     th:src="${eaDomain != null and eaDomain.eventImg2 != null and eaDomain.eventImg2 != ''} 
-                              ? @{|/upload/event/${eaDomain.eventImg2}|} 
+              <div class="ev-img-box" style="margin-bottom:0;">
+                <img id="preview2" class="ev-img-preview"
+                     th:src="${eaDomain != null and eaDomain.eventImg2 != null and eaDomain.eventImg2 != ''}
+                              ? @{|/upload/event/${eaDomain.eventImg2}|}
                               : @{/common/images/no-image.png}"
                      alt="event img2" />
-                <div class="img-actions">
-                  <label class="btn-mini" for="img2">2번 이미지<br/>새로 업로드</label>
-                  <input type="file" id="img2" name="img2" accept="image/*" />
+
+                <!-- ✅ 버튼 + 파일명 표시 -->
+                <div class="ev-upload-bar">
+                  <label class="ev-upload-btn" for="img2">2번 이미지 업로드</label>
+                  <div id="fileName2" class="ev-file-name">선택된 파일 없음</div>
+                  <input type="file" class="ev-file" id="img2" name="img2" accept="image/*" />
                 </div>
               </div>
             </div>
 
-            <!-- 우측: 입력 폼 -->
-            <div class="form">
-              <div class="row">
-                <div class="label">제목</div>
-                <input class="input" type="text" name="eventTitle"
+            <!-- 우측: 입력 -->
+            <div class="ev-form">
+              <div class="ev-row">
+                <div class="ev-label">제목</div>
+                <input class="ev-input" type="text" name="eventTitle"
                        th:value="${eaDomain != null ? eaDomain.eventTitle : ''}" required />
               </div>
 
-              <div class="row">
-                <div class="label">부제목</div>
-                <input class="input" type="text" name="eventSubTitle"
+              <div class="ev-row">
+                <div class="ev-label">부제목</div>
+                <input class="ev-input" type="text" name="eventSubTitle"
                        th:value="${eaDomain != null ? eaDomain.eventSubTitle : ''}" />
               </div>
 
-              <div class="row">
-                <div class="label">기간</div>
-                <div class="dates">
-                  <input class="input" type="date" id="eventStartDate" name="eventStartDate"
+              <div class="ev-row">
+                <div class="ev-label">기간</div>
+                <div class="ev-dates">
+                  <input class="ev-input" type="date" id="eventStartDate" name="eventStartDate" required
                          th:value="${eaDomain != null && eaDomain.eventStartDate != null
-                                  ? #temporals.format(eaDomain.eventStartDate, 'yyyy-MM-dd')
+                                  ? #dates.format(eaDomain.eventStartDate, 'yyyy-MM-dd')
                                   : ''}" />
-
                   <span>~</span>
-
-                  <input class="input" type="date" id="eventEndDate" name="eventEndDate" required
+                  <input class="ev-input" type="date" id="eventEndDate" name="eventEndDate" required
                          th:value="${eaDomain != null && eaDomain.eventEndDate != null
-                                  ? #temporals.format(eaDomain.eventEndDate, 'yyyy-MM-dd')
+                                  ? #dates.format(eaDomain.eventEndDate, 'yyyy-MM-dd')
                                   : ''}" />
                 </div>
               </div>
 
-              <div class="row" style="align-items:start;">
-                <div class="label">설명</div>
-                <textarea class="textarea" name="eventMsg"
+              <div class="ev-row" style="align-items:start;">
+                <div class="ev-label">설명</div>
+                <textarea class="ev-textarea" name="eventMsg"
                           th:text="${eaDomain != null ? eaDomain.eventMsg : ''}"></textarea>
               </div>
 
-              <div class="actions">
-                <!-- ✅ 취소: 목록으로 -->
-                <a class="btn-cancel"
-                   th:href="@{/admin/event/list(currentPage=${param.currentPage}, keyword=${param.keyword})}">
+              <div class="ev-actions">
+                <a class="ev-btn-cancel"
+                   th:href="@{/event/eventAdminList(currentPage=${param.currentPage}, keyword=${param.keyword})}">
                   취소
                 </a>
 
-                <!-- ✅ 삭제: 별도 form을 mainForm 밖에서 submit (중첩 제거) -->
-                <button type="button" class="btn-cancel"
-                        th:if="${mode == 'edit'}"
+                <button type="button" class="ev-btn-cancel"
+                        th:if="${mode == 'edit' and eaDomain != null}"
                         onclick="document.getElementById('deleteForm').submit();">
                   삭제
                 </button>
 
-                <button type="submit" class="btn-submit"
+                <button type="submit" class="ev-btn-submit"
                         th:text="${mode == 'edit' ? '수정' : '등록'}">등록</button>
               </div>
             </div>
@@ -256,23 +397,23 @@
           </div>
         </form>
 
-        <!-- ✅ 삭제 전용 form (mainForm 밖에 둔다: 중첩 금지) -->
+        <!-- ✅ 삭제 전용 form (중첩 금지) -->
         <form id="deleteForm"
-              th:if="${mode == 'edit'}"
-              th:action="@{/admin/event/delete}"
+              th:if="${mode == 'edit' and eaDomain != null}"
+              th:action="@{/event/removeEventProcess}"
               method="post"
               onsubmit="return confirmDelete();"
               style="display:none;">
           <input type="hidden" name="eventNum" th:value="${eaDomain.eventNum}">
-          <!-- 목록으로 돌아갈 때 쓸 값 유지하고 싶으면 같이 넘겨도 됨 -->
-          <input type="hidden" name="currentPage" th:value="${param.currentPage}">
-          <input type="hidden" name="keyword" th:value="${param.keyword}">
+          <input type="hidden" name="currentPage" th:value="${param.currentPage != null ? param.currentPage : 1}">
+          <input type="hidden" name="keyword" th:value="${param.keyword != null ? param.keyword : ''}">
         </form>
 
       </div>
     </div>
-        <div th:replace="~{manager/fragments/footer :: footer}"></div>
-    
+
+    <!-- ✅ footer: list와 동일 위치 -->
+    <div th:replace="~{manager/fragments/footer :: footer}"></div>
   </div>
 </body>
 </html>

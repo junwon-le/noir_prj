@@ -11,7 +11,14 @@ import kr.co.noir.dao.MyBatisHandler;
 
 @Repository("eventAdminDAO")
 public class EventAdminDAO {
-
+	
+	public Integer selectAdminNumByAdminId(String adminId) throws SQLException {
+	    SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
+	    Integer num = ss.selectOne("kr.co.noir.eventAdmin.selectAdminNumByAdminId", adminId);
+	    if (ss != null) ss.close();
+	    return num;
+	}
+	
     // 전체 게시글 수
     public int selectEventTotalCnt(EventRangeDTO erDTO) throws SQLException {
         SqlSession ss = null;

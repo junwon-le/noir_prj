@@ -13,7 +13,7 @@ public class EventAdminService {
 
     @Autowired
     @Qualifier("eventAdminDAO") // DAO에 @Repository("eventAdminDAO") 있으니까 이거 유지 OK
-    private EventAdminDAO eaDAO; // ✅ required=false 제거
+    private EventAdminDAO eaDAO;
 
     public int totalCnt(EventRangeDTO erDTO) {
         int totalCnt = 0;
@@ -29,8 +29,10 @@ public class EventAdminService {
         return 10;
     }
 
+    // ✅ 수정 1) totalCnt=0이어도 totalPage 최소 1 보장
     public int totalPage(int totalCount, int pageScale) {
-        return (int) Math.ceil((double) totalCount / pageScale);
+        int tp = (int) Math.ceil((double) totalCount / pageScale);
+        return (tp <= 0) ? 1 : tp;
     }
 
     public int startNum(int currentPage, int pageScale) {
@@ -44,7 +46,14 @@ public class EventAdminService {
     public List<EventAdminDomain> searchEventList(EventRangeDTO erDTO) {
         List<EventAdminDomain> list = null;
         try {
+
+            System.out.println(erDTO.getEndNum());
+            System.out.println(erDTO.getStartNum());
+            System.out.println(erDTO.getField());
+
             list = eaDAO.selectEventList(erDTO);
+            System.out.println(list);
+
             if (list != null && !list.isEmpty()) {
                 titleSubStr(list);
             }
@@ -56,9 +65,11 @@ public class EventAdminService {
 
     public void titleSubStr(List<EventAdminDomain> eventList) {
         for (EventAdminDomain domain : eventList) {
-            String title = domain.getEventTitle();
-            if (title != null && title.length() > 20) {
-                domain.setEventTitle(title.substring(0, 20) + "...");
+            if (domain != null) {
+                String title = domain.getEventTitle();
+                if (title != null && title.length() > 20) {
+                    domain.setEventTitle(title.substring(0, 20) + "...");
+                }
             }
         }
     }
@@ -68,72 +79,77 @@ public class EventAdminService {
 
         int pageNumber = 3;
         int startPage = ((erDTO.getCurrentPage() - 1) / pageNumber) * pageNumber + 1;
-        int endPage = (((startPage - 1) + pageNumber) / pageNumber) * pageNumber;
 
-        if (erDTO.getTotalPage() <= endPage) {
+        int endPage = startPage + pageNumber - 1;
+        if (endPage > erDTO.getTotalPage()) {
             endPage = erDTO.getTotalPage();
         }
 
-        // ✅ keyword 공백 방어 (여기서 1번만!)
         String kw = erDTO.getKeyword();
         boolean hasKeyword = kw != null && !kw.trim().isEmpty();
         String safeKw = hasKeyword ? kw.trim() : "";
 
         int movePage = 0;
 
-        // 이전
-        StringBuilder prevMark = new StringBuilder("[&lt;&lt;]");
+        // ✅ 이전
         if (erDTO.getCurrentPage() > pageNumber) {
             movePage = startPage - 1;
-            prevMark.setLength(0);
-            prevMark.append("[<a href='").append(erDTO.getUrl()).append("?currentPage=").append(movePage);
+            pagiNation.append("<a class='prevMark' href='")
+                      .append(erDTO.getUrl())
+                      .append("?currentPage=")
+                      .append(movePage);
 
             if (hasKeyword) {
-                prevMark.append("&field=").append(erDTO.getField())
-                        .append("&keyword=").append(safeKw);
+                pagiNation.append("&keyword=").append(safeKw);
             }
-            prevMark.append("' class='prevMark'>&lt;&lt;</a>]");
+            pagiNation.append("'>&lt;&lt;</a>");
+        } else {
+            // 비활성 느낌(원하면 CSS로 스타일)
+            pagiNation.append("<span class='currentPage' style='opacity:.35'>&lt;&lt;</span>");
         }
 
-        // 페이지 링크
-        StringBuilder pageLink = new StringBuilder();
+        // ✅ 페이지 링크
         movePage = startPage;
         while (movePage <= endPage) {
             if (movePage == erDTO.getCurrentPage()) {
-                pageLink.append("[ <span class='currentPage'>").append(movePage).append("</span>]");
+                pagiNation.append("<span class='currentPage'>")
+                          .append(movePage)
+                          .append("</span>");
             } else {
-                pageLink.append("[ <a class='notCurrentPage' href='")
-                        .append(erDTO.getUrl()).append("?currentPage=").append(movePage);
+                pagiNation.append("<a class='notCurrentPage' href='")
+                          .append(erDTO.getUrl())
+                          .append("?currentPage=")
+                          .append(movePage);
 
                 if (hasKeyword) {
-                    pageLink.append("&field=").append(erDTO.getField())
-                            .append("&keyword=").append(safeKw);
+                    pagiNation.append("&keyword=").append(safeKw);
                 }
-                pageLink.append("'>").append(movePage).append("</a>]");
+                pagiNation.append("'>")
+                          .append(movePage)
+                          .append("</a>");
             }
             movePage++;
         }
 
-        // 다음
-        StringBuilder nextMark = new StringBuilder("[&gt;&gt;]");
+        // ✅ 다음
         if (erDTO.getTotalPage() > endPage) {
             movePage = endPage + 1;
-            nextMark.setLength(0);
-            nextMark.append("[ <a class='nextMark' href='").append(erDTO.getUrl())
-                    .append("?currentPage=").append(movePage);
+            pagiNation.append("<a class='nextMark' href='")
+                      .append(erDTO.getUrl())
+                      .append("?currentPage=")
+                      .append(movePage);
 
             if (hasKeyword) {
-                nextMark.append("&field=").append(erDTO.getField())
-                        .append("&keyword=").append(safeKw);
+                pagiNation.append("&keyword=").append(safeKw);
             }
-            nextMark.append("'> &gt;&gt; </a> ]");
+            pagiNation.append("'>&gt;&gt;</a>");
+        } else {
+            pagiNation.append("<span class='currentPage' style='opacity:.35'>&gt;&gt;</span>");
         }
 
-        pagiNation.append(prevMark).append("...").append(pageLink).append("...").append(nextMark);
         return pagiNation.toString();
     }
-    
-    
+
     public EventAdminDomain searchOneEvent(int eventNum) {
         EventAdminDomain domain = null;
         try {
@@ -144,7 +160,6 @@ public class EventAdminService {
         return domain;
     }
 
-    // ✅ throws SQLException 제거 + SQLException까지 여기서 처리
     public boolean addEvent(EventAdminDTO eaDTO) {
         try {
             return eaDAO.insertEvent(eaDTO) == 1;
@@ -172,5 +187,19 @@ public class EventAdminService {
             e.printStackTrace();
         }
         return flag;
+    }
+
+    // ✅ adminId → adminNum 조회 (세션 보정용)
+    public Integer findAdminNumByAdminId(String adminId) {
+        if (adminId == null || adminId.trim().isEmpty()) {
+            return null;
+        }
+
+        try {
+            return eaDAO.selectAdminNumByAdminId(adminId.trim());
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
