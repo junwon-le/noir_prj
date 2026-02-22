@@ -62,6 +62,7 @@ public class RoomReserveService {
 		MemberDomain memberDomain = null;
 		
 		try {
+			System.out.println(id);
 			memberDomain=rrDAO.selectMember(id);
 			TextEncryptor te = Encryptors.text(key,salt);
 			if(memberDomain.getMember_provider_id()!=null) {
