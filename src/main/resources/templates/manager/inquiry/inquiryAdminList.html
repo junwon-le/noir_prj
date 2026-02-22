@@ -70,7 +70,80 @@
 .inquiry-row:hover { background: #f9fbff; }
 .inquiry-table .text-left { text-align: left; }
 .empty-text { padding: 40px 0; color: #b1c1e2; font-size: 14px; }
+
 .pagination-wrap { text-align: center; margin-top: 20px; }
+
+/* ✅✅ Pagination 디자인 (리뷰페이지 톤으로 통일 / pagination-wrap 아래만 적용) */
+.pagination-wrap .pagination{
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 20px 0 10px;
+}
+
+/* ul/li 구조든 a/span만 오든 모두 커버 */
+.pagination-wrap .pagination .page-link,
+.pagination-wrap .pagination a,
+.pagination-wrap .pagination span{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 44px;
+  height: 44px;
+  padding: 0 16px;
+
+  border: 1px solid #e3e8f3;
+  background: #fff;
+  color: #38599a;
+  border-radius: 999px;
+
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+
+  transition: background-color .15s ease, border-color .15s ease, color .15s ease, transform .15s ease;
+}
+
+/* hover */
+.pagination-wrap .pagination .page-link:hover,
+.pagination-wrap .pagination a:hover{
+  background: #38599a;
+  border-color: #38599a;
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+/* active */
+.pagination-wrap .pagination .page-item.active .page-link,
+.pagination-wrap .pagination .active a,
+.pagination-wrap .pagination .active span{
+  background: #38599a;
+  border-color: #38599a;
+  color: #fff;
+}
+
+/* disabled */
+.pagination-wrap .pagination .page-item.disabled .page-link,
+.pagination-wrap .pagination .disabled a,
+.pagination-wrap .pagination .disabled span{
+  background: #f6f8fc;
+  border-color: #e3e8f3;
+  color: #b1c1e2;
+  pointer-events: none;
+  transform: none;
+}
+
+/* Prev/Next가 텍스트(이전/다음)면 살짝 넓게 */
+.pagination-wrap .pagination a[aria-label="Previous"],
+.pagination-wrap .pagination a[aria-label="Next"],
+.pagination-wrap .pagination .page-link[aria-label="Previous"],
+.pagination-wrap .pagination .page-link[aria-label="Next"]{
+  min-width: 56px;
+  padding: 0 18px;
+}
 
 #inquiryDetailBox { margin-top: 40px; }
 .inquiry-detail-panel {
@@ -141,11 +214,9 @@ $(function () {
       ]
     });
 
-    // ✅ 처음엔 에디터 잠금
     $('#detailAnswer').summernote('disable');
   }
 
-  // ✅ 초기 상태: 하단 숨김 + 값 비움 + 버튼 비활성화
   function resetDetailUI() {
     $('#inquiryDetailBox').addClass('d-none');
 
@@ -186,7 +257,6 @@ $(function () {
         $('#detailEmail').text(data.memberEmail || '-');
         $('#detailWriter').text((data.memberId != null && data.memberId !== '') ? data.memberId : '-');
 
-        // ✅ 문의 내용은 HTML로 표시
         $('#detailContent').html(data.inquiryMsg || '-');
 
         initAnswerEditorOnce();
@@ -202,7 +272,6 @@ $(function () {
     });
   }
 
-  // row 클릭 -> 상세 ajax
   $(document).on('click', '.inquiry-row', function () {
     $('.inquiry-row').removeClass('active');
     $(this).addClass('active');
@@ -211,7 +280,6 @@ $(function () {
     loadDetail(inquiryNum);
   });
 
-  // 답변 버튼 -> submit
   $('#answerBtn').on('click', function () {
     if ($('#detailInquiryNum').val() === '') {
       alert('문의를 선택해주세요.');
@@ -229,13 +297,10 @@ $(function () {
       return;
     }
 
-    // ✅ 전송 안정화: hidden으로 서버에 보냄
     $('#inquiryReturnHidden').val(html);
-
     $('#answerFrm').submit();
   });
 
-  // 삭제 버튼 -> submit
   $('#deleteBtn').on('click', function () {
     if ($('#deleteInquiryNum').val() === '') {
       alert('문의를 선택해주세요.');
@@ -246,10 +311,8 @@ $(function () {
     }
   });
 
-  // ✅ 1) 첫 진입은 무조건 하단 비우기
   resetDetailUI();
 
-  // ✅ 2) redirect 후 선택된 글이 있을 때만 자동 선택
   var selected = /*[[${selectedInquiryNum}]]*/ null;
   if (selected != null) {
     var $row = $('.inquiry-row[data-num="' + selected + '"]');
@@ -349,7 +412,6 @@ $(function () {
               <input type="hidden" name="keyword" th:value="${param.keyword}">
               <input type="hidden" name="field" th:value="${param.field != null ? param.field : 1}">
 
-              <!-- ✅ 전송 안정화용 hidden -->
               <input type="hidden" name="inquiryReturn" id="inquiryReturnHidden">
 
               <table class="table table-bordered inquiry-detail-table">
@@ -372,7 +434,6 @@ $(function () {
                 <tr>
                   <th>답변</th>
                   <td>
-                    <!-- ✅ name 제거(중복/충돌 방지), hidden으로 전송 -->
                     <textarea id="detailAnswer" class="form-control"></textarea>
                   </td>
                 </tr>

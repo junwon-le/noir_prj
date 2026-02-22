@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta http-equiv="x-ua-compatible" content="ie=edge">
-<title>NOIR호텔 관리자 페이지</title>
+<title>NOIR호텔 관리자 review list 페이지</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <!-- 🔥 관리자 공통 CSS -->
@@ -45,9 +45,7 @@ body, .all-content-wrapper{
   box-shadow:0 3px 8px rgba(0,0,0,0.05);
 }
 
-.review-table{
-  color:#38599a;
-}
+.review-table{ color:#38599a; }
 
 .review-table thead th{
   background:#f4f6fb;
@@ -59,10 +57,7 @@ body, .all-content-wrapper{
   text-align:center;
   vertical-align:middle;
 }
-
-.review-table tbody td:nth-child(2){
-  text-align:left;
-}
+.review-table tbody td:nth-child(2){ text-align:left; }
 
 .review-table tbody tr:hover{
   background:#f9fbff;
@@ -75,9 +70,7 @@ body, .all-content-wrapper{
   background:#f7f7f7 !important;
   cursor:not-allowed !important;
 }
-.review-row.is-deleted:hover{
-  background:#f7f7f7 !important;
-}
+.review-row.is-deleted:hover{ background:#f7f7f7 !important; }
 
 /* ✅ 상태 뱃지 */
 .badge-answered{
@@ -139,9 +132,7 @@ body, .all-content-wrapper{
   background:#fff;
 }
 
-.detail-table td{
-  color:#2c3e50;
-}
+.detail-table td{ color:#2c3e50; }
 
 .detail-btn-row{
   display:flex;
@@ -152,7 +143,9 @@ body, .all-content-wrapper{
 
 .detail-btn-row .right-btns{
   display:flex;
-  gap:10px;
+  gap:12px;   /* ✅ 간격 살짝 증가 */
+  flex-wrap:wrap;
+  justify-content:flex-end;
 }
 
 /* ✅ 이미지 썸네일 */
@@ -165,9 +158,7 @@ body, .all-content-wrapper{
   border:1px solid rgba(56,89,154,0.2);
 }
 
-.thumb-link{
-  display:inline-block;
-}
+.thumb-link{ display:inline-block; }
 
 /* ✅ 로딩 텍스트 */
 .loading-txt{
@@ -202,8 +193,9 @@ body, .all-content-wrapper{
   background:#ffffff;
   border-radius:12px;
   margin-top:8px;
+  margin-bottom:8px;
   list-style:none;
-  padding:10px 0;
+  padding:10px 10px;
   box-shadow:0 6px 16px rgba(0,0,0,0.08);
   display:none;
   z-index:1000;
@@ -221,9 +213,8 @@ body, .all-content-wrapper{
 .review-pagination{
   margin:22px 0 16px;
 }
-.review-pagination .pagination{
-  gap:6px;
-}
+.review-pagination .pagination{ gap:6px; }
+
 .review-pagination .page-item .page-link,
 .review-pagination .page-item span.page-link{
   border:0 !important;
@@ -249,6 +240,89 @@ body, .all-content-wrapper{
 }
 .review-pagination .page-item:not(.disabled):not(.active) .page-link:hover{
   background:#f4f6fb !important;
+}
+
+/* =========================================================
+   ✅ 추가/수정: 관리자 답변 칸 + 하단 버튼 4개 스타일
+   ========================================================= */
+
+/* ✅ 관리자 답변 textarea 컬러/톤 */
+#adminReply{
+  background:#f6f8fc;                 /* 연한 블루그레이 */
+  border:1px solid #cfd8e6;
+  border-radius:12px;
+  color:#1f2d4d;
+  padding:14px 14px;
+  font-size:14px;
+  line-height:1.6;
+  box-shadow: inset 0 2px 8px rgba(0,0,0,0.04);
+  transition: border-color .15s ease, box-shadow .15s ease, background-color .15s ease;
+}
+#adminReply:focus{
+  background:#ffffff;
+  border-color:#38599a;
+  box-shadow: 0 0 0 4px rgba(56, 89, 154, 0.15);
+  outline:none;
+}
+
+/* ✅ 하단 버튼 공통 크기 업 */
+.detail-btn-row .btn{
+  height:42px;
+  padding:10px 18px;
+  border-radius:12px;
+  font-weight:700;
+  font-size:14px;
+  line-height:1;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* ✅ 1) 삭제(빨강) : 기존 danger 톤 유지 + 조금 세련되게 */
+#deleteFrm .btn.btn-danger{
+  background:#c94a4a;
+  border:1px solid #c94a4a;
+  box-shadow:0 8px 18px rgba(201,74,74,0.18);
+}
+#deleteFrm .btn.btn-danger:hover{
+  background:#b13e3e;
+  border-color:#b13e3e;
+}
+
+/* ✅ 2) 취소(그레이) */
+#cancelBtn{
+  background:#eef2fb !important;
+  border:1px solid #cfd8e6 !important;
+  color:#38599a !important;
+  box-shadow:none;
+}
+#cancelBtn:hover{
+  background:#e6ebf7 !important;
+  border-color:#b8c6de !important;
+}
+
+/* ✅ 3) 답변삭제(아웃라인) */
+#deleteReplyFrm .btn.btn-outline-secondary{
+  background:#ffffff;
+  border:1px solid #cfd8e6;
+  color:#38599a;
+}
+#deleteReplyFrm .btn.btn-outline-secondary:hover{
+  background:#f4f6fb;
+  border-color:#38599a;
+  color:#38599a;
+}
+
+/* ✅ 4) 답변(블루) : 지금까지 쓰던 블루 톤 */
+#replyBtn{
+  background:#38599a !important;
+  border:1px solid #38599a !important;
+  color:#ffffff !important;
+  box-shadow:0 10px 22px rgba(56,89,154,0.22);
+}
+#replyBtn:hover{
+  background:#2f4f8b !important;
+  border-color:#2f4f8b !important;
 }
 </style>
 </head>
@@ -333,14 +407,11 @@ body, .all-content-wrapper{
             <td th:text="${#dates.format(r.reviewDate,'yyyy-MM-dd')}"></td>
             <td th:text="${r.reviewStar}"></td>
             <td>
-              <!-- 삭제 우선 -->
               <span th:if="${r.reviewDelFlag == 'Y'}" class="badge-deleted">삭제됨</span>
 
-              <!-- 답변완료 -->
               <span th:if="${r.reviewDelFlag != 'Y'} and ${r.reviewReturn != null and !#strings.isEmpty(r.reviewReturn)}"
                     class="badge-answered">답변완료</span>
 
-              <!-- 미답변 -->
               <span th:if="${r.reviewDelFlag != 'Y'} and ${r.reviewReturn == null or #strings.isEmpty(r.reviewReturn)}"
                     class="badge-not">미답변</span>
             </td>
@@ -463,7 +534,6 @@ $(function(){
   if (num && ROOM_MAP[num]) {
     $("#selectedRoomText").text(ROOM_MAP[num]);
   } else {
-    // 기본 list 페이지는 전체로 보여주고 싶으면 아래처럼
     if (window.location.pathname === "/admin/review/list") {
       $("#selectedRoomText").text("전체");
     } else {
@@ -603,10 +673,8 @@ $("#roomSelectMenu li").click(function(){
   const url = $(this).data("url");
   const txt = $(this).text();
 
-  // 클릭 즉시 텍스트 반영
   $("#selectedRoomText").text(txt);
 
-  // 페이지 이동
   if (url) location.href = url;
 });
 

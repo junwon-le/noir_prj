@@ -5,7 +5,7 @@
 
 <mapper namespace="kr.co.noir.noticeAdmin">
 
-  <!-- ✅ 총 개수 -->
+  <!-- ✅ 1) 총 개수 -->
   <select id="selectNoticeTotalCnt"
           parameterType="kr.co.noir.notice.BoardRangeDTO"
           resultType="int">
@@ -14,23 +14,30 @@
     <where>
       notice_del_flag = 'N'
 
-      <!-- ✅ field(1~4) 기반 카테고리 필터 -->
-      <if test="field != null and field != 1">
+      <!-- ✅ 카테고리 필터 -->
+      <if test="field != null and field != '' and field != '1'">
         <choose>
-          <when test="field == 2">and notice_category = '일반'</when>
-          <when test="field == 3">and notice_category = '멤버십'</when>
-          <when test="field == 4">and notice_category = '약관개정'</when>
+          <when test="field == '2'">
+            and trim(notice_category) = '일반'
+          </when>
+          <when test="field == '3'">
+            and trim(notice_category) = '멤버십'
+          </when>
+          <when test="field == '4'">
+            and trim(notice_category) = '약관개정'
+          </when>
         </choose>
       </if>
 
-      <!-- ✅ keyword(제목 검색) -->
-      <if test="keyword != null and keyword != ''">
+      <!-- ✅ keyword(제목 검색) : 공백 방지 -->
+      <if test="keyword != null and keyword.trim() != ''">
         and instr(notice_title, #{keyword}) != 0
       </if>
     </where>
   </select>
 
-  <!-- ✅ 목록 -->
+
+  <!-- ✅ 2) 목록 (페이징) -->
   <select id="selectNoticeList"
           parameterType="kr.co.noir.notice.BoardRangeDTO"
           resultType="kr.co.noir.notice.NoticeAdminDomain">
@@ -43,22 +50,29 @@
         notice_category as noticeCategory,
         notice_msg      as noticeMsg,
         notice_date     as noticeDate,
-        row_number() over(order by notice_date desc, notice_num desc) rnum
+        row_number() over(order by notice_num desc) rnum
       from notice
       <where>
         notice_del_flag = 'N'
+        
 
-        <!-- ✅ field(1~4) 기반 카테고리 필터 -->
-        <if test="field != null and field != 1">
+        <!-- ✅ 카테고리 필터 -->
+        <if test="field != null and field != '' and field != '1'">
           <choose>
-            <when test="field == 2">and notice_category = '일반'</when>
-            <when test="field == 3">and notice_category = '멤버십'</when>
-            <when test="field == 4">and notice_category = '약관개정'</when>
+            <when test="field == '2'">
+              and trim(notice_category) = '일반'
+            </when>
+            <when test="field == '3'">
+              and trim(notice_category) = '멤버십'
+            </when>
+            <when test="field == '4'">
+              and trim(notice_category) = '약관개정'
+            </when>
           </choose>
         </if>
 
-        <!-- ✅ keyword(제목 검색) -->
-        <if test="keyword != null and keyword != ''">
+        <!-- ✅ keyword(제목 검색) : 공백 방지 -->
+        <if test="keyword != null and keyword.trim() != ''">
           and instr(notice_title, #{keyword}) != 0
         </if>
       </where>
@@ -66,7 +80,7 @@
     where rnum between #{startNum} and #{endNum}
   </select>
 
-  <!-- ✅ 상세 -->
+  <!-- ✅ 3) 상세 -->
   <select id="selectNoticeDetail"
           parameterType="int"
           resultType="kr.co.noir.notice.NoticeAdminDomain">
@@ -82,8 +96,9 @@
       and notice_del_flag = 'N'
   </select>
 
-  <!-- ✅ 등록 -->
-  <insert id="insertNotice" parameterType="kr.co.noir.notice.NoticeAdminDTO">
+  <!-- ✅ 4) 등록 -->
+  <insert id="insertNotice"
+          parameterType="kr.co.noir.notice.NoticeAdminDTO">
     insert into notice (
       notice_num,
       admin_num,
@@ -92,19 +107,20 @@
       notice_msg,
       notice_date,
       notice_del_flag
-) values (
-  NOTICE_SEQ.nextval,
-  #{adminNum},
-  #{noticeTitle},
-  #{noticeCategory},
-  #{noticeMsg},
-  sysdate,
-  'N'
-)
+    ) values (
+      NOTICE_SEQ.nextval,
+      #{adminNum},
+      #{noticeTitle},
+      #{noticeCategory},
+      #{noticeMsg},
+      sysdate,
+      'N'
+    )
   </insert>
 
-  <!-- ✅ 수정 -->
-  <update id="updateNotice" parameterType="kr.co.noir.notice.NoticeAdminDTO">
+  <!-- ✅ 5) 수정 -->
+  <update id="updateNotice"
+          parameterType="kr.co.noir.notice.NoticeAdminDTO">
     update notice
     set
       notice_title = #{noticeTitle},
@@ -114,12 +130,21 @@
       and notice_del_flag = 'N'
   </update>
 
-  <!-- ✅ 삭제 -->
+  <!-- ✅ 6) 삭제(soft delete) -->
   <update id="deleteNotice" parameterType="int">
     update notice
     set notice_del_flag = 'Y'
     where notice_num = #{value}
       and notice_del_flag = 'N'
   </update>
+
+  <!-- ✅ 7) adminId → adminNum 조회 -->
+  <select id="selectAdminNumByAdminId"
+          parameterType="string"
+          resultType="int">
+    select admin_num
+    from admin
+    where admin_id = #{value}
+  </select>
 
 </mapper>
