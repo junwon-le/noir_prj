@@ -25,5 +25,8 @@ public class InquiryAdminDomain {
     private String inquiryReturn;
 
     private Date inquiryDate;
+    
+    private String writerView;   // 작성자 표시용 (복호화 결과)
+    private String emailView;    // 이메일 표시용 (복호화 결과, 선택)
 
 }

@@ -143,7 +143,7 @@ body, .all-content-wrapper{
 
 .detail-btn-row .right-btns{
   display:flex;
-  gap:12px;   /* ✅ 간격 살짝 증가 */
+  gap:12px;
   flex-wrap:wrap;
   justify-content:flex-end;
 }
@@ -157,8 +157,13 @@ body, .all-content-wrapper{
   margin-right:8px;
   border:1px solid rgba(56,89,154,0.2);
 }
-
 .thumb-link{ display:inline-block; }
+
+/* ✅ 여러 장일 때 줄바꿈/간격 */
+#d_imgs{
+  flex-wrap: wrap;
+  gap: 10px;
+}
 
 /* ✅ 로딩 텍스트 */
 .loading-txt{
@@ -243,12 +248,12 @@ body, .all-content-wrapper{
 }
 
 /* =========================================================
-   ✅ 추가/수정: 관리자 답변 칸 + 하단 버튼 4개 스타일
+   ✅ 관리자 답변 칸 + 하단 버튼 4개 스타일
    ========================================================= */
 
 /* ✅ 관리자 답변 textarea 컬러/톤 */
 #adminReply{
-  background:#f6f8fc;                 /* 연한 블루그레이 */
+  background:#f6f8fc;
   border:1px solid #cfd8e6;
   border-radius:12px;
   color:#1f2d4d;
@@ -278,7 +283,7 @@ body, .all-content-wrapper{
   justify-content:center;
 }
 
-/* ✅ 1) 삭제(빨강) : 기존 danger 톤 유지 + 조금 세련되게 */
+/* ✅ 1) 삭제(빨강) */
 #deleteFrm .btn.btn-danger{
   background:#c94a4a;
   border:1px solid #c94a4a;
@@ -313,7 +318,7 @@ body, .all-content-wrapper{
   color:#38599a;
 }
 
-/* ✅ 4) 답변(블루) : 지금까지 쓰던 블루 톤 */
+/* ✅ 4) 답변(블루) */
 #replyBtn{
   background:#38599a !important;
   border:1px solid #38599a !important;
@@ -512,6 +517,34 @@ body, .all-content-wrapper{
 /** ✅ 설정: 이미지 베이스 경로 */
 const IMG_BASE = "/upload/review/";
 
+/**
+ * ✅ 이미지 리스트 파싱 (가장 안전 버전)
+ * - 서버가 ["a.jpg","b.jpg"] 로 주든
+ * - 서버가 ["a.jpg,b.jpg"] 로 주든
+ * - 서버가 "a.jpg,b.jpg" 문자열로 주든
+ * 전부 ["a.jpg","b.jpg"]로 정규화
+ */
+function parseImgList(raw){
+  if (!raw) return [];
+
+  // ✅ 배열이면: 각 요소를 콤마로 split -> 평탄화
+  if (Array.isArray(raw)) {
+    return raw
+      .flatMap(v => (v || "").toString().split(","))   // ⭐ 핵심
+      .map(s => s.trim())
+      .filter(Boolean)
+      .map(s => s.split("/").pop()); // 경로 포함 시 파일명만
+  }
+
+  // ✅ 문자열이면: 콤마 split
+  return raw
+    .toString()
+    .split(",")
+    .map(s => s.trim())
+    .filter(Boolean)
+    .map(s => s.split("/").pop());
+}
+
 /** ✅ URL 파라미터 읽기 */
 function getParam(name){
   const params = new URLSearchParams(window.location.search);
@@ -596,7 +629,10 @@ $(document).on("click", ".review-row", function () {
     if (!res || !res.ok) { alert("상세 조회 실패"); return; }
 
     const d = res.detail || {};
-    const imgs = res.imgList || [];
+
+    // ✅ imgList가 따로 올 수도, detail.reviewImgList로 올 수도 있어서 둘 다 커버
+    const rawImgs = res.imgList ?? (d ? d.reviewImgList : null);
+    const imgs = parseImgList(rawImgs);
 
     $("#d_title").text(d.reviewTitle || "-");
     $("#d_writer").text(d.memberLastName || "-");
@@ -614,14 +650,19 @@ $(document).on("click", ".review-row", function () {
     setDetailBadge(d.reviewDelFlag || "N", d.reviewReturn || "");
 
     const box = $("#d_imgs").empty();
-    if (!imgs || imgs.length === 0) {
+    if (imgs.length === 0) {
       box.append("<span style='color:#7f8c8d;'>등록된 사진이 없습니다.</span>");
     } else {
       imgs.forEach(function (fn) {
+        fn = (fn || "").toString().trim();
         if (!fn) return;
+
+        // ✅ 한글/특수문자 안전하게 인코딩 (파일명만 인코딩)
+        const enc = encodeURIComponent(fn);
+
         box.append(
-          "<a class='thumb-link' href='" + IMG_BASE + fn + "' target='_blank'>" +
-            "<img class='thumb' src='" + IMG_BASE + fn + "' alt='review image'>" +
+          "<a class='thumb-link' href='" + IMG_BASE + enc + "' target='_blank'>" +
+            "<img class='thumb' src='" + IMG_BASE + enc + "' alt='review image'>" +
           "</a>"
         );
       });

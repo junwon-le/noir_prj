@@ -314,7 +314,7 @@
               <div class="ev-img-box">
                 <img id="preview1" class="ev-img-preview"
                      th:src="${eaDomain != null and eaDomain.eventImg1 != null and eaDomain.eventImg1 != ''}
-                              ? @{|/upload/event/${eaDomain.eventImg1}|}
+                              ? @{|/common/images/homepage/event/${eaDomain.eventImg1}|}
                               : @{/common/images/no-image.png}"
                      alt="event img1" />
 
@@ -329,7 +329,7 @@
               <div class="ev-img-box" style="margin-bottom:0;">
                 <img id="preview2" class="ev-img-preview"
                      th:src="${eaDomain != null and eaDomain.eventImg2 != null and eaDomain.eventImg2 != ''}
-                              ? @{|/upload/event/${eaDomain.eventImg2}|}
+                              ? @{|/common/images/homepage/event/${eaDomain.eventImg2}|}
                               : @{/common/images/no-image.png}"
                      alt="event img2" />
 
