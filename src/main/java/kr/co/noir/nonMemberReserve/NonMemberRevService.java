@@ -36,20 +36,24 @@ public class NonMemberRevService {
 		TextEncryptor te = Encryptors.text(key, salt);
 		try {
 			nrcDomain=nmrm.nonMemberRevCheck(rmrDTO);
+			System.out.println(nrcDomain);
 		
 			String password=nrcDomain.getPassword();
 			String nowPassword= rmrDTO.getPassword();
 			String email = rmrDTO.getEmail();
 			String nowEmail =te.decrypt(nrcDomain.getEmail());
-			if("dinning".equals(rmrDTO.getReserveType())) {
-				passwordFlag=password.equals(nowPassword);
+		//	System.out.println(nowEmail);
+		//	if("dinning".equals(rmrDTO.getReserveType())) {
+				//passwordFlag=password.equals(nowPassword);
 				
-			}else {				
+			//}else {				
 				passwordFlag=bpe.matches(nowPassword, password);
-			}
+			//	System.out.println(passwordFlag);
+			//}
 			
 			
 			boolean emailFlag=email.equals(nowEmail);
+			System.out.println(emailFlag);
 			flag=passwordFlag&&emailFlag;
 		}catch (PersistenceException pe) {
 			pe.printStackTrace();

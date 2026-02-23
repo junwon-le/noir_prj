@@ -37,10 +37,10 @@ public class NonMemberRevController {
 		String reserveType=nmrDTO.getReserveType();
 		String uri = "redirect:/login/memberLogin";
 		
-		System.out.println(nmrDTO.getReserveType());
-		System.out.println("이메일"+nmrDTO.getEmail());
-		System.out.println("비밀번호"+nmrDTO.getPassword());
-		System.out.println("예약번호"+nmrDTO.getReserveNum());
+//		System.out.println(nmrDTO.getReserveType());
+//		System.out.println("이메일"+nmrDTO.getEmail());
+//		System.out.println("비밀번호"+nmrDTO.getPassword());
+//		System.out.println("예약번호"+nmrDTO.getReserveNum());
 		
 		reserveFlag=nmrs.NonReserveCheck(nmrDTO);
 //		System.out.println("확인결과"+reserveType);
