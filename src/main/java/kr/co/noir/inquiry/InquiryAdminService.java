@@ -7,6 +7,9 @@ import java.util.List;
 
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.encrypt.Encryptors;
+import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,6 +17,13 @@ public class InquiryAdminService {
 
     @Autowired
     private InquiryAdminDAO iaDAO;
+
+    // ✅ InquiryService와 동일한 설정값 사용
+    @Value("${user.crypto.key}")
+    private String key;
+
+    @Value("${user.crypto.salt}")
+    private String salt;
 
     // 전체 문의 개수
     public int totalCnt(InquiryRangeDTO irDTO) {
@@ -26,35 +36,25 @@ public class InquiryAdminService {
         return totalCnt;
     }
 
-    // 한 화면에 보여줄 게시물 수
-    public int pageScale() {
-        return 10;
-    }
+    public int pageScale() { return 10; }
 
-    // 총 페이지 수
     public int totalPage(int totalCount, int pageScale) {
         return (int) Math.ceil((double) totalCount / pageScale);
     }
 
-    // 시작 번호
     public int startNum(int pageScale, int currentPage) {
         return pageScale * (currentPage - 1) + 1;
     }
 
-    // 끝 번호
     public int endNum(int startNum, int pageScale) {
         return startNum + pageScale - 1;
     }
 
-    /**
-     * 제목이 20자를 초과하면 20자까지 보여주고 ...을 붙이는 일
-     */
     public void titleSubStr(List<InquiryAdminDomain> iaList) {
         if (iaList == null) return;
 
-        String title = "";
         for (InquiryAdminDomain d : iaList) {
-            title = d.getInquiryTitle();
+            String title = d.getInquiryTitle();
             if (title != null && title.length() > 19) {
                 d.setInquiryTitle(title.substring(0, 20) + "...");
             }
@@ -68,7 +68,7 @@ public class InquiryAdminService {
             list = iaDAO.selectInquiryList(irDTO);
             titleSubStr(list);
 
-            // ✅ 표시용 필드 세팅 (목록용)
+            // ✅ 표시용 필드 세팅(목록)
             applyViewFieldsToList(list);
 
         } catch (SQLException e) {
@@ -83,7 +83,7 @@ public class InquiryAdminService {
         try {
             detail = iaDAO.selectInquiryDetail(inquiryNum);
 
-            // ✅ 표시용 필드 세팅 (상세용)
+            // ✅ 표시용 필드 세팅(상세)
             applyViewFieldsToOne(detail);
 
         } catch (SQLException e) {
@@ -93,7 +93,6 @@ public class InquiryAdminService {
     }
 
     // 답변 등록/수정
-    // iaDTO에는 inquiryNum + inquiryReturn이 세팅되어 있어야 함
     public boolean updateInquiryReturn(InquiryAdminDTO iaDTO) {
         boolean flag = false;
         try {
@@ -221,10 +220,9 @@ public class InquiryAdminService {
     }
 
     /* =========================
-       ✅ 표시용 필드 세팅 (복호화)
+       ✅ 표시용 필드 세팅 (복호화 적용)
        - emailView : memberEmail 복호화
-       - writerView: 기본은 emailView로 세팅(작성자 칸에 이메일을 보여주고 싶을 때)
-         * 작성자 칸에 memberId를 보여주고 싶다면 아래 한 줄만 바꾸면 됨.
+       - writerView: memberId 표시(현재 너 코드 기준 유지)
        ========================= */
 
     private void applyViewFieldsToList(List<InquiryAdminDomain> list) {
@@ -237,11 +235,10 @@ public class InquiryAdminService {
     private void applyViewFieldsToOne(InquiryAdminDomain d) {
         if (d == null) return;
 
-        // ✅ 이메일(암호화 저장) -> 복호화 표시
-        String emailView = decryptSafe(d.getMemberEmail());
-        d.setEmailView(emailView);
+        // ✅ 이메일 복호화해서 표시용 필드에 세팅
+        d.setEmailView(decryptEmailSafe(d.getMemberEmail()));
 
-        // ✅ 작성자 칸에는 아이디 표시 (아이디는 평문 저장 가정)
+        // ✅ 작성자는 memberId 표시
         if (d.getMemberId() != null && !d.getMemberId().isBlank()) {
             d.setWriterView(d.getMemberId());
         } else {
@@ -249,13 +246,13 @@ public class InquiryAdminService {
         }
     }
 
-    private String decryptSafe(String enc) {
-        if (enc == null || enc.isBlank()) return "-";
+    private String decryptEmailSafe(String encEmail) {
+        if (encEmail == null || encEmail.isBlank()) return "-";
         try {
-            return CryptoUtil.decrypt(enc); // 너희 프로젝트 복호화 유틸로 교체
+            TextEncryptor te = Encryptors.text(key, salt);
+            return te.decrypt(encEmail);
         } catch (Exception e) {
             return "-";
         }
     }
-
-} // class
+}

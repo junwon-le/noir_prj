@@ -45,7 +45,13 @@
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.js"></script>
 
 <style>
+/* =========================
+   ✅ Inquiry List Table (간격/정렬 최종 튜닝)
+   - 기존 톤 유지하면서 행 높이/패딩만 정돈
+   ========================= */
+
 .inquiry-row.active { background: #eef3ff; }
+
 .inquiry-card {
   background: #ffffff;
   border-radius: 14px;
@@ -53,23 +59,73 @@
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
   overflow: hidden;
 }
-.inquiry-table { background: transparent; color: #38599a; margin-bottom: 0; }
+
+/* ✅ 카드 안쪽 여백: 테이블이 너무 딱 붙어 보이는 느낌 완화 */
+.inquiry-card .panel-body {
+  padding: 8px 10px !important;   /* 기존 inline padding:0 덮어쓰기용 */
+}
+
+/* ✅ 테이블 기본 */
+.inquiry-table {
+  background: transparent;
+  color: #38599a;
+  margin-bottom: 0;
+
+  border-collapse: separate;      /* 라인/라운딩 안정 */
+  border-spacing: 0;
+  font-size: 14px;
+}
+
+/* ✅ 헤더 */
 .inquiry-table thead { background: #f6f8fc; }
 .inquiry-table thead th {
   border-bottom: 1px solid #e3e8f3;
   color: #38599a;
-  font-weight: 600;
-  padding: 14px;
+  font-weight: 700;
+
+  padding: 10px 12px;             /* ✅ 14px → 10px (간격 축소) */
+  vertical-align: middle;
+  white-space: nowrap;
 }
+
+/* ✅ 바디 셀 */
 .inquiry-table tbody td {
   border-top: 1px solid #e3e8f3;
-  padding: 14px;
+
+  padding: 10px 12px;             /* ✅ 14px → 10px (간격 축소) */
   vertical-align: middle;
+  line-height: 1.25;
 }
-.inquiry-row { cursor: pointer; transition: background 0.2s ease; }
+
+/* ✅ 행 인터랙션 */
+.inquiry-row { cursor: pointer; transition: background 0.15s ease; }
 .inquiry-row:hover { background: #f9fbff; }
+
 .inquiry-table .text-left { text-align: left; }
-.empty-text { padding: 40px 0; color: #b1c1e2; font-size: 14px; }
+
+/* ✅ 제목 칸: 한 줄 말줄임(테이블이 커지는 원인 제거) */
+.inquiry-table td.text-left {
+  max-width: 520px;               /* 화면에 맞게 420~700 조절 가능 */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ✅ 번호/작성자/등록일은 줄바꿈 방지 */
+.inquiry-table tbody td:nth-child(1),
+.inquiry-table tbody td:nth-child(3),
+.inquiry-table tbody td:nth-child(4) {
+  white-space: nowrap;
+}
+
+/* ✅ 빈 목록 문구 */
+.empty-text {
+  padding: 28px 0;                /* ✅ 40px → 28px (과한 공백 줄임) */
+  color: #b1c1e2;
+  font-size: 14px;
+}
+
+/* ===== 기존 pagination/detail/search 영역은 그대로 아래 유지 ===== */
 
 .pagination-wrap { text-align: center; margin-top: 20px; }
 
@@ -189,6 +245,29 @@
   padding: 8px 12px;
   border-radius: 8px;
 }
+/* ===== 작성자 칸 정렬 정확히 맞춤 ===== */
+
+/* 헤더 정렬 통일 */
+.inquiry-table thead th {
+  text-align: center;
+}
+
+/* 제목 칸은 왼쪽 */
+.inquiry-table thead th:nth-child(2),
+.inquiry-table tbody td:nth-child(2) {
+  text-align: left;
+}
+
+/* 번호 / 작성자 / 등록일은 가운데 */
+.inquiry-table thead th:nth-child(1),
+.inquiry-table thead th:nth-child(3),
+.inquiry-table thead th:nth-child(4),
+.inquiry-table tbody td:nth-child(1),
+.inquiry-table tbody td:nth-child(3),
+.inquiry-table tbody td:nth-child(4) {
+  text-align: center;
+}
+
 </style>
 
 <!-- ✅ flash msg -->
@@ -254,7 +333,11 @@ $(function () {
         $('#deleteInquiryNum').val(data.inquiryNum);
 
         $('#detailTitle').text(data.inquiryTitle || '-');
-        $('#detailEmail').text(data.memberEmail || '-');
+
+        // ✅ 이메일은 복호화된 emailView를 우선 사용
+        $('#detailEmail').text(data.emailView || '-');
+
+        // ✅ 글쓴이는 memberId 표시
         $('#detailWriter').text((data.memberId != null && data.memberId !== '') ? data.memberId : '-');
 
         $('#detailContent').html(data.inquiryMsg || '-');
@@ -385,7 +468,10 @@ $(function () {
                   th:classappend="${selectedInquiryNum != null and inquiry.inquiryNum == selectedInquiryNum} ? ' active' : ''">
                 <td th:text="${listNum - i.index}"></td>
                 <td class="text-left" th:text="${inquiry.inquiryTitle}"></td>
-                <td th:text="${inquiry.memberEmail != null ? inquiry.memberEmail : inquiry.memberId}"></td>
+
+                <!-- ✅ 작성자 칸: memberId만 표시(이메일/암호문 노출 방지) -->
+                <td th:text="${inquiry.memberId != null && inquiry.memberId != '' ? inquiry.memberId : '-'}"></td>
+
                 <td th:text="${#dates.format(inquiry.inquiryDate, 'yyyy-MM-dd')}"></td>
               </tr>
             </tbody>
