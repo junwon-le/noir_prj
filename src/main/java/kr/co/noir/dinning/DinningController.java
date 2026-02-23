@@ -73,7 +73,7 @@ public class DinningController {
 		model.addAttribute("dinning",dDomain);
 		model.addAttribute("dinningList",list);
 		
-		return "/manager/dinning/dinningManage";
+		return "manager/dinning/dinningManage";
 	}
 	
 	
@@ -102,6 +102,7 @@ public class DinningController {
 	
 	@Value("${user.upload-dir}")
 	private String uploadDir;
+	
 
 	
 	@PostMapping("/admin/dinningModifyProcess")
