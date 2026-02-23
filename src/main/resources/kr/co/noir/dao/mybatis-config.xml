@@ -9,11 +9,8 @@
 		<typeAlias type="kr.co.noir.room.RoomDTO" alias="roomDTO"/>
 		<typeAlias type="kr.co.noir.room.RoomPriceDomain" alias="roomPriceDomain"/>		
 		<typeAlias type="kr.co.noir.room.RoomPriceDTO" alias="roomPriceDTO"/>				
-		<typeAlias type="kr.co.noir.reserve.RoomSearchDomain" alias="roomSearchDomain"/>		
-		<typeAlias type="kr.co.noir.reserve.RoomSearchDTO" alias="roomSearchDTO"/>		
 		<typeAlias type="kr.co.noir.dinning.DinningDomain" alias="dinningDomain"/>
 		
-		<typeAlias type="kr.co.noir.dinning.DinningDomain" alias="dinningDomain"/>		
 		<typeAlias type="kr.co.noir.dinning.DinningDTO" alias="dinningDTO"/>		
 		
 		<!-- 박현욱 사용 -->		
@@ -25,7 +22,7 @@
      	 <typeAlias type="kr.co.noir.mypageReserve.HotelRevSearchDomain" alias="hotelRevSearchDomain"/>   
      	 <typeAlias type="kr.co.noir.mypageReserve.ReserveSearchDTO" alias="reserveSearchDTO"/>   
      	 <typeAlias type="kr.co.noir.mypageReserve.ReserveDetailDTO" alias="reserveDetailDTO"/>   
-     	 <typeAlias type="kr.co.noir.mypageReserve.HotelRevDetailDomain" alias="hotelRevDetailDomain"/>   
+     	 <typeAlias type="kr.co.noir.mypageReserve.HotelRevDetailDomain" alias="hotelRevDetailDomain"/>    
      	 <typeAlias type="kr.co.noir.mypageReserve.DinningRevSearchDomain" alias="dinningRevSearchDomain"/>   
      	 <typeAlias type="kr.co.noir.mypageReserve.DinningRevDetailDomain" alias="dinningRevDetailDomain"/>   
 	

@@ -76,8 +76,6 @@ public class DinningReserveService {
 		drDTO.setEmail(te.encrypt(drDTO.getEmailId()+"@"+drDTO.getEmailDomain()));
 		drDTO.setReserve_tel(te.encrypt(drDTO.getReserve_tel()));
 		drDTO.setVisite_date(LocalDate.parse(drDTO.getStr_visite_date()));
-		BCryptPasswordEncoder bpe=new BCryptPasswordEncoder(10);
-		drDTO.setNon_user_pass(bpe.encode(drDTO.getNon_user_pass()));
 		//결제 정보 서버에서 가져오기
 		//예약 시간에 해당하는 다이닝 타입 조회 - 서버
 		String dinningType = drm.selectDinningtype(drDTO.getDinning_time());
