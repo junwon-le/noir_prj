@@ -221,6 +221,7 @@ public class MypageReseveController {
 	              emailService.sendDiningReserveMail(diningDetail); // 다이닝 전용 메서드
 	              redirectAttributes.addFlashAttribute("msg", "다이닝 예약 확인서가 메일로 발송되었습니다.");
 	              redirectAttributes.addFlashAttribute("emailFlag",true);
+	              
 	          }
 	          redirectUri = "redirect:/mypage/reserve/memberDinningDetail";
 	      }
@@ -228,6 +229,11 @@ public class MypageReseveController {
 	      // 공통 파라미터 세팅
 	      redirectAttributes.addAttribute("reserveNum", rdDTO.getReserveNum());
 	      redirectAttributes.addAttribute("reserveType", type);
+	      redirectAttributes.addAttribute("startDate", rdDTO.getStartDate());
+	      redirectAttributes.addAttribute("endDate", rdDTO.getEndDate());
+	      redirectAttributes.addAttribute("currentpage", rdDTO.getCurrentpage());
+	      redirectAttributes.addAttribute("period", rdDTO.getPeriod());
+	   
 	      
 	      return redirectUri; 
 	  }

@@ -15,7 +15,6 @@
       notice_del_flag = 'N'
 
       <!-- ✅ 카테고리 필터 -->
-      <if test="field != null and field != '' and field != '1'">
         <choose>
           <when test="field == '2'">
             and trim(notice_category) = '일반'
@@ -27,7 +26,6 @@
             and trim(notice_category) = '약관개정'
           </when>
         </choose>
-      </if>
 
       <!-- ✅ keyword(제목 검색) : 공백 방지 -->
       <if test="keyword != null and keyword.trim() != ''">
@@ -59,14 +57,14 @@
         <!-- ✅ 카테고리 필터 -->
         <if test="field != null and field != '' and field != '1'">
           <choose>
-            <when test="field == '2'">
-              and trim(notice_category) = '일반'
+            <when test='field == "2" or field == 2'> 
+                and notice_category like '%일반%' 
             </when>
-            <when test="field == '3'">
-              and trim(notice_category) = '멤버십'
+            <when test='field == "3" or field == 3'> 
+                and notice_category like '%멤버십%' 
             </when>
-            <when test="field == '4'">
-              and trim(notice_category) = '약관개정'
+            <when test='field == "4" or field == 4'> 
+                and notice_category like '%약관%' 
             </when>
           </choose>
         </if>

@@ -23,6 +23,9 @@ public class NoticeAdminDAO {
     public List<NoticeAdminDomain> selectNoticeList(BoardRangeDTO rDTO) throws SQLException {
         SqlSession ss = MyBatisHandler.getInstance().getMyBatisHandler(false);
         try {
+        	System.out.println("-----------");
+        	System.out.println(rDTO);
+        	System.out.println("-----------");
             return ss.selectList("kr.co.noir.noticeAdmin.selectNoticeList", rDTO);
         } finally {
             if (ss != null) ss.close();

@@ -643,7 +643,7 @@ function goBackToList(){
             </div>
             <div class="modal-footer border-0 justify-content-center">
                 <button type="button" class="btn btn-secondary btn-sm rounded-0 px-4" data-bs-dismiss="modal">아니오</button>
-                <form th:action="@{/mypage/reserve/cancelDinningReserve}" method="post" style="display:inline;">
+                <form th:action="@{/nonMember/cancelDinningReserve}" method="post" style="display:inline;">
                      <input type="hidden" name="reserveNum" th:value="${dinningRevDetail.reserveNum}" /> 
                     <button type="submit" class="btn btn-danger btn-sm rounded-0 px-4">네, 취소합니다</button>
                 </form>

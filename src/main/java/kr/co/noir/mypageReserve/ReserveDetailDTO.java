@@ -12,6 +12,8 @@ public class ReserveDetailDTO {
 	private int reserveNum;
 	private String reserveType;
 	private String pageStartDate,pageEndDate;
+	private String startDate,endDate;
+	private String period;
 	private int currentpage;
 	private String monthBtnValue;
 	

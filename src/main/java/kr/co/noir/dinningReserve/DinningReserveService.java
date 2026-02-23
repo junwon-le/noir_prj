@@ -121,7 +121,7 @@ public class DinningReserveService {
 		//예약 테이블 데이터 처리 - 서버에서 다시 db조회하여 실제 데이터를 가져옴
 		TextEncryptor te = Encryptors.text(key,salt);
 
-		drDTO.setEmail(te.encrypt(drDTO.getEmailId()));
+		drDTO.setEmail(te.encrypt(drDTO.getEmailId()+"@"+drDTO.getEmailDomain()));
 		drDTO.setReserve_tel(te.encrypt(drDTO.getReserve_tel()));
 
 		drDTO.setVisite_date(LocalDate.parse(drDTO.getStr_visite_date()));
